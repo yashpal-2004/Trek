@@ -80,5 +80,5 @@ export const STORAGE_KEYS = {
   completedDays: "completed-days-plan2",
   favoritePlaces: "favorite-places-plan2",
   completedTreks: "completed-treks-plan2",
-  budgetCalculator: "budget-calculator-v10-plan2",
+  budgetCalculator: "budget-calculator-v11-plan2",
 };
