@@ -3,7 +3,7 @@ export const budget = {
   perPerson: true,
   currency: "INR",
   categories: [
-    { id: "transport", label: "Transportation", amount: 1860, color: "#2563EB", icon: "Bus", description: "Train, bus, jeep, shared transport" },
+    { id: "transport", label: "Transportation", amount: 2000, color: "#2563EB", icon: "Bus", description: "Train, bus, jeep, shared transport" },
     { id: "accommodation", label: "Accommodation", amount: 2500, color: "#10B981", icon: "Bed", description: "Hostels, GMVN, homestays, temple stays" },
     { id: "food", label: "Food", amount: 1860, color: "#F59E0B", icon: "Utensils", description: "Meals, snacks, water" },
     { id: "rafting", label: "Rafting", amount: 1000, color: "#8B5CF6", icon: "Waves", description: "16 KM Rishikesh rafting" },
@@ -11,16 +11,16 @@ export const budget = {
   ],
   dailyEstimate: [
     { day: 1, amount: 300, label: "Hisar → Haridwar" },
-    { day: 2, amount: 1030, label: "To Sagar Village" },
+    { day: 2, amount: 1100, label: "To Sagar Village" },
     { day: 3, amount: 550, label: "Rudranath Trek" },
-    { day: 4, amount: 950, label: "Return to Gopeshwar" },
+    { day: 4, amount: 1020, label: "Return to Gopeshwar" },
     { day: 5, amount: 1080, label: "Chandrashila" },
     { day: 6, amount: 1480, label: "To Rishikesh" },
     { day: 7, amount: 1830, label: "Rafting & Night Bus" },
     { day: 8, amount: 0, label: "Reach Hisar" },
   ],
   calculatorDefaults: {
-    transport: 1860,
+    transport: 2000,
     stay: 2500,
     food: 1860,
     rafting: 1000,
