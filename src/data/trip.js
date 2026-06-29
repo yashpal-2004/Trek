@@ -21,7 +21,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 9, suffix: "", description: "Full expedition duration", icon: "Calendar" },
   { id: "treks", label: "Treks", value: 3, suffix: "", description: "Major trekking routes", icon: "Mountain" },
-  { id: "walking", label: "Walking Distance", value: 30, suffix: " KM", description: "Total trek distance", icon: "Footprints" },
+  { id: "walking", label: "Walking Distance", value: 60, suffix: " KM", description: "Total trek distance", icon: "Footprints" },
   { id: "budget", label: "Budget", value: 9.9, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 4000, suffix: " M+", description: "Chandrashila summit", icon: "TrendingUp" },
   { id: "rafting", label: "River Rafting", value: 16, suffix: " KM", description: "Rishikesh stretch", icon: "Waves" },

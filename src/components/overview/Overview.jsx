@@ -18,14 +18,15 @@ function AnimatedNumber({ value, inView }) {
 
     const tick = (now) => {
       const progress = Math.min((now - startTime) / duration, 1);
-      setCount(Math.round(progress * value));
+      setCount(progress * value);
       if (progress < 1) requestAnimationFrame(tick);
     };
 
     requestAnimationFrame(tick);
   }, [inView, value]);
 
-  return count.toLocaleString("en-IN");
+  const isDecimal = value % 1 !== 0;
+  return isDecimal ? count.toFixed(2) : Math.round(count).toLocaleString("en-IN");
 }
 
 function AnimatedStat({ stat, index }) {
