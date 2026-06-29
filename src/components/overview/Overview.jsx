@@ -39,25 +39,25 @@ function AnimatedStat({ stat, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.4 }}
-      className="group bg-card rounded-[18px] border border-border p-6 shadow-sm hover:-translate-y-1 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+      className="group bg-white/70 backdrop-blur-md rounded-[24px] border border-black/10 p-6 shadow-sm hover:-translate-y-1 hover:shadow-md hover:border-black/20 transition-all duration-300"
     >
-      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/15 transition-colors">
-        <Icon size={20} className="text-primary" />
+      <div className="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center mb-4 text-black/70 group-hover:bg-black/10 transition-colors">
+        <Icon size={20} />
       </div>
-      <p className="text-3xl font-bold text-text">
+      <p className="text-3xl font-black text-black">
         {stat.prefix}
         <AnimatedNumber value={stat.value} inView={inView} />
         {stat.suffix}
       </p>
-      <p className="text-sm font-medium text-text mt-1">{stat.label}</p>
-      <p className="text-xs text-secondary mt-1">{stat.description}</p>
+      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1.5">{stat.label}</p>
+      <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">{stat.description}</p>
     </motion.div>
   );
 }
 
 export default function QuickStats() {
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-20 md:py-28 bg-[#f2efe9]">
       <Container>
         <SectionTitle
           label="At a Glance"
