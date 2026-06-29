@@ -3,7 +3,7 @@
 @import "leaflet/dist/leaflet.css";
 
 @theme {
-  --color-background: #f8fafc;
+  --color-background: #f2efe9;
   --color-card: #ffffff;
   --color-primary: #2563eb;
   --color-accent: #10b981;

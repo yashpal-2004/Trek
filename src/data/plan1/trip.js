@@ -59,15 +59,7 @@ export const navLinks = [
   { id: "timeline", label: "Timeline" },
   { id: "itinerary", label: "Itinerary" },
   { id: "transport", label: "Transport" },
-  { id: "treks", label: "Treks" },
   { id: "budget", label: "Budget" },
-  { id: "stay", label: "Stay" },
-  { id: "food", label: "Food" },
-  { id: "packing", label: "Packing" },
-  { id: "safety", label: "Safety" },
-  { id: "emergency", label: "Emergency" },
-  { id: "faq", label: "FAQ" },
-  { id: "print", label: "Print" },
 ];
 
 export const expenseCategories = [
@@ -88,5 +80,5 @@ export const STORAGE_KEYS = {
   completedDays: "completed-days-plan1",
   favoritePlaces: "favorite-places-plan1",
   completedTreks: "completed-treks-plan1",
-  budgetCalculator: "budget-calculator-v5-plan1",
+  budgetCalculator: "budget-calculator-v6-plan1",
 };

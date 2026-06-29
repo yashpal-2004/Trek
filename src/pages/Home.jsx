@@ -9,15 +9,7 @@ import RouteTimeline from "../components/overview/RouteTimeline";
 
 const ItinerarySection = lazy(() => import("../components/itinerary/ItinerarySection"));
 const TransportSection = lazy(() => import("../components/transport/TransportSection"));
-const TrekSection = lazy(() => import("../components/trek/TrekSection"));
 const BudgetSection = lazy(() => import("../components/budget/BudgetSection"));
-const StaySection = lazy(() => import("../components/stay/StaySection"));
-const FoodSection = lazy(() => import("../components/food/FoodSection"));
-const PackingSection = lazy(() => import("../components/packing/PackingSection"));
-const SafetySection = lazy(() => import("../components/safety/SafetySection"));
-const EmergencySection = lazy(() => import("../components/emergency/EmergencySection"));
-const FAQSection = lazy(() => import("../components/faq/FAQSection"));
-const PrintSection = lazy(() => import("../components/print/PrintSection"));
 
 function SectionFallback() {
   return (
@@ -35,20 +27,11 @@ export default function Home() {
       <main>
         <Hero />
         <QuickStats />
-        <OverviewSection />
         <RouteTimeline />
         <Suspense fallback={<SectionFallback />}>
           <ItinerarySection />
           <TransportSection />
-          <TrekSection />
           <BudgetSection />
-          <StaySection />
-          <FoodSection />
-          <PackingSection />
-          <SafetySection />
-          <EmergencySection />
-          <FAQSection />
-          <PrintSection />
         </Suspense>
       </main>
       <Footer />

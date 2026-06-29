@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, Users, Wallet, Activity, TrendingUp, Route, ChevronDown, Map, Download } from "lucide-react";
 import { trip } from "../../data/trip";
@@ -15,74 +16,66 @@ const heroCards = [
 ];
 
 export default function Hero() {
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80)" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+  const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
+  const subtitleText = isPlan2 
+    ? "General coach transit, direct Sagar Village approach, and standard Himalayan treks."
+    : "Sleeper coach transit, transit rest breaks, and classic Himalayan treks.";
 
-      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 xl:px-10 text-center text-white pt-20">
+  return (
+    <section className="relative min-h-screen bg-[#f2efe9] text-black overflow-hidden flex flex-col justify-between py-12">
+      {/* Mountain Illustration Layer */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
+        <img
+          src="/mountain_clay_peak.png"
+          alt="Garhwal Mountain Peak"
+          className="w-full max-w-[650px] object-contain opacity-75 md:opacity-85 translate-y-[-10%] md:translate-y-[-5%]"
+        />
+      </div>
+
+      <div className="relative z-10 w-full max-w-[1400px] mx-auto px-4 md:px-6 lg:px-8 xl:px-10 text-center pt-24 my-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-sm font-medium mb-6">
-            2 Jul – 11 Jul · 10 Days · Uttarakhand
+          <span className="inline-block px-4 py-1.5 rounded-full bg-black/5 border border-black/10 text-xs font-bold font-mono tracking-wider uppercase mb-6">
+            {trip.duration} · Uttarakhand Expedition
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4">
-            {trip.title}
+          
+          <h1 
+            className="text-5xl sm:text-7xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-none mb-6 uppercase text-black/90 select-none"
+            style={{ fontFamily: "'Anton', sans-serif" }}
+          >
+            {isPlan2 ? "PLAN TWO" : "PLAN ONE"}
           </h1>
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8">
-            {trip.subtitle}
+          
+          <p className="text-base md:text-lg text-slate-600 max-w-xl mx-auto mb-10 font-medium">
+            {subtitleText}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button size="lg" onClick={() => scrollToSection("itinerary")} icon={Map}>
+            <button
+              onClick={() => scrollToSection("itinerary")}
+              className="inline-flex items-center gap-2 bg-black hover:bg-black/90 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-md hover:scale-102"
+            >
+              <Map size={16} />
               View Itinerary
-            </Button>
-            <Button
-              size="lg"
-              variant="secondary"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
-              onClick={() => scrollToSection("timeline")}
+            </button>
+            <button
+              onClick={() => scrollToSection("budget")}
+              className="inline-flex items-center gap-2 bg-white hover:bg-black/5 text-black text-sm font-semibold px-6 py-3 rounded-xl border border-black/15 transition-all shadow-sm hover:scale-102"
             >
-              Explore Route
-            </Button>
-            <Button
-              size="lg"
-              variant="ghost"
-              className="text-white/70 hover:text-white hover:bg-white/10"
-              icon={Download}
-              onClick={() => window.print()}
-            >
-              Download PDF
-            </Button>
+              Explore Budget
+            </button>
           </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.7 }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4"
-        >
-          {heroCards.map(({ icon: Icon, label, value }) => (
-            <Card key={label} hover className="bg-white/10 backdrop-blur-md border-white/20 text-white !p-4">
-              <Icon size={20} className="text-white/70 mb-2 mx-auto" />
-              <p className="text-xs text-white/60">{label}</p>
-              <p className="text-sm font-semibold mt-0.5">{value}</p>
-            </Card>
-          ))}
         </motion.div>
       </div>
 
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60"
+        className="text-black/40 flex justify-center mt-4 cursor-pointer"
+        onClick={() => scrollToSection("overview")}
       >
         <ChevronDown size={28} />
       </motion.div>
