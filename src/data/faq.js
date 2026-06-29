@@ -1,36 +1,6 @@
-export const faq = [
-  { id: 1, question: "How difficult is the Rudranath trek?", answer: "Rudranath is rated Hard — 20-22 KM with significant elevation gain to 3600m. Prior trekking experience is strongly recommended. Allow 8-10 hours and start before 5 AM.", category: "Trek" },
-  { id: 2, question: "What is the total budget per person?", answer: "The estimated budget is ₹11,000–₹12,000 per person covering transport, stay, food, rafting, and emergency funds for the complete 10-day trip.", category: "Budget" },
-  { id: 3, question: "Is river rafting safe during monsoon?", answer: "Rafting operates in light to moderate monsoon conditions with experienced guides. Always wear a life jacket. Trips may be cancelled during heavy rainfall or high water levels.", category: "Safety" },
-  { id: 4, question: "Where is the last ATM on the route?", answer: "Gopeshwar has reliable ATMs. Withdraw sufficient cash there — Sagar Village, Rudranath, and mountain areas have no ATM access.", category: "Practical" },
-  { id: 5, question: "Do I need trekking permits?", answer: "No special permits needed for these treks. Temple stays at Rudranath and Kalpeshwar are free. Camping at Deoria Tal may require informing local forest officials.", category: "Trek" },
-  { id: 6, question: "What mobile networks work in Garhwal?", answer: "BSNL has the best coverage in remote areas. Jio works in towns like Gopeshwar and Chopta. Expect no network during Rudranath trek and at Deoria Tal.", category: "Practical" },
-  { id: 7, question: "Can beginners do Chandrashila?", answer: "Chandrashila is Moderate difficulty. The trail from Chopta to Tungnath is paved and manageable. The final 1.5 KM summit push is steep — good fitness required.", category: "Trek" },
-  { id: 8, question: "What should I pack for monsoon trekking?", answer: "Rain jacket, poncho, backpack cover, quick-dry clothes, waterproof trekking shoes, zip-lock bags, and extra socks. Never trek without rain protection in July.", category: "Packing" },
-  { id: 9, question: "How to book GMVN guest houses?", answer: "Book online at gmvnonline.com or call GMVN offices. Gopeshwar and Chopta GMVN properties are recommended. Walk-in availability varies by season.", category: "Stay" },
-  { id: 10, question: "Is vegetarian food easily available?", answer: "Yes, Garhwal is predominantly vegetarian. Dal-roti, rajma chawal, and paratha are available everywhere. Protein bars recommended for trek days.", category: "Food" },
-  { id: 11, question: "What is the best time to start trekking each day?", answer: "Start by 5-6 AM for long treks like Rudranath. Shorter treks like Kalpeshwar can start at 7-8 AM. Always descend before 2 PM from high altitude.", category: "Trek" },
-  { id: 12, question: "How to reach Sagar Village from Gopeshwar?", answer: "Shared jeeps (Bolero) operate from Gopeshwar market in the morning. Cost ₹60-80 per person. Last jeep usually leaves by 2 PM.", category: "Transport" },
-  { id: 13, question: "Is camping allowed at Deoria Tal?", answer: "Yes, camping is popular at Deoria Tal. Carry your own gear. No permanent facilities at the lake — practice leave-no-trace camping.", category: "Stay" },
-  { id: 14, question: "What altitude sickness symptoms should I watch for?", answer: "Headache, nausea, dizziness, and shortness of breath above 3500m. Descend immediately if symptoms worsen. Carry ORS and Diamox as precaution.", category: "Safety" },
-  { id: 15, question: "Can I do this trip solo?", answer: "The itinerary is designed for 3 people for cost sharing. Solo travel is possible but shared jeeps and lodging cost more alone. Never trek alone — join groups at base villages.", category: "General" },
-  { id: 16, question: "How much does rafting cost?", answer: "16 KM rafting from Shivpuri costs ₹1,000 per person. This includes all safety gear, a professional guide, and optional action photos/videos.", category: "Budget" },
-  { id: 17, question: "What transport should I book to and from Hisar?", answer: "For the outbound journey, buy a General Class ticket (₹150) directly at Hisar station for Train 14717 departing at 03:55 AM. For the return journey, take a direct overnight government bus (₹350) from Haridwar to Hisar to skip unnecessary hotel stay costs.", category: "Transport" },
-  { id: 18, question: "Are ponchos available locally?", answer: "Yes, buy at Gopeshwar or Haridwar markets for ₹100-200. Don't rely on finding them at remote villages.", category: "Packing" },
-  { id: 19, question: "What is the temperature at Chandrashila?", answer: "Expect 5-10°C at the 4000m summit even in July. Wind chill makes it feel colder. Carry thermal layer, gloves, and windcheater.", category: "Weather" },
-  { id: 20, question: "How to handle leeches during monsoon treks?", answer: "Wear full-length pants tucked into socks. Apply salt or tobacco water on shoes. Check legs during breaks. Leeches are harmless but annoying.", category: "Safety" },
-  { id: 21, question: "Is there electricity in mountain villages?", answer: "Sagar Village and Sari have limited electricity (often 6 PM–10 PM). Carry power bank and charge devices whenever possible at GMVN.", category: "Practical" },
-  { id: 22, question: "What fitness level is required?", answer: "Moderate to high fitness. You should comfortably walk 15+ KM on hilly terrain. Train with weekend hikes before the trip.", category: "Trek" },
-  { id: 23, question: "Can I hire a porter or pony?", answer: "Ponies available for Rudranath (₹1500-2000) and some other treks. Porters can be arranged at Sagar Village. Book a day ahead.", category: "Trek" },
-  { id: 24, question: "What if roads are blocked by landslides?", answer: "Monsoon landslides are common. Build 1 buffer day in planning. Follow local advice. UTC buses usually resume within 24-48 hours.", category: "Safety" },
-  { id: 25, question: "Is travel insurance recommended?", answer: "Yes, especially covering trekking and emergency evacuation. Basic policies start at ₹500 for 10 days.", category: "Safety" },
-  { id: 26, question: "How much water to carry on trek days?", answer: "Minimum 2L for short treks, 3L for Rudranath. Water sources exist on some trails but may be contaminated — carry purification tablets.", category: "Trek" },
-  { id: 27, question: "What photography gear to bring?", answer: "Phone is sufficient for most shots. Bring power bank, zip-lock protection, and optional wide-angle lens. Tripod useful for Deoria Tal sunrise.", category: "General" },
-  { id: 28, question: "Are there medical facilities on route?", answer: "Basic PHCs at Gopeshwar and Rudraprayag. Carry comprehensive first aid kit. Nearest hospital with facilities is at Srinagar (Garhwal).", category: "Emergency" },
-  { id: 29, question: "How to respect local culture at temples?", answer: "Remove shoes before entering, dress modestly, no photography inside temples unless permitted, participate quietly in aarti ceremonies.", category: "General" },
-  { id: 30, question: "Can I extend the trip to Kedarnath?", answer: "Kedarnath is accessible from Gopeshwar/Guptkashi but adds 3-4 days. This itinerary focuses on Rudranath and Panch Kedar alternatives.", category: "General" },
-  { id: 31, question: "What is the UTC bus fare range?", answer: "UTC government buses are cheapest: ₹30-400 depending on distance. Shared jeeps cost ₹50-500. Private taxis are 3-5× more expensive.", category: "Transport" },
-  { id: 32, question: "How to download offline maps?", answer: "Download Google Maps offline for Uttarakhand before leaving Hisar. Maps.me is an excellent backup with trekking trails.", category: "Practical" },
-];
+import { faq as faq1, faqCategories as faqCategories1 } from "./plan1/faq";
+import { faq as faq2, faqCategories as faqCategories2 } from "./plan2/faq";
+import { isPlan2 } from "./proxyHelper";
 
-export const faqCategories = ["All", "Trek", "Budget", "Safety", "Transport", "Stay", "Food", "Packing", "Weather", "Practical", "Emergency", "General"];
+export const faq = isPlan2 ? faq2 : faq1;
+export const faqCategories = isPlan2 ? faqCategories2 : faqCategories1;

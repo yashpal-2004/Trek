@@ -31,13 +31,22 @@ export default function Navbar() {
     >
       <Container>
         <nav className="flex items-center justify-between h-16 lg:h-[72px]" aria-label="Main navigation">
-          <button
-            onClick={() => handleNav("overview")}
-            className="flex items-center gap-2 font-bold text-lg text-text hover:text-primary transition-colors"
-          >
-            <Mountain size={24} className="text-primary" />
-            <span className="hidden sm:inline">Trek</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handleNav("overview")}
+              className="flex items-center gap-2 font-bold text-lg text-text hover:text-primary transition-colors"
+            >
+              <Mountain size={24} className="text-primary" />
+              <span className="hidden sm:inline">Trek</span>
+            </button>
+            <a
+              href="/"
+              className="text-xs font-semibold text-secondary hover:text-primary transition-colors bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-[8px] border border-border/80"
+            >
+              Switch Plan
+            </a>
+          </div>
+
 
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
