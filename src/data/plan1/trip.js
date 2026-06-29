@@ -30,17 +30,17 @@ export const quickStats = [
 ];
 
 export const routeTimeline = [
-  { id: 1, location: "Hisar", altitude: "215m", distance: "0 km", day: 1, time: "Start", transport: "Train", icon: "Home" },
-  { id: 2, location: "Haridwar", altitude: "314m", distance: "290 km", day: 1, time: "8 hrs", transport: "Train", icon: "Train" },
-  { id: 3, location: "Sagar Village", altitude: "1800m", distance: "225 km", day: 2, time: "8 hrs", transport: "Bus + Jeep", icon: "Mountain" },
-  { id: 4, location: "Rudranath", altitude: "3600m", distance: "22 km", day: 3, time: "10 hrs", transport: "Trek", icon: "Mountain" },
-  { id: 5, location: "Gopeshwar", altitude: "1300m", distance: "67 km", day: 4, time: "6 hrs", transport: "Trek + Jeep", icon: "MapPin" },
-  { id: 6, location: "Chandrashila", altitude: "4000m", distance: "40 km", day: 5, time: "7 hrs", transport: "Jeep + Trek", icon: "TrendingUp" },
-  { id: 7, location: "Kartik Swami", altitude: "3050m", distance: "15 km", day: 6, time: "3 hrs", transport: "Jeep + Trek", icon: "Mountain" },
-  { id: 8, location: "Rishikesh", altitude: "372m", distance: "170 km", day: 6, time: "6 hrs", transport: "Sumo/Bus", icon: "MapPin" },
-  { id: 9, location: "Rafting Shivpuri", altitude: "340m", distance: "16 km", day: 7, time: "3 hrs", transport: "Raft", icon: "Waves" },
-  { id: 10, location: "Haridwar", altitude: "314m", distance: "25 km", day: 8, time: "1.5 hrs", transport: "Bus/Auto", icon: "Train" },
-  { id: 11, location: "Hisar", altitude: "215m", distance: "290 km", day: 9, time: "8 hrs", transport: "Overnight Bus", icon: "Home" },
+  { id: 1, location: "Hisar", altitude: "215m", distance: "0 km", day: 1, date: "2 Jul", depTime: "03:55 AM", transport: "Train", icon: "Home" },
+  { id: 2, location: "Haridwar", altitude: "314m", distance: "290 km", day: 1, date: "2 Jul", arrTime: "03:00 PM", depTime: "07:00 AM (Next Day)", transport: "Train", icon: "Train" },
+  { id: 3, location: "Sagar Village", altitude: "1800m", distance: "225 km", day: 2, date: "3 Jul", arrTime: "02:30 PM", depTime: "05:00 AM (Next Day)", transport: "Bus + Jeep", icon: "Mountain" },
+  { id: 4, location: "Rudranath", altitude: "3600m", distance: "22 km", day: 3, date: "4 Jul", arrTime: "04:30 PM", depTime: "06:00 AM (Next Day)", transport: "Trek", icon: "Mountain" },
+  { id: 5, location: "Gopeshwar", altitude: "1300m", distance: "67 km", day: 4, date: "5 Jul", arrTime: "04:00 PM", depTime: "05:00 AM (Next Day)", transport: "Trek + Jeep", icon: "MapPin" },
+  { id: 6, location: "Chandrashila", altitude: "4000m", distance: "40 km", day: 5, date: "6 Jul", arrTime: "02:00 PM", depTime: "06:00 AM (Next Day)", transport: "Jeep + Trek", icon: "TrendingUp" },
+  { id: 7, location: "Kartik Swami", altitude: "3050m", distance: "15 km", day: 6, date: "7 Jul", arrTime: "11:30 AM", depTime: "01:00 PM", transport: "Jeep + Trek", icon: "Mountain" },
+  { id: 8, location: "Rishikesh", altitude: "372m", distance: "170 km", day: 6, date: "7 Jul", arrTime: "06:00 PM", depTime: "09:00 AM (Next Day)", transport: "Sumo/Bus", icon: "MapPin" },
+  { id: 9, location: "Rafting Shivpuri", altitude: "340m", distance: "16 km", day: 7, date: "8 Jul", arrTime: "09:00 AM", depTime: "12:00 PM", transport: "Raft", icon: "Waves" },
+  { id: 10, location: "Haridwar", altitude: "314m", distance: "25 km", day: 8, date: "9 Jul", arrTime: "02:00 PM", depTime: "08:30 PM", transport: "Bus/Auto", icon: "Train" },
+  { id: 11, location: "Hisar", altitude: "215m", distance: "290 km", day: 9, date: "10 Jul", arrTime: "05:00 AM", transport: "Overnight Bus", icon: "Home" },
 ];
 
 export const overviewCards = [

@@ -5,7 +5,7 @@ import { routeTimeline } from "../../data/trip";
 
 export default function RouteTimeline() {
   return (
-    <section id="timeline" className="py-20 md:py-28 bg-white scroll-mt-20">
+    <section id="timeline" className="py-20 md:py-28 bg-[#f2efe9] scroll-mt-20">
       <Container>
         <SectionTitle
           label="Route"

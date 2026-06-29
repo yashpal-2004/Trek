@@ -8,8 +8,8 @@ import { formatCurrency } from "../../utils/currency";
 import Container from "../layout/Container";
 import SectionTitle from "../common/SectionTitle";
 
-// Muted Premium Tailored Colors
-const CHART_COLORS = ["#000000", "#18181b", "#3f3f46", "#71717a", "#a1a1aa", "#d4d4d8"];
+// Premium Color Palette for Budget Categories
+const CHART_COLORS = ["#b45309", "#1d4ed8", "#15803d", "#be185d", "#6d28d9", "#0369a1", "#b91c1c"];
 
 export default function BudgetSection() {
   const { values, updateValue, total, remaining, remainingBudget, chartData, budgetLimit } = useBudget();
@@ -125,16 +125,20 @@ export default function BudgetSection() {
                 {budget.categories.map((cat, i) => {
                   const currentVal = values[cat.id] !== undefined ? values[cat.id] : cat.amount;
                   const pct = limit > 0 ? (currentVal / limit) * 100 : 0;
+                  const color = CHART_COLORS[i % CHART_COLORS.length];
                   return (
                     <div key={cat.id} className="space-y-1">
                       <div className="flex justify-between text-xs font-semibold">
-                        <span className="text-slate-600">{cat.label}</span>
+                        <span className="text-slate-600 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: color }} />
+                          {cat.label}
+                        </span>
                         <span className="font-extrabold text-black">{formatCurrency(currentVal)} ({pct.toFixed(0)}%)</span>
                       </div>
                       <div className="w-full h-1.5 bg-black/5 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-black rounded-full transition-all duration-500" 
-                          style={{ width: `${Math.min(pct, 100)}%` }} 
+                          className="h-full rounded-full transition-all duration-500" 
+                          style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color }} 
                         />
                       </div>
                     </div>
