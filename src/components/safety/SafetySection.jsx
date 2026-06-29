@@ -1,74 +1,106 @@
 import { getIcon } from "../../utils/icons";
-import { CloudRain, Shield } from "lucide-react";
+import { CloudRain, Shield, Thermometer, Wind, Droplets, Sunrise } from "lucide-react";
 import { safety } from "../../data/weather";
 import { weather } from "../../data/weather";
 import Container from "../layout/Container";
-import SectionTitle from "../common/SectionTitle";
-import Card from "../common/Card";
-import Badge from "../common/Badge";
 
 export default function SafetySection() {
   return (
-    <section id="safety" className="py-20 md:py-28 bg-white scroll-mt-20">
+    <section id="safety" className="py-10 scroll-mt-20">
       <Container>
-        <SectionTitle label="Stay Safe" title="Safety Guide" description="Essential safety information for your trek." />
+        {/* Header */}
+        <div className="mb-8">
+          <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Stay Safe</p>
+          <h2 className="text-2xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+            Safety Guide
+          </h2>
+        </div>
 
-        <Card hover={false} className="mb-8 bg-warning/5 border-warning/20">
-          <div className="flex items-start gap-3">
-            <CloudRain size={24} className="text-warning shrink-0" />
-            <div>
-              <h3 className="font-semibold mb-1">Monsoon Warning — {weather.month}</h3>
-              <p className="text-sm text-secondary">{weather.monsoonWarning}</p>
-            </div>
+        {/* Monsoon Warning Banner */}
+        <div className="flex items-start gap-4 bg-amber-50 border border-amber-200 rounded-[24px] p-6 mb-8">
+          <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+            <CloudRain size={18} className="text-amber-600" />
           </div>
-        </Card>
+          <div>
+            <h3 className="font-extrabold text-sm uppercase tracking-tight text-amber-800 mb-1">
+              Monsoon Alert — {weather.month}
+            </h3>
+            <p className="text-xs text-amber-700 leading-relaxed">{weather.monsoonWarning}</p>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {/* Safety Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           {safety.map((item) => {
             const Icon = getIcon(item.icon, Shield);
             return (
-              <Card key={item.id} hover={false} className="hover:-translate-y-1 hover:shadow-md transition-all">
-                <Icon size={22} className="text-primary mb-3" />
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-secondary mb-3">{item.description}</p>
-                <ul className="space-y-1">
+              <div key={item.id} className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-5 hover:border-black/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all">
+                <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center mb-4">
+                  <Icon size={16} className="text-black/60" />
+                </div>
+                <h3 className="font-extrabold text-sm uppercase tracking-tight mb-1.5">{item.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed mb-4">{item.description}</p>
+                <ul className="space-y-1.5">
                   {item.tips.map((tip, i) => (
-                    <li key={i} className="text-xs text-secondary flex items-start gap-2">
-                      <span className="text-accent mt-0.5">•</span>{tip}
+                    <li key={i} className="text-[11px] text-slate-600 flex items-start gap-1.5">
+                      <span className="text-black/30 font-black shrink-0">{String(i + 1).padStart(2, "0")}.</span>{tip}
                     </li>
                   ))}
                 </ul>
-              </Card>
+              </div>
             );
           })}
         </div>
 
-        <SectionTitle label="Weather" title="Expected Conditions" description={`Average weather during ${weather.month} in Garhwal.`} className="!mb-8" />
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border text-left text-secondary">
-                <th className="pb-3 font-medium">Location</th>
-                <th className="pb-3 font-medium">Temp</th>
-                <th className="pb-3 font-medium">Rain</th>
-                <th className="pb-3 font-medium">Humidity</th>
-                <th className="pb-3 font-medium">Sunrise</th>
-                <th className="pb-3 font-medium">Wind</th>
-              </tr>
-            </thead>
-            <tbody>
-              {weather.locations.map((loc) => (
-                <tr key={loc.name} className="border-b border-border/50">
-                  <td className="py-3 font-medium">{loc.name}</td>
-                  <td className="py-3">{loc.temp.min}–{loc.temp.max}°C</td>
-                  <td className="py-3"><Badge color="primary">{loc.rain}%</Badge></td>
-                  <td className="py-3">{loc.humidity}%</td>
-                  <td className="py-3">{loc.sunrise}</td>
-                  <td className="py-3 text-secondary">{loc.wind}</td>
+        {/* Weather Table */}
+        <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-6">
+          <div className="mb-5">
+            <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Expected Conditions</p>
+            <h3 className="text-base font-extrabold uppercase tracking-tight">
+              Weather — {weather.month}
+            </h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-black/5">
+                  {["Location", "Temp", "Rain", "Humidity", "Sunrise", "Wind"].map((h) => (
+                    <th key={h} className="pb-3 font-black text-slate-400 uppercase tracking-wider text-[9px] font-mono text-left pr-6">{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {weather.locations.map((loc, i) => (
+                  <tr key={loc.name} className={`border-b border-black/5 last:border-0 ${i % 2 === 0 ? "" : "bg-black/[0.01]"}`}>
+                    <td className="py-3 font-bold pr-6">{loc.name}</td>
+                    <td className="py-3 pr-6">
+                      <span className="flex items-center gap-1 font-medium">
+                        <Thermometer size={11} className="text-red-400" />
+                        {loc.temp.min}–{loc.temp.max}°C
+                      </span>
+                    </td>
+                    <td className="py-3 pr-6">
+                      <span className="flex items-center gap-1">
+                        <Droplets size={11} className="text-blue-400" />
+                        <span className="font-bold text-blue-600">{loc.rain}%</span>
+                      </span>
+                    </td>
+                    <td className="py-3 pr-6 text-slate-600">{loc.humidity}%</td>
+                    <td className="py-3 pr-6">
+                      <span className="flex items-center gap-1 text-slate-600">
+                        <Sunrise size={11} className="text-amber-400" />{loc.sunrise}
+                      </span>
+                    </td>
+                    <td className="py-3 text-slate-500">
+                      <span className="flex items-center gap-1">
+                        <Wind size={11} className="text-slate-400" />{loc.wind}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </Container>
     </section>

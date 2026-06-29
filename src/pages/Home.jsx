@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import ScrollProgress from "../components/layout/ScrollProgress";
@@ -20,6 +20,17 @@ function SectionFallback() {
 }
 
 export default function Home() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("print") === "1") {
+      // Wait for lazy sections + images to render before printing
+      const timer = setTimeout(() => {
+        window.print();
+      }, 8000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <>
       <ScrollProgress />

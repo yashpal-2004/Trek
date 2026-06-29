@@ -20,13 +20,13 @@ export default function Resources() {
   const [activeTab, setActiveTab] = useState("treks");
 
   const tabs = [
-    { id: "treks", label: "Treks", icon: Mountain, component: <TrekSection /> },
-    { id: "food", label: "Food", icon: Coffee, component: <FoodSection /> },
-    { id: "packing", label: "Packing", icon: Backpack, component: <PackingSection /> },
-    { id: "safety", label: "Safety", icon: ShieldCheck, component: <SafetySection /> },
-    { id: "emergency", label: "Emergency", icon: Flame, component: <EmergencySection /> },
-    { id: "faq", label: "FAQ", icon: HelpCircle, component: <FAQSection /> },
-    { id: "print", label: "Print", icon: Printer, component: <PrintSection /> },
+    { id: "treks",     label: "Treks",     icon: Mountain,   component: <TrekSection /> },
+    { id: "food",      label: "Food",      icon: Coffee,     component: <FoodSection /> },
+    { id: "packing",   label: "Packing",   icon: Backpack,   component: <PackingSection /> },
+    { id: "safety",    label: "Safety",    icon: ShieldCheck,component: <SafetySection /> },
+    { id: "emergency", label: "Emergency", icon: Flame,      component: <EmergencySection /> },
+    { id: "faq",       label: "FAQ",       icon: HelpCircle, component: <FAQSection /> },
+    { id: "print",     label: "Print",     icon: Printer,    component: <PrintSection /> },
   ];
 
   const activeComponent = tabs.find((t) => t.id === activeTab)?.component || <TrekSection />;
@@ -36,47 +36,51 @@ export default function Resources() {
       <ScrollProgress />
       <Navbar />
 
-      {/* Header */}
-      <div className="pt-24 pb-8 border-b border-black/5 bg-[#f2efe9]/50 backdrop-blur-md">
-        <Container className="text-center">
-          <span className="text-[10px] font-bold font-mono tracking-widest text-slate-500 uppercase">{planName} Guides</span>
-          <h1 className="text-4xl font-black mt-2 mb-4 uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
-            Essential Resources
+      {/* Hero Header */}
+      <div className="pt-28 pb-10 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <span className="text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase">{planName} · Resources</span>
+          <h1
+            className="text-5xl md:text-6xl font-black mt-3 mb-4 uppercase tracking-tight leading-none"
+            style={{ fontFamily: "'Anton', sans-serif" }}
+          >
+            Essential<br />Resources
           </h1>
-          <p className="text-slate-500 text-sm max-w-lg mx-auto">
-            Everything you need for the expedition: food spots, packing checklist, safety guidelines, and print backups.
+          <p className="text-slate-500 text-sm max-w-md mx-auto leading-relaxed">
+            Everything you need for the expedition — food spots, packing checklist, safety guidelines, and print backups.
           </p>
-        </Container>
+        </div>
       </div>
 
-      {/* Tab Switcher */}
-      <div className="sticky top-16 z-30 bg-[#f2efe9]/80 backdrop-blur-md border-b border-black/5 py-4 no-print">
-        <Container>
-          <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-none justify-start lg:justify-center">
+      {/* Tab Rail */}
+      <div className="sticky top-16 z-30 border-b border-black/5 bg-[#f2efe9]/90 backdrop-blur-xl no-print">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="flex overflow-x-auto gap-1 py-3 scrollbar-none">
             {tabs.map((tab) => {
               const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={cn(
-                    "flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-semibold border transition-all whitespace-nowrap",
-                    activeTab === tab.id
-                      ? "bg-black text-white border-black shadow-md scale-102"
-                      : "bg-white/60 text-slate-600 border-black/10 hover:bg-white hover:text-black"
+                    "flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border whitespace-nowrap transition-all duration-200 shrink-0",
+                    isActive
+                      ? "bg-black text-white border-black shadow-sm"
+                      : "bg-white/60 text-slate-500 border-black/8 hover:bg-white hover:text-black hover:border-black/15"
                   )}
                 >
-                  <Icon size={16} />
+                  <Icon size={14} />
                   {tab.label}
                 </button>
               );
             })}
           </div>
-        </Container>
+        </div>
       </div>
 
-      {/* Main Tab Content */}
-      <main className="py-8 min-h-[50vh]">
+      {/* Content */}
+      <main className="min-h-[50vh]">
         {activeComponent}
       </main>
 

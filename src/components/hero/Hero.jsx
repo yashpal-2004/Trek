@@ -1,23 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Calendar, Users, Wallet, Activity, TrendingUp, Route, ChevronDown, Map, Download } from "lucide-react";
-import { trip } from "../../data/trip";
+import { Calendar, Users, Wallet, Activity, TrendingUp, Route, ChevronDown, Map } from "lucide-react";
+import { trip as trip1 } from "../../data/plan1/trip";
+import { trip as trip2 } from "../../data/plan2/trip";
 import { scrollToSection } from "../../utils/helpers";
-import Button from "../common/Button";
-import Card from "../common/Card";
 
-const heroCards = [
-  { icon: Calendar, label: "Duration", value: trip.duration },
-  { icon: Users, label: "People", value: `${trip.people} Travelers` },
-  { icon: Wallet, label: "Budget", value: `₹${trip.budgetMin / 1000}K–${trip.budgetMax / 1000}K` },
-  { icon: Activity, label: "Difficulty", value: trip.difficulty },
-  { icon: TrendingUp, label: "Altitude", value: trip.highestAltitude },
-  { icon: Route, label: "Trek Distance", value: trip.totalTrekDistance },
-];
+
 
 export default function Hero() {
   const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
-  const subtitleText = isPlan2 
+  const trip = isPlan2 ? trip2 : trip1;
+  const subtitleText = isPlan2
     ? "General coach transit, direct Sagar Village approach, and standard Himalayan treks."
     : "Sleeper coach transit, transit rest breaks, and classic Himalayan treks.";
 

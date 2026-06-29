@@ -4,8 +4,8 @@ export const trip = {
   duration: "3 Jul – 10 Jul",
   durationDays: 8,
   people: 3,
-  budgetMin: 8400,
-  budgetMax: 9400,
+  budgetMin: 10000,
+  budgetMax: 10500,
   difficulty: "Moderate to Hard",
   highestAltitude: "4000m+",
   totalDistance: "650 km",
@@ -22,7 +22,7 @@ export const quickStats = [
   { id: "days", label: "Total Days", value: 8, suffix: "", description: "Full expedition duration", icon: "Calendar" },
   { id: "treks", label: "Treks", value: 3, suffix: "", description: "Major trekking routes", icon: "Mountain" },
   { id: "walking", label: "Walking Distance", value: 52, suffix: " KM", description: "Total trek distance", icon: "Footprints" },
-  { id: "budget", label: "Budget", value: 8.8, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
+  { id: "budget", label: "Budget", value: 10, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 4000, suffix: " M+", description: "Chandrashila summit", icon: "TrendingUp" },
   { id: "rafting", label: "River Rafting", value: 16, suffix: " KM", description: "Rishikesh stretch", icon: "Waves" },
   { id: "bus", label: "Bus Journey", value: 500, suffix: "+ KM", description: "Road travel total", icon: "Bus" },
@@ -45,7 +45,7 @@ export const routeTimeline = [
 
 export const overviewCards = [
   { id: "duration", label: "Duration", value: "8 Days", icon: "Calendar", description: "3 Jul – 10 Jul 2026" },
-  { id: "budget", label: "Budget", value: "₹8.5K–9.5K", icon: "Wallet", description: "Per person estimate" },
+  { id: "budget", label: "Budget", value: "₹10K–10.5K", icon: "Wallet", description: "Per person estimate" },
   { id: "difficulty", label: "Difficulty", value: "Mod–Hard", icon: "Activity", description: "Trekking experience needed" },
   { id: "people", label: "Travelers", value: "3 People", icon: "Users", description: "Group expedition" },
   { id: "transport", label: "Transport", value: "Multi-Mode", icon: "Bus", description: "Train, bus, jeep, trek" },
