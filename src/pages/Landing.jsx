@@ -7,14 +7,14 @@ export default function Landing() {
       id: "plan1",
       title: "Plan 1",
       duration: "2 Jul – 10 Jul",
-      features: "Rudranath Trek + Chandrashila + Rishikesh Rafting",
+      features: "Rudranath Trek + Chandrashila + Rishikesh",
       path: "/plan1",
     },
     {
       id: "plan2",
       title: "Plan 2",
-      duration: "3 Jul – 10 Jul",
-      features: "General Train + Direct Sagar Village + Rishikesh Rafting",
+      duration: "3 Jul – 9 Jul",
+      features: "General Train + Direct Sagar Village + Rishikesh",
       path: "/plan2",
     },
   ];

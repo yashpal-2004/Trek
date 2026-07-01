@@ -1,12 +1,11 @@
 export const budget = {
-  total: 10000,
+  total: 9000,
   perPerson: true,
   currency: "INR",
   categories: [
     { id: "transport", label: "Transportation", amount: 1860, color: "#2563EB", icon: "Bus", description: "Train, bus, jeep, shared transport" },
     { id: "accommodation", label: "Accommodation", amount: 3300, color: "#10B981", icon: "Bed", description: "Hostels, GMVN, homestays, temple stays" },
     { id: "food", label: "Food", amount: 2190, color: "#F59E0B", icon: "Utensils", description: "Meals, snacks, water" },
-    { id: "rafting", label: "Rafting", amount: 1000, color: "#8B5CF6", icon: "Waves", description: "16 KM Rishikesh rafting" },
     { id: "emergency", label: "Emergency & Misc", amount: 1550, color: "#EF4444", icon: "Shield", description: "Contingency, medicines, registration, shopping" },
   ],
   dailyEstimate: [
@@ -16,7 +15,7 @@ export const budget = {
     { day: 4, amount: 950, label: "Return to Gopeshwar" },
     { day: 5, amount: 1080, label: "Chandrashila" },
     { day: 6, amount: 1480, label: "To Rishikesh" },
-    { day: 7, amount: 1730, label: "Rafting Day" },
+    { day: 7, amount: 730, label: "Explore Rishikesh" },
     { day: 8, amount: 830, label: "To Hisar (Night Bus)" },
     { day: 9, amount: 0, label: "Reach Hisar" },
   ],
@@ -24,7 +23,6 @@ export const budget = {
     transport: 1860,
     stay: 3300,
     food: 2190,
-    rafting: 1000,
     emergency: 1000,
     shopping: 300,
     permits: 250,

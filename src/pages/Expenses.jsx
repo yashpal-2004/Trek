@@ -1,9 +1,12 @@
 import React, { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import { ArrowLeft, Plus, Trash2, Receipt, Users, Wallet, AlertCircle, TrendingUp, IndianRupee, ChevronDown } from "lucide-react";
 import { useExpense } from "../hooks/useExpense";
 import { expenseCategories } from "../data/trip";
 import { formatCurrency } from "../utils/currency";
 import Container from "../components/layout/Container";
+import { transport } from "../data/transport";
+import { stayOptions } from "../data/budget";
 
 const categoryColors = {
   Transport: { bg: "bg-blue-50", text: "text-blue-700", dot: "bg-blue-500" },
@@ -17,22 +20,126 @@ const categoryColors = {
 
 export default function Expenses() {
   const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
-  const members = isPlan2 ? ["Yashpal", "Vansh", "Subham"] : ["Yashpal", "Vansh"];
+  const members = ["Yashpal", "Vansh"];
   const planName = isPlan2 ? "Plan 2" : "Plan 1";
 
   const { expenses, addExpense, deleteExpense, totalSpent } = useExpense();
 
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState("Transport");
+  const [selectedPreset, setSelectedPreset] = useState("custom_transport");
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
   const [paidBy, setPaidBy] = useState(members[0]);
   const [splitWith, setSplitWith] = useState(members);
+  const [paidAmounts, setPaidAmounts] = useState({ Yashpal: "", Vansh: "" });
+  const [settleLater, setSettleLater] = useState(false);
+  const [showSettleLaterOnly, setShowSettleLaterOnly] = useState(false);
+
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((exp) => {
+      if (showSettleLaterOnly) return exp.settleLater;
+      return true;
+    });
+  }, [expenses, showSettleLaterOnly]);
+
+  const transportPresets = useMemo(() => {
+    return transport.map((item) => ({
+      value: `transport_${item.id}`,
+      label: `${item.from} → ${item.to} (${item.mode})`,
+      amountPerPerson: item.fare || item.cheapest || 0,
+      category: "Transport",
+      notes: `${item.from} to ${item.to} (${item.mode})`,
+    }));
+  }, [isPlan2]);
+
+  const stayPresets = useMemo(() => {
+    return stayOptions.map((item) => ({
+      value: `stay_${item.id}`,
+      label: `Stay: ${item.destination}`,
+      amountPerPerson: item.budget || item.mid || 0,
+      category: "Accommodation",
+      notes: `Stay at ${item.destination}`,
+    }));
+  }, [isPlan2]);
+
+  const handlePresetChange = (presetValue) => {
+    setSelectedPreset(presetValue);
+    if (presetValue.startsWith("transport_")) {
+      const p = transportPresets.find((x) => x.value === presetValue);
+      if (p) {
+        const totalAmt = p.amountPerPerson * 2;
+        setCategory(p.category);
+        setAmount(totalAmt);
+        setNotes(p.notes);
+        setPaidAmounts({ Yashpal: totalAmt / 2, Vansh: totalAmt / 2 });
+      }
+    } else if (presetValue.startsWith("stay_")) {
+      const p = stayPresets.find((x) => x.value === presetValue);
+      if (p) {
+        const totalAmt = p.amountPerPerson * 2;
+        setCategory(p.category);
+        setAmount(totalAmt);
+        setNotes(p.notes);
+        setPaidAmounts({ Yashpal: totalAmt / 2, Vansh: totalAmt / 2 });
+      }
+    } else {
+      const cat = presetValue.replace("custom_", "");
+      const finalCat = cat.charAt(0).toUpperCase() + cat.slice(1);
+      const categoryName = finalCat === "Accommodation" ? "Accommodation" : (finalCat === "Emergency" ? "Emergency" : finalCat);
+      setCategory(categoryName);
+      setAmount("");
+      setNotes("");
+      setPaidAmounts({ Yashpal: "", Vansh: "" });
+    }
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
+
+  const selectedPresetObj = useMemo(() => {
+    if (selectedPreset.startsWith("transport_")) {
+      return transportPresets.find((x) => x.value === selectedPreset);
+    } else if (selectedPreset.startsWith("stay_")) {
+      return stayPresets.find((x) => x.value === selectedPreset);
+    } else {
+      const customOptions = [
+        { value: "custom_transport", label: "Custom Transport" },
+        { value: "custom_accommodation", label: "Custom Accommodation" },
+        { value: "custom_food", label: "Custom Food" },
+        { value: "custom_emergency", label: "Custom Emergency & Misc" },
+        { value: "custom_shopping", label: "Custom Shopping" },
+        { value: "custom_other", label: "Custom Other" },
+      ];
+      return customOptions.find((x) => x.value === selectedPreset);
+    }
+  }, [selectedPreset, transportPresets, stayPresets]);
 
   const handleCheckboxChange = (name) => {
     setSplitWith((prev) =>
       prev.includes(name) ? prev.filter((m) => m !== name) : [...prev, name]
     );
+  };
+
+  const handlePaidByChange = (name) => {
+    if (paidBy === "Share") {
+      const other = members.find((m) => m !== name);
+      setPaidBy(other);
+      const totalPaid = Number(paidAmounts.Yashpal || 0) + Number(paidAmounts.Vansh || 0);
+      if (totalPaid > 0) {
+        setAmount(totalPaid);
+      }
+    } else if (paidBy === name) {
+      const other = members.find((m) => m !== name);
+      setPaidBy(other);
+    } else {
+      setPaidBy("Share");
+      const currentAmt = Number(amount) || 0;
+      setPaidAmounts({
+        Yashpal: currentAmt ? currentAmt / 2 : "",
+        Vansh: currentAmt ? currentAmt / 2 : ""
+      });
+    }
   };
 
   const handleAdd = (e) => {
@@ -45,10 +152,19 @@ export default function Expenses() {
       notes: notes || `${category} expense`,
       paidBy,
       splitWith,
+      paidAmounts: paidBy === "Share" ? {
+        Yashpal: Number(paidAmounts.Yashpal || 0),
+        Vansh: Number(paidAmounts.Vansh || 0)
+      } : null,
+      settleLater,
     });
     setAmount("");
     setNotes("");
+    setSelectedPreset("custom_transport");
+    setCategory("Transport");
     setSplitWith(members);
+    setPaidAmounts({ Yashpal: "", Vansh: "" });
+    setSettleLater(false);
   };
 
   const balances = useMemo(() => {
@@ -56,11 +172,28 @@ export default function Expenses() {
     members.forEach((m) => { netBalances[m] = 0; });
 
     expenses.forEach((exp) => {
+      if (exp.settleLater) return;
+
       const payer = exp.paidBy || members[0];
       const sharers = exp.splitWith || members;
-      if (!sharers.includes(payer) && !members.includes(payer)) return;
+
+      // Credit payers
+      if (payer === "Share") {
+        const pAmounts = exp.paidAmounts || {
+          Yashpal: exp.amount / 2,
+          Vansh: exp.amount / 2
+        };
+        members.forEach((m) => {
+          netBalances[m] = (netBalances[m] || 0) + Number(pAmounts[m] || 0);
+        });
+      } else {
+        if (members.includes(payer)) {
+          netBalances[payer] = (netBalances[payer] || 0) + exp.amount;
+        }
+      }
+
+      // Debit sharers
       const sharePerPerson = exp.amount / sharers.length;
-      netBalances[payer] = (netBalances[payer] || 0) + exp.amount;
       sharers.forEach((m) => {
         netBalances[m] = (netBalances[m] || 0) - sharePerPerson;
       });
@@ -135,29 +268,170 @@ export default function Expenses() {
                   <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className={inputCls} />
                 </div>
                 <div>
-                  <label className={labelCls}>Category</label>
+                  <label className={labelCls}>Category / Preset</label>
                   <div className="relative">
-                    <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputCls + " appearance-none pr-10"}>
-                      {expenseCategories.map((c) => <option key={c} value={c}>{c}</option>)}
-                    </select>
-                    <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    <button
+                      type="button"
+                      onClick={() => setIsOpen(!isOpen)}
+                      className={inputCls + " flex justify-between items-center text-left cursor-pointer pr-10 bg-white/80"}
+                    >
+                      <span className="truncate">
+                        {selectedPresetObj ? `${selectedPresetObj.label} ${selectedPresetObj.amountPerPerson ? `(₹${selectedPresetObj.amountPerPerson}/p)` : ""}` : "Select Category / Preset"}
+                      </span>
+                      <ChevronDown size={14} className={`text-slate-400 transition-transform duration-200 shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {isOpen && (
+                      <>
+                        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+                        <div className="absolute left-0 right-0 mt-2 max-h-80 overflow-y-auto rounded-2xl border border-black/10 bg-white/95 backdrop-blur-xl shadow-xl z-50 py-2 scrollbar-thin">
+                          
+                          {/* Transport from Itinerary */}
+                          <div className="px-4 py-1.5 text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase bg-slate-50/50">
+                            Transport from Itinerary
+                          </div>
+                          {transportPresets.map((p) => (
+                            <button
+                              key={p.value}
+                              type="button"
+                              onClick={() => {
+                                handlePresetChange(p.value);
+                                setIsOpen(false);
+                              }}
+                              className={`w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-black/5 transition-colors flex justify-between items-center ${selectedPreset === p.value ? "bg-black/5 text-black" : "text-slate-700"}`}
+                            >
+                              <span>{p.label}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">₹{p.amountPerPerson}/p</span>
+                            </button>
+                          ))}
+
+                          {/* Stays from Itinerary */}
+                          <div className="px-4 py-1.5 text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase bg-slate-50/50 mt-2">
+                            Stays from Itinerary
+                          </div>
+                          {stayPresets.map((p) => (
+                            <button
+                              key={p.value}
+                              type="button"
+                              onClick={() => {
+                                handlePresetChange(p.value);
+                                setIsOpen(false);
+                              }}
+                              className={`w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-black/5 transition-colors flex justify-between items-center ${selectedPreset === p.value ? "bg-black/5 text-black" : "text-slate-700"}`}
+                            >
+                              <span>{p.label}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">₹{p.amountPerPerson}/p</span>
+                            </button>
+                          ))}
+
+                          {/* Custom Expenses */}
+                          <div className="px-4 py-1.5 text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase bg-slate-50/50 mt-2">
+                            Custom Expenses (Ad-hoc)
+                          </div>
+                          {[
+                            { value: "custom_transport", label: "Custom Transport" },
+                            { value: "custom_accommodation", label: "Custom Accommodation" },
+                            { value: "custom_food", label: "Custom Food" },
+                            { value: "custom_emergency", label: "Custom Emergency & Misc" },
+                            { value: "custom_shopping", label: "Custom Shopping" },
+                            { value: "custom_other", label: "Custom Other" },
+                          ].map((p) => (
+                            <button
+                              key={p.value}
+                              type="button"
+                              onClick={() => {
+                                handlePresetChange(p.value);
+                                setIsOpen(false);
+                              }}
+                              className={`w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-black/5 transition-colors ${selectedPreset === p.value ? "bg-black/5 text-black" : "text-slate-700"}`}
+                            >
+                              {p.label}
+                            </button>
+                          ))}
+
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
                 <div>
                   <label className={labelCls}>Paid By</label>
-                  <div className="relative">
-                    <select value={paidBy} onChange={(e) => setPaidBy(e.target.value)} className={inputCls + " appearance-none pr-10"}>
-                      {members.map((m) => <option key={m} value={m}>{m}</option>)}
-                    </select>
-                    <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <div className="flex flex-wrap gap-2 py-1.5">
+                    {members.map((m) => {
+                      const isChecked = paidBy === m || paidBy === "Share";
+                      return (
+                        <label key={m} className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-bold cursor-pointer select-none transition-all ${isChecked ? "bg-black text-white border-black" : "bg-white border-black/10 text-slate-600 hover:border-black/25"}`}>
+                          <input type="checkbox" checked={isChecked} onChange={() => handlePaidByChange(m)} className="sr-only" />
+                          {m}
+                        </label>
+                      );
+                    })}
                   </div>
                 </div>
                 <div>
-                  <label className={labelCls}>Amount (₹)</label>
-                  <input type="number" placeholder="0.00" value={amount} onChange={(e) => setAmount(e.target.value)} required className={inputCls} />
+                  {paidBy === "Share" ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-[9px] font-bold text-slate-400 block mb-1">Yashpal Paid</label>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          value={paidAmounts.Yashpal}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setPaidAmounts((prev) => {
+                              const newAmounts = { ...prev, Yashpal: val };
+                              setAmount(Number(newAmounts.Yashpal || 0) + Number(newAmounts.Vansh || 0));
+                              return newAmounts;
+                            });
+                          }}
+                          required
+                          className={inputCls}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[9px] font-bold text-slate-400 block mb-1">Vansh Paid</label>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          value={paidAmounts.Vansh}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setPaidAmounts((prev) => {
+                              const newAmounts = { ...prev, Vansh: val };
+                              setAmount(Number(newAmounts.Yashpal || 0) + Number(newAmounts.Vansh || 0));
+                              return newAmounts;
+                            });
+                          }}
+                          required
+                          className={inputCls}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <label className={labelCls}>Amount (₹)</label>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        value={amount}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setAmount(val);
+                          const amt = Number(val) || 0;
+                          setPaidAmounts({
+                            Yashpal: amt / 2,
+                            Vansh: amt / 2
+                          });
+                        }}
+                        required
+                        className={inputCls}
+                      />
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -178,39 +452,89 @@ export default function Expenses() {
                 </div>
               </div>
 
-              <button type="submit" className="w-full bg-black text-white font-bold py-3.5 rounded-2xl hover:bg-black/85 transition-all text-sm tracking-wide">
-                Add Expense Entry
-              </button>
+              <div className="flex items-center gap-2.5 bg-slate-50/50 p-3 rounded-2xl border border-black/5">
+                <input
+                  type="checkbox"
+                  id="settleLater"
+                  checked={settleLater}
+                  onChange={(e) => setSettleLater(e.target.checked)}
+                  className="rounded border-slate-300 text-black focus:ring-black w-4 h-4 cursor-pointer"
+                />
+                <label htmlFor="settleLater" className="text-xs font-bold text-slate-700 cursor-pointer select-none">
+                  Settle Later (Exclude from automatic calculations; settle manually)
+                </label>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAmount("");
+                    setNotes("");
+                    setSelectedPreset("custom_transport");
+                    setCategory("Transport");
+                    setPaidBy(members[0]);
+                    setSplitWith(members);
+                    setPaidAmounts({ Yashpal: "", Vansh: "" });
+                    setSettleLater(false);
+                  }}
+                  className="w-1/3 bg-slate-100 text-slate-600 border border-black/10 font-bold py-3.5 rounded-2xl hover:bg-slate-200 hover:border-black/20 transition-all text-sm tracking-wide"
+                >
+                  Clear
+                </button>
+                <button type="submit" className="w-2/3 bg-black text-white font-bold py-3.5 rounded-2xl hover:bg-black/85 transition-all text-sm tracking-wide">
+                  Add Entry
+                </button>
+              </div>
             </form>
           </div>
 
           {/* Expense Ledger */}
           <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">
                   <Receipt size={15} className="text-slate-700" />
                 </div>
                 <h2 className="font-extrabold text-base uppercase tracking-tight">Shared Ledger</h2>
               </div>
-              {expenses.length > 0 && (
-                <span className="text-[10px] font-bold font-mono text-slate-400 bg-black/5 px-2 py-1 rounded-lg">
-                  {expenses.length} entries
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowSettleLaterOnly(!showSettleLaterOnly)}
+                  className={`px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer select-none transition-all ${showSettleLaterOnly ? "bg-black text-white border-black" : "bg-white border-black/10 text-slate-600 hover:border-black/25"}`}
+                >
+                  Settle Later Only
+                </button>
+                {expenses.length > 0 && (
+                  <span className="text-[10px] font-bold font-mono text-slate-400 bg-black/5 px-2 py-1.5 rounded-lg">
+                    {filteredExpenses.length} entries
+                  </span>
+                )}
+              </div>
             </div>
 
-            {expenses.length === 0 ? (
+            {filteredExpenses.length === 0 ? (
               <div className="flex flex-col items-center py-16 text-slate-400 gap-3">
                 <Receipt size={36} className="opacity-25" />
-                <p className="text-sm font-medium">No expenses logged yet.</p>
+                <p className="text-sm font-medium">No expenses match the filter.</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {expenses.map((exp) => {
+                {filteredExpenses.map((exp) => {
                   const sharers = exp.splitWith || members;
                   const payer = exp.paidBy || members[0];
                   const colors = categoryColors[exp.category] || categoryColors.Other;
+
+                  let payerText = <span className="font-bold text-slate-600">{payer}</span>;
+                  if (payer === "Share" && exp.paidAmounts) {
+                    payerText = (
+                      <span className="font-medium text-slate-500">
+                        <span className="font-bold text-slate-600">Yashpal</span> (₹{exp.paidAmounts.Yashpal}) & <span className="font-bold text-slate-600">Vansh</span> (₹{exp.paidAmounts.Vansh})
+                      </span>
+                    );
+                  }
+
                   return (
                     <div key={exp.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-black/5 hover:border-black/15 transition-all group">
                       <div className={`w-2 h-8 rounded-full shrink-0 ${colors.dot}`} />
@@ -218,14 +542,17 @@ export default function Expenses() {
                         <div className="flex items-center gap-2 mb-0.5">
                           <p className="font-bold text-sm truncate">{exp.notes}</p>
                           <span className={`text-[9px] font-black font-mono uppercase px-1.5 py-0.5 rounded-md shrink-0 ${colors.bg} ${colors.text}`}>{exp.category}</span>
+                          {exp.settleLater && (
+                            <span className="text-[9px] font-black font-mono uppercase px-1.5 py-0.5 rounded-md shrink-0 bg-amber-100 text-amber-800">Settle Later</span>
+                          )}
                         </div>
                         <p className="text-[11px] text-slate-400">
-                          <span className="font-bold text-slate-600">{payer}</span> paid · split with {sharers.join(", ")} · {exp.date}
+                          {payerText} paid · split with {sharers.join(", ")} · {exp.date}
                         </p>
                       </div>
                       <p className="font-black text-base shrink-0">{formatCurrency(exp.amount)}</p>
                       <button
-                        onClick={() => deleteExpense(exp.id)}
+                        onClick={() => setDeleteTargetId(exp.id)}
                         className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-slate-300 transition-colors opacity-0 group-hover:opacity-100"
                       >
                         <Trash2 size={14} />
@@ -321,6 +648,48 @@ export default function Expenses() {
         </div>
 
       </Container>
+
+      {deleteTargetId !== null && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-[28px] border border-black/10 p-7 max-w-sm w-full shadow-2xl relative overflow-hidden"
+          >
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500">
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-lg uppercase tracking-tight">Delete Expense?</h3>
+                <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                  Are you sure you want to delete this expense entry? This action cannot be undone.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setDeleteTargetId(null)}
+                className="w-1/2 bg-slate-100 text-slate-600 border border-black/10 font-bold py-3 rounded-xl hover:bg-slate-200 transition-all text-xs tracking-wide cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  deleteExpense(deleteTargetId);
+                  setDeleteTargetId(null);
+                }}
+                className="w-1/2 bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition-all text-xs tracking-wide cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

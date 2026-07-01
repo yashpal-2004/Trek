@@ -9,10 +9,8 @@ export const transport = [
   { id: 8, from: "Chopta", to: "Tungnath/Chandrashila", mode: "Trek", distance: "5 km", duration: "3-4 hrs", fare: 0, cheapest: 0, alternative: "Pony (to Tungnath)", frequency: "Daily", notes: "Paved path up to temple, dirt ridge to summit", busType: "On Foot" },
   { id: 9, from: "Chopta", to: "Kanak Chauri", mode: "Shared Jeep", distance: "12 km", duration: "30 min", fare: 300, cheapest: 300, alternative: "Private Taxi", frequency: "Morning", notes: "Base for Kartik Swami", busType: "Shared Jeep" },
   { id: 10, from: "Kanak Chauri", to: "Kartik Swami", mode: "Trek", distance: "3 km", duration: "1.5 hrs", fare: 0, cheapest: 0, alternative: "None", frequency: "Daily", notes: "Cliff-edge ridge walk", busType: "On Foot" },
-  { id: 11, from: "Kanak Chauri", to: "Rishikesh", mode: "Shared Jeep/Sumo", distance: "170 km", duration: "6 hrs", fare: 500, cheapest: 500, alternative: "UTC Bus", frequency: "Morning/Afternoon", notes: "Travel down via Rudraprayag", busType: "Tata Sumo / Bus" },
-  { id: 12, from: "Rishikesh", to: "Rafting Point", mode: "Raft", distance: "16 km", duration: "2-3 hrs", fare: 1000, cheapest: 800, alternative: "12 KM stretch", frequency: "9 AM–3 PM", notes: "Includes safety gear & river guide", busType: "River Raft" },
-  { id: 13, from: "Rishikesh", to: "Haridwar", mode: "Bus", distance: "25 km", duration: "1 hr", fare: 80, cheapest: 80, alternative: "Shared Auto", frequency: "Every 20 min", notes: "Local government buses", busType: "UTC Bus / Auto" },
-  { id: 14, from: "Haridwar", to: "Hisar", mode: "Bus", distance: "290 km", duration: "8 hrs", fare: 700, cheapest: 700, alternative: "UTC Bus", frequency: "Daily overnight (9 PM)", notes: "Board direct overnight bus, arrive Hisar morning (05:00 AM)", busType: "UTC / Haryana Roadways" },
+  { id: 11, from: "Kanak Chauri", to: "Haridwar", mode: "Bus", distance: "200 km", duration: "6.5 hrs", fare: 400, cheapest: 400, alternative: "Shared Sumo", frequency: "Morning/Afternoon", notes: "Travel down via Rudraprayag", busType: "UTC government bus / Shared Sumo" },
+  { id: 12, from: "Haridwar", to: "Hisar", mode: "Bus", distance: "290 km", duration: "8 hrs", fare: 700, cheapest: 700, alternative: "UTC Bus", frequency: "Daily overnight (9 PM)", notes: "Board direct overnight bus, arrive Hisar morning (05:00 AM)", busType: "UTC / Haryana Roadways" },
 ];
 
-export const transportModes = ["All", "Train", "Bus", "Shared Jeep", "Trek", "Raft"];
+export const transportModes = ["All", "Train", "Bus", "Shared Jeep", "Trek"];

@@ -20,7 +20,7 @@ export const packing = [
       { id: "cloth-rain", name: "Rain Jacket / Poncho", essential: true },
       { id: "cloth-thermal", name: "Thermal Inner", essential: true },
       { id: "cloth-pants", name: "Track Pants (2)", essential: true },
-      { id: "cloth-shorts", name: "Shorts (rafting day)", essential: false },
+      { id: "cloth-shorts", name: "Shorts (casual)", essential: false },
       { id: "cloth-socks", name: "Woolen Socks (2 pairs)", essential: true },
       { id: "cloth-cap", name: "Cap / Sun Hat", essential: true },
     ],

@@ -28,9 +28,27 @@ function getDayIcon(day) {
   return MapPin;
 }
 
+const getCostFromString = (str) => {
+  if (!str) return 0;
+  const lower = str.toLowerCase();
+  if (lower.includes("home") || lower.includes("free") || lower.includes("none") || lower.includes("train") || lower.includes("bus")) {
+    if (!str.includes("₹")) return 0;
+  }
+  const match = str.match(/₹([0-9,]+)/);
+  if (match) {
+    return parseInt(match[1].replace(/,/g, ""), 10);
+  }
+  return 0;
+};
+
 function DayCard({ day, isOpen, onToggle, isCompleted, onToggleComplete }) {
   const DayIcon = getDayIcon(day);
   const formattedDayNum = String(day.id).padStart(2, "0");
+  
+  const stayCost = day.stayCost !== undefined ? day.stayCost : getCostFromString(day.stay);
+  const foodCost = day.foodCost !== undefined ? day.foodCost : getCostFromString(day.food);
+
+  const transportCost = Math.max(0, day.estimatedCost - stayCost - foodCost);
 
   return (
     <div 
@@ -81,7 +99,7 @@ function DayCard({ day, isOpen, onToggle, isCompleted, onToggleComplete }) {
             </div>
             
             <h3 className="font-extrabold text-base md:text-lg text-black/90 hover:text-black transition-colors">
-              {day.title}
+               {day.title}
             </h3>
 
             {/* Quick Summary Badges */}
@@ -171,27 +189,38 @@ function DayCard({ day, isOpen, onToggle, isCompleted, onToggleComplete }) {
                 {/* Logistics Box (Stay & Food & Warnings) */}
                 <div className="space-y-4">
                   
-                  {/* Stay & Food Cards */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Logistics Cards */}
+                  <div className="flex flex-col gap-4">
                     <div className="bg-white border border-black/5 rounded-2xl p-5 shadow-sm flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center text-black/60 shrink-0">
+                      <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center text-black/60 shrink-0 text-slate-600">
                         <Bed size={18} />
                       </div>
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Stay Option</h5>
                         <p className="text-sm font-extrabold text-black/85 leading-snug">{day.stay}</p>
-                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">Budget: {day.stayCost === 0 ? "Free" : formatCurrency(day.stayCost)}</p>
+                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">Budget: {stayCost === 0 ? "Free" : formatCurrency(stayCost)}</p>
                       </div>
                     </div>
 
                     <div className="bg-white border border-black/5 rounded-2xl p-5 shadow-sm flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center text-black/60 shrink-0">
+                      <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center text-black/60 shrink-0 text-slate-600">
                         <Utensils size={18} />
                       </div>
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Food Stops</h5>
                         <p className="text-sm font-extrabold text-black/85 leading-snug">{day.food}</p>
-                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">Meals: {day.foodCost === 0 ? "Free" : formatCurrency(day.foodCost)}</p>
+                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">Meals: {foodCost === 0 ? "Free" : formatCurrency(foodCost)}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white border border-black/5 rounded-2xl p-5 shadow-sm flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center text-black/60 shrink-0 text-slate-600">
+                        <Compass size={18} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Transit Details</h5>
+                        <p className="text-sm font-extrabold text-black/85 leading-snug">{day.travelMode}</p>
+                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">Transit: {transportCost === 0 ? "Free" : formatCurrency(transportCost)}</p>
                       </div>
                     </div>
                   </div>
