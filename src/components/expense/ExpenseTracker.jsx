@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { Plus, Trash2, Pencil, Download, Receipt } from "lucide-react";
 import { useExpense } from "../../hooks/useExpense";
@@ -15,6 +16,7 @@ export default function ExpenseTracker() {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("date");
   const [editItem, setEditItem] = useState(null);
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
   const { register, handleSubmit, reset, setValue } = useForm();
 
   const filtered = filterBySearch(expenses, search, ["category", "notes", "date"])
@@ -107,12 +109,61 @@ export default function ExpenseTracker() {
                   <td className="py-3 text-right font-medium">{formatCurrency(exp.amount)}</td>
                   <td className="py-3 text-right">
                     <button onClick={() => openEdit(exp)} className="p-1.5 hover:bg-gray-100 rounded-lg inline-flex" aria-label="Edit"><Pencil size={16} /></button>
-                    <button onClick={() => deleteExpense(exp.id)} className="p-1.5 hover:bg-red-50 text-danger rounded-lg inline-flex" aria-label="Delete"><Trash2 size={16} /></button>
+                     <button
+                      onClick={() => setDeleteTargetId(exp.id)}
+                      className="p-1.5 hover:bg-red-50 text-danger rounded-lg inline-flex"
+                      aria-label="Delete"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+    </div>
+
+      {deleteTargetId !== null && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-[28px] border border-black/10 p-7 max-w-sm w-full shadow-2xl relative overflow-hidden text-left"
+          >
+            <div className="flex flex-col items-center text-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-500">
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-lg uppercase tracking-tight text-black">Delete Expense?</h3>
+                <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+                  Are you sure you want to delete this expense entry? This action cannot be undone.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setDeleteTargetId(null)}
+                className="w-1/2 bg-slate-100 text-slate-600 border border-black/10 font-bold py-3 rounded-xl hover:bg-slate-200 transition-all text-xs tracking-wide cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  deleteExpense(deleteTargetId);
+                  setDeleteTargetId(null);
+                }}
+                className="w-1/2 bg-red-600 text-white font-bold py-3 rounded-xl hover:bg-red-700 transition-all text-xs tracking-wide cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </motion.div>
         </div>
       )}
     </div>
