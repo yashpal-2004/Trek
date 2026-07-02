@@ -207,7 +207,7 @@ export const itinerary = [
     photography: ["Group selfie at Hisar bus stand"],
     activities: [
       { time: "05:00 AM", title: "Arrive Hisar Bus Stand", description: "Arrive early morning, meet parents picking you up (₹0)" },
-      { time: "05:30 AM", title: "Trip Complete", description: "Reach home. Garhwal Expedition finished!" },
+      { time: "05:30 AM", title: "Trip Complete", description: "Reach home. Rudranath & Tungnath Trek finished!" },
     ],
   },
 ];

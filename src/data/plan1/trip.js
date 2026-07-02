@@ -1,5 +1,5 @@
 export const trip = {
-  title: "Trek",
+  title: "Rudranath & Tungnath Trek",
   subtitle: "A 9-day budget backpacking adventure across the Himalayas of Uttarakhand",
   duration: "2 Jul – 10 Jul",
   durationDays: 9,
@@ -15,7 +15,7 @@ export const trip = {
   transport: ["Train", "Government Bus", "Shared Jeep", "Walking"],
   theme: "Light",
   version: "1.0.0",
-  developer: "Trek Team",
+  developer: "Trip Team",
 };
 
 export const quickStats = [

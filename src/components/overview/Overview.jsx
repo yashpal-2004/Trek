@@ -2,22 +2,10 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Info } from "lucide-react";
-import { quickStats as quickStats1, overviewCards as overviewCards1 } from "../../data/plan1/trip";
-import { quickStats as quickStats2, overviewCards as overviewCards2 } from "../../data/plan2/trip";
+import { trip, quickStats, overviewCards } from "../../data/trip";
 import { getIcon } from "../../utils/icons";
 import Container from "../layout/Container";
 import SectionTitle from "../common/SectionTitle";
-
-// Detect plan at render time (not at module load time) to stay reactive in SPA
-function usePlan2() {
-  const [isPlan2, setIsPlan2] = useState(
-    typeof window !== "undefined" && window.location.pathname.includes("plan2")
-  );
-  useEffect(() => {
-    setIsPlan2(window.location.pathname.includes("plan2"));
-  }, []);
-  return isPlan2;
-}
 
 function AnimatedNumber({ value, inView }) {
   const [count, setCount] = useState(0);
@@ -68,16 +56,13 @@ function AnimatedStat({ stat, index }) {
 }
 
 export default function QuickStats() {
-  const isPlan2 = usePlan2();
-  const quickStats = isPlan2 ? quickStats2 : quickStats1;
-
   return (
     <section className="py-20 md:py-28 bg-[#f2efe9]">
       <Container>
         <SectionTitle
           label="At a Glance"
           title="Trip Statistics"
-          description="Key numbers for your Garhwal adventure at a glance."
+          description={`Key numbers for your ${trip.title} at a glance.`}
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {quickStats.map((stat, i) => (
@@ -90,9 +75,6 @@ export default function QuickStats() {
 }
 
 export function OverviewSection() {
-  const isPlan2 = usePlan2();
-  const overviewCards = isPlan2 ? overviewCards2 : overviewCards1;
-
   return (
     <section id="overview" className="py-20 md:py-28 scroll-mt-20">
       <Container>

@@ -6,9 +6,10 @@ import { formatCurrency } from "../../utils/currency";
 import { downloadJSON } from "../../utils/helpers";
 import Container from "../layout/Container";
 
+import { getActiveTripKey } from "../../data/proxyHelper";
+
 export default function PrintSection() {
-  const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
-  const planRoot = isPlan2 ? "/plan2" : "/plan1";
+  const planRoot = `/${getActiveTripKey()}`;
 
   const handlePrint = () => {
     // Open the plan page with ?print=1 — Home.jsx detects this param

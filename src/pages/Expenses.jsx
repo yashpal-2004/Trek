@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Plus, Trash2, Receipt, Users, Wallet, AlertCircle, TrendingUp, IndianRupee, ChevronDown } from "lucide-react";
 import { useExpense } from "../hooks/useExpense";
 import { expenseCategories } from "../data/trip";
+import { getActiveTripKey } from "../data/proxyHelper";
 import { formatCurrency } from "../utils/currency";
 import Container from "../components/layout/Container";
 import { transport } from "../data/transport";
@@ -19,9 +20,10 @@ const categoryColors = {
 };
 
 export default function Expenses() {
-  const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
+  const activeKey = getActiveTripKey();
+  const isPlan2 = activeKey === "plan2";
   const members = ["Yashpal", "Vansh"];
-  const planName = isPlan2 ? "Plan 2" : "Plan 1";
+  const planName = activeKey === "plan2" ? "Plan 2" : (activeKey === "sikkim" ? "Sikkim Trip" : "Plan 1");
 
   const { expenses, addExpense, deleteExpense, totalSpent } = useExpense();
 
@@ -51,7 +53,7 @@ export default function Expenses() {
       category: "Transport",
       notes: `${item.from} to ${item.to} (${item.mode})`,
     }));
-  }, [isPlan2]);
+  }, [transport]);
 
   const stayPresets = useMemo(() => {
     return stayOptions.map((item) => ({
@@ -61,7 +63,7 @@ export default function Expenses() {
       category: "Accommodation",
       notes: `Stay at ${item.destination}`,
     }));
-  }, [isPlan2]);
+  }, [stayOptions]);
 
   const handlePresetChange = (presetValue) => {
     setSelectedPreset(presetValue);
@@ -85,8 +87,8 @@ export default function Expenses() {
       }
     } else {
       const cat = presetValue.replace("custom_", "");
-      const finalCat = cat.charAt(0).toUpperCase() + cat.slice(1);
-      const categoryName = finalCat === "Accommodation" ? "Accommodation" : (finalCat === "Emergency" ? "Emergency" : finalCat);
+      const match = expenseCategories.find((c) => c.toLowerCase() === cat.toLowerCase());
+      const categoryName = match || (cat.charAt(0).toUpperCase() + cat.slice(1));
       setCategory(categoryName);
       setAmount("");
       setNotes("");
@@ -103,17 +105,13 @@ export default function Expenses() {
     } else if (selectedPreset.startsWith("stay_")) {
       return stayPresets.find((x) => x.value === selectedPreset);
     } else {
-      const customOptions = [
-        { value: "custom_transport", label: "Custom Transport" },
-        { value: "custom_accommodation", label: "Custom Accommodation" },
-        { value: "custom_food", label: "Custom Food" },
-        { value: "custom_emergency", label: "Custom Emergency & Misc" },
-        { value: "custom_shopping", label: "Custom Shopping" },
-        { value: "custom_other", label: "Custom Other" },
-      ];
+      const customOptions = expenseCategories.map((cat) => ({
+        value: `custom_${cat.toLowerCase()}`,
+        label: `Custom ${cat}`,
+      }));
       return customOptions.find((x) => x.value === selectedPreset);
     }
-  }, [selectedPreset, transportPresets, stayPresets]);
+  }, [selectedPreset, transportPresets, stayPresets, expenseCategories]);
 
   const handleCheckboxChange = (name) => {
     setSplitWith((prev) =>
@@ -228,7 +226,7 @@ export default function Expenses() {
         <Container className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <a
-              href={`/${isPlan2 ? "plan2" : "plan1"}`}
+              href={`/${activeKey}`}
               className="w-9 h-9 rounded-xl border border-black/10 flex items-center justify-center hover:bg-black/5 transition-colors bg-white/60"
             >
               <ArrowLeft size={16} />
@@ -328,26 +326,23 @@ export default function Expenses() {
                           <div className="px-4 py-1.5 text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase bg-slate-50/50 mt-2">
                             Custom Expenses (Ad-hoc)
                           </div>
-                          {[
-                            { value: "custom_transport", label: "Custom Transport" },
-                            { value: "custom_accommodation", label: "Custom Accommodation" },
-                            { value: "custom_food", label: "Custom Food" },
-                            { value: "custom_emergency", label: "Custom Emergency & Misc" },
-                            { value: "custom_shopping", label: "Custom Shopping" },
-                            { value: "custom_other", label: "Custom Other" },
-                          ].map((p) => (
-                            <button
-                              key={p.value}
-                              type="button"
-                              onClick={() => {
-                                handlePresetChange(p.value);
-                                setIsOpen(false);
-                              }}
-                              className={`w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-black/5 transition-colors ${selectedPreset === p.value ? "bg-black/5 text-black" : "text-slate-700"}`}
-                            >
-                              {p.label}
-                            </button>
-                          ))}
+                           {expenseCategories.map((cat) => {
+                             const value = `custom_${cat.toLowerCase()}`;
+                             const label = `Custom ${cat}`;
+                             return (
+                               <button
+                                 key={value}
+                                 type="button"
+                                 onClick={() => {
+                                   handlePresetChange(value);
+                                   setIsOpen(false);
+                                 }}
+                                 className={`w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-black/5 transition-colors ${selectedPreset === value ? "bg-black/5 text-black" : "text-slate-700"}`}
+                               >
+                                 {label}
+                               </button>
+                             );
+                           })}
 
                         </div>
                       </>

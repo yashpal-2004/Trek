@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Mountain } from "lucide-react";
+import { Menu, X, Mountain, Compass } from "lucide-react";
 import { navLinks } from "../../data/trip";
 import { useScrollSpy } from "../../hooks/useScrollSpy";
+import { getActiveTripKey, getIsTripMainPage } from "../../data/proxyHelper";
 import { scrollToSection, cn } from "../../utils/helpers";
 import Container from "./Container";
 
@@ -17,8 +18,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const plan = typeof window !== "undefined" && window.location.pathname.includes("plan2") ? "plan2" : "plan1";
-  const isHome = typeof window !== "undefined" && (window.location.pathname === "/plan1" || window.location.pathname === "/plan2");
+  const plan = getActiveTripKey();
+  const isHome = getIsTripMainPage();
 
   const handleNav = (id) => {
     if (isHome) {
@@ -43,14 +44,20 @@ export default function Navbar() {
               onClick={() => handleNav("overview")}
               className="flex items-center gap-2 font-bold text-lg text-text hover:opacity-75 transition-opacity"
             >
-              <Mountain size={24} className="text-black" />
-              <span className="font-extrabold tracking-tight uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>Trek.</span>
+              {plan === "sikkim" ? (
+                <Compass size={24} className="text-black" />
+              ) : (
+                <Mountain size={24} className="text-black" />
+              )}
+              <span className="font-extrabold tracking-tight uppercase" style={{ fontFamily: "'Anton', sans-serif" }}>
+                {plan === "sikkim" ? "Trip." : "Trek."}
+              </span>
             </button>
             <a
               href="/"
               className="text-xs font-semibold text-secondary hover:text-black transition-colors bg-transparent hover:bg-black/5 px-2.5 py-1 rounded-[8px] border border-black/15"
             >
-              Switch Plan
+              {plan === "sikkim" ? "All Trips" : "Switch Plan"}
             </a>
           </div>
 

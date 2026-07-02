@@ -14,9 +14,11 @@ import TrekSection from "../components/trek/TrekSection";
 import { Coffee, Backpack, ShieldCheck, Flame, HelpCircle, Printer, Mountain } from "lucide-react";
 import { cn } from "../utils/helpers";
 
+import { getActiveTripKey } from "../data/proxyHelper";
+
 export default function Resources() {
-  const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
-  const planName = isPlan2 ? "Plan 2" : "Plan 1";
+  const activeKey = getActiveTripKey();
+  const planName = activeKey === "plan2" ? "Plan 2" : (activeKey === "sikkim" ? "Sikkim Trip" : "Plan 1");
   const [activeTab, setActiveTab] = useState("treks");
 
   const tabs = [

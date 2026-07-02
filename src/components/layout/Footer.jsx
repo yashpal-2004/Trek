@@ -1,12 +1,13 @@
 import { Mountain, ArrowUp } from "lucide-react";
 import { trip, navLinks } from "../../data/trip";
+import { getActiveTripKey, getIsTripMainPage } from "../../data/proxyHelper";
 import { scrollToSection } from "../../utils/helpers";
 import Container from "./Container";
 import Button from "../common/Button";
 
 export default function Footer() {
-  const plan = typeof window !== "undefined" && window.location.pathname.includes("plan2") ? "plan2" : "plan1";
-  const isHome = typeof window !== "undefined" && (window.location.pathname === "/plan1" || window.location.pathname === "/plan2");
+  const plan = getActiveTripKey();
+  const isHome = getIsTripMainPage();
 
   const handleLinkClick = (id) => {
     if (isHome) {
@@ -78,7 +79,7 @@ export default function Footer() {
         {/* Footer Bottom copyright */}
         <div className="mt-12 pt-8 border-t border-black/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[10px] font-bold font-mono text-slate-400 uppercase tracking-wider">
-            © 2026 {trip.developer}. Designed for the Garhwal Expedition.
+            © 2026 {trip.developer}. Designed for the Rudranath & Tungnath Trek.
           </p>
         </div>
       </Container>

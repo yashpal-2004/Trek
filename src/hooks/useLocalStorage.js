@@ -1,37 +1,47 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { db } from "../utils/firebase";
 
 export function useLocalStorage(key, initialValue) {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch {
-      return initialValue;
-    }
-  });
+  const [storedValue, setStoredValue] = useState(initialValue);
+  const storedValueRef = useRef(storedValue);
 
+  // Keep ref updated to prevent stale closures
+  useEffect(() => {
+    storedValueRef.current = storedValue;
+  }, [storedValue]);
+
+  // 1. Fetch initial value and listen to updates from Firestore
+  useEffect(() => {
+    const docRef = doc(db, "trek_app_data", key);
+    
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setStoredValue(docSnap.data().data);
+      } else {
+        setStoredValue(initialValue);
+      }
+    }, (error) => {
+      console.error(`Error loading key "${key}" from Firestore:`, error);
+    });
+
+    return () => unsubscribe();
+  }, [key]);
+
+  // 2. Set value to Firestore
   const setValue = useCallback(
-    (value) => {
+    async (value) => {
       try {
-        const valueToStore = value instanceof Function ? value(storedValue) : value;
+        const docRef = doc(db, "trek_app_data", key);
+        const valueToStore = value instanceof Function ? value(storedValueRef.current) : value;
         setStoredValue(valueToStore);
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        await setDoc(docRef, { data: valueToStore });
       } catch (error) {
-        console.error(`Error saving to localStorage key "${key}":`, error);
+        console.error(`Error saving to Firestore key "${key}":`, error);
       }
     },
-    [key, storedValue]
+    [key]
   );
-
-  useEffect(() => {
-    const handleStorage = (e) => {
-      if (e.key === key && e.newValue) {
-        setStoredValue(JSON.parse(e.newValue));
-      }
-    };
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, [key]);
 
   return [storedValue, setValue];
 }

@@ -6,9 +6,11 @@ import BackToTop from "../components/layout/BackToTop";
 import Container from "../components/layout/Container";
 import StaySection from "../components/stay/StaySection";
 
+import { getActiveTripKey } from "../data/proxyHelper";
+
 export default function StayPage() {
-  const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
-  const planName = isPlan2 ? "Plan 2" : "Plan 1";
+  const activeKey = getActiveTripKey();
+  const planName = activeKey === "plan2" ? "Plan 2" : (activeKey === "sikkim" ? "Sikkim Trip" : "Plan 1");
 
   return (
     <div className="min-h-screen bg-[#f2efe9] text-black selection:bg-black/10 font-sans pb-12">

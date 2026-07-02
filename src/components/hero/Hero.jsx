@@ -1,18 +1,17 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, Users, Wallet, Activity, TrendingUp, Route, ChevronDown, Map } from "lucide-react";
-import { trip as trip1 } from "../../data/plan1/trip";
-import { trip as trip2 } from "../../data/plan2/trip";
+import { trip } from "../../data/trip";
+import { getActiveTripKey } from "../../data/proxyHelper";
 import { scrollToSection } from "../../utils/helpers";
 
-
-
 export default function Hero() {
-  const isPlan2 = typeof window !== "undefined" && window.location.pathname.includes("plan2");
-  const trip = isPlan2 ? trip2 : trip1;
-  const subtitleText = isPlan2
+  const key = getActiveTripKey();
+  const subtitleText = key === "plan2"
     ? "General coach transit, direct Sagar Village approach, and standard Himalayan treks."
-    : "Sleeper coach transit, transit rest breaks, and classic Himalayan treks.";
+    : (key === "sikkim" 
+        ? "Sleeper train transit, shared Sumo mountain travel, and high-altitude lake excursions."
+        : "Sleeper coach transit, transit rest breaks, and classic Himalayan treks.");
 
   return (
     <section className="relative min-h-screen bg-[#f2efe9] text-black overflow-hidden flex flex-col justify-between py-12">
@@ -32,14 +31,14 @@ export default function Hero() {
           transition={{ duration: 0.7 }}
         >
           <span className="inline-block px-4 py-1.5 rounded-full bg-black/5 border border-black/10 text-xs font-bold font-mono tracking-wider uppercase mb-6">
-            {trip.duration} · Uttarakhand Expedition
+            {trip.duration} · {trip.title}
           </span>
           
           <h1 
             className="text-5xl sm:text-7xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-none mb-6 uppercase text-black/90 select-none"
             style={{ fontFamily: "'Anton', sans-serif" }}
           >
-            {isPlan2 ? "PLAN TWO" : "PLAN ONE"}
+            {key === "plan2" ? "PLAN TWO" : (key === "sikkim" ? "SIKKIM TRIP" : "PLAN ONE")}
           </h1>
           
           <p className="text-base md:text-lg text-slate-600 max-w-xl mx-auto mb-10 font-medium">
