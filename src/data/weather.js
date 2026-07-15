@@ -1,5 +1,5 @@
-import { weather as weather1, safety as safety1 } from "./plan1/weather";
-import { weather as weather2, safety as safety2 } from "./plan2/weather";
+import { weather as weather1, safety as safety1 } from "./garhwal/plan1/weather";
+import { weather as weather2, safety as safety2 } from "./garhwal/plan2/weather";
 import { weather as weatherSikkim, safety as safetySikkim } from "./sikkim/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 

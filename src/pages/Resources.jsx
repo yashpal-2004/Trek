@@ -16,7 +16,7 @@ import { cn } from "../utils/helpers";
 
 import { getActiveTripKey } from "../data/proxyHelper";
 
-export default function Resources() {
+export default function Resources({ isSection = false }) {
   const activeKey = getActiveTripKey();
   const planName = activeKey === "plan2" ? "Plan 2" : (activeKey === "sikkim" ? "Sikkim Trip" : "Plan 1");
   const [activeTab, setActiveTab] = useState("treks");
@@ -32,6 +32,54 @@ export default function Resources() {
   ];
 
   const activeComponent = tabs.find((t) => t.id === activeTab)?.component || <TrekSection />;
+
+  if (isSection) {
+    return (
+      <section id="resources" className="py-20 md:py-28 bg-[#f2efe9] scroll-mt-20 border-t border-black/5">
+        <Container>
+          <div className="text-center mb-12">
+            <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">{planName} · Guides</span>
+            <h2 className="text-4xl md:text-5xl font-black mt-1 uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+              Essential Resources
+            </h2>
+            <p className="text-slate-500 text-sm max-w-md mx-auto leading-relaxed mt-2">
+              Everything you need for the expedition — food spots, packing checklist, safety guidelines, and print backups.
+            </p>
+          </div>
+
+          {/* Tab Rail */}
+          <div className="sticky top-16 z-30 border-b border-black/5 bg-[#f2efe9]/90 backdrop-blur-xl no-print mb-8">
+            <div className="flex overflow-x-auto gap-1 py-3 scrollbar-none justify-center">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={cn(
+                      "flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border whitespace-nowrap transition-all duration-200 shrink-0",
+                      isActive
+                        ? "bg-black text-white border-black shadow-sm"
+                        : "bg-white/60 text-slate-500 border-black/8 hover:bg-white hover:text-black hover:border-black/15"
+                    )}
+                  >
+                    <Icon size={14} />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="min-h-[50vh]">
+            {activeComponent}
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f2efe9] text-black selection:bg-black/10 font-sans pb-12">

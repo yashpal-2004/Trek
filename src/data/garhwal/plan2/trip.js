@@ -56,7 +56,10 @@ export const navLinks = [
   { id: "timeline", label: "Timeline" },
   { id: "itinerary", label: "Itinerary" },
   { id: "transport", label: "Transport" },
+  { id: "stay", label: "Stay" },
   { id: "budget", label: "Budget" },
+  { id: "expenses", label: "Expenses" },
+  { id: "resources", label: "Guides" },
 ];
 
 export const expenseCategories = [

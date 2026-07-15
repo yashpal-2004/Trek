@@ -1,5 +1,5 @@
-import { transport as transport1, transportModes as transportModes1 } from "./plan1/transport";
-import { transport as transport2, transportModes as transportModes2 } from "./plan2/transport";
+import { transport as transport1, transportModes as transportModes1 } from "./garhwal/plan1/transport";
+import { transport as transport2, transportModes as transportModes2 } from "./garhwal/plan2/transport";
 import { transport as transportSikkim, transportModes as transportModesSikkim } from "./sikkim/transport";
 import { createDynamicProxy } from "./proxyHelper";
 

@@ -1,11 +1,14 @@
+import { sikkimAmounts } from "./amounts";
+const data = sikkimAmounts;
+
 export const budget = {
-  total: 6900,
+  total: data.budgetTotal,
   perPerson: true,
   currency: "INR",
   categories: [
-    { id: "transport", label: "Transportation", amount: 2100, color: "#2563EB", icon: "Bus", description: "Delhi-NJP rail + shared Sumos" },
-    { id: "accommodation", label: "Accommodation", amount: 1000, color: "#10B981", icon: "Bed", description: "Gangtok hotel stays" },
-    { id: "food", label: "Food & Package", amount: 3800, color: "#F59E0B", icon: "Utensils", description: "North Sikkim 2N/3D shared tour package (includes Lachen/Lachung homestays & food)" },
+    { id: "transport", label: "Transportation", amount: data.transportCategory, color: "#2563EB", icon: "Bus", description: "Delhi-NJP rail + shared Sumos" },
+    { id: "accommodation", label: "Accommodation", amount: data.accommodationCategory, color: "#10B981", icon: "Bed", description: "Gangtok hotel stays" },
+    { id: "food", label: "Food & Package", amount: data.foodCategory, color: "#F59E0B", icon: "Utensils", description: "North Sikkim 2N/3D shared tour package (includes Lachen/Lachung homestays & food)" },
   ],
   dailyEstimate: [
     { day: 1, amount: 700, label: "Delhi → NJP (Train)" },
@@ -16,14 +19,7 @@ export const budget = {
     { day: 6, amount: 350, label: "Gangtok → NJP Sumo" },
     { day: 7, amount: 700, label: "NJP → Delhi (Train)" },
   ],
-  calculatorDefaults: {
-    transport: 2100,
-    stay: 1000,
-    food: 3800,
-    emergency: 0,
-    shopping: 0,
-    permits: 0,
-  },
+  calculatorDefaults: data.calcDefaults,
 };
 
 export const stayOptions = [
@@ -31,9 +27,9 @@ export const stayOptions = [
     id: 1,
     destination: "Gangtok",
     image: "https://images.unsplash.com/photo-1561361531-99522c546d0c?w=800&q=80",
-    budget: 400,
-    mid: 500,
-    premium: 1000,
+    budget: data.stays.gangtok.budget,
+    mid: data.stays.gangtok.mid,
+    premium: data.stays.gangtok.premium,
     gmvnn: false,
     camping: false,
     hostel: true,
@@ -43,14 +39,19 @@ export const stayOptions = [
     tips: "Book shared room near MG Marg stand to save taxi fare",
     rating: 4.3,
     mapLink: "https://maps.google.com/?q=Gangtok",
+    hotels: [
+      { name: "Tag Hotel Gangtok", price: data.stays.gangtok.hotelPrice, link: "https://www.booking.com" },
+      { name: "Zostel Gangtok", price: data.stays.gangtok.zostelPrice, link: "https://www.zostel.com" },
+      { name: "MG Marg Budget Lodges", price: data.stays.gangtok.lodgePrice, offline: true }
+    ]
   },
   {
     id: 2,
     destination: "Lachen homestays",
     image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-    budget: 0,
-    mid: 0,
-    premium: 0,
+    budget: data.stays.lachen.budget,
+    mid: data.stays.lachen.mid,
+    premium: data.stays.lachen.premium,
     gmvnn: false,
     camping: false,
     hostel: false,
@@ -60,14 +61,17 @@ export const stayOptions = [
     tips: "Homestay is included in your North Sikkim Sumo package",
     rating: 4.1,
     mapLink: "https://maps.google.com/?q=Lachen",
+    hotels: [
+      { name: "Package Homestays (Included in Tour)", price: data.stays.lachen.homestayPrice, offline: true }
+    ]
   },
   {
     id: 3,
     destination: "Lachung homestays",
     image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80",
-    budget: 0,
-    mid: 0,
-    premium: 0,
+    budget: data.stays.lachung.budget,
+    mid: data.stays.lachung.mid,
+    premium: data.stays.lachung.premium,
     gmvnn: false,
     camping: false,
     hostel: false,
@@ -77,5 +81,8 @@ export const stayOptions = [
     tips: "Homestay is included in your North Sikkim Sumo package",
     rating: 4.2,
     mapLink: "https://maps.google.com/?q=Lachung",
+    hotels: [
+      { name: "Package Homestays (Included in Tour)", price: data.stays.lachung.homestayPrice, offline: true }
+    ]
   },
 ];

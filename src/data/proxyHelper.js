@@ -7,6 +7,12 @@ export const getActiveTripKey = () => {
   return 'plan1';
 };
 
+export const getParentTripId = () => {
+  const key = getActiveTripKey();
+  if (key === 'plan1' || key === 'plan2') return 'garhwal';
+  return key;
+};
+
 export const getIsTripMainPage = () => {
   if (typeof window === 'undefined') return true;
   const path = window.location.pathname;

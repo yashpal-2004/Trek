@@ -10,7 +10,20 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const sectionIds = navLinks.map((l) => l.id);
-  const activeId = useScrollSpy(sectionIds);
+  const scrollActiveId = useScrollSpy(sectionIds);
+  const [hashActiveId, setHashActiveId] = useState("");
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace("#", "");
+      setHashActiveId(hash);
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
+  const activeId = hashActiveId || scrollActiveId || "overview";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -23,7 +36,7 @@ export default function Navbar() {
 
   const handleNav = (id) => {
     if (isHome) {
-      scrollToSection(id);
+      window.location.hash = id;
     } else {
       window.location.href = `/${plan}#${id}`;
     }
@@ -78,34 +91,6 @@ export default function Navbar() {
                 )}
               </button>
             ))}
-            <div className="w-[1px] h-4 bg-black/10 mx-2" />
-            <a
-              href={`/${plan}/stay`}
-              className={cn(
-                "px-3 py-2 text-sm font-medium transition-colors rounded-lg",
-                window.location.pathname.includes("stay") ? "text-primary" : "text-secondary hover:text-text"
-              )}
-            >
-              Stay
-            </a>
-            <a
-              href={`/${plan}/expenses`}
-              className={cn(
-                "px-3 py-2 text-sm font-medium transition-colors rounded-lg",
-                window.location.pathname.includes("expenses") ? "text-primary" : "text-secondary hover:text-text"
-              )}
-            >
-              Expenses
-            </a>
-            <a
-              href={`/${plan}/resources`}
-              className={cn(
-                "px-3 py-2 text-sm font-medium transition-colors rounded-lg",
-                window.location.pathname.includes("resources") ? "text-primary" : "text-secondary hover:text-text"
-              )}
-            >
-              Guides
-            </a>
           </div>
 
           <button
@@ -134,34 +119,6 @@ export default function Navbar() {
                   {link.label}
                 </button>
               ))}
-              <div className="h-[1px] bg-black/5 my-2" />
-              <a
-                href={`/${plan}/stay`}
-                className={cn(
-                  "text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors block",
-                  window.location.pathname.includes("stay") ? "bg-primary/10 text-primary" : "text-secondary hover:bg-gray-50"
-                )}
-              >
-                Stay
-              </a>
-              <a
-                href={`/${plan}/expenses`}
-                className={cn(
-                  "text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors block",
-                  window.location.pathname.includes("expenses") ? "bg-primary/10 text-primary" : "text-secondary hover:bg-gray-50"
-                )}
-              >
-                Expenses
-              </a>
-              <a
-                href={`/${plan}/resources`}
-                className={cn(
-                  "text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors block",
-                  window.location.pathname.includes("resources") ? "bg-primary/10 text-primary" : "text-secondary hover:bg-gray-50"
-                )}
-              >
-                Guides
-              </a>
             </div>
           </Container>
         </div>

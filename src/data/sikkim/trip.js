@@ -48,7 +48,10 @@ export const navLinks = [
   { id: "overview", label: "Overview" },
   { id: "itinerary", label: "Itinerary" },
   { id: "transport", label: "Transport" },
+  { id: "stay", label: "Stay" },
   { id: "budget", label: "Budget" },
+  { id: "expenses", label: "Expenses" },
+  { id: "resources", label: "Guides" },
 ];
 
 export const expenseCategories = ["Transport", "Accommodation", "Food", "Permits", "Emergency", "Shopping", "Other"];

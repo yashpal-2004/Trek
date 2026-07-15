@@ -1,5 +1,5 @@
-import { packing as packing1 } from "./plan1/packing";
-import { packing as packing2 } from "./plan2/packing";
+import { packing as packing1 } from "./garhwal/plan1/packing";
+import { packing as packing2 } from "./garhwal/plan2/packing";
 import { packing as packingSikkim } from "./sikkim/packing";
 import { createDynamicProxy } from "./proxyHelper";
 

@@ -57,7 +57,7 @@ function AnimatedStat({ stat, index }) {
 
 export default function QuickStats() {
   return (
-    <section className="py-20 md:py-28 bg-[#f2efe9]">
+    <section id="overview" className="pt-8 pb-20 md:pt-10 md:pb-28 bg-[#f2efe9] scroll-mt-20">
       <Container>
         <SectionTitle
           label="At a Glance"

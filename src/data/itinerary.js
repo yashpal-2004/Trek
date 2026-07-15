@@ -1,5 +1,5 @@
-import { itinerary as itinerary1 } from "./plan1/itinerary";
-import { itinerary as itinerary2 } from "./plan2/itinerary";
+import { itinerary as itinerary1 } from "./garhwal/plan1/itinerary";
+import { itinerary as itinerary2 } from "./garhwal/plan2/itinerary";
 import { itinerary as itinerarySikkim } from "./sikkim/itinerary";
 import { createDynamicProxy } from "./proxyHelper";
 

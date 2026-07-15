@@ -1,5 +1,5 @@
-import { foodGuide as foodGuide1 } from "./plan1/food";
-import { foodGuide as foodGuide2 } from "./plan2/food";
+import { foodGuide as foodGuide1 } from "./garhwal/plan1/food";
+import { foodGuide as foodGuide2 } from "./garhwal/plan2/food";
 import { foodGuide as foodGuideSikkim } from "./sikkim/food";
 import { createDynamicProxy } from "./proxyHelper";
 
