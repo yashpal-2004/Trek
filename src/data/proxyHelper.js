@@ -30,8 +30,8 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
       const activeData = 
         key === "plan2" ? getPlan2() : 
         (key === "sikkim" ? getSikkim() : 
-        (key === "yulla-plan1" ? getYulla1() : 
-        (key === "yulla-plan2" ? getYulla2() : 
+        (key === "yulla-plan1" ? getYulla2() :   // swapped: plan1 route → old plan2 data
+        (key === "yulla-plan2" ? getYulla1() :   // swapped: plan2 route → old plan1 data
         getPlan1())));
       
       if (activeData === undefined || activeData === null) {
@@ -50,8 +50,8 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
       const activeData = 
         key === "plan2" ? getPlan2() : 
         (key === "sikkim" ? getSikkim() : 
-        (key === "yulla-plan1" ? getYulla1() : 
-        (key === "yulla-plan2" ? getYulla2() : 
+        (key === "yulla-plan1" ? getYulla2() :   // swapped
+        (key === "yulla-plan2" ? getYulla1() :   // swapped
         getPlan1())));
       return Reflect.ownKeys(activeData || {});
     },
@@ -60,8 +60,8 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
       const activeData = 
         key === "plan2" ? getPlan2() : 
         (key === "sikkim" ? getSikkim() : 
-        (key === "yulla-plan1" ? getYulla1() : 
-        (key === "yulla-plan2" ? getYulla2() : 
+        (key === "yulla-plan1" ? getYulla2() :   // swapped
+        (key === "yulla-plan2" ? getYulla1() :   // swapped
         getPlan1())));
       return Reflect.getOwnPropertyDescriptor(activeData || {}, prop);
     }

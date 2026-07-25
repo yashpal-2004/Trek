@@ -1,11 +1,11 @@
 export const trip = {
-  title: "Yulla Kanda Trek & Shimla (Scooty Ride)",
+  title: "Yulla Kanda Trek & Shimla — Plan 1 (Continuous Scooty)",
   subtitle: "A 5-day adventure renting a scooty in Shimla and riding it up to the Yulla Khas base village in Kinnaur, followed by Shimla exploration",
   duration: "Custom Dates",
   durationDays: 5,
   people: 4,
-  budgetMin: 7800,
-  budgetMax: 9200,
+  budgetMin: 7300,
+  budgetMax: 8500,
   difficulty: "Moderate",
   highestAltitude: "3,895m (12,779 ft)",
   totalDistance: "1250 km",
@@ -21,7 +21,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 5, suffix: "", description: "Full trip duration", icon: "Calendar" },
   { id: "walking", label: "Walking/Trek", value: 24, suffix: " KM", description: "Yulla Khas to lake & back", icon: "Footprints" },
-  { id: "budget", label: "Budget", value: 8.2, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
+  { id: "budget", label: "Budget", value: 7.7, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 3895, suffix: " M (12,779 FT)", description: "Krishna Temple Lake", icon: "TrendingUp" },
   { id: "distance", label: "Total Distance", value: 1250, suffix: " KM", description: "Bus & continuous scooty ride", icon: "Route" },
   { id: "destinations", label: "Destinations", value: 4, suffix: "", description: "Major stops visited", icon: "MapPin" },
@@ -57,9 +57,9 @@ export const navLinks = [
 export const expenseCategories = ["Transport", "Accommodation", "Food", "Permits", "Emergency", "Shopping", "Other"];
 
 export const STORAGE_KEYS = {
-  expenseTracker: "expenses-yulla-p2",
-  budgetCalculator: "budget-values-yulla-p2",
-  completedTreks: "completed-treks-yulla-p2",
-  packingChecklist: "packing-checklist-yulla-p2",
-  completedDays: "completed-days-yulla-p2",
+  expenseTracker: "expenses-yulla",
+  budgetCalculator: "budget-values-yulla",
+  completedTreks: "completed-treks-yulla",
+  packingChecklist: "packing-checklist-yulla",
+  completedDays: "completed-days-yulla",
 };

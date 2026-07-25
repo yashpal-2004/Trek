@@ -1,5 +1,5 @@
 export const trip = {
-  title: "Yulla Kanda Trek & Shimla",
+  title: "Yulla Kanda Trek & Shimla — Plan 2 (Standard Transit)",
   subtitle: "A 5-day trip including Yulla Kanda Trek and a 2-day Shimla scooty exploration starting from Delhi",
   duration: "Custom Dates",
   durationDays: 5,
@@ -57,9 +57,9 @@ export const navLinks = [
 export const expenseCategories = ["Transport", "Accommodation", "Food", "Permits", "Emergency", "Shopping", "Other"];
 
 export const STORAGE_KEYS = {
-  expenseTracker: "expenses-yulla",
-  budgetCalculator: "budget-values-yulla",
-  completedTreks: "completed-treks-yulla",
-  packingChecklist: "packing-checklist-yulla",
-  completedDays: "completed-days-yulla",
+  expenseTracker: "expenses-yulla-p2",
+  budgetCalculator: "budget-values-yulla-p2",
+  completedTreks: "completed-treks-yulla-p2",
+  packingChecklist: "packing-checklist-yulla-p2",
+  completedDays: "completed-days-yulla-p2",
 };

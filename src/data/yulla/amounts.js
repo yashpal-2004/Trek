@@ -33,17 +33,17 @@ export const yullaAmounts = {
   },
 
   plan2: {
-    budgetTotal: 8200,
+    budgetTotal: 7700,
     transportCategory: 3100,
     accommodationCategory: 1700,
     foodCategory: 2600,
-    emergencyCategory: 800,
+    emergencyCategory: 300,
 
     calcDefaults: {
       transport: 3100,
       stay: 1700,
       food: 2600,
-      emergency: 500,
+      emergency: 0,
       shopping: 200,
       permits: 100
     },
