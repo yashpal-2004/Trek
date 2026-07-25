@@ -4,6 +4,7 @@ import { db } from "../utils/firebase";
 
 export function useFirestore(key, initialValue) {
   const [storedValue, setStoredValue] = useState(initialValue);
+  const [isLoading, setIsLoading] = useState(true);
   const storedValueRef = useRef(storedValue);
 
   // Keep ref updated to prevent stale closures
@@ -14,15 +15,14 @@ export function useFirestore(key, initialValue) {
   // 1. Fetch initial value and listen to updates from Firestore
   useEffect(() => {
     const docRef = doc(db, "trek_app_data", key);
-    
+
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
-        setStoredValue(docSnap.data().data);
-      } else {
-        setStoredValue(initialValue);
-      }
+      const value = docSnap.exists() ? docSnap.data().data : initialValue;
+      setStoredValue(value);
+      setIsLoading(false);
     }, (error) => {
       console.error(`Error loading key "${key}" from Firestore:`, error);
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
@@ -43,5 +43,6 @@ export function useFirestore(key, initialValue) {
     [key]
   );
 
-  return [storedValue, setValue];
+  return [storedValue, setValue, isLoading];
 }
+

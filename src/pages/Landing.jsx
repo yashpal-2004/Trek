@@ -7,7 +7,7 @@ import { yullaAmounts } from "../data/yulla/amounts";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
-  const [completedPlans, setCompletedPlans] = useFirestore("trek_completed_plans", []);
+  const [completedPlans, setCompletedPlans, isLoading] = useFirestore("trek_completed_plans", []);
   const [activeTab, setActiveTab] = useState("active"); // "active" or "done"
 
   const isTripCompleted = (trip) => {
@@ -140,6 +140,16 @@ export default function Landing() {
     const done = isTripCompleted(trip);
     return activeTab === "done" ? done : !done;
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen w-screen bg-[#f2efe9] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-5 h-5 rounded-full border-2 border-black border-t-transparent animate-spin" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-screen bg-[#f2efe9] text-black selection:bg-black/10 flex flex-col justify-between relative font-sans">
