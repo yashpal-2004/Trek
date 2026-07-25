@@ -4,7 +4,9 @@ import { gallery as gallerySikkim, galleryCategories as galleryCategoriesSikkim 
 import { gallery as galleryYulla1, galleryCategories as galleryCategoriesYulla1 } from "./yulla/plan1/gallery";
 import { gallery as galleryYulla2, galleryCategories as galleryCategoriesYulla2 } from "./yulla/plan2/gallery";
 import { galleryImages as galleryHemkund } from "./hemkund/gallery";
+import { galleryImages as galleryLadakh1 } from "./ladakh/plan1/gallery";
+import { galleryImages as galleryLadakh2 } from "./ladakh/plan2/gallery";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const gallery = createDynamicProxy(() => gallery1, () => gallery2, () => gallerySikkim, () => galleryYulla1, () => galleryYulla2, () => galleryHemkund, true);
-export const galleryCategories = createDynamicProxy(() => galleryCategories1, () => galleryCategories2, () => galleryCategoriesSikkim, () => galleryCategoriesYulla1, () => galleryCategoriesYulla2, () => galleryHemkund, true);
+export const gallery = createDynamicProxy(() => gallery1, () => gallery2, () => gallerySikkim, () => galleryYulla1, () => galleryYulla2, () => galleryHemkund, () => galleryLadakh1, () => galleryLadakh2, true);
+export const galleryCategories = createDynamicProxy(() => galleryCategories1, () => galleryCategories2, () => galleryCategoriesSikkim, () => galleryCategoriesYulla1, () => galleryCategoriesYulla2, () => galleryHemkund, () => galleryLadakh1, () => galleryLadakh2, true);

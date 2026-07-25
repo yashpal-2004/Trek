@@ -4,10 +4,12 @@ import { weather as weatherSikkim, safety as safetySikkim } from "./sikkim/weath
 import { weather as weatherYulla1, safety as safetyYulla1 } from "./yulla/plan1/weather";
 import { weather as weatherYulla2, safety as safetyYulla2 } from "./yulla/plan2/weather";
 import { weatherData as weatherHemkund } from "./hemkund/weather";
+import { weatherData as weatherLadakh1 } from "./ladakh/plan1/weather";
+import { weatherData as weatherLadakh2 } from "./ladakh/plan2/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => weatherHemkund, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },

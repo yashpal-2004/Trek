@@ -4,6 +4,8 @@ import { foodGuide as foodGuideSikkim } from "./sikkim/food";
 import { foodGuide as foodGuideYulla1 } from "./yulla/plan1/food";
 import { foodGuide as foodGuideYulla2 } from "./yulla/plan2/food";
 import { foodItems as foodGuideHemkund } from "./hemkund/food";
+import { foodItems as foodGuideLadakh1 } from "./ladakh/plan1/food";
+import { foodItems as foodGuideLadakh2 } from "./ladakh/plan2/food";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const foodGuide = createDynamicProxy(() => foodGuide1, () => foodGuide2, () => foodGuideSikkim, () => foodGuideYulla1, () => foodGuideYulla2, () => foodGuideHemkund);
+export const foodGuide = createDynamicProxy(() => foodGuide1, () => foodGuide2, () => foodGuideSikkim, () => foodGuideYulla1, () => foodGuideYulla2, () => foodGuideHemkund, () => foodGuideLadakh1, () => foodGuideLadakh2);

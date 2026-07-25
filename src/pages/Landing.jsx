@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
 import { yullaAmounts } from "../data/yulla/amounts";
+import { ladakhAmounts } from "../data/ladakh/amounts";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -155,6 +156,38 @@ export default function Landing() {
           details: "Complete 6-day self-guided pilgrimage and alpine valley trek starting and ending in Delhi via Haridwar & Govindghat.",
           budget: "₹7,800 / person",
           path: "/hemkund",
+        }
+      ],
+    },
+    {
+      id: "ladakh",
+      title: "Ladakh Self-Scooty Circuit",
+      subtitle: "Ladakh & Jammu-Kashmir, India",
+      description: "An ultimate 12-day self-scooty expedition from Hisar conquering high-altitude passes (Khardung La, Chang La, Zoji La, Baralacha La), Pangong Lake & Nubra Valley.",
+      stats: {
+        duration: "12 Days",
+        distance: "2850 km Riding",
+        budget: `₹${(ladakhAmounts.plan1.budgetTotal / 1000).toFixed(1)}K–${(ladakhAmounts.plan2.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "ladakh-plan1",
+          title: "Plan 1 (Via Srinagar)",
+          duration: "12 Days",
+          route: "Hisar → Jammu → Srinagar → Zoji La → Kargil → Leh → Khardung La → Nubra → Pangong → Baralacha La → Manali → Hisar",
+          details: "Gradual acclimatization route starting via Srinagar & Zoji La, exploring Leh, Nubra, Pangong, and returning via Manali & Atal Tunnel.",
+          budget: `₹${ladakhAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/ladakh-plan1",
+        },
+        {
+          id: "ladakh-plan2",
+          title: "Plan 2 (Via Manali)",
+          duration: "12 Days",
+          route: "Hisar → Manali → Atal Tunnel → Jispa → Baralacha La → Leh → Khardung La → Nubra → Pangong → Kargil → Srinagar → Hisar",
+          details: "High pass thrill route entering via Manali, Atal Tunnel & Baralacha La, exploring Ladakh, and returning via Zoji La & Srinagar.",
+          budget: `₹${ladakhAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/ladakh-plan2",
         }
       ],
     },

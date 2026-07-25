@@ -4,6 +4,8 @@ import { packing as packingSikkim } from "./sikkim/packing";
 import { packing as packingYulla1 } from "./yulla/plan1/packing";
 import { packing as packingYulla2 } from "./yulla/plan2/packing";
 import { packingCategories as packingHemkund } from "./hemkund/packing";
+import { packingCategories as packingLadakh1 } from "./ladakh/plan1/packing";
+import { packingCategories as packingLadakh2 } from "./ladakh/plan2/packing";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const packing = createDynamicProxy(() => packing1, () => packing2, () => packingSikkim, () => packingYulla1, () => packingYulla2, () => packingHemkund, true);
+export const packing = createDynamicProxy(() => packing1, () => packing2, () => packingSikkim, () => packingYulla1, () => packingYulla2, () => packingHemkund, () => packingLadakh1, () => packingLadakh2, true);

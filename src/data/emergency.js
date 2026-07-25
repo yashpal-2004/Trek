@@ -4,7 +4,9 @@ import { emergency as emergencySikkim, emergencyTips as emergencyTipsSikkim } fr
 import { emergency as emergencyYulla1, emergencyTips as emergencyTipsYulla1 } from "./yulla/plan1/emergency";
 import { emergency as emergencyYulla2, emergencyTips as emergencyTipsYulla2 } from "./yulla/plan2/emergency";
 import { emergencyInfo as emergencyHemkund } from "./hemkund/emergency";
+import { emergencyInfo as emergencyLadakh1 } from "./ladakh/plan1/emergency";
+import { emergencyInfo as emergencyLadakh2 } from "./ladakh/plan2/emergency";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const emergency = createDynamicProxy(() => emergency1, () => emergency2, () => emergencySikkim, () => emergencyYulla1, () => emergencyYulla2, () => emergencyHemkund, true);
-export const emergencyTips = createDynamicProxy(() => emergencyTips1, () => emergencyTips2, () => emergencyTipsSikkim, () => emergencyTipsYulla1, () => emergencyTipsYulla2, () => emergencyHemkund, true);
+export const emergency = createDynamicProxy(() => emergency1, () => emergency2, () => emergencySikkim, () => emergencyYulla1, () => emergencyYulla2, () => emergencyHemkund, () => emergencyLadakh1, () => emergencyLadakh2, true);
+export const emergencyTips = createDynamicProxy(() => emergencyTips1, () => emergencyTips2, () => emergencyTipsSikkim, () => emergencyTipsYulla1, () => emergencyTipsYulla2, () => emergencyHemkund, () => emergencyLadakh1, () => emergencyLadakh2, true);
