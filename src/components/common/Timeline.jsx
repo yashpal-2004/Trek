@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { getIcon } from "../../utils/icons";
 import { useIntersection } from "../../hooks/useIntersection";
 import { cn } from "../../utils/helpers";
-import { ArrowRight, MapPin, Compass, Train, Waves, Mountain, Footprints, Calendar, Clock } from "lucide-react";
+import { ArrowRight, MapPin, Compass, Train, Waves, Mountain, Footprints, Calendar, Clock, DollarSign } from "lucide-react";
+import { itinerary } from "../../data/itinerary";
 
 function getTransportIcon(mode) {
   const m = mode.toLowerCase();
@@ -28,6 +29,18 @@ export default function Timeline({ items, className }) {
           
           const nextItem = !isLast ? items[index + 1] : null;
           const NextTransIcon = nextItem ? getTransportIcon(nextItem.transport) : ArrowRight;
+
+          const matchingItineraryItem = itinerary.find((i) => {
+            if (!i.date || !item.date) return false;
+            const iDate = i.date.toLowerCase().replace(/[^a-z0-9]/g, "");
+            const tDate = item.date.toLowerCase().replace(/[^a-z0-9]/g, "");
+            return iDate.includes(tDate) || tDate.includes(iDate);
+          }) || itinerary.find((i) => {
+            if (!i.date) return false;
+            const dayNum = i.date.match(/\d+/);
+            return dayNum && parseInt(dayNum[0]) === item.day;
+          });
+          const cost = matchingItineraryItem ? matchingItineraryItem.estimatedCost : null;
 
           return (
             <div 
@@ -96,6 +109,11 @@ export default function Timeline({ items, className }) {
                       <span className="text-[9px] font-extrabold font-mono tracking-wide bg-white border border-black/5 px-2 py-0.5 rounded-md text-slate-500 flex items-center gap-1">
                         <Compass size={10} className="text-slate-400" />
                         {item.distance}
+                      </span>
+                    )}
+                    {cost !== null && cost !== undefined && (
+                      <span className="text-[9px] font-extrabold font-mono tracking-wide bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md text-emerald-600 flex items-center gap-0.5">
+                        <span>₹{cost}</span>
                       </span>
                     )}
                   </div>

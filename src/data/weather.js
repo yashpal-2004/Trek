@@ -1,10 +1,12 @@
 import { weather as weather1, safety as safety1 } from "./garhwal/plan1/weather";
 import { weather as weather2, safety as safety2 } from "./garhwal/plan2/weather";
 import { weather as weatherSikkim, safety as safetySikkim } from "./sikkim/weather";
+import { weather as weatherYulla1, safety as safetyYulla1 } from "./yulla/plan1/weather";
+import { weather as weatherYulla2, safety as safetyYulla2 } from "./yulla/plan2/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
@@ -22,4 +24,11 @@ const networkCoverageSikkim = [
   { place: "Gurudongmar Lake", signal: "No Network", level: 0, carriers: "None", note: "Absolute zero signal. High altitude border zone" },
 ];
 
-export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, true);
+const networkCoverageYulla = [
+  { place: "Shimla", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
+  { place: "Tapri", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "4G coverage available in the town center" },
+  { place: "Yulla Khas", signal: "Weak", level: 1, carriers: "Jio, BSNL (spots only)", note: "Highly intermittent. Jio works in some parts of the village" },
+  { place: "Base Camp & Lake", signal: "No Network", level: 0, carriers: "None", note: "Absolute zero coverage. Inform family in advance" },
+];
+
+export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, true);

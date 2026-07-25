@@ -10,6 +10,8 @@ export default function App() {
         <Route path="/plan1" element={<Home />} />
         <Route path="/plan2" element={<Home />} />
         <Route path="/sikkim" element={<Home />} />
+        <Route path="/yulla-plan1" element={<Home />} />
+        <Route path="/yulla-plan2" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

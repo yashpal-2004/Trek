@@ -3,6 +3,7 @@ import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Circle 
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
+import { yullaAmounts } from "../data/yulla/amounts";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -18,7 +19,8 @@ export default function Landing() {
     const labels = {
       "plan1": "Plan 1",
       "plan2": "Plan 2",
-      "sikkim-std": "Standard"
+      "sikkim-std": "Standard",
+      "yulla-std": "Standard"
     };
     return donePlans.map(p => labels[p.id] || p.title.split(" ")[0]).join(", ");
   };
@@ -97,6 +99,38 @@ export default function Landing() {
           details: "Shared Sumo package tour (covers North Sikkim transit, homestays, permits, and food).",
           budget: "₹6,900 / person",
           path: "/sikkim",
+        }
+      ],
+    },
+    {
+      id: "yulla",
+      title: "Yulla Kanda Trek & Shimla",
+      subtitle: "Himachal Pradesh, India",
+      description: "Trek to the highest Krishna Temple in the world in Kinnaur, followed by a 2-day scooty sightseeing exploration in Shimla.",
+      stats: {
+        duration: "5 Days",
+        distance: "24 km Trek",
+        budget: `₹${(yullaAmounts.plan1.budgetTotal / 1000).toFixed(1)}K–${(yullaAmounts.plan2.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "yulla-plan1",
+          title: "Plan 1 (Standard Transit)",
+          duration: "5 Days",
+          route: "Delhi → Shimla → Tapri → Yulla Khas → Yulla Kanda Lake → Yulla Khas → Shimla (Scooty exploration) → Delhi",
+          details: "Self-guided budget route using HRTC buses, village homestays, and a 2-day Shimla scooty exploration at the end.",
+          budget: `₹${yullaAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/yulla-plan1",
+        },
+        {
+          id: "yulla-plan2",
+          title: "Plan 2 (Continuous Scooty)",
+          duration: "5 Days",
+          route: "Delhi → Shimla → Yulla Khas (via Scooty) → Yulla Kanda Lake → Yulla Khas → Shimla (via Scooty) → Delhi",
+          details: "Adventure budget route renting a scooty in Shimla and riding it all the way to Yulla Khas base village and back.",
+          budget: `₹${yullaAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/yulla-plan2",
         }
       ],
     },

@@ -1,7 +1,8 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { Calculator, Download, Copy } from "lucide-react";
-import { budget } from "../../data/budget";
+import { budget, stayOptions } from "../../data/budget";
+import { transport } from "../../data/transport";
 import { useBudget } from "../../hooks/useBudget";
 import { copyToClipboard, downloadJSON } from "../../utils/helpers";
 import { formatCurrency } from "../../utils/currency";
@@ -141,6 +142,21 @@ export default function BudgetSection() {
                           style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: color }} 
                         />
                       </div>
+                      {cat.description && (
+                        <p className="text-[10px] text-slate-400 mt-1 font-medium leading-normal pl-3.5">
+                          {cat.description}
+                        </p>
+                      )}
+                      {cat.subItems && cat.subItems.length > 0 && (
+                        <div className="mt-2 pl-3.5 space-y-1 border-l border-black/5 ml-1">
+                          {cat.subItems.map((sub, idx) => (
+                            <div key={idx} className="flex justify-between text-[10px] text-slate-500 font-semibold">
+                              <span>• {sub.name}</span>
+                              <span className="font-bold text-slate-700">{formatCurrency(sub.price)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -162,6 +178,47 @@ export default function BudgetSection() {
                 <Bar dataKey="amount" fill="#000000" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Cost Details Tables */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mt-8">
+          {/* Transport Fares */}
+          <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-6 md:p-8 shadow-sm">
+            <h4 className="font-extrabold text-sm uppercase tracking-wider text-black mb-4 border-b border-black/5 pb-3">Detailed Transport Fares</h4>
+            <div className="space-y-3">
+              {transport.filter(t => t.fare > 0).map(t => (
+                <div key={t.id} className="flex justify-between items-center text-xs border-b border-black/[0.03] pb-2">
+                  <div>
+                    <span className="font-bold text-slate-700">{t.from} → {t.to}</span>
+                    <span className="text-[10px] text-slate-400 block">{t.mode} • {t.notes}</span>
+                  </div>
+                  <span className="font-extrabold text-black">₹{t.fare}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Stays & Accommodations */}
+          <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-6 md:p-8 shadow-sm">
+            <h4 className="font-extrabold text-sm uppercase tracking-wider text-black mb-4 border-b border-black/5 pb-3">Detailed Stay Stoppages</h4>
+            <div className="space-y-4">
+              {stayOptions.map(option => (
+                <div key={option.id} className="space-y-2">
+                  <span className="font-bold text-xs text-slate-800 block border-b border-black/5 pb-1">{option.destination}</span>
+                  <div className="space-y-2 pl-2">
+                    {option.hotels.map((h, index) => (
+                      <div key={index} className="flex justify-between items-center text-xs">
+                        <span className="text-slate-600">{h.name}</span>
+                        <span className="font-extrabold text-black">
+                          {h.price > 0 ? `₹${h.price}` : "Included in package"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Container>
