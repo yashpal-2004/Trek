@@ -12,6 +12,7 @@ export default function App() {
         <Route path="/sikkim" element={<Home />} />
         <Route path="/yulla-plan1" element={<Home />} />
         <Route path="/yulla-plan2" element={<Home />} />
+        <Route path="/hemkund" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

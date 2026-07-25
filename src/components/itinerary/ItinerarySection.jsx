@@ -16,25 +16,26 @@ import Badge from "../common/Badge";
 
 // Helper to choose the best icon for the day based on details
 function getDayIcon(day) {
-  const title = day.title.toLowerCase();
-  const mode = day.travelMode.toLowerCase();
+  const title = (day.title || "").toLowerCase();
+  const mode = (day.travelMode || "").toLowerCase();
+  const stay = (day.stay || "").toLowerCase();
   
   if (title.includes("rafting") || mode.includes("raft")) return Waves;
-  if (title.includes("trek") || title.includes("chandrashila") || title.includes("swami") || title.includes("rudranath")) return Mountain;
-  if (title.includes("camp") || day.stay.toLowerCase().includes("camping") || day.stay.toLowerCase().includes("tent")) return Tent;
+  if (title.includes("trek") || title.includes("chandrashila") || title.includes("swami") || title.includes("rudranath") || title.includes("flowers") || title.includes("hemkund")) return Mountain;
+  if (title.includes("camp") || stay.includes("camping") || stay.includes("tent")) return Tent;
   if (mode.includes("train")) return Train;
-  if (mode.includes("bus") || mode.includes("jeep")) return Compass;
-  if (day.trekDistance !== "0 km") return Footprints;
+  if (mode.includes("bus") || mode.includes("jeep") || mode.includes("taxi")) return Compass;
+  if (day.trekDistance && day.trekDistance !== "0 km") return Footprints;
   return MapPin;
 }
 
 const getCostFromString = (str) => {
   if (!str) return 0;
-  const lower = str.toLowerCase();
+  const lower = String(str).toLowerCase();
   if (lower.includes("home") || lower.includes("free") || lower.includes("none") || lower.includes("train") || lower.includes("bus")) {
     if (!str.includes("₹")) return 0;
   }
-  const match = str.match(/₹([0-9,]+)/);
+  const match = String(str).match(/₹([0-9,]+)/);
   if (match) {
     return parseInt(match[1].replace(/,/g, ""), 10);
   }
@@ -43,7 +44,8 @@ const getCostFromString = (str) => {
 
 function DayCard({ day, isOpen, onToggle, isCompleted, onToggleComplete }) {
   const DayIcon = getDayIcon(day);
-  const formattedDayNum = String(day.id).padStart(2, "0");
+  const dayId = day.id !== undefined ? day.id : day.day;
+  const formattedDayNum = String(dayId || 1).padStart(2, "0");
   
   const stayCost = day.stayCost !== undefined ? day.stayCost : getCostFromString(day.stay);
   const foodCost = day.foodCost !== undefined ? day.foodCost : getCostFromString(day.food);
@@ -169,7 +171,7 @@ function DayCard({ day, isOpen, onToggle, isCompleted, onToggleComplete }) {
                     <Clock size={16} /> Today's Timeline
                   </h4>
                   <div className="relative pl-5 border-l border-black/10 space-y-5 ml-1">
-                    {day.activities.map((act, i) => (
+                    {(day.activities || day.schedule || []).map((act, i) => (
                       <div key={i} className="relative">
                         {/* Timeline Node Ring */}
                         <span className="absolute -left-[25px] top-1 w-2.5 h-2.5 rounded-full border border-white bg-black ring-4 ring-black/5" />
@@ -177,7 +179,7 @@ function DayCard({ day, isOpen, onToggle, isCompleted, onToggleComplete }) {
                         <div className="flex flex-col sm:flex-row sm:items-baseline gap-1.5">
                           <span className="text-[10px] font-bold font-mono text-slate-500 bg-black/5 px-2 py-0.5 rounded-md inline-block w-fit">{act.time}</span>
                           <div className="flex-1">
-                            <p className="text-sm font-bold text-black/85">{act.title}</p>
+                            <p className="text-sm font-bold text-black/85">{act.title || act.activity}</p>
                             {act.description && <p className="text-xs text-slate-500 mt-0.5 leading-relaxed font-medium">{act.description}</p>}
                           </div>
                         </div>
@@ -338,16 +340,19 @@ export default function ItinerarySection() {
               <p className="text-slate-500 font-medium">No days match your search filters.</p>
             </div>
           ) : (
-            filteredItinerary.map((day) => (
-              <DayCard
-                key={day.id}
-                day={day}
-                isOpen={openDays.includes(day.id)}
-                onToggle={() => toggleDay(day.id)}
-                isCompleted={completedDays.includes(day.id)}
-                onToggleComplete={() => toggleComplete(day.id)}
-              />
-            ))
+            filteredItinerary.map((day, idx) => {
+              const dayKey = day.id !== undefined ? day.id : (day.day !== undefined ? day.day : idx);
+              return (
+                <DayCard
+                  key={dayKey}
+                  day={day}
+                  isOpen={openDays.includes(dayKey)}
+                  onToggle={() => toggleDay(dayKey)}
+                  isCompleted={completedDays.includes(dayKey)}
+                  onToggleComplete={() => toggleComplete(dayKey)}
+                />
+              );
+            })
           )}
         </div>
       </Container>

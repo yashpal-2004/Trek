@@ -48,12 +48,22 @@ import {
   STORAGE_KEYS as STORAGE_KEYSYulla2
 } from "./yulla/plan2/trip";
 
+import {
+  trip as tripHemkund,
+  quickStats as quickStatsHemkund,
+  routeTimeline as routeTimelineHemkund,
+  overviewCards as overviewCardsHemkund,
+  navLinks as navLinksHemkund,
+  expenseCategories as expenseCategoriesHemkund,
+  STORAGE_KEYS as STORAGE_KEYSHemkund
+} from "./hemkund/trip";
+
 import { createDynamicProxy } from "./proxyHelper";
 
-export const trip = createDynamicProxy(() => trip1, () => trip2, () => tripSikkim, () => tripYulla1, () => tripYulla2);
-export const quickStats = createDynamicProxy(() => quickStats1, () => quickStats2, () => quickStatsSikkim, () => quickStatsYulla1, () => quickStatsYulla2, true);
-export const routeTimeline = createDynamicProxy(() => routeTimeline1, () => routeTimeline2, () => routeTimelineSikkim, () => routeTimelineYulla1, () => routeTimelineYulla2, true);
-export const overviewCards = createDynamicProxy(() => overviewCards1, () => overviewCards2, () => overviewCardsSikkim, () => overviewCardsYulla1, () => overviewCardsYulla2, true);
-export const navLinks = createDynamicProxy(() => navLinks1, () => navLinks2, () => navLinksSikkim, () => navLinksYulla1, () => navLinksYulla2, true);
-export const expenseCategories = createDynamicProxy(() => expenseCategories1, () => expenseCategories2, () => expenseCategoriesSikkim, () => expenseCategoriesYulla1, () => expenseCategoriesYulla2, true);
-export const STORAGE_KEYS = createDynamicProxy(() => STORAGE_KEYS1, () => STORAGE_KEYS2, () => STORAGE_KEYSSikkim, () => STORAGE_KEYSYulla1, () => STORAGE_KEYSYulla2);
+export const trip = createDynamicProxy(() => trip1, () => trip2, () => tripSikkim, () => tripYulla1, () => tripYulla2, () => tripHemkund);
+export const quickStats = createDynamicProxy(() => quickStats1, () => quickStats2, () => quickStatsSikkim, () => quickStatsYulla1, () => quickStatsYulla2, () => quickStatsHemkund, true);
+export const routeTimeline = createDynamicProxy(() => routeTimeline1, () => routeTimeline2, () => routeTimelineSikkim, () => routeTimelineYulla1, () => routeTimelineYulla2, () => routeTimelineHemkund, true);
+export const overviewCards = createDynamicProxy(() => overviewCards1, () => overviewCards2, () => overviewCardsSikkim, () => overviewCardsYulla1, () => overviewCardsYulla2, () => overviewCardsHemkund, true);
+export const navLinks = createDynamicProxy(() => navLinks1, () => navLinks2, () => navLinksSikkim, () => navLinksYulla1, () => navLinksYulla2, () => navLinksHemkund, true);
+export const expenseCategories = createDynamicProxy(() => expenseCategories1, () => expenseCategories2, () => expenseCategoriesSikkim, () => expenseCategoriesYulla1, () => expenseCategoriesYulla2, () => expenseCategoriesHemkund, true);
+export const STORAGE_KEYS = createDynamicProxy(() => STORAGE_KEYS1, () => STORAGE_KEYS2, () => STORAGE_KEYSSikkim, () => STORAGE_KEYSYulla1, () => STORAGE_KEYSYulla2, () => STORAGE_KEYSHemkund);

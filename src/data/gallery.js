@@ -3,7 +3,8 @@ import { gallery as gallery2, galleryCategories as galleryCategories2 } from "./
 import { gallery as gallerySikkim, galleryCategories as galleryCategoriesSikkim } from "./sikkim/gallery";
 import { gallery as galleryYulla1, galleryCategories as galleryCategoriesYulla1 } from "./yulla/plan1/gallery";
 import { gallery as galleryYulla2, galleryCategories as galleryCategoriesYulla2 } from "./yulla/plan2/gallery";
+import { galleryImages as galleryHemkund } from "./hemkund/gallery";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const gallery = createDynamicProxy(() => gallery1, () => gallery2, () => gallerySikkim, () => galleryYulla1, () => galleryYulla2, true);
-export const galleryCategories = createDynamicProxy(() => galleryCategories1, () => galleryCategories2, () => galleryCategoriesSikkim, () => galleryCategoriesYulla1, () => galleryCategoriesYulla2, true);
+export const gallery = createDynamicProxy(() => gallery1, () => gallery2, () => gallerySikkim, () => galleryYulla1, () => galleryYulla2, () => galleryHemkund, true);
+export const galleryCategories = createDynamicProxy(() => galleryCategories1, () => galleryCategories2, () => galleryCategoriesSikkim, () => galleryCategoriesYulla1, () => galleryCategoriesYulla2, () => galleryHemkund, true);

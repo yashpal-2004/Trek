@@ -3,6 +3,7 @@ import { itinerary as itinerary2 } from "./garhwal/plan2/itinerary";
 import { itinerary as itinerarySikkim } from "./sikkim/itinerary";
 import { itinerary as itineraryYulla1 } from "./yulla/plan1/itinerary";
 import { itinerary as itineraryYulla2 } from "./yulla/plan2/itinerary";
+import { itinerary as itineraryHemkund } from "./hemkund/itinerary";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const itinerary = createDynamicProxy(() => itinerary1, () => itinerary2, () => itinerarySikkim, () => itineraryYulla1, () => itineraryYulla2, true);
+export const itinerary = createDynamicProxy(() => itinerary1, () => itinerary2, () => itinerarySikkim, () => itineraryYulla1, () => itineraryYulla2, () => itineraryHemkund, true);

@@ -20,7 +20,8 @@ export default function Landing() {
       "plan1": "Plan 1",
       "plan2": "Plan 2",
       "sikkim-std": "Standard",
-      "yulla-std": "Standard"
+      "yulla-std": "Standard",
+      "hemkund": "Standard"
     };
     return donePlans.map(p => labels[p.id] || p.title.split(" ")[0]).join(", ");
   };
@@ -131,6 +132,29 @@ export default function Landing() {
           details: "Self-guided budget route using HRTC buses, village homestays, and a 2-day Shimla scooty exploration at the end.",
           budget: `₹${yullaAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/yulla-plan2",
+        }
+      ],
+    },
+    {
+      id: "hemkund",
+      title: "Valley of Flowers & Hemkund Sahib",
+      subtitle: "Uttarakhand, India",
+      description: "Trek through the UNESCO World Heritage alpine floral meadows and visit the sacred high-altitude Shree Hemkund Sahib Gurudwara.",
+      stats: {
+        duration: "6 Days",
+        distance: "38 km Trek",
+        budget: "₹7.8K",
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "hemkund",
+          title: "Standard Plan (Delhi Round Trip)",
+          duration: "6 Days",
+          route: "Delhi → Haridwar → Govindghat → Ghangaria → Valley of Flowers & Hemkund Sahib → Haridwar → Delhi",
+          details: "Complete 6-day self-guided pilgrimage and alpine valley trek starting and ending in Delhi via Haridwar & Govindghat.",
+          budget: "₹7,800 / person",
+          path: "/hemkund",
         }
       ],
     },
