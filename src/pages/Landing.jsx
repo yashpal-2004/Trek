@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore } from "../hooks/useFirestore";
 import { yullaAmounts } from "../data/yulla/amounts";
 import { ladakhAmounts } from "../data/ladakh/amounts";
+import { spitiAmounts } from "../data/spiti/amounts";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -188,6 +189,38 @@ export default function Landing() {
           details: "High pass thrill route entering via Manali, Atal Tunnel & Baralacha La, exploring Ladakh, and returning via Zoji La & Srinagar.",
           budget: `₹${ladakhAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/ladakh-plan2",
+        }
+      ],
+    },
+    {
+      id: "spiti",
+      title: "Spiti Valley Expedition",
+      subtitle: "Himachal Pradesh, India",
+      description: "A high-altitude mountain riding expedition from Delhi via Manali, Atal Tunnel, Kunzum Pass (14,931 ft), Kaza, Key Monastery, Hikkim & Chandratal Lake.",
+      stats: {
+        duration: "6 Days",
+        distance: "1150 km Total",
+        budget: `₹${(spitiAmounts.plan2.budgetTotal / 1000).toFixed(1)}K–${(spitiAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "spiti-plan1",
+          title: "Plan 1 (2 Persons Variant)",
+          duration: "6 Days",
+          route: "Delhi → Manali → Atal Tunnel → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
+          details: "Delhi-Manali Volvo, 3-day Hero Xpulse 200 rental in Spiti & 2-day Scooty rental in Manali for 2 riders.",
+          budget: `₹${spitiAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/spiti-plan1",
+        },
+        {
+          id: "spiti-plan2",
+          title: "Plan 2 (4 Persons Variant)",
+          duration: "6 Days",
+          route: "Delhi → Manali → Atal Tunnel → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
+          details: "Optimized 4-person group route with 2 Hero Xpulse bikes, 2 Manali scooties, and shared quad stay savings.",
+          budget: `₹${spitiAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/spiti-plan2",
         }
       ],
     },

@@ -207,7 +207,7 @@ export default function BudgetSection() {
                 <div key={option.id} className="space-y-2">
                   <span className="font-bold text-xs text-slate-800 block border-b border-black/5 pb-1">{option.destination}</span>
                   <div className="space-y-2 pl-2">
-                    {option.hotels.map((h, index) => (
+                    {(option.hotels || []).map((h, index) => (
                       <div key={index} className="flex justify-between items-center text-xs">
                         <span className="text-slate-600">{h.name}</span>
                         <span className="font-extrabold text-black">

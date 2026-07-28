@@ -6,6 +6,8 @@ import { packing as packingYulla2 } from "./yulla/plan2/packing";
 import { packingCategories as packingHemkund } from "./hemkund/packing";
 import { packingCategories as packingLadakh1 } from "./ladakh/plan1/packing";
 import { packingCategories as packingLadakh2 } from "./ladakh/plan2/packing";
+import { packing as packingSpiti1 } from "./spiti/plan1/packing";
+import { packing as packingSpiti2 } from "./spiti/plan2/packing";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const packing = createDynamicProxy(() => packing1, () => packing2, () => packingSikkim, () => packingYulla1, () => packingYulla2, () => packingHemkund, () => packingLadakh1, () => packingLadakh2, true);
+export const packing = createDynamicProxy(() => packing1, () => packing2, () => packingSikkim, () => packingYulla1, () => packingYulla2, () => packingHemkund, () => packingLadakh1, () => packingLadakh2, () => packingSpiti1, () => packingSpiti2, true);

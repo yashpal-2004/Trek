@@ -133,7 +133,7 @@ export default function StaySection() {
                     <div className="space-y-1.5">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Acclamation Pros</p>
                       <ul className="space-y-1 text-slate-600">
-                        {stay.pros.map((p, i) => (
+                        {(stay.pros || []).map((p, i) => (
                           <li key={i} className="flex items-start gap-1.5">
                             <Check size={12} className="text-green-600 shrink-0 mt-0.5" />
                             <span>{p}</span>
@@ -144,7 +144,7 @@ export default function StaySection() {
                     <div className="space-y-1.5">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Drawback Cons</p>
                       <ul className="space-y-1 text-slate-600">
-                        {stay.cons.map((c, i) => (
+                        {(stay.cons || []).map((c, i) => (
                           <li key={i} className="flex items-start gap-1.5">
                             <AlertTriangle size={12} className="text-red-500 shrink-0 mt-0.5" />
                             <span>{c}</span>

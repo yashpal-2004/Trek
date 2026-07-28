@@ -42,7 +42,7 @@ export default function SafetySection() {
                 <h3 className="font-extrabold text-sm uppercase tracking-tight mb-1.5">{item.title}</h3>
                 <p className="text-xs text-slate-500 leading-relaxed mb-4">{item.description}</p>
                 <ul className="space-y-1.5">
-                  {item.tips.map((tip, i) => (
+                  {(item.tips || []).map((tip, i) => (
                     <li key={i} className="text-[11px] text-slate-600 flex items-start gap-1.5">
                       <span className="text-black/30 font-black shrink-0">{String(i + 1).padStart(2, "0")}.</span>{tip}
                     </li>

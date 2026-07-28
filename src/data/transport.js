@@ -6,7 +6,9 @@ import { transport as transportYulla2, transportModes as transportModesYulla2 } 
 import { transport as transportHemkund, transportModes as transportModesHemkund } from "./hemkund/transport";
 import { transport as transportLadakh1, transportModes as transportModesLadakh1 } from "./ladakh/plan1/transport";
 import { transport as transportLadakh2, transportModes as transportModesLadakh2 } from "./ladakh/plan2/transport";
+import { transport as transportSpiti1, transportModes as transportModesSpiti1 } from "./spiti/plan1/transport";
+import { transport as transportSpiti2, transportModes as transportModesSpiti2 } from "./spiti/plan2/transport";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const transport = createDynamicProxy(() => transport1, () => transport2, () => transportSikkim, () => transportYulla1, () => transportYulla2, () => transportHemkund, () => transportLadakh1, () => transportLadakh2, true);
-export const transportModes = createDynamicProxy(() => transportModes1, () => transportModes2, () => transportModesSikkim, () => transportModesYulla1, () => transportModesYulla2, () => transportModesHemkund, () => transportModesLadakh1, () => transportModesLadakh2, true);
+export const transport = createDynamicProxy(() => transport1, () => transport2, () => transportSikkim, () => transportYulla1, () => transportYulla2, () => transportHemkund, () => transportLadakh1, () => transportLadakh2, () => transportSpiti1, () => transportSpiti2, true);
+export const transportModes = createDynamicProxy(() => transportModes1, () => transportModes2, () => transportModesSikkim, () => transportModesYulla1, () => transportModesYulla2, () => transportModesHemkund, () => transportModesLadakh1, () => transportModesLadakh2, () => transportModesSpiti1, () => transportModesSpiti2, true);

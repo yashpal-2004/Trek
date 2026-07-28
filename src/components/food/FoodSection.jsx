@@ -15,13 +15,13 @@ export default function FoodSection() {
             Food Guide
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Daily estimate: <span className="font-bold text-black">{formatCurrency(foodGuide.dailyEstimate.min)}–{formatCurrency(foodGuide.dailyEstimate.max)}</span> per person.
+            Daily estimate: <span className="font-bold text-black">{formatCurrency(foodGuide?.dailyEstimate?.min || 250)}–{formatCurrency(foodGuide?.dailyEstimate?.max || 350)}</span> per person.
           </p>
         </div>
 
         {/* Meal Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-          {foodGuide.meals.map((meal) => {
+          {(foodGuide?.meals || []).map((meal) => {
             const Icon = getIcon(meal.icon, Utensils);
             return (
               <div key={meal.type} className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-6 hover:border-black/20 hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all">
@@ -32,7 +32,7 @@ export default function FoodSection() {
                   <h3 className="font-extrabold text-sm uppercase tracking-tight">{meal.type}</h3>
                 </div>
                 <ul className="space-y-3">
-                  {meal.items.map((item, i) => (
+                  {(meal.items || []).map((item, i) => (
                     <li key={i} className="flex justify-between items-start pb-3 border-b border-black/5 last:border-0 last:pb-0">
                       <div>
                         <p className="font-bold text-sm">{item.dish}</p>
@@ -57,7 +57,7 @@ export default function FoodSection() {
               <h3 className="font-extrabold text-sm uppercase tracking-tight">Local Specialties</h3>
             </div>
             <ul className="space-y-4">
-              {foodGuide.localSpecialties.map((s, i) => (
+              {(foodGuide?.localSpecialties || []).map((s, i) => (
                 <li key={i} className="pb-4 border-b border-black/5 last:border-0 last:pb-0">
                   <p className="font-bold text-sm">{s.name}</p>
                   <p className="text-[11px] text-slate-500 mt-0.5 mb-1.5">{s.description}</p>
@@ -75,7 +75,7 @@ export default function FoodSection() {
               <h3 className="font-extrabold text-sm uppercase tracking-tight">Protein Sources</h3>
             </div>
             <ul className="space-y-2 mb-6">
-              {foodGuide.proteinSources.map((p, i) => (
+              {(foodGuide?.proteinSources || []).map((p, i) => (
                 <li key={i} className="flex items-center gap-2 text-xs text-slate-600">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />{p}
                 </li>
@@ -84,7 +84,7 @@ export default function FoodSection() {
             <div className="border-t border-black/5 pt-5">
               <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400 mb-3">Pro Tips</p>
               <ul className="space-y-2">
-                {foodGuide.tips.map((t, i) => (
+                {(foodGuide?.tips || []).map((t, i) => (
                   <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
                     <span className="font-black text-black/40 shrink-0">{String(i + 1).padStart(2, "0")}.</span>{t}
                   </li>

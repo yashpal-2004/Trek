@@ -109,12 +109,12 @@ export default function Expenses({ isSection = false }) {
   }, [transport]);
 
   const stayPresets = useMemo(() => {
-    return stayOptions.map((item) => ({
-      value: `stay_${item.id}`,
-      label: `Stay: ${item.destination}`,
-      amountPerPerson: item.budget || item.mid || 0,
+    return stayOptions.map((item, idx) => ({
+      value: `stay_${item.id || item.name || idx}`,
+      label: `Stay: ${item.destination || item.name || 'Homestay'}`,
+      amountPerPerson: item.budget || item.mid || item.pricePerNight || 0,
       category: "Accommodation",
-      notes: `Stay at ${item.destination}`,
+      notes: `Stay at ${item.destination || item.name || 'Homestay'}`,
     }));
   }, [stayOptions]);
 

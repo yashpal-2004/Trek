@@ -11,17 +11,17 @@ export function useBudget() {
   };
 
   const total = useMemo(
-    () => Object.values(values).reduce((sum, v) => sum + Number(v), 0),
+    () => Object.values(values || {}).reduce((sum, v) => sum + Number(v), 0),
     [values]
   );
 
-  const remaining = budgetData.total - total;
+  const remaining = (budgetData.total || 0) - total;
   const savings = remaining > 0 ? remaining : 0;
   const overBudget = remaining < 0 ? Math.abs(remaining) : 0;
 
   const chartData = useMemo(
     () =>
-      Object.entries(values)
+      Object.entries(values || {})
         .filter(([, v]) => v > 0)
         .map(([key, value]) => ({
           name: key.charAt(0).toUpperCase() + key.slice(1),
