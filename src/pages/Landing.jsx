@@ -41,12 +41,17 @@ export default function Landing() {
     const planId = costPromptModal.id;
     const numericCost = parseFloat(inputActualCost) || 0;
 
-    const updatedCosts = { ...actualCosts, [planId]: numericCost };
-    setActualCosts(updatedCosts);
+    const parentTrip = trips.find(t => t.plans.some(p => p.id === planId));
+    const tripPlanIds = parentTrip ? parentTrip.plans.map(p => p.id) : [planId];
 
-    if (!completedPlans.includes(planId)) {
-      setCompletedPlans([...completedPlans, planId]);
-    }
+    const cleanedCompleted = completedPlans.filter(id => !tripPlanIds.includes(id));
+    setCompletedPlans([...cleanedCompleted, planId]);
+
+    const updatedCosts = { ...actualCosts, [planId]: numericCost };
+    tripPlanIds.forEach(id => {
+      if (id !== planId) delete updatedCosts[id];
+    });
+    setActualCosts(updatedCosts);
 
     setCostPromptModal(null);
   };
@@ -416,6 +421,46 @@ export default function Landing() {
     );
   };
 
+  const completedTrips = trips.filter(t => isTripCompleted(t));
+  const completedTripsCount = completedTrips.length;
+
+  const totalSpent = completedTrips.reduce((sum, trip) => {
+    const donePlan = trip.plans.find(p => completedPlans.includes(p.id));
+    if (!donePlan) return sum;
+    const val = actualCosts[donePlan.id];
+    return sum + (val !== undefined && val !== null && !isNaN(parseFloat(val)) ? parseFloat(val) : parseNumericBudget(donePlan.budget));
+  }, 0);
+
+  const parseBudgetRange = (str) => {
+    if (!str) return { min: 0, max: 0 };
+    const matches = String(str).match(/₹([0-9,]+)/g);
+    if (!matches || matches.length === 0) return { min: 0, max: 0 };
+    const nums = matches.map(m => parseInt(m.replace(/[^0-9]/g, ""), 10));
+    const min = Math.min(...nums);
+    const max = Math.max(...nums);
+    return { min, max };
+  };
+
+  const getTripBudgetBounds = (trip) => {
+    let min = Infinity;
+    let max = -Infinity;
+    (trip.plans || []).forEach(plan => {
+      const bounds = parseBudgetRange(plan.budget);
+      if (bounds.min > 0 && bounds.min < min) min = bounds.min;
+      if (bounds.max > max) max = bounds.max;
+    });
+    if (min === Infinity) min = 0;
+    if (max === -Infinity) max = min;
+    return { min, max };
+  };
+
+  const activeTrips = trips.filter(t => !isTripCompleted(t));
+  const activeTripsCount = activeTrips.length;
+  const upcomingRange = activeTrips.reduce((acc, trip) => {
+    const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
   return (
     <div className="min-h-screen w-screen bg-[#f2efe9] text-black selection:bg-black/10 flex flex-col justify-between relative font-sans">
       
@@ -431,14 +476,43 @@ export default function Landing() {
       <main className="flex-grow flex flex-col justify-start pt-2 md:pt-4 pb-12 px-6 max-w-5xl mx-auto w-full z-10">
         
         {/* Intro */}
-        <div className="mb-6">
-          <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
-          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
-            Select Your Adventure
-          </h1>
-          <p className="text-slate-500 font-medium text-sm mt-1.5 max-w-md leading-relaxed">
-            Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
-          </p>
+        <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
+            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
+              Select Your Adventure
+            </h1>
+            <p className="text-slate-500 font-medium text-sm mt-1.5 max-w-md leading-relaxed">
+              Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
+            </p>
+          </div>
+
+          {/* Financial Summary Stat Badges */}
+          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+            <div className="bg-white/80 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-3.5 min-w-[145px] shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Total Spent</span>
+              </div>
+              <p className="text-xl font-black text-emerald-700 font-mono">₹{totalSpent.toLocaleString("en-IN")}</p>
+              <p className="text-[9px] font-bold text-slate-400 mt-0.5">{completedTripsCount} Completed Trek{completedTripsCount === 1 ? "" : "s"}</p>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 min-w-[170px] shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className="w-2 h-2 rounded-full bg-amber-500" />
+                <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Upcoming Est.</span>
+              </div>
+              <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                {upcomingRange.min === upcomingRange.max ? (
+                  `₹${upcomingRange.min.toLocaleString("en-IN")}`
+                ) : (
+                  `₹${upcomingRange.min.toLocaleString("en-IN")} – ₹${upcomingRange.max.toLocaleString("en-IN")}`
+                )}
+              </p>
+              <p className="text-[9px] font-bold text-slate-400 mt-0.5">{activeTripsCount} Planned Trek{activeTripsCount === 1 ? "" : "s"}</p>
+            </div>
+          </div>
         </div>
 
         {/* Filter Toolbar: Category Filters + Status Filters */}
