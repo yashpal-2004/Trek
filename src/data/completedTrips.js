@@ -175,5 +175,35 @@ export const completedTrips = [
         path: "#",
       }
     ]
+  },
+  {
+    id: "vrindavan-family",
+    type: "trip",
+    typeLabel: "Family Pilgrimage",
+    title: "Vrindavan Family Pilgrimage",
+    subtitle: "Uttar Pradesh, India",
+    description: "Family pilgrimage from Hisar to Vrindavan (10 Jul – 11 Jul 2026) visiting Bankey Bihari Temple, Prem Mandir & Nidhivan with personal expense fully covered by family.",
+    isCompleted: true,
+    spentTotal: 0.00,
+    stats: {
+      duration: "2 Days (10 Jul – 11 Jul 2026)",
+      distance: "Family Transit",
+      budget: "₹0.00",
+    },
+    image: "/mountain_clay_peak.png",
+    expenses: [
+      { category: "Family Covered", description: "Transits, Accommodation & Meals (Paid by Family)", amount: 0.00 },
+    ],
+    plans: [
+      {
+        id: "vrindavan-done",
+        title: "Completed Family Pilgrimage",
+        duration: "2 Days (10 Jul – 11 Jul 2026)",
+        route: "Hisar (10 Jul 10:00 PM) → Mathura → Vrindavan → Hisar (11 Jul 9:00 PM)",
+        details: "Departed Hisar 10:00 PM on 10 Jul 2026 with family, visited Bankey Bihari Temple, Prem Mandir & local ashrams, returning 9:00 PM on 11 Jul 2026. Personal expense: ₹0.",
+        budget: "₹0.00",
+        path: "#",
+      }
+    ]
   }
 ];

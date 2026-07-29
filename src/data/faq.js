@@ -9,7 +9,10 @@ import { faqs as faqLadakh2 } from "./ladakh/plan2/faq";
 import { faq as faqSpiti1, faqCategories as faqCategoriesSpiti1 } from "./spiti/plan1/faq";
 import { faq as faqSpiti2, faqCategories as faqCategoriesSpiti2 } from "./spiti/plan2/faq";
 import { faqs as faqAnnapurna1 } from "./annapurna/plan1/faq";
+import { faqs as faqShrikhand1, faqCategories as faqCategoriesShrikhand1 } from "./shrikhand/plan1/faq";
+import { faqs as faqShrikhand2, faqCategories as faqCategoriesShrikhand2 } from "./shrikhand/plan2/faq";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const faq = createDynamicProxy(() => faq1, () => faq2, () => faqSikkim, () => faqYulla1, () => faqYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqSpiti1, () => faqSpiti2, () => faqAnnapurna1, true);
-export const faqCategories = createDynamicProxy(() => faqCategories1, () => faqCategories2, () => faqCategoriesSikkim, () => faqCategoriesYulla1, () => faqCategoriesYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqCategoriesSpiti1, () => faqCategoriesSpiti2, () => faqAnnapurna1, true);
+export const faq = createDynamicProxy(() => faq1, () => faq2, () => faqSikkim, () => faqYulla1, () => faqYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqSpiti1, () => faqSpiti2, () => faqAnnapurna1, () => faqShrikhand1, () => faqShrikhand2, true);
+export const faqCategories = createDynamicProxy(() => faqCategories1, () => faqCategories2, () => faqCategoriesSikkim, () => faqCategoriesYulla1, () => faqCategoriesYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqCategoriesSpiti1, () => faqCategoriesSpiti2, () => faqAnnapurna1, () => faqCategoriesShrikhand1, () => faqCategoriesShrikhand2, true);
+
