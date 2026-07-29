@@ -1,7 +1,7 @@
 export const getActiveTripKey = () => {
   if (typeof window === 'undefined') return 'plan1';
   const segment = window.location.pathname.split('/')[1];
-  if (segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2') {
+  if (segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'annapurna-plan1') {
     return segment;
   }
   return 'plan1';
@@ -13,6 +13,7 @@ export const getParentTripId = () => {
   if (key === 'yulla-plan1' || key === 'yulla-plan2') return 'yulla';
   if (key === 'ladakh-plan1' || key === 'ladakh-plan2') return 'ladakh';
   if (key === 'spiti-plan1' || key === 'spiti-plan2') return 'spiti';
+  if (key === 'annapurna-plan1') return 'annapurna';
   if (key === 'hemkund') return 'hemkund';
   return key;
 };
@@ -25,7 +26,7 @@ export const getIsTripMainPage = () => {
 
 export const isPlan2 = typeof window !== 'undefined' && (window.location.pathname.includes('plan2') || window.location.pathname.includes('yulla-plan2') || window.location.pathname.includes('ladakh-plan2') || window.location.pathname.includes('spiti-plan2'));
 
-export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, getYulla2, getHemkund, getLadakh1, getLadakh2, getSpiti1, getSpiti2, isArray = false) => {
+export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, getYulla2, getHemkund, getLadakh1, getLadakh2, getSpiti1, getSpiti2, getAnnapurna1, isArray = false) => {
   const target = isArray ? [] : {};
   return new Proxy(target, {
     get(t, prop) {
@@ -38,9 +39,10 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
         (key === "ladakh-plan2" ? getLadakh2() :
         (key === "spiti-plan1" ? (getSpiti1 ? getSpiti1() : getPlan1()) :
         (key === "spiti-plan2" ? (getSpiti2 ? getSpiti2() : getPlan2()) :
+        (key === "annapurna-plan1" ? (getAnnapurna1 ? getAnnapurna1() : getPlan1()) :
         (key === "yulla-plan1" ? getYulla2() :   // swapped: plan1 route → old plan2 data
         (key === "yulla-plan2" ? getYulla1() :   // swapped: plan2 route → old plan1 data
-        getPlan1()))))))));
+        getPlan1())))))))));
       
       if (activeData === undefined || activeData === null) {
         return undefined;
@@ -52,7 +54,6 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
       }
       return value;
     },
-    // Add ownKeys and getOwnPropertyDescriptor to support Object.keys(), spreads, and loops
     ownKeys(t) {
       const key = getActiveTripKey();
       const activeData = 
@@ -63,9 +64,10 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
         (key === "ladakh-plan2" ? getLadakh2() :
         (key === "spiti-plan1" ? (getSpiti1 ? getSpiti1() : getPlan1()) :
         (key === "spiti-plan2" ? (getSpiti2 ? getSpiti2() : getPlan2()) :
+        (key === "annapurna-plan1" ? (getAnnapurna1 ? getAnnapurna1() : getPlan1()) :
         (key === "yulla-plan1" ? getYulla2() :   // swapped
         (key === "yulla-plan2" ? getYulla1() :   // swapped
-        getPlan1()))))))));
+        getPlan1())))))))));
       return Reflect.ownKeys(activeData || {});
     },
     getOwnPropertyDescriptor(t, prop) {
@@ -78,9 +80,10 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
         (key === "ladakh-plan2" ? getLadakh2() :
         (key === "spiti-plan1" ? (getSpiti1 ? getSpiti1() : getPlan1()) :
         (key === "spiti-plan2" ? (getSpiti2 ? getSpiti2() : getPlan2()) :
+        (key === "annapurna-plan1" ? (getAnnapurna1 ? getAnnapurna1() : getPlan1()) :
         (key === "yulla-plan1" ? getYulla2() :   // swapped
         (key === "yulla-plan2" ? getYulla1() :   // swapped
-        getPlan1()))))))));
+        getPlan1())))))))));
       return Reflect.getOwnPropertyDescriptor(activeData || {}, prop);
     }
   });

@@ -19,21 +19,23 @@ export default function EmergencySection() {
 
         {/* Contact Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {emergency.map((contact) => {
+          {(emergency || []).map((contact, idx) => {
             const Icon = getIcon(contact.icon, Phone);
+            const num = contact.number || contact.phone;
+            const title = contact.type ? (contact.name ? `${contact.type}: ${contact.name}` : contact.type) : (contact.name || "Contact");
             return (
-              <div key={contact.id} className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-5 hover:border-red-200 hover:bg-red-50/30 transition-all group">
+              <div key={contact.id || contact.name || idx} className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-5 hover:border-red-200 hover:bg-red-50/30 transition-all group">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center shrink-0">
                     <Icon size={16} className="text-red-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-extrabold text-xs uppercase tracking-tight mb-0.5">
-                      {contact.type}{contact.name ? `: ${contact.name}` : ""}
+                      {title}
                     </h3>
-                    {contact.number && (
-                      <a href={`tel:${contact.number}`} className="text-xl font-black text-red-600 hover:underline block">
-                        {contact.number}
+                    {num && (
+                      <a href={`tel:${num}`} className="text-xl font-black text-red-600 hover:underline block">
+                        {num}
                       </a>
                     )}
                     <p className="text-[10px] text-slate-500 mt-1">{contact.description}</p>
@@ -41,9 +43,9 @@ export default function EmergencySection() {
                       <p className="text-[10px] text-slate-400 mt-0.5">{contact.location}</p>
                     )}
                   </div>
-                  {contact.number && (
+                  {num && (
                     <button
-                      onClick={() => copyToClipboard(contact.number)}
+                      onClick={() => copyToClipboard(num)}
                       className="p-1.5 hover:bg-black/5 rounded-xl text-slate-300 hover:text-slate-600 transition-colors shrink-0 opacity-0 group-hover:opacity-100"
                       aria-label="Copy number"
                     >
@@ -65,10 +67,12 @@ export default function EmergencySection() {
             <h3 className="font-extrabold text-sm uppercase tracking-tight">Emergency Action Tips</h3>
           </div>
           <ul className="grid md:grid-cols-2 gap-3">
-            {emergencyTips.map((tip, i) => (
+            {(emergencyTips || []).map((tip, i) => (
               <li key={i} className="flex items-start gap-3 text-xs text-white/70">
                 <span className="font-black text-white/30 shrink-0 mt-0.5 font-mono">{String(i + 1).padStart(2, "0")}.</span>
-                <span className="leading-relaxed">{tip}</span>
+                <span className="leading-relaxed">
+                  {typeof tip === "object" ? (tip.title ? `${tip.title}: ${(tip.steps || []).join(" ")}` : JSON.stringify(tip)) : tip}
+                </span>
               </li>
             ))}
           </ul>

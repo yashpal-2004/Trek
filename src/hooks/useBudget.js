@@ -4,15 +4,25 @@ import { STORAGE_KEYS } from "../data/trip";
 import { budget as budgetData } from "../data/budget";
 
 export function useBudget() {
-  const [values, setValues] = useLocalStorage(STORAGE_KEYS.budgetCalculator, budgetData.calculatorDefaults);
+  const [rawValues, setValues] = useLocalStorage(STORAGE_KEYS.budgetCalculator, budgetData.calculatorDefaults);
+
+  const effectiveValues = useMemo(() => {
+    const defaults = budgetData.calculatorDefaults || {};
+    if (!rawValues) return defaults;
+    const result = {};
+    Object.keys(defaults).forEach((key) => {
+      result[key] = rawValues[key] !== undefined ? rawValues[key] : defaults[key];
+    });
+    return result;
+  }, [rawValues]);
 
   const updateValue = (key, value) => {
-    setValues((prev) => ({ ...prev, [key]: Number(value) || 0 }));
+    setValues((prev) => ({ ...(prev || {}), [key]: Number(value) || 0 }));
   };
 
   const total = useMemo(
-    () => Object.values(values || {}).reduce((sum, v) => sum + Number(v), 0),
-    [values]
+    () => Object.values(effectiveValues).reduce((sum, v) => sum + Number(v), 0),
+    [effectiveValues]
   );
 
   const remaining = (budgetData.total || 0) - total;
@@ -21,14 +31,14 @@ export function useBudget() {
 
   const chartData = useMemo(
     () =>
-      Object.entries(values || {})
+      Object.entries(effectiveValues)
         .filter(([, v]) => v > 0)
         .map(([key, value]) => ({
           name: key.charAt(0).toUpperCase() + key.slice(1),
           value: Number(value),
         })),
-    [values]
+    [effectiveValues]
   );
 
-  return { values, updateValue, total, remaining, savings, overBudget, chartData, budgetLimit: budgetData.total };
+  return { values: effectiveValues, updateValue, total, remaining, savings, overBudget, chartData, budgetLimit: budgetData.total };
 }

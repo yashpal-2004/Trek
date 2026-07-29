@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Circle } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
 import { yullaAmounts } from "../data/yulla/amounts";
 import { ladakhAmounts } from "../data/ladakh/amounts";
 import { spitiAmounts } from "../data/spiti/amounts";
+import { annapurnaAmounts } from "../data/annapurna/amounts";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [completedPlans, setCompletedPlans, isLoading] = useFirestore("trek_completed_plans", []);
   const [activeTab, setActiveTab] = useState("active"); // "active" or "done"
+  const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
 
   const isTripCompleted = (trip) => {
     return trip.plans.some(p => completedPlans.includes(p.id));
@@ -23,7 +25,11 @@ export default function Landing() {
       "plan2": "Plan 2",
       "sikkim-std": "Standard",
       "yulla-std": "Standard",
-      "hemkund": "Standard"
+      "hemkund": "Standard",
+      "spiti-plan1": "Plan 1",
+      "spiti-plan2": "Plan 2",
+      "ladakh-plan1": "Plan 1",
+      "ladakh-plan2": "Plan 2"
     };
     return donePlans.map(p => labels[p.id] || p.title.split(" ")[0]).join(", ");
   };
@@ -52,6 +58,8 @@ export default function Landing() {
   const trips = [
     {
       id: "garhwal",
+      type: "trek",
+      typeLabel: "Mountain Trek",
       title: "Rudranath & Tungnath Trek",
       subtitle: "Uttarakhand, India",
       description: "A backpacking trek across the ancient temples and towering peaks of the Garhwal Himalayas.",
@@ -83,30 +91,9 @@ export default function Landing() {
       ],
     },
     {
-      id: "sikkim",
-      title: "Sikkim Expedition",
-      subtitle: "Sikkim, India",
-      description: "Explore the ancient monasteries of Gangtok, stay in Lachen/Lachung homestays, and visit the sacred Gurudongmar Lake at 17,800 ft.",
-      stats: {
-        duration: "7 Days",
-        distance: "15 km Walk",
-        budget: "₹6.9K",
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "sikkim-std",
-          title: "Standard Budget Route",
-          duration: "7 Days",
-          route: "Delhi → NJP → Gangtok → Lachen → Gurudongmar → Lachung → Yumthang → Gangtok → NJP → Delhi",
-          details: "Shared Sumo package tour (covers North Sikkim transit, homestays, permits, and food).",
-          budget: "₹6,900 / person",
-          path: "/sikkim",
-        }
-      ],
-    },
-    {
       id: "yulla",
+      type: "trek",
+      typeLabel: "Trek & Scooty",
       title: "Yulla Kanda Trek & Shimla",
       subtitle: "Himachal Pradesh, India",
       description: "Trek to the highest Krishna Temple in the world in Kinnaur, followed by a 2-day scooty sightseeing exploration in Shimla.",
@@ -139,6 +126,8 @@ export default function Landing() {
     },
     {
       id: "hemkund",
+      type: "trek",
+      typeLabel: "Alpine Trek",
       title: "Valley of Flowers & Hemkund Sahib",
       subtitle: "Uttarakhand, India",
       description: "Trek through the UNESCO World Heritage alpine floral meadows and visit the sacred high-altitude Shree Hemkund Sahib Gurudwara.",
@@ -161,7 +150,68 @@ export default function Landing() {
       ],
     },
     {
+      id: "annapurna",
+      type: "trek",
+      typeLabel: "International Alpine Trek",
+      title: "Annapurna Base Camp Expedition",
+      subtitle: "Nepal Himalayas",
+      description: "A high-altitude expedition from Delhi to Annapurna Base Camp (4,130m / 13,549 ft) via Sonauli border, Pokhara, and the Modi Khola valley sanctuary.",
+      stats: {
+        duration: "10 Days",
+        distance: "75 km Trek",
+        budget: `₹${(annapurnaAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "annapurna-plan1",
+          title: "Ultra-Budget Route (Delhi Round Trip)",
+          duration: "10 Days",
+          route: "Delhi → Gorakhpur (IRCTC Sleeper) → Sonauli → Bhairahawa → Pokhara (Local Bus) → Nayapul → ABC → Pokhara → Delhi",
+          details: "Self-guided ultra-budget overland plan using Sleeper train berths, local buses, teahouses, and Dal Bhat meals.",
+          budget: `₹${annapurnaAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/annapurna-plan1",
+        }
+      ],
+    },
+    {
+      id: "spiti",
+      type: "trip",
+      typeLabel: "Riding Expedition",
+      title: "Spiti Valley Expedition",
+      subtitle: "Himachal Pradesh, India",
+      description: "A high-altitude mountain riding expedition from Delhi via Manali, Atal Tunnel, Kunzum Pass (14,931 ft), Kaza, Key Monastery, Hikkim & Chandratal Lake.",
+      stats: {
+        duration: "6 Days",
+        distance: "1150 km Total",
+        budget: `₹${(spitiAmounts.plan2.budgetTotal / 1000).toFixed(1)}K–${(spitiAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "spiti-plan1",
+          title: "Plan 1 (2 Persons Variant)",
+          duration: "6 Days",
+          route: "Delhi → Manali → Atal Tunnel → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
+          details: "Delhi-Manali Volvo, 3-day Hero Xpulse 200 rental in Spiti & 2-day Scooty rental in Manali for 2 riders.",
+          budget: `₹${spitiAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/spiti-plan1",
+        },
+        {
+          id: "spiti-plan2",
+          title: "Plan 2 (4 Persons Variant)",
+          duration: "6 Days",
+          route: "Delhi → Manali → Atal Tunnel → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
+          details: "Optimized 4-person group route with 2 Hero Xpulse bikes, 2 Manali scooties, and shared quad stay savings.",
+          budget: `₹${spitiAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/spiti-plan2",
+        }
+      ],
+    },
+    {
       id: "ladakh",
+      type: "trip",
+      typeLabel: "Self-Scooty Circuit",
       title: "Ladakh Self-Scooty Circuit",
       subtitle: "Ladakh & Jammu-Kashmir, India",
       description: "An ultimate 12-day self-scooty expedition from Hisar conquering high-altitude passes (Khardung La, Chang La, Zoji La, Baralacha La), Pangong Lake & Nubra Valley.",
@@ -193,43 +243,41 @@ export default function Landing() {
       ],
     },
     {
-      id: "spiti",
-      title: "Spiti Valley Expedition",
-      subtitle: "Himachal Pradesh, India",
-      description: "A high-altitude mountain riding expedition from Delhi via Manali, Atal Tunnel, Kunzum Pass (14,931 ft), Kaza, Key Monastery, Hikkim & Chandratal Lake.",
+      id: "sikkim",
+      type: "trip",
+      typeLabel: "Circuit Trip",
+      title: "Sikkim Expedition",
+      subtitle: "Sikkim, India",
+      description: "Explore the ancient monasteries of Gangtok, stay in Lachen/Lachung homestays, and visit the sacred Gurudongmar Lake at 17,800 ft.",
       stats: {
-        duration: "6 Days",
-        distance: "1150 km Total",
-        budget: `₹${(spitiAmounts.plan2.budgetTotal / 1000).toFixed(1)}K–${(spitiAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
+        duration: "7 Days",
+        distance: "15 km Walk",
+        budget: "₹6.9K",
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
-          id: "spiti-plan1",
-          title: "Plan 1 (2 Persons Variant)",
-          duration: "6 Days",
-          route: "Delhi → Manali → Atal Tunnel → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
-          details: "Delhi-Manali Volvo, 3-day Hero Xpulse 200 rental in Spiti & 2-day Scooty rental in Manali for 2 riders.",
-          budget: `₹${spitiAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
-          path: "/spiti-plan1",
-        },
-        {
-          id: "spiti-plan2",
-          title: "Plan 2 (4 Persons Variant)",
-          duration: "6 Days",
-          route: "Delhi → Manali → Atal Tunnel → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
-          details: "Optimized 4-person group route with 2 Hero Xpulse bikes, 2 Manali scooties, and shared quad stay savings.",
-          budget: `₹${spitiAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
-          path: "/spiti-plan2",
+          id: "sikkim-std",
+          title: "Standard Budget Route",
+          duration: "7 Days",
+          route: "Delhi → NJP → Gangtok → Lachen → Gurudongmar → Lachung → Yumthang → Gangtok → NJP → Delhi",
+          details: "Shared Sumo package tour (covers North Sikkim transit, homestays, permits, and food).",
+          budget: "₹6,900 / person",
+          path: "/sikkim",
         }
       ],
-    },
+    }
   ];
 
   const filteredTrips = trips.filter(trip => {
-    const done = isTripCompleted(trip);
-    return activeTab === "done" ? done : !done;
+    const isDone = isTripCompleted(trip);
+    const matchesStatus = activeTab === "done" ? isDone : !isDone;
+    const matchesCategory = categoryTab === "all" || trip.type === categoryTab;
+    return matchesStatus && matchesCategory;
   });
+
+  const trekItems = filteredTrips.filter(t => t.type === "trek");
+  const tripItems = filteredTrips.filter(t => t.type === "trip");
 
   if (isLoading) {
     return (
@@ -241,145 +289,260 @@ export default function Landing() {
     );
   }
 
+  const renderTripCard = (trip) => {
+    const isCompleted = isTripCompleted(trip);
+    const isTrek = trip.type === "trek";
+
+    return (
+      <div
+        key={trip.id}
+        onClick={() => setSelectedTrip(trip)}
+        className={`bg-white/60 hover:bg-white border border-black/10 hover:border-black/25 rounded-[32px] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between cursor-pointer group relative overflow-hidden ${
+          isCompleted ? "opacity-90 grayscale-[20%]" : ""
+        }`}
+      >
+        <div>
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className={`inline-flex items-center gap-1 text-[9px] font-extrabold uppercase font-mono px-2 py-0.5 rounded-full ${
+                  isTrek ? "bg-emerald-500/10 text-emerald-700" : "bg-sky-500/10 text-sky-700"
+                }`}>
+                  {isTrek ? <Footprints size={10} /> : <Compass size={10} />}
+                  {trip.typeLabel}
+                </span>
+                <span className="text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1">
+                  <MapPin size={10} />
+                  {trip.subtitle}
+                </span>
+              </div>
+
+              <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2" style={{ fontFamily: "'Anton', sans-serif" }}>
+                {trip.title}
+                {isCompleted && (
+                  <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full normal-case font-sans">
+                    Done ({getCompletedPlansText(trip)})
+                  </span>
+                )}
+              </h3>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => toggleTripCompleted(trip, e)}
+                className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
+                  isCompleted
+                    ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
+                    : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                }`}
+                title={isCompleted ? "Mark Active" : "Mark Done"}
+              >
+                <CheckCircle2 size={18} />
+              </button>
+              <div className="w-10 h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
+                <ArrowUpRight size={18} />
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
+            {trip.description}
+          </p>
+
+          {/* Quick Stats Grid */}
+          <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-black/5">
+            <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
+              <Calendar size={14} className="mx-auto text-slate-400 mb-1" />
+              <p className="text-[10px] font-black uppercase text-slate-400">Days</p>
+              <p className="text-xs font-black mt-0.5">{trip.stats.duration}</p>
+            </div>
+            <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
+              <Route size={14} className="mx-auto text-slate-400 mb-1" />
+              <p className="text-[10px] font-black uppercase text-slate-400">{isTrek ? "Trek" : "Distance"}</p>
+              <p className="text-xs font-black mt-0.5">{trip.stats.distance}</p>
+            </div>
+            <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
+              <Wallet size={14} className="mx-auto text-slate-400 mb-1" />
+              <p className="text-[10px] font-black uppercase text-slate-400">Budget</p>
+              <p className="text-xs font-black mt-0.5">{trip.stats.budget}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen w-screen bg-[#f2efe9] text-black selection:bg-black/10 flex flex-col justify-between relative font-sans">
       
       {/* Header */}
-      <header className="w-full py-6 px-6 md:px-12 flex justify-between items-center z-30">
+      <header className="w-full py-4 px-6 md:px-12 flex justify-between items-center z-30">
         <a href="/" className="font-extrabold text-xl tracking-tight uppercase hover:opacity-75 transition-opacity flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-black"></span>
-          Treks
+          Treks & Expeditions
         </a>
       </header>
 
       {/* Main Content Dashboard */}
-      <main className="flex-grow flex flex-col justify-start py-12 md:py-20 px-6 max-w-5xl mx-auto w-full z-10">
+      <main className="flex-grow flex flex-col justify-start pt-2 md:pt-4 pb-12 px-6 max-w-5xl mx-auto w-full z-10">
         
         {/* Intro */}
-        <div className="mb-12">
-          <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Trip Explorer Portal</span>
+        <div className="mb-6">
+          <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
           <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
             Select Your Adventure
           </h1>
-          <p className="text-slate-500 font-medium text-sm mt-2 max-w-md leading-relaxed">
-            Browse through curated travel routes and detailed itineraries across different destinations.
+          <p className="text-slate-500 font-medium text-sm mt-1.5 max-w-md leading-relaxed">
+            Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
           </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-4 mb-8 border-b border-black/10 pb-4">
-          <button
-            onClick={() => setActiveTab("active")}
-            className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-              activeTab === "active"
-                ? "bg-black text-white"
-                : "bg-white/60 hover:bg-white border border-black/10 text-slate-500 hover:text-black"
-            }`}
-          >
-            Active Trips ({trips.filter(t => !isTripCompleted(t)).length})
-          </button>
-          <button
-            onClick={() => setActiveTab("done")}
-            className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
-              activeTab === "done"
-                ? "bg-black text-white"
-                : "bg-white/60 hover:bg-white border border-black/10 text-slate-500 hover:text-black"
-            }`}
-          >
-            Trips Done ({trips.filter(t => isTripCompleted(t)).length})
-          </button>
+        {/* Filter Toolbar: Category Filters + Status Filters */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 border-b border-black/10 pb-6">
+          {/* Category Selector Tabs */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setCategoryTab("all")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                categoryTab === "all"
+                  ? "bg-black text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              All Adventures ({trips.filter(t => activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t)).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("trek")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "trek"
+                  ? "bg-emerald-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Footprints size={13} />
+              Mountain Treks ({trips.filter(t => t.type === "trek" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("trip")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "trip"
+                  ? "bg-sky-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Compass size={13} />
+              Road Trips ({trips.filter(t => t.type === "trip" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+          </div>
+
+          {/* Status Selector (Active vs Done) */}
+          <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0">
+            <button
+              onClick={() => setActiveTab("active")}
+              className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                activeTab === "active"
+                  ? "bg-white text-black shadow-sm"
+                  : "text-slate-500 hover:text-black"
+              }`}
+            >
+              Active
+            </button>
+            <button
+              onClick={() => setActiveTab("done")}
+              className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                activeTab === "done"
+                  ? "bg-white text-black shadow-sm"
+                  : "text-slate-500 hover:text-black"
+              }`}
+            >
+              Done
+            </button>
+          </div>
         </div>
 
-        {/* Trips Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          {filteredTrips.map((trip) => {
-            const isCompleted = isTripCompleted(trip);
-            return (
-              <div
-                key={trip.id}
-                onClick={() => setSelectedTrip(trip)}
-                className={`bg-white/60 hover:bg-white border border-black/10 hover:border-black/25 rounded-[32px] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between cursor-pointer group relative overflow-hidden ${
-                  isCompleted ? "opacity-90 grayscale-[20%]" : ""
-                }`}
-              >
-                <div>
-                <div className="flex justify-between items-start mb-4">
+        {/* Content Section: Separated display when 'all' is selected */}
+        {categoryTab === "all" ? (
+          <div className="space-y-12">
+            {/* Section 1: Mountain Treks */}
+            {trekItems.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-700">
+                    <Footprints size={16} />
+                  </div>
                   <div>
-                    <span className="text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1.5">
-                      <MapPin size={10} />
-                      {trip.subtitle}
-                    </span>
-                    <h3 className="text-2xl font-black uppercase mt-1 tracking-tight flex items-center gap-2" style={{ fontFamily: "'Anton', sans-serif" }}>
-                      {trip.title}
-                      {isCompleted && (
-                        <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full normal-case font-sans">
-                          Done ({getCompletedPlansText(trip)})
-                        </span>
-                      )}
-                    </h3>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => toggleTripCompleted(trip, e)}
-                      className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
-                        isCompleted
-                          ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
-                          : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
-                      }`}
-                      title={isCompleted ? "Mark Active" : "Mark Done"}
-                    >
-                      <CheckCircle2 size={18} />
-                    </button>
-                    <div className="w-10 h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
-                      <ArrowUpRight size={18} />
-                    </div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Himalayan Mountain Treks
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Foot trails, high passes, and sacred temple treks</p>
                   </div>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {trekItems.map(renderTripCard)}
+                </div>
+              </div>
+            )}
 
-                <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
-                  {trip.description}
+            {/* Section 2: Road Trips & Expeditions */}
+            {tripItems.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-700">
+                    <Compass size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Road Trips & Expeditions
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Self-scooty circuits, bike rentals, and high-pass riding routes</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {tripItems.map(renderTripCard)}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Filtered view for specific category */
+          <div>
+            <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                categoryTab === "trek" ? "bg-emerald-500/10 text-emerald-700" : "bg-sky-500/10 text-sky-700"
+              }`}>
+                {categoryTab === "trek" ? <Footprints size={16} /> : <Compass size={16} />}
+              </div>
+              <div>
+                <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  {categoryTab === "trek" ? "Himalayan Mountain Treks" : "Road Trips & Expeditions"}
+                </h2>
+                <p className="text-xs text-slate-500 font-medium">
+                  {categoryTab === "trek" ? "Foot trails, high passes, and sacred temple treks" : "Self-scooty circuits, bike rentals, and high-pass riding routes"}
                 </p>
-
-                {/* Quick Stats Grid */}
-                <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-black/5">
-                  <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
-                    <Calendar size={14} className="mx-auto text-slate-400 mb-1" />
-                    <p className="text-[10px] font-black uppercase text-slate-400">Days</p>
-                    <p className="text-xs font-black mt-0.5">{trip.stats.duration}</p>
-                  </div>
-                  <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
-                    <Route size={14} className="mx-auto text-slate-400 mb-1" />
-                    <p className="text-[10px] font-black uppercase text-slate-400">Trek</p>
-                    <p className="text-xs font-black mt-0.5">{trip.stats.distance}</p>
-                  </div>
-                  <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
-                    <Wallet size={14} className="mx-auto text-slate-400 mb-1" />
-                    <p className="text-[10px] font-black uppercase text-slate-400">Budget</p>
-                    <p className="text-xs font-black mt-0.5">{trip.stats.budget}</p>
-                  </div>
-                </div>
               </div>
             </div>
-          );
-        })}
-
-          {/* Placeholder Card for future treks */}
-          {activeTab === "active" && (
-            <div className="border-2 border-dashed border-black/10 rounded-[32px] p-8 flex flex-col justify-center items-center text-center py-16 opacity-60">
-              <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center mb-3">
-                <Plus size={20} className="text-slate-400" />
-              </div>
-              <h4 className="font-extrabold text-sm text-slate-700">More Treks Coming Soon</h4>
-              <p className="text-xs text-slate-400 max-w-[200px] mt-1 leading-relaxed">
-                We are working on adding details for new Himalayan routes.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+              {filteredTrips.map(renderTripCard)}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {filteredTrips.length === 0 && (
+          <div className="border-2 border-dashed border-black/10 rounded-[32px] p-12 text-center py-16">
+            <Compass size={32} className="mx-auto text-slate-300 mb-3" />
+            <h4 className="font-extrabold text-base text-slate-700">No Adventures Found</h4>
+            <p className="text-xs text-slate-400 max-w-xs mx-auto mt-1 leading-relaxed">
+              No routes match the selected category and status filters.
+            </p>
+          </div>
+        )}
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-6 px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center text-[10px] font-semibold uppercase tracking-widest text-black/45 z-30">
+      <footer className="w-full py-6 px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center text-[10px] font-semibold uppercase tracking-widest text-black/45 z-30 border-t border-black/5 mt-12">
         <span>© 2026 Trip Expedition Studio.</span>
         <span className="mt-2 sm:mt-0">Premium Adventure Travel Planner.</span>
       </footer>
@@ -406,7 +569,15 @@ export default function Landing() {
 
               {/* Modal Header */}
               <div className="mb-6 pr-10">
-                <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">{selectedTrip.subtitle}</span>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`inline-flex items-center gap-1 text-[9px] font-extrabold uppercase font-mono px-2 py-0.5 rounded-full ${
+                    selectedTrip.type === "trek" ? "bg-emerald-500/10 text-emerald-700" : "bg-sky-500/10 text-sky-700"
+                  }`}>
+                    {selectedTrip.type === "trek" ? <Footprints size={10} /> : <Compass size={10} />}
+                    {selectedTrip.typeLabel}
+                  </span>
+                  <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">{selectedTrip.subtitle}</span>
+                </div>
                 <h3 className="text-2xl font-black uppercase tracking-tight mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
                   Select Plan Version
                 </h3>
@@ -490,7 +661,3 @@ export default function Landing() {
     </div>
   );
 }
-
-// Simple dynamic import icon support helper
-import { Plus } from "lucide-react";
-

@@ -77,9 +77,9 @@ export default function FAQSection() {
             />
           </div>
           <div className="flex flex-wrap gap-1.5">
-            {faqCategories.map((cat) => (
+            {(Array.isArray(faqCategories) ? faqCategories : ["All"]).filter(c => typeof c === "string").map((cat, idx) => (
               <button
-                key={cat}
+                key={typeof cat === "string" ? cat : idx}
                 onClick={() => setCategory(cat)}
                 className={`px-3 py-1.5 rounded-xl text-[10px] font-bold border transition-all ${
                   category === cat

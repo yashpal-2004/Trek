@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Bed, Star, MapPin, ExternalLink, Tent, Building, Check, AlertTriangle, Plus, Trash2, X } from "lucide-react";
-import { stayOptions } from "../../data/budget";
+import { stayOptions, accommodationBreakdown } from "../../data/budget";
 import { formatCurrency } from "../../utils/currency";
 import Container from "../layout/Container";
 import SectionTitle from "../common/SectionTitle";
@@ -232,6 +232,56 @@ export default function StaySection() {
             );
           })}
         </div>
+
+        {/* Accommodation Breakdown Table (If available) */}
+        {accommodationBreakdown && accommodationBreakdown.length > 0 && (
+          <div className="mt-12 max-w-6xl mx-auto bg-white/80 backdrop-blur-md border border-black/10 rounded-[28px] p-6 md:p-8 shadow-sm">
+            <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-black/5">
+              <div className="w-9 h-9 rounded-xl bg-black/5 flex items-center justify-center">
+                <Bed size={18} className="text-black/70" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-base text-black uppercase tracking-tight">Accommodation Cost Breakdown</h3>
+                <p className="text-xs text-slate-500 font-medium">Night-by-night breakdown of room rates in NPR & INR</p>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-black/10 text-slate-400 font-bold uppercase text-[10px] tracking-wider">
+                    <th className="py-3 px-3">Night</th>
+                    <th className="py-3 px-3">Location</th>
+                    <th className="py-3 px-3">Room Type</th>
+                    <th className="py-3 px-3">Cost in NPR</th>
+                    <th className="py-3 px-3 text-right">Cost in INR (₹)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-black/5 font-medium text-slate-700">
+                  {accommodationBreakdown.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-black/[0.02]">
+                      <td className="py-3 px-3 font-bold text-black">{row.night}</td>
+                      <td className="py-3 px-3 font-semibold text-slate-800">{row.location}</td>
+                      <td className="py-3 px-3">{row.roomType}</td>
+                      <td className="py-3 px-3 font-mono font-bold text-slate-600">{row.npr}</td>
+                      <td className="py-3 px-3 text-right font-black text-black">
+                        {row.inr > 0 ? formatCurrency(row.inr) : (row.note || "Free")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="border-t-2 border-black/15 font-black text-sm text-black">
+                    <td colSpan={4} className="py-3.5 px-3 uppercase tracking-wider">Total Accommodation (7 Nights)</td>
+                    <td className="py-3.5 px-3 text-right font-mono text-base">
+                      {formatCurrency(accommodationBreakdown.reduce((sum, r) => sum + (r.inr || 0), 0))}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        )}
       </Container>
 
       {/* Modal Form */}

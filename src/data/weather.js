@@ -8,10 +8,11 @@ import { weatherData as weatherLadakh1 } from "./ladakh/plan1/weather";
 import { weatherData as weatherLadakh2 } from "./ladakh/plan2/weather";
 import { weather as weatherSpiti1, safety as safetySpiti1 } from "./spiti/plan1/weather";
 import { weather as weatherSpiti2, safety as safetySpiti2 } from "./spiti/plan2/weather";
+import { weather as weatherAnnapurna1, safety as safetyAnnapurna1 } from "./annapurna/plan1/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => safetySpiti1, () => safetySpiti2, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
@@ -44,4 +45,11 @@ const networkCoverageSpiti = [
   { place: "Chandratal Lake", signal: "No Network", level: 0, carriers: "None", note: "No cellular coverage around the lake area" }
 ];
 
-export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, true);
+const networkCoverageAnnapurna = [
+  { place: "Pokhara Lakeside", signal: "Excellent", level: 4, carriers: "Ncell, Nepal Telecom (NTC)", note: "Full 4G/5G in Pokhara town" },
+  { place: "Nayapul / Ghandruk", signal: "Good", level: 3, carriers: "Ncell, NTC", note: "Good 4G signal in Ghandruk and Chhomrong" },
+  { place: "Chhomrong / Sinuwa", signal: "Moderate", level: 2, carriers: "NTC", note: "3G/4G available at teahouses" },
+  { place: "Deurali / MBC / ABC", signal: "No Network", level: 0, carriers: "Teahouse Wi-Fi only", note: "Zero cellular network. Teahouses offer paid Wi-Fi (NPR 200-300)" }
+];
+
+export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, true);
