@@ -1,5 +1,5 @@
-import { treks as treks1, trekDifficulties as trekDifficulties1 } from "./garhwal/plan1/treks";
-import { treks as treks2, trekDifficulties as trekDifficulties2 } from "./garhwal/plan2/treks";
+import { treks as treks1, trekDifficulties as trekDifficulties1 } from "./rudranath/plan1/treks";
+import { treks as treks2, trekDifficulties as trekDifficulties2 } from "./rudranath/plan2/treks";
 import { treks as treksSikkim, trekDifficulties as trekDifficultiesSikkim } from "./sikkim/treks";
 import { treks as treksYulla1, trekDifficulties as trekDifficultiesYulla1 } from "./yulla/plan1/treks";
 import { treks as treksYulla2, trekDifficulties as trekDifficultiesYulla2 } from "./yulla/plan2/treks";

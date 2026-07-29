@@ -1,5 +1,5 @@
-import { gallery as gallery1, galleryCategories as galleryCategories1 } from "./garhwal/plan1/gallery";
-import { gallery as gallery2, galleryCategories as galleryCategories2 } from "./garhwal/plan2/gallery";
+import { gallery as gallery1, galleryCategories as galleryCategories1 } from "./rudranath/plan1/gallery";
+import { gallery as gallery2, galleryCategories as galleryCategories2 } from "./rudranath/plan2/gallery";
 import { gallery as gallerySikkim, galleryCategories as galleryCategoriesSikkim } from "./sikkim/gallery";
 import { gallery as galleryYulla1, galleryCategories as galleryCategoriesYulla1 } from "./yulla/plan1/gallery";
 import { gallery as galleryYulla2, galleryCategories as galleryCategoriesYulla2 } from "./yulla/plan2/gallery";

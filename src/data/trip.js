@@ -6,7 +6,7 @@ import {
   navLinks as navLinks1,
   expenseCategories as expenseCategories1,
   STORAGE_KEYS as STORAGE_KEYS1
-} from "./garhwal/plan1/trip";
+} from "./rudranath/plan1/trip";
 
 import {
   trip as trip2,
@@ -16,7 +16,7 @@ import {
   navLinks as navLinks2,
   expenseCategories as expenseCategories2,
   STORAGE_KEYS as STORAGE_KEYS2
-} from "./garhwal/plan2/trip";
+} from "./rudranath/plan2/trip";
 
 import {
   trip as tripSikkim,

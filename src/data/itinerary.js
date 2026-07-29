@@ -1,5 +1,5 @@
-import { itinerary as itinerary1 } from "./garhwal/plan1/itinerary";
-import { itinerary as itinerary2 } from "./garhwal/plan2/itinerary";
+import { itinerary as itinerary1 } from "./rudranath/plan1/itinerary";
+import { itinerary as itinerary2 } from "./rudranath/plan2/itinerary";
 import { itinerary as itinerarySikkim } from "./sikkim/itinerary";
 import { itinerary as itineraryYulla1 } from "./yulla/plan1/itinerary";
 import { itinerary as itineraryYulla2 } from "./yulla/plan2/itinerary";

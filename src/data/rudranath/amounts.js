@@ -1,4 +1,4 @@
-export const garhwalAmounts = {
+export const rudranathAmounts = {
   plan1: {
     budgetTotal: 9000,
     transportCategory: 1860,
@@ -93,3 +93,5 @@ export const garhwalAmounts = {
     }
   }
 };
+
+export const garhwalAmounts = rudranathAmounts;

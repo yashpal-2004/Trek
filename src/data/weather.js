@@ -1,5 +1,5 @@
-import { weather as weather1, safety as safety1 } from "./garhwal/plan1/weather";
-import { weather as weather2, safety as safety2 } from "./garhwal/plan2/weather";
+import { weather as weather1, safety as safety1 } from "./rudranath/plan1/weather";
+import { weather as weather2, safety as safety2 } from "./rudranath/plan2/weather";
 import { weather as weatherSikkim, safety as safetySikkim } from "./sikkim/weather";
 import { weather as weatherYulla1, safety as safetyYulla1 } from "./yulla/plan1/weather";
 import { weather as weatherYulla2, safety as safetyYulla2 } from "./yulla/plan2/weather";

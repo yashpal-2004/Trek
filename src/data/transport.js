@@ -1,5 +1,5 @@
-import { transport as transport1, transportModes as transportModes1 } from "./garhwal/plan1/transport";
-import { transport as transport2, transportModes as transportModes2 } from "./garhwal/plan2/transport";
+import { transport as transport1, transportModes as transportModes1 } from "./rudranath/plan1/transport";
+import { transport as transport2, transportModes as transportModes2 } from "./rudranath/plan2/transport";
 import { transport as transportSikkim, transportModes as transportModesSikkim } from "./sikkim/transport";
 import { transport as transportYulla1, transportModes as transportModesYulla1 } from "./yulla/plan1/transport";
 import { transport as transportYulla2, transportModes as transportModesYulla2 } from "./yulla/plan2/transport";

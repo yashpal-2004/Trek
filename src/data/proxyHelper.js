@@ -1,15 +1,15 @@
 export const getActiveTripKey = () => {
-  if (typeof window === 'undefined') return 'plan1';
+  if (typeof window === 'undefined') return 'rudranath-plan1';
   const segment = window.location.pathname.split('/')[1];
-  if (segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'annapurna-plan1') {
+  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'annapurna-plan1') {
     return segment;
   }
-  return 'plan1';
+  return 'rudranath-plan1';
 };
 
 export const getParentTripId = () => {
   const key = getActiveTripKey();
-  if (key === 'plan1' || key === 'plan2') return 'garhwal';
+  if (key === 'rudranath-plan1' || key === 'rudranath-plan2' || key === 'plan1' || key === 'plan2') return 'rudranath';
   if (key === 'yulla-plan1' || key === 'yulla-plan2') return 'yulla';
   if (key === 'ladakh-plan1' || key === 'ladakh-plan2') return 'ladakh';
   if (key === 'spiti-plan1' || key === 'spiti-plan2') return 'spiti';
@@ -28,26 +28,27 @@ export const isPlan2 = typeof window !== 'undefined' && (window.location.pathnam
 
 export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, getYulla2, getHemkund, getLadakh1, getLadakh2, getSpiti1, getSpiti2, getAnnapurna1, isArray = false) => {
   const target = isArray ? [] : {};
+  const getActiveData = () => {
+    const key = getActiveTripKey();
+    if (key === "rudranath-plan2" || key === "plan2") return getPlan2();
+    if (key === "sikkim") return getSikkim();
+    if (key === "hemkund") return getHemkund();
+    if (key === "ladakh-plan1") return getLadakh1();
+    if (key === "ladakh-plan2") return getLadakh2();
+    if (key === "spiti-plan1") return getSpiti1 ? getSpiti1() : getPlan1();
+    if (key === "spiti-plan2") return getSpiti2 ? getSpiti2() : getPlan2();
+    if (key === "annapurna-plan1") return getAnnapurna1 ? getAnnapurna1() : getPlan1();
+    if (key === "yulla-plan1") return getYulla2();
+    if (key === "yulla-plan2") return getYulla1();
+    return getPlan1();
+  };
+
   return new Proxy(target, {
     get(t, prop) {
-      const key = getActiveTripKey();
-      const activeData = 
-        key === "plan2" ? getPlan2() : 
-        (key === "sikkim" ? getSikkim() : 
-        (key === "hemkund" ? getHemkund() :
-        (key === "ladakh-plan1" ? getLadakh1() :
-        (key === "ladakh-plan2" ? getLadakh2() :
-        (key === "spiti-plan1" ? (getSpiti1 ? getSpiti1() : getPlan1()) :
-        (key === "spiti-plan2" ? (getSpiti2 ? getSpiti2() : getPlan2()) :
-        (key === "annapurna-plan1" ? (getAnnapurna1 ? getAnnapurna1() : getPlan1()) :
-        (key === "yulla-plan1" ? getYulla2() :   // swapped: plan1 route → old plan2 data
-        (key === "yulla-plan2" ? getYulla1() :   // swapped: plan2 route → old plan1 data
-        getPlan1())))))))));
-      
+      const activeData = getActiveData();
       if (activeData === undefined || activeData === null) {
         return undefined;
       }
-      
       const value = activeData[prop];
       if (typeof value === "function") {
         return value.bind(activeData);
@@ -55,36 +56,10 @@ export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, get
       return value;
     },
     ownKeys(t) {
-      const key = getActiveTripKey();
-      const activeData = 
-        key === "plan2" ? getPlan2() : 
-        (key === "sikkim" ? getSikkim() : 
-        (key === "hemkund" ? getHemkund() :
-        (key === "ladakh-plan1" ? getLadakh1() :
-        (key === "ladakh-plan2" ? getLadakh2() :
-        (key === "spiti-plan1" ? (getSpiti1 ? getSpiti1() : getPlan1()) :
-        (key === "spiti-plan2" ? (getSpiti2 ? getSpiti2() : getPlan2()) :
-        (key === "annapurna-plan1" ? (getAnnapurna1 ? getAnnapurna1() : getPlan1()) :
-        (key === "yulla-plan1" ? getYulla2() :   // swapped
-        (key === "yulla-plan2" ? getYulla1() :   // swapped
-        getPlan1())))))))));
-      return Reflect.ownKeys(activeData || {});
+      return Reflect.ownKeys(getActiveData() || {});
     },
     getOwnPropertyDescriptor(t, prop) {
-      const key = getActiveTripKey();
-      const activeData = 
-        key === "plan2" ? getPlan2() : 
-        (key === "sikkim" ? getSikkim() : 
-        (key === "hemkund" ? getHemkund() :
-        (key === "ladakh-plan1" ? getLadakh1() :
-        (key === "ladakh-plan2" ? getLadakh2() :
-        (key === "spiti-plan1" ? (getSpiti1 ? getSpiti1() : getPlan1()) :
-        (key === "spiti-plan2" ? (getSpiti2 ? getSpiti2() : getPlan2()) :
-        (key === "annapurna-plan1" ? (getAnnapurna1 ? getAnnapurna1() : getPlan1()) :
-        (key === "yulla-plan1" ? getYulla2() :   // swapped
-        (key === "yulla-plan2" ? getYulla1() :   // swapped
-        getPlan1())))))))));
-      return Reflect.getOwnPropertyDescriptor(activeData || {}, prop);
+      return Reflect.getOwnPropertyDescriptor(getActiveData() || {}, prop);
     }
   });
 };

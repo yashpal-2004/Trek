@@ -11,6 +11,9 @@ import { annapurnaAmounts } from "../data/annapurna/amounts";
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [completedPlans, setCompletedPlans, isLoading] = useFirestore("trek_completed_plans", []);
+  const [actualCosts, setActualCosts] = useFirestore("trek_actual_costs", {});
+  const [costPromptModal, setCostPromptModal] = useState(null); // { plan, defaultCost }
+  const [inputActualCost, setInputActualCost] = useState("");
   const [activeTab, setActiveTab] = useState("active"); // "active" or "done"
   const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
 
@@ -18,20 +21,58 @@ export default function Landing() {
     return trip.plans.some(p => completedPlans.includes(p.id));
   };
 
+  const parseNumericBudget = (str) => {
+    if (!str) return 0;
+    const match = String(str).match(/₹([0-9,]+)/);
+    return match ? parseInt(match[1].replace(/,/g, ""), 10) : 0;
+  };
+
+  const openCostPrompt = (plan, e) => {
+    if (e) e.stopPropagation();
+    const existing = actualCosts[plan.id];
+    const defaultVal = existing !== undefined ? existing : parseNumericBudget(plan.budget);
+    setInputActualCost(defaultVal ? String(defaultVal) : "");
+    setCostPromptModal(plan);
+  };
+
+  const handleSaveActualCost = (e) => {
+    e.preventDefault();
+    if (!costPromptModal) return;
+    const planId = costPromptModal.id;
+    const numericCost = parseFloat(inputActualCost) || 0;
+
+    const updatedCosts = { ...actualCosts, [planId]: numericCost };
+    setActualCosts(updatedCosts);
+
+    if (!completedPlans.includes(planId)) {
+      setCompletedPlans([...completedPlans, planId]);
+    }
+
+    setCostPromptModal(null);
+  };
+
+  const handleTogglePlanMark = (plan, e) => {
+    if (e) e.stopPropagation();
+    const isPlanDone = completedPlans.includes(plan.id);
+    if (isPlanDone) {
+      setCompletedPlans(completedPlans.filter(id => id !== plan.id));
+      const newCosts = { ...actualCosts };
+      delete newCosts[plan.id];
+      setActualCosts(newCosts);
+    } else {
+      openCostPrompt(plan, e);
+    }
+  };
+
   const getCompletedPlansText = (trip) => {
     const donePlans = trip.plans.filter(p => completedPlans.includes(p.id));
-    const labels = {
-      "plan1": "Plan 1",
-      "plan2": "Plan 2",
-      "sikkim-std": "Standard",
-      "yulla-std": "Standard",
-      "hemkund": "Standard",
-      "spiti-plan1": "Plan 1",
-      "spiti-plan2": "Plan 2",
-      "ladakh-plan1": "Plan 1",
-      "ladakh-plan2": "Plan 2"
-    };
-    return donePlans.map(p => labels[p.id] || p.title.split(" ")[0]).join(", ");
+    return donePlans.map(p => {
+      const actual = actualCosts[p.id];
+      if (actual !== undefined) {
+        return `Spent: ₹${actual.toLocaleString("en-IN")}`;
+      }
+      return "Done";
+    }).join(", ");
   };
 
   const toggleTripCompleted = (trip, e) => {
@@ -39,13 +80,16 @@ export default function Landing() {
     const tripPlanIds = trip.plans.map(p => p.id);
     const hasAnyDone = tripPlanIds.some(id => completedPlans.includes(id));
 
-    let updated;
     if (hasAnyDone) {
-      updated = completedPlans.filter(id => !tripPlanIds.includes(id));
+      const updated = completedPlans.filter(id => !tripPlanIds.includes(id));
+      setCompletedPlans(updated);
+      const newCosts = { ...actualCosts };
+      tripPlanIds.forEach(id => delete newCosts[id]);
+      setActualCosts(newCosts);
     } else {
-      updated = [...completedPlans, tripPlanIds[0]];
+      // Open cost prompt for first plan
+      openCostPrompt(trip.plans[0], e);
     }
-    setCompletedPlans(updated);
   };
 
   const togglePlanCompleted = (planId) => {
@@ -57,7 +101,7 @@ export default function Landing() {
 
   const trips = [
     {
-      id: "garhwal",
+      id: "rudranath",
       type: "trek",
       typeLabel: "Mountain Trek",
       title: "Rudranath & Tungnath Trek",
@@ -71,22 +115,22 @@ export default function Landing() {
       image: "/mountain_clay_peak.png",
       plans: [
         {
-          id: "plan1",
+          id: "rudranath-plan1",
           title: "Plan 1 (Standard Route)",
           duration: "2 Jul – 10 Jul (9 Days)",
           route: "Hisar → Haridwar → Sagar → Rudranath → Chopta → Kalpeshwar → Rishikesh → Hisar",
           details: "Includes Kalpeshwar (Panch Kedar temple) and a leisure day exploring Rishikesh ghats.",
           budget: "₹8,500 – ₹9,500",
-          path: "/plan1",
+          path: "/rudranath-plan1",
         },
         {
-          id: "plan2",
+          id: "rudranath-plan2",
           title: "Plan 2 (Direct Route)",
           duration: "3 Jul – 9 Jul (7 Days)",
           route: "Hisar → Haridwar → Sagar → Rudranath → Chopta → Kartik Swami → Hisar",
           details: "Fast-paced route bypassing Rishikesh stay and going directly back to Hisar.",
           budget: "₹8,000 – ₹8,500",
-          path: "/plan2",
+          path: "/rudranath-plan2",
         },
       ],
     },
@@ -622,8 +666,19 @@ export default function Landing() {
                       
                       <div className="flex items-center gap-3 self-stretch sm:self-auto justify-between border-t sm:border-t-0 border-black/5 pt-3 sm:pt-0 shrink-0">
                         <div className="text-right">
-                          <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-widest block leading-none">Est. Cost</span>
-                          <span className="text-sm font-black text-black leading-none mt-1 inline-block">{plan.budget}</span>
+                          {isPlanCompleted && actualCosts[plan.id] !== undefined ? (
+                            <>
+                              <span className="text-[9px] font-bold font-mono text-emerald-600 uppercase tracking-widest block leading-none">Spent / Person</span>
+                              <span className="text-sm font-black text-emerald-700 leading-none mt-1 inline-block">
+                                ₹{actualCosts[plan.id].toLocaleString("en-IN")}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-widest block leading-none">Est. Cost</span>
+                              <span className="text-sm font-black text-black leading-none mt-1 inline-block">{plan.budget}</span>
+                            </>
+                          )}
                         </div>
                         
                         <div className="flex items-center gap-2">
@@ -631,14 +686,14 @@ export default function Landing() {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              togglePlanCompleted(plan.id);
+                              handleTogglePlanMark(plan, e);
                             }}
                             className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
                               isPlanCompleted
                                 ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
                                 : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
                             }`}
-                            title={isPlanCompleted ? "Mark Active" : "Mark Done"}
+                            title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
                           >
                             <CheckCircle2 size={14} />
                           </button>
@@ -654,6 +709,76 @@ export default function Landing() {
                   );
                 })}
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Actual Spent Cost Input Modal Overlay */}
+      <AnimatePresence>
+        {costPromptModal && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0" onClick={() => setCostPromptModal(null)} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#f2efe9] rounded-[32px] border border-black/10 p-6 md:p-8 max-w-md w-full shadow-2xl relative z-10"
+            >
+              <button
+                onClick={() => setCostPromptModal(null)}
+                className="absolute right-6 top-6 w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center bg-white hover:bg-black/5 transition-colors"
+              >
+                <X size={14} />
+              </button>
+
+              <div className="mb-6">
+                <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Trip Expenditure</span>
+                <h3 className="text-xl font-black uppercase tracking-tight mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  Record Actual Cost
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  Enter the exact per-person amount spent on <strong className="text-black">{costPromptModal.title}</strong>.
+                </p>
+              </div>
+
+              <form onSubmit={handleSaveActualCost} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Actual Spent per Person (₹)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-extrabold text-slate-400">₹</span>
+                    <input
+                      type="number"
+                      required
+                      step="1"
+                      placeholder="e.g. 9100"
+                      value={inputActualCost}
+                      onChange={(e) => setInputActualCost(e.target.value)}
+                      className="w-full pl-8 pr-4 py-3 rounded-xl border border-black/10 bg-white font-extrabold text-sm focus:outline-none focus:border-black transition-colors"
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-medium">Estimated budget reference: {costPromptModal.budget}</p>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={(e) => handleTogglePlanMark(costPromptModal, e)}
+                    className="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors cursor-pointer"
+                  >
+                    Unmark / Remove
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-black text-white hover:bg-black/80 transition-colors shadow-md cursor-pointer"
+                  >
+                    Save & Mark Done
+                  </button>
+                </div>
+              </form>
             </motion.div>
           </div>
         )}

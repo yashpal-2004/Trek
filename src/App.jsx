@@ -7,6 +7,8 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/rudranath-plan1" element={<Home />} />
+        <Route path="/rudranath-plan2" element={<Home />} />
         <Route path="/plan1" element={<Home />} />
         <Route path="/plan2" element={<Home />} />
         <Route path="/sikkim" element={<Home />} />
