@@ -1,8 +1,8 @@
 export const trip = {
   title: "Rudranath & Tungnath Trek",
   subtitle: "An 8-day budget backpacking adventure across the Himalayas of Uttarakhand",
-  duration: "3 Jul – 9 Jul",
-  durationDays: 7,
+  duration: "3 Jul – 8 Jul 2026",
+  durationDays: 6,
   people: 2,
   budgetMin: 9000,
   budgetMax: 9500,
@@ -19,7 +19,7 @@ export const trip = {
 };
 
 export const quickStats = [
-  { id: "days", label: "Total Days", value: 7, suffix: "", description: "Full expedition duration", icon: "Calendar" },
+  { id: "days", label: "Total Days", value: 6, suffix: "", description: "Full expedition duration", icon: "Calendar" },
   { id: "treks", label: "Treks", value: 3, suffix: "", description: "Major trekking routes", icon: "Mountain" },
   { id: "walking", label: "Walking Distance", value: 52, suffix: " KM", description: "Total trek distance", icon: "Footprints" },
   { id: "budget", label: "Budget", value: 8.2, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },

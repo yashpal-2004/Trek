@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
@@ -7,6 +7,7 @@ import { yullaAmounts } from "../data/yulla/amounts";
 import { ladakhAmounts } from "../data/ladakh/amounts";
 import { spitiAmounts } from "../data/spiti/amounts";
 import { annapurnaAmounts } from "../data/annapurna/amounts";
+import { completedTrips } from "../data/completedTrips";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -16,8 +17,10 @@ export default function Landing() {
   const [inputActualCost, setInputActualCost] = useState("");
   const [activeTab, setActiveTab] = useState("active"); // "active" or "done"
   const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
+  const [viewMode, setViewMode] = useState("grid"); // "grid" or "timeline"
 
   const isTripCompleted = (trip) => {
+    if (trip.isCompleted) return true;
     return trip.plans.some(p => completedPlans.includes(p.id));
   };
 
@@ -70,6 +73,9 @@ export default function Landing() {
   };
 
   const getCompletedPlansText = (trip) => {
+    if (trip.isCompleted && trip.spentTotal) {
+      return `Spent: ₹${trip.spentTotal.toLocaleString("en-IN")}`;
+    }
     const donePlans = trip.plans.filter(p => completedPlans.includes(p.id));
     return donePlans.map(p => {
       const actual = actualCosts[p.id];
@@ -113,7 +119,7 @@ export default function Landing() {
       subtitle: "Uttarakhand, India",
       description: "A backpacking trek across the ancient temples and towering peaks of the Garhwal Himalayas.",
       stats: {
-        duration: "7–9 Days",
+        duration: "6–9 Days (Jul 2026)",
         distance: "52–60 km Trek",
         budget: "₹8.0K–9.5K",
       },
@@ -122,7 +128,7 @@ export default function Landing() {
         {
           id: "rudranath-plan1",
           title: "Plan 1 (Standard Route)",
-          duration: "2 Jul – 10 Jul (9 Days)",
+          duration: "2 Jul – 10 Jul 2026 (9 Days)",
           route: "Hisar → Haridwar → Sagar → Rudranath → Chopta → Kalpeshwar → Rishikesh → Hisar",
           details: "Includes Kalpeshwar (Panch Kedar temple) and a leisure day exploring Rishikesh ghats.",
           budget: "₹8,500 – ₹9,500",
@@ -131,9 +137,9 @@ export default function Landing() {
         {
           id: "rudranath-plan2",
           title: "Plan 2 (Direct Route)",
-          duration: "3 Jul – 9 Jul (7 Days)",
-          route: "Hisar → Haridwar → Sagar → Rudranath → Chopta → Kartik Swami → Hisar",
-          details: "Fast-paced route bypassing Rishikesh stay and going directly back to Hisar.",
+          duration: "3 Jul – 8 Jul 2026 (6 Days)",
+          route: "Hisar (3 Jul 5:00 PM) → Haridwar → Sagar → Rudranath → Chopta → Kartik Swami → Hisar (8 Jul 10:00 PM)",
+          details: "Fast-paced route departing Hisar 3 Jul 5:00 PM, returning 8 Jul 10:00 PM.",
           budget: "₹8,000 – ₹8,500",
           path: "/rudranath-plan2",
         },
@@ -318,7 +324,9 @@ export default function Landing() {
     }
   ];
 
-  const filteredTrips = trips.filter(trip => {
+  const allTrips = [...trips, ...completedTrips];
+
+  const filteredTrips = allTrips.filter(trip => {
     const isDone = isTripCompleted(trip);
     const matchesStatus = activeTab === "done" ? isDone : !isDone;
     const matchesCategory = categoryTab === "all" || trip.type === categoryTab;
@@ -377,17 +385,19 @@ export default function Landing() {
             </div>
             
             <div className="flex items-center gap-2">
-              <button
-                onClick={(e) => toggleTripCompleted(trip, e)}
-                className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
-                  isCompleted
-                    ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
-                    : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
-                }`}
-                title={isCompleted ? "Mark Active" : "Mark Done"}
-              >
-                <CheckCircle2 size={18} />
-              </button>
+              {!trip.isCompleted && (
+                <button
+                  onClick={(e) => toggleTripCompleted(trip, e)}
+                  className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
+                    isCompleted
+                      ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
+                      : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                  }`}
+                  title={isCompleted ? "Mark Active" : "Mark Done"}
+                >
+                  <CheckCircle2 size={18} />
+                </button>
+              )}
               <div className="w-10 h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
                 <ArrowUpRight size={18} />
               </div>
@@ -421,15 +431,119 @@ export default function Landing() {
     );
   };
 
-  const completedTrips = trips.filter(t => isTripCompleted(t));
-  const completedTripsCount = completedTrips.length;
+  const getTripTimestamp = (trip) => {
+    const dur = (trip.plans && trip.plans[0] && trip.plans[0].duration) || trip.stats?.duration || "";
+    const months = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+    
+    const yearMatch = dur.match(/202[5-9]/);
+    const year = yearMatch ? parseInt(yearMatch[0], 10) : 2026;
 
-  const totalSpent = completedTrips.reduce((sum, trip) => {
+    let monthIdx = 6;
+    for (const [mName, mIdx] of Object.entries(months)) {
+      if (dur.toLowerCase().includes(mName)) {
+        monthIdx = mIdx;
+        break;
+      }
+    }
+
+    const dayMatch = dur.match(/(\d{1,2})\s*(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i);
+    const day = dayMatch ? parseInt(dayMatch[1], 10) : 1;
+
+    return new Date(year, monthIdx, day).getTime();
+  };
+
+  const renderTimelineView = () => {
+    const sorted = [...filteredTrips].sort((a, b) => getTripTimestamp(a) - getTripTimestamp(b));
+
+    return (
+      <div className="relative pl-6 md:pl-10 space-y-8 my-4 before:absolute before:left-3 md:before:left-5 before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-black/20 before:via-black/10 before:to-transparent">
+        {sorted.map((trip) => {
+          const isCompleted = isTripCompleted(trip);
+          const isTrek = trip.type === "trek";
+          return (
+            <div key={trip.id} className="relative group">
+              {/* Timeline Bullet Marker */}
+              <div className={`absolute -left-6 md:-left-10 top-6 w-4 h-4 rounded-full border-2 bg-white flex items-center justify-center transition-all group-hover:scale-125 z-10 ${
+                isCompleted ? "border-emerald-600 bg-emerald-500" : "border-black/30"
+              }`}>
+                <div className={`w-1.5 h-1.5 rounded-full ${isCompleted ? "bg-white" : "bg-black/30"}`} />
+              </div>
+
+              {/* Timeline Entry Card */}
+              <div
+                onClick={() => setSelectedTrip(trip)}
+                className="bg-white/70 hover:bg-white border border-black/10 hover:border-black/25 rounded-3xl p-6 md:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-pointer flex flex-col md:flex-row justify-between items-start md:items-center gap-5"
+              >
+                <div className="space-y-2 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`inline-flex items-center gap-1 text-[9px] font-extrabold uppercase font-mono px-2.5 py-0.5 rounded-full ${
+                      isTrek ? "bg-emerald-500/10 text-emerald-700" : "bg-sky-500/10 text-sky-700"
+                    }`}>
+                      {isTrek ? <Footprints size={10} /> : <Compass size={10} />}
+                      {trip.typeLabel}
+                    </span>
+                    <span className="text-[10px] font-mono font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1">
+                      <MapPin size={10} />
+                      {trip.subtitle}
+                    </span>
+                    <span className="text-[10px] font-mono font-black text-slate-500 bg-black/5 px-2.5 py-0.5 rounded-full">
+                      {trip.stats.duration}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                    {trip.title}
+                    {isCompleted && (
+                      <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full normal-case font-sans ml-2">
+                        Done ({getCompletedPlansText(trip)})
+                      </span>
+                    )}
+                  </h3>
+
+                  <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed">
+                    {trip.description}
+                  </p>
+                </div>
+
+                {/* Right Side Stats */}
+                <div className="flex md:flex-col items-center md:items-end justify-between w-full md:w-auto shrink-0 border-t md:border-t-0 border-black/5 pt-4 md:pt-0 gap-3">
+                  {isCompleted ? (
+                    <div className="text-left md:text-right">
+                      <span className="text-[9px] font-bold font-mono text-emerald-600 uppercase tracking-wider block">Total Spent</span>
+                      <span className="text-lg font-black text-emerald-700 font-mono">
+                        {trip.spentTotal ? `₹${trip.spentTotal.toLocaleString("en-IN")}` : getCompletedPlansText(trip)}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="text-left md:text-right">
+                      <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-wider block">Est. Budget</span>
+                      <span className="text-lg font-black text-black font-mono">{trip.stats.budget}</span>
+                    </div>
+                  )}
+
+                  <div className="w-9 h-9 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300">
+                    <ArrowUpRight size={16} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const completedTripsList = allTrips.filter(t => isTripCompleted(t));
+  const totalSpent = completedTripsList.reduce((sum, trip) => {
+    if (trip.spentTotal) return sum + trip.spentTotal;
     const donePlan = trip.plans.find(p => completedPlans.includes(p.id));
     if (!donePlan) return sum;
     const val = actualCosts[donePlan.id];
     return sum + (val !== undefined && val !== null && !isNaN(parseFloat(val)) ? parseFloat(val) : parseNumericBudget(donePlan.budget));
   }, 0);
+
+  const completedTreksCount = completedTripsList.filter(t => t.type === "trek").length;
+  const completedRoadTripsCount = completedTripsList.filter(t => t.type === "trip").length;
 
   const parseBudgetRange = (str) => {
     if (!str) return { min: 0, max: 0 };
@@ -455,7 +569,8 @@ export default function Landing() {
   };
 
   const activeTrips = trips.filter(t => !isTripCompleted(t));
-  const activeTripsCount = activeTrips.length;
+  const activeTreksCount = activeTrips.filter(t => t.type === "trek").length;
+  const activeRoadTripsCount = activeTrips.filter(t => t.type === "trip").length;
   const upcomingRange = activeTrips.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
     return { min: acc.min + min, max: acc.max + max };
@@ -489,16 +604,18 @@ export default function Landing() {
 
           {/* Financial Summary Stat Badges */}
           <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
-            <div className="bg-white/80 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-3.5 min-w-[145px] shadow-sm">
+            <div className="bg-white/80 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-3.5 min-w-[155px] shadow-sm">
               <div className="flex items-center gap-1.5 mb-1">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Total Spent</span>
               </div>
               <p className="text-xl font-black text-emerald-700 font-mono">₹{totalSpent.toLocaleString("en-IN")}</p>
-              <p className="text-[9px] font-bold text-slate-400 mt-0.5">{completedTripsCount} Completed Trek{completedTripsCount === 1 ? "" : "s"}</p>
+              <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
+                {completedTreksCount} Trek{completedTreksCount === 1 ? "" : "s"} • {completedRoadTripsCount} Road Trip{completedRoadTripsCount === 1 ? "" : "s"}
+              </p>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 min-w-[170px] shadow-sm">
+            <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 min-w-[185px] shadow-sm">
               <div className="flex items-center gap-1.5 mb-1">
                 <div className="w-2 h-2 rounded-full bg-amber-500" />
                 <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Upcoming Est.</span>
@@ -510,7 +627,9 @@ export default function Landing() {
                   `₹${upcomingRange.min.toLocaleString("en-IN")} – ₹${upcomingRange.max.toLocaleString("en-IN")}`
                 )}
               </p>
-              <p className="text-[9px] font-bold text-slate-400 mt-0.5">{activeTripsCount} Planned Trek{activeTripsCount === 1 ? "" : "s"}</p>
+              <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
+                {activeTreksCount} Trek{activeTreksCount === 1 ? "" : "s"} • {activeRoadTripsCount} Road Trip{activeRoadTripsCount === 1 ? "" : "s"}
+              </p>
             </div>
           </div>
         </div>
@@ -527,7 +646,7 @@ export default function Landing() {
                   : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
               }`}
             >
-              All Adventures ({trips.filter(t => activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t)).length})
+              All Adventures ({allTrips.filter(t => activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t)).length})
             </button>
 
             <button
@@ -539,7 +658,7 @@ export default function Landing() {
               }`}
             >
               <Footprints size={13} />
-              Mountain Treks ({trips.filter(t => t.type === "trek" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+              Mountain Treks ({allTrips.filter(t => t.type === "trek" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
             </button>
 
             <button
@@ -551,37 +670,67 @@ export default function Landing() {
               }`}
             >
               <Compass size={13} />
-              Road Trips ({trips.filter(t => t.type === "trip" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+              Road Trips ({allTrips.filter(t => t.type === "trip" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
             </button>
           </div>
 
-          {/* Status Selector (Active vs Done) */}
-          <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0">
-            <button
-              onClick={() => setActiveTab("active")}
-              className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                activeTab === "active"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-slate-500 hover:text-black"
-              }`}
-            >
-              Active
-            </button>
-            <button
-              onClick={() => setActiveTab("done")}
-              className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                activeTab === "done"
-                  ? "bg-white text-black shadow-sm"
-                  : "text-slate-500 hover:text-black"
-              }`}
-            >
-              Done
-            </button>
+          <div className="flex items-center gap-3 shrink-0">
+            {/* View Mode Switcher */}
+            <div className="flex gap-1 bg-black/5 p-1 rounded-2xl">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-1.5 rounded-xl transition-all ${
+                  viewMode === "grid"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-slate-400 hover:text-black"
+                }`}
+                title="Grid View"
+              >
+                <LayoutGrid size={15} />
+              </button>
+              <button
+                onClick={() => setViewMode("timeline")}
+                className={`p-1.5 rounded-xl transition-all ${
+                  viewMode === "timeline"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-slate-400 hover:text-black"
+                }`}
+                title="Timeline View"
+              >
+                <Clock size={15} />
+              </button>
+            </div>
+
+            {/* Status Selector (Active vs Done) */}
+            <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0">
+              <button
+                onClick={() => setActiveTab("active")}
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                  activeTab === "active"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-slate-500 hover:text-black"
+                }`}
+              >
+                Active
+              </button>
+              <button
+                onClick={() => setActiveTab("done")}
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                  activeTab === "done"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-slate-500 hover:text-black"
+                }`}
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Content Section: Separated display when 'all' is selected */}
-        {categoryTab === "all" ? (
+        {viewMode === "timeline" ? (
+          renderTimelineView()
+        ) : categoryTab === "all" ? (
           <div className="space-y-12">
             {/* Section 1: Mountain Treks */}
             {trekItems.length > 0 && (
@@ -697,10 +846,12 @@ export default function Landing() {
                   <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">{selectedTrip.subtitle}</span>
                 </div>
                 <h3 className="text-2xl font-black uppercase tracking-tight mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
-                  Select Plan Version
+                  {selectedTrip.isCompleted ? `${selectedTrip.title} Breakdown` : "Select Plan Version"}
                 </h3>
                 <p className="text-xs text-slate-500 font-medium mt-1">
-                  Choose the travel plan variant that matches your timeline and budget constraints.
+                  {selectedTrip.isCompleted
+                    ? `Completed ${selectedTrip.stats.duration} Trip • Total Spent: ₹${(selectedTrip.spentTotal || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })} / person`
+                    : "Choose the travel plan variant that matches your timeline and budget constraints."}
                 </p>
               </div>
 
@@ -756,21 +907,23 @@ export default function Landing() {
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleTogglePlanMark(plan, e);
-                            }}
-                            className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
-                              isPlanCompleted
-                                ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
-                                : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-                            }`}
-                            title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
-                          >
-                            <CheckCircle2 size={14} />
-                          </button>
+                          {!selectedTrip.isCompleted && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleTogglePlanMark(plan, e);
+                              }}
+                              className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
+                                isPlanCompleted
+                                  ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
+                                  : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                              }`}
+                              title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
+                            >
+                              <CheckCircle2 size={14} />
+                            </button>
+                          )}
                           <a
                             href={plan.path}
                             className="w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center bg-slate-50 group-hover:bg-black group-hover:text-white transition-colors shrink-0"
@@ -783,6 +936,48 @@ export default function Landing() {
                   );
                 })}
               </div>
+
+              {/* Itemized Expenses Breakdown Table if available */}
+              {selectedTrip.expenses && selectedTrip.expenses.length > 0 && (
+                <div className="mt-6 border-t border-black/10 pt-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-extrabold text-xs text-black uppercase tracking-wider">Itemized Expense Breakdown</h4>
+                    <span className="text-[10px] font-black font-mono bg-black/5 text-slate-600 px-2.5 py-1 rounded-full uppercase">
+                      {selectedTrip.stats.duration}
+                    </span>
+                  </div>
+                  <div className="bg-white rounded-2xl border border-black/5 p-4 overflow-x-auto shadow-sm">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="border-b border-black/10 text-slate-400 font-bold uppercase text-[9px] tracking-wider">
+                          <th className="py-2 px-2">Category</th>
+                          <th className="py-2 px-2">Description / Route</th>
+                          <th className="py-2 px-2 text-right">Amount (₹)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-black/5 font-medium text-slate-700">
+                        {selectedTrip.expenses.map((item, idx) => (
+                          <tr key={idx} className="hover:bg-black/[0.02]">
+                            <td className="py-2.5 px-2 font-bold text-black">{item.category}</td>
+                            <td className="py-2.5 px-2 text-slate-600">{item.description}</td>
+                            <td className="py-2.5 px-2 text-right font-mono font-bold text-black">
+                              ₹{item.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                      <tfoot>
+                        <tr className="border-t-2 border-black/15 font-black text-xs text-black">
+                          <td colSpan={2} className="py-3 px-2 uppercase tracking-wider">Total Expenditure</td>
+                          <td className="py-3 px-2 text-right font-mono text-sm text-emerald-700">
+                            ₹{selectedTrip.spentTotal ? selectedTrip.spentTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 }) : selectedTrip.expenses.reduce((s, i) => s + i.amount, 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
         )}
