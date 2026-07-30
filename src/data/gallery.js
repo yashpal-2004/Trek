@@ -11,8 +11,10 @@ import { gallery as gallerySpiti2, galleryCategories as galleryCategoriesSpiti2 
 import { gallery as galleryAnnapurna1 } from "./annapurna/plan1/gallery";
 import { gallery as galleryShrikhand1, galleryCategories as galleryCategoriesShrikhand1 } from "./shrikhand/plan1/gallery";
 import { gallery as galleryShrikhand2, galleryCategories as galleryCategoriesShrikhand2 } from "./shrikhand/plan2/gallery";
+import { gallery as galleryHampta1, galleryCategories as galleryCategoriesHampta1 } from "./hampta/plan1/gallery";
+import { gallery as galleryHampta2, galleryCategories as galleryCategoriesHampta2 } from "./hampta/plan2/gallery";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const gallery = createDynamicProxy(() => gallery1, () => gallery2, () => gallerySikkim, () => galleryYulla1, () => galleryYulla2, () => galleryHemkund, () => galleryLadakh1, () => galleryLadakh2, () => gallerySpiti1, () => gallerySpiti2, () => galleryAnnapurna1, () => galleryShrikhand1, () => galleryShrikhand2, true);
-export const galleryCategories = createDynamicProxy(() => galleryCategories1, () => galleryCategories2, () => galleryCategoriesSikkim, () => galleryCategoriesYulla1, () => galleryCategoriesYulla2, () => galleryHemkund, () => galleryLadakh1, () => galleryLadakh2, () => galleryCategoriesSpiti1, () => galleryCategoriesSpiti2, () => galleryAnnapurna1, () => galleryCategoriesShrikhand1, () => galleryCategoriesShrikhand2, true);
+export const gallery = createDynamicProxy(() => gallery1, () => gallery2, () => gallerySikkim, () => galleryYulla1, () => galleryYulla2, () => galleryHemkund, () => galleryLadakh1, () => galleryLadakh2, () => gallerySpiti1, () => gallerySpiti2, () => galleryAnnapurna1, () => galleryShrikhand1, () => galleryShrikhand2, () => galleryHampta1, () => galleryHampta2, true);
+export const galleryCategories = createDynamicProxy(() => galleryCategories1, () => galleryCategories2, () => galleryCategoriesSikkim, () => galleryCategoriesYulla1, () => galleryCategoriesYulla2, () => galleryHemkund, () => galleryLadakh1, () => galleryLadakh2, () => galleryCategoriesSpiti1, () => galleryCategoriesSpiti2, () => galleryAnnapurna1, () => galleryCategoriesShrikhand1, () => galleryCategoriesShrikhand2, () => galleryCategoriesHampta1, () => galleryCategoriesHampta2, true);
 

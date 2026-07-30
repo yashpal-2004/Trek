@@ -1,7 +1,7 @@
 export const getActiveTripKey = () => {
   if (typeof window === 'undefined') return 'rudranath-plan1';
   const segment = window.location.pathname.split('/')[1];
-  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2') {
+  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2') {
     return segment;
   }
   return 'rudranath-plan1';
@@ -16,6 +16,7 @@ export const getParentTripId = () => {
   if (key === 'annapurna-plan1') return 'annapurna';
   if (key === 'hemkund') return 'hemkund';
   if (key === 'shrikhand-plan1' || key === 'shrikhand-plan2') return 'shrikhand-mahadev';
+  if (key === 'hampta-plan1' || key === 'hampta-plan2') return 'hampta-pass';
   return key;
 };
 
@@ -25,25 +26,32 @@ export const getIsTripMainPage = () => {
   return !path.includes('stay') && !path.includes('expenses') && !path.includes('resources');
 };
 
-export const isPlan2 = typeof window !== 'undefined' && (window.location.pathname.includes('plan2') || window.location.pathname.includes('yulla-plan2') || window.location.pathname.includes('ladakh-plan2') || window.location.pathname.includes('spiti-plan2') || window.location.pathname.includes('shrikhand-plan2'));
+export const isPlan2 = typeof window !== 'undefined' && (window.location.pathname.includes('plan2') || window.location.pathname.includes('yulla-plan2') || window.location.pathname.includes('ladakh-plan2') || window.location.pathname.includes('spiti-plan2') || window.location.pathname.includes('shrikhand-plan2') || window.location.pathname.includes('hampta-plan2'));
 
-export const createDynamicProxy = (getPlan1, getPlan2, getSikkim, getYulla1, getYulla2, getHemkund, getLadakh1, getLadakh2, getSpiti1, getSpiti2, getAnnapurna1, getShrikhand1, getShrikhand2, isArray = false) => {
+export const createDynamicProxy = (...args) => {
+  let isArray = false;
+  const getters = [...args];
+  if (typeof getters[getters.length - 1] === 'boolean') {
+    isArray = getters.pop();
+  }
   const target = isArray ? [] : {};
   const getActiveData = () => {
     const key = getActiveTripKey();
-    if (key === "rudranath-plan2" || key === "plan2") return typeof getPlan2 === "function" ? getPlan2() : getPlan1();
-    if (key === "sikkim") return typeof getSikkim === "function" ? getSikkim() : getPlan1();
-    if (key === "hemkund") return typeof getHemkund === "function" ? getHemkund() : getPlan1();
-    if (key === "ladakh-plan1") return typeof getLadakh1 === "function" ? getLadakh1() : getPlan1();
-    if (key === "ladakh-plan2") return typeof getLadakh2 === "function" ? getLadakh2() : getPlan1();
-    if (key === "spiti-plan1") return typeof getSpiti1 === "function" ? getSpiti1() : getPlan1();
-    if (key === "spiti-plan2") return typeof getSpiti2 === "function" ? getSpiti2() : getPlan2();
-    if (key === "annapurna-plan1") return typeof getAnnapurna1 === "function" ? getAnnapurna1() : getPlan1();
-    if (key === "yulla-plan1") return typeof getYulla2 === "function" ? getYulla2() : getPlan1();
-    if (key === "yulla-plan2") return typeof getYulla1 === "function" ? getYulla1() : getPlan1();
-    if (key === "shrikhand-plan1") return typeof getShrikhand1 === "function" ? getShrikhand1() : getPlan1();
-    if (key === "shrikhand-plan2") return typeof getShrikhand2 === "function" ? getShrikhand2() : typeof getPlan2 === "function" ? getPlan2() : getPlan1();
-    return typeof getPlan1 === "function" ? getPlan1() : {};
+    if (key === "rudranath-plan2" || key === "plan2") return typeof getters[1] === "function" ? getters[1]() : getters[0]();
+    if (key === "sikkim") return typeof getters[2] === "function" ? getters[2]() : getters[0]();
+    if (key === "yulla-plan1") return typeof getters[4] === "function" ? getters[4]() : getters[0]();
+    if (key === "yulla-plan2") return typeof getters[3] === "function" ? getters[3]() : getters[0]();
+    if (key === "hemkund") return typeof getters[5] === "function" ? getters[5]() : getters[0]();
+    if (key === "ladakh-plan1") return typeof getters[6] === "function" ? getters[6]() : getters[0]();
+    if (key === "ladakh-plan2") return typeof getters[7] === "function" ? getters[7]() : getters[0]();
+    if (key === "spiti-plan1") return typeof getters[8] === "function" ? getters[8]() : getters[0]();
+    if (key === "spiti-plan2") return typeof getters[9] === "function" ? getters[9]() : getters[1]();
+    if (key === "annapurna-plan1") return typeof getters[10] === "function" ? getters[10]() : getters[0]();
+    if (key === "shrikhand-plan1") return typeof getters[11] === "function" ? getters[11]() : getters[0]();
+    if (key === "shrikhand-plan2") return typeof getters[12] === "function" ? getters[12]() : typeof getters[1] === "function" ? getters[1]() : getters[0]();
+    if (key === "hampta-plan1") return typeof getters[13] === "function" ? getters[13]() : getters[0]();
+    if (key === "hampta-plan2") return typeof getters[14] === "function" ? getters[14]() : typeof getters[1] === "function" ? getters[1]() : getters[0]();
+    return typeof getters[0] === "function" ? getters[0]() : {};
   };
 
   return new Proxy(target, {

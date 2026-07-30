@@ -1,12 +1,13 @@
-export const emergencyInfo = {
-  hospitals: [
-    { name: "SNM District Hospital Leh", phone: "+91-1982-252014", location: "Leh Town Center" },
-    { name: "Army General Hospital Leh", phone: "102 / Direct", location: "Leh Cantonment" },
-    { name: "District Hospital Kargil", phone: "+91-1985-232223", location: "Kargil Town" }
-  ],
-  police: [
-    { name: "Leh Police Station", phone: "112 / +91-1982-252018", location: "Leh Main Market" },
-    { name: "Kargil Police Control Room", phone: "+91-1985-232210", location: "Kargil" }
-  ],
-  helpline: "UT Ladakh Tourism & Emergency Helpline: 112"
-};
+export const emergencyContacts = [
+  { id: 1, type: "Police Station", name: "Leh Police Station", number: "+91-1982-252018", description: "Leh main police control room", location: "Leh Main Market", icon: "Shield" },
+  { id: 2, type: "Hospital", name: "SNM District Hospital", number: "+91-1982-252014", description: "Nearest major public hospital", location: "Leh Town Center", icon: "Hospital" },
+  { id: 3, type: "Ambulance", name: "Army General Hospital", number: "102", description: "Equipped for high-altitude emergency and chamber treatments", location: "Leh Cantonment", icon: "Ambulance" },
+  { id: 4, type: "Helpline", name: "Ladakh Emergency Helpline", number: "112", description: "UT Ladakh Tourism & general emergency line", location: "Leh/Kargil", icon: "Phone" }
+];
+
+export const emergencyProtocols = [
+  "Strictly follow 36-48 hours acclimatization resting period upon arriving in Leh",
+  "Download offline Ladakh region maps before travelling to remote lake sides",
+  "Carry multiple printed copies of Inner Line Permits (ILP) for checkpoint clearances",
+  "Purchase a local BSNL postpaid SIM or keep satellite phone track info if available"
+];

@@ -1,0 +1,43 @@
+export const treks = [
+  {
+    id: 1,
+    name: "Jobra Trailhead Ascent",
+    altitude: "2,980 m (9,776 ft)",
+    distance: "3 km",
+    duration: "2 Hours",
+    difficulty: "Easy",
+    description: "Trek through lush green pine forests along Rani Nallah stream to reach Chika camp.",
+    terrain: "Muddy trail & forest paths",
+    highlights: ["Pine & maple woods", "Waterfalls near Chika"],
+    bestTime: "June to September",
+    safetyNotes: "Gradual climb, excellent for first day acclimatization.",
+  },
+  {
+    id: 2,
+    name: "Balu Ka Ghera Flatbed",
+    altitude: "3,600 m (11,811 ft)",
+    distance: "8 km",
+    duration: "5 Hours",
+    difficulty: "Moderate",
+    description: "Trek along valley floor crossing alpine streams and rocky slopes to Balu Ka Ghera.",
+    terrain: "Alpine meadows, boulder fields & river beds",
+    highlights: ["Jwara wildflower meadow", "Cold water stream crossing"],
+    bestTime: "June to September",
+    safetyNotes: "Use trekking sandals for stream crossings. Keep hydrated.",
+  },
+  {
+    id: 3,
+    name: "Hampta Pass Summit Crossover",
+    altitude: "4,270 m (14,010 ft)",
+    distance: "12 km",
+    duration: "9 Hours",
+    difficulty: "Moderate to Strenuous",
+    description: "The main crossover pass summit climb over glacier bridges, followed by a steep descent into Lahaul.",
+    terrain: "Glaciers, snow bridges, scree & steep rocks",
+    highlights: ["Stunning crossover scenery", "Indrasan Peak views"],
+    bestTime: "June to September",
+    safetyNotes: "Descent is steep and slippery. Use microspikes if snow is present.",
+  },
+];
+
+export const trekDifficulties = ["Easy", "Moderate", "Moderate to Strenuous"];

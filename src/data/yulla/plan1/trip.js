@@ -21,7 +21,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 5, suffix: "", description: "Full trip duration", icon: "Calendar" },
   { id: "walking", label: "Walking/Trek", value: 24, suffix: " KM", description: "Yulla Khas to lake & back", icon: "Footprints" },
-  { id: "budget", label: "Budget", value: 8.9, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
+  { id: "budget", label: "Budget", value: 8.2, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 3895, suffix: " M (12,779 FT)", description: "Krishna Temple Lake", icon: "TrendingUp" },
   { id: "distance", label: "Total Distance", value: 1150, suffix: " KM", description: "Bus, road & scooty travel", icon: "Route" },
   { id: "destinations", label: "Destinations", value: 5, suffix: "", description: "Major stops visited", icon: "MapPin" },

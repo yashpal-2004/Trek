@@ -3,18 +3,20 @@ import { weather as weather2, safety as safety2 } from "./rudranath/plan2/weathe
 import { weather as weatherSikkim, safety as safetySikkim } from "./sikkim/weather";
 import { weather as weatherYulla1, safety as safetyYulla1 } from "./yulla/plan1/weather";
 import { weather as weatherYulla2, safety as safetyYulla2 } from "./yulla/plan2/weather";
-import { weatherData as weatherHemkund } from "./hemkund/weather";
-import { weatherData as weatherLadakh1 } from "./ladakh/plan1/weather";
-import { weatherData as weatherLadakh2 } from "./ladakh/plan2/weather";
+import { weather as weatherHemkund, safety as safetyHemkund } from "./hemkund/weather";
+import { weather as weatherLadakh1, safety as safetyLadakh1 } from "./ladakh/plan1/weather";
+import { weather as weatherLadakh2, safety as safetyLadakh2 } from "./ladakh/plan2/weather";
 import { weather as weatherSpiti1, safety as safetySpiti1 } from "./spiti/plan1/weather";
 import { weather as weatherSpiti2, safety as safetySpiti2 } from "./spiti/plan2/weather";
 import { weather as weatherAnnapurna1, safety as safetyAnnapurna1 } from "./annapurna/plan1/weather";
 import { weather as weatherShrikhand1, safety as safetyShrikhand1, networkCoverage as networkCoverageShrikhand1 } from "./shrikhand/plan1/weather";
 import { weather as weatherShrikhand2, safety as safetyShrikhand2, networkCoverage as networkCoverageShrikhand2 } from "./shrikhand/plan2/weather";
+import { weather as weatherHampta1, safety as safetyHampta1, networkCoverage as networkCoverageHampta1 } from "./hampta/plan1/weather";
+import { weather as weatherHampta2, safety as safetyHampta2, networkCoverage as networkCoverageHampta2 } from "./hampta/plan2/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
@@ -54,4 +56,4 @@ const networkCoverageAnnapurna = [
   { place: "Deurali / MBC / ABC", signal: "No Network", level: 0, carriers: "Teahouse Wi-Fi only", note: "Zero cellular network. Teahouses offer paid Wi-Fi (NPR 200-300)" }
 ];
 
-export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, true);
+export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, true);

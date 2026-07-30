@@ -1,17 +1,17 @@
 export const hemkundAmounts = {
-  budgetTotal: 7800,
+  budgetTotal: 7400,
   transportCategory: 2600,
   accommodationCategory: 1800,
   foodCategory: 2800,
-  emergencyCategory: 600,
+  emergencyCategory: 300,
 
   calcDefaults: {
     transport: 2600,
     stay: 1800,
     food: 2800,
-    emergency: 300,
-    shopping: 200,
-    permits: 100
+    emergency: 0,
+    shopping: 0,
+    permits: 200
   },
 
   stays: {

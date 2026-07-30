@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
@@ -7,11 +7,18 @@ import { yullaAmounts } from "../data/yulla/amounts";
 import { ladakhAmounts } from "../data/ladakh/amounts";
 import { spitiAmounts } from "../data/spiti/amounts";
 import { annapurnaAmounts } from "../data/annapurna/amounts";
+import { hemkundAmounts } from "../data/hemkund/amounts";
+import { rudranathAmounts } from "../data/rudranath/amounts";
+import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
+import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
+import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
+import { budget as budgetHampta2 } from "../data/hampta/plan2/budget";
 import { completedTrips } from "../data/completedTrips";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [completedPlans, setCompletedPlans, isLoading] = useFirestore("trek_completed_plans", []);
+  const [targetPlans, setTargetPlans] = useFirestore("trek_target_plans", []);
   const [actualCosts, setActualCosts] = useFirestore("trek_actual_costs", {});
   const [costPromptModal, setCostPromptModal] = useState(null); // { plan, defaultCost }
   const [inputActualCost, setInputActualCost] = useState("");
@@ -19,6 +26,21 @@ export default function Landing() {
   const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "timeline"
   const [expandedTripId, setExpandedTripId] = useState(null);
+
+  const handleToggleTargetPlan = (plan, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!selectedTrip) return;
+    const isAlreadyTarget = targetPlans.includes(plan.id);
+    const trekPlanIds = selectedTrip.plans.map(p => p.id);
+    let updatedTargets = targetPlans.filter(pid => !trekPlanIds.includes(pid));
+    if (!isAlreadyTarget) {
+      updatedTargets.push(plan.id);
+    }
+    setTargetPlans(updatedTargets);
+  };
 
   const isTripCompleted = (trip) => {
     if (trip.isCompleted) return true;
@@ -133,7 +155,7 @@ export default function Landing() {
       stats: {
         duration: "6–9 Days (Jul 2026)",
         distance: "52–60 km Trek",
-        budget: "₹8.0K–9.5K",
+        budget: `₹${(rudranathAmounts.plan2.budgetTotal / 1000).toFixed(1)}K–${(rudranathAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -143,7 +165,7 @@ export default function Landing() {
           duration: "2 Jul – 10 Jul 2026 (9 Days)",
           route: "Hisar → Haridwar → Sagar → Rudranath → Chopta → Kalpeshwar → Rishikesh → Hisar",
           details: "Includes Kalpeshwar (Panch Kedar temple) and a leisure day exploring Rishikesh ghats.",
-          budget: "₹8,500 – ₹9,500",
+          budget: `₹${rudranathAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/rudranath-plan1",
         },
         {
@@ -152,7 +174,7 @@ export default function Landing() {
           duration: "3 Jul – 8 Jul 2026 (6 Days)",
           route: "Hisar (3 Jul 5:00 PM) → Haridwar → Sagar → Rudranath → Chopta → Kartik Swami → Hisar (8 Jul 10:00 PM)",
           details: "Fast-paced route departing Hisar 3 Jul 5:00 PM, returning 8 Jul 10:00 PM.",
-          budget: "₹8,000 – ₹8,500",
+          budget: `₹${rudranathAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/rudranath-plan2",
         },
       ],
@@ -167,7 +189,7 @@ export default function Landing() {
       stats: {
         duration: "6–7 Days (Jul 2026)",
         distance: "64 km Trek",
-        budget: "₹6.5K–8.0K",
+        budget: `₹${(budgetShrikhand2.total / 1000).toFixed(1)}K–${(budgetShrikhand1.total / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -177,7 +199,7 @@ export default function Landing() {
           duration: "15 Jul – 21 Jul 2026 (7 Days)",
           route: "Hisar → Shimla → Rampur → Jaon → Singhad → Thachru → Kali Ghati → Bhim Dwar → Shrikhand Mahadev (5,227m) → Hisar",
           details: "Standard 7-day pilgrimage route with acclimatization stays at Thachru and Bhim Dwar base camp.",
-          budget: "₹6,500 – ₹8,000",
+          budget: `₹${budgetShrikhand1.total.toLocaleString("en-IN")} / person`,
           path: "/shrikhand-plan1",
         },
         {
@@ -186,8 +208,42 @@ export default function Landing() {
           duration: "16 Jul – 21 Jul 2026 (6 Days)",
           route: "Hisar (15 Jul 10:00 PM) → Rampur → Jaon → Singhad → Kali Ghati → Bhim Dwar → Shrikhand Summit → Jaon → Hisar",
           details: "Fast-paced 6-day direct route departing Hisar late night, bypassing Shimla stay.",
-          budget: "₹6,000 – ₹7,200",
+          budget: `₹${budgetShrikhand2.total.toLocaleString("en-IN")} / person`,
           path: "/shrikhand-plan2",
+        },
+      ],
+    },
+    {
+      id: "hampta-pass",
+      type: "trek",
+      typeLabel: "Mountain Trek",
+      title: "Hampta Pass Crossover Trek",
+      subtitle: "Himachal Pradesh, India",
+      description: "A spectacular crossover trek passing through dense pine forests and high-altitude alpine meadows to Lahaul's barren desert landscapes.",
+      stats: {
+        duration: "4–5 Days (Aug 2026)",
+        distance: "35 km Trek",
+        budget: `₹${(budgetHampta2.total / 1000).toFixed(1)}K–${(budgetHampta1.total / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "hampta-plan1",
+          title: "Plan 1 (Standard with Chandra Tal)",
+          duration: "10 Aug – 14 Aug 2026 (5 Days)",
+          route: "Delhi → Manali → Jobra → Chika → Balu Ka Ghera → Hampta Pass (4,270m) → Shea Goru → Chatru → Chandra Tal Lake → Manali → Delhi",
+          details: "Complete 5-day crossover trek including the detour to Chandra Tal high-altitude lake.",
+          budget: `₹${budgetHampta1.total.toLocaleString("en-IN")} / person`,
+          path: "/hampta-plan1",
+        },
+        {
+          id: "hampta-plan2",
+          title: "Plan 2 (Express Route Bypassing Chandra Tal)",
+          duration: "10 Aug – 13 Aug 2026 (4 Days)",
+          route: "Delhi → Manali → Jobra → Chika → Balu Ka Ghera → Hampta Pass (4,270m) → Shea Goru → Chatru → Manali → Delhi",
+          details: "Fast-paced 4-day express route bypassing Chandra Tal detour to fit tight holiday schedules.",
+          budget: `₹${budgetHampta2.total.toLocaleString("en-IN")} / person`,
+          path: "/hampta-plan2",
         },
       ],
     },
@@ -235,7 +291,7 @@ export default function Landing() {
       stats: {
         duration: "6 Days",
         distance: "38 km Trek",
-        budget: "₹7.8K",
+        budget: `₹${(hemkundAmounts.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -245,7 +301,7 @@ export default function Landing() {
           duration: "6 Days",
           route: "Delhi → Haridwar → Govindghat → Ghangaria → Valley of Flowers & Hemkund Sahib → Haridwar → Delhi",
           details: "Complete 6-day self-guided pilgrimage and alpine valley trek starting and ending in Delhi via Haridwar & Govindghat.",
-          budget: "₹7,800 / person",
+          budget: `₹${hemkundAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/hemkund",
         }
       ],
@@ -395,6 +451,7 @@ export default function Landing() {
   const renderTripCard = (trip) => {
     const isCompleted = isTripCompleted(trip);
     const isTrek = trip.type === "trek";
+    const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? trip.plans[0] : trip.plans.find(p => targetPlans.includes(p.id))) : null;
 
     return (
       <div
@@ -420,11 +477,17 @@ export default function Landing() {
                 </span>
               </div>
 
-              <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2" style={{ fontFamily: "'Anton', sans-serif" }}>
+              <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 flex-wrap" style={{ fontFamily: "'Anton', sans-serif" }}>
                 {trip.title}
                 {isCompleted && (
                   <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full normal-case font-sans">
                     Done ({getCompletedPlansText(trip)})
+                  </span>
+                )}
+                {targetPlanForTrip && !isCompleted && (
+                  <span className="bg-amber-500/10 text-amber-700 text-[10px] font-bold tracking-wider px-2.5 py-0.5 rounded-full normal-case font-sans border border-amber-500/20 flex items-center gap-1">
+                    <Star size={10} className="fill-amber-500 text-amber-500" />
+                    Target: {targetPlanForTrip.title.split(" (")[0]}
                   </span>
                 )}
               </h3>
@@ -544,6 +607,7 @@ export default function Landing() {
                   const isCompleted = isTripCompleted(trip);
                   const isTrek = trip.type === "trek";
                   const isExpanded = expandedTripId === trip.id;
+                  const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? trip.plans[0] : trip.plans.find(p => targetPlans.includes(p.id))) : null;
 
                   return (
                     <motion.div
@@ -591,6 +655,12 @@ export default function Landing() {
                               {isCompleted && (
                                 <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-bold tracking-wider px-2.5 py-0.5 rounded-full normal-case font-sans border border-emerald-500/20">
                                   Done ({getCompletedPlansText(trip)})
+                                </span>
+                              )}
+                              {targetPlanForTrip && !isCompleted && (
+                                <span className="bg-amber-500/10 text-amber-700 text-[10px] font-bold tracking-wider px-2.5 py-0.5 rounded-full normal-case font-sans border border-amber-500/20 flex items-center gap-1">
+                                  <Star size={10} className="fill-amber-500 text-amber-500" />
+                                  Target: {targetPlanForTrip.title.split(" (")[0]}
                                 </span>
                               )}
                             </h3>
@@ -1034,13 +1104,18 @@ export default function Landing() {
 
               {/* Plan Options Stack */}
               <div className="space-y-4">
-                {selectedTrip.plans.map((plan) => {
+                 {selectedTrip.plans.map((plan) => {
                   const isPlanCompleted = completedPlans.includes(plan.id);
+                  const isPlanTarget = selectedTrip.plans.length === 1 ? true : targetPlans.includes(plan.id);
                   return (
                     <div
                       key={plan.id}
                       className={`relative bg-white hover:bg-white/80 border rounded-2xl p-5 transition-all shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group ${
-                        isPlanCompleted ? "border-emerald-500/35 bg-emerald-500/[0.01]" : "border-black/5 hover:border-black/25"
+                        isPlanCompleted
+                          ? "border-emerald-500/35 bg-emerald-500/[0.01]"
+                          : isPlanTarget
+                            ? "border-amber-500/40 bg-amber-500/[0.01] ring-1 ring-amber-500/20"
+                            : "border-black/5 hover:border-black/25"
                       }`}
                     >
                       <a
@@ -1054,6 +1129,11 @@ export default function Landing() {
                               {isPlanCompleted && (
                                 <span className="bg-emerald-500/10 text-emerald-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase">
                                   Completed
+                                </span>
+                              )}
+                              {isPlanTarget && !isPlanCompleted && (
+                                <span className="bg-amber-500/10 text-amber-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase border border-amber-500/25 flex items-center gap-0.5">
+                                  <Star size={9} className="fill-amber-500 text-amber-500" /> Target
                                 </span>
                               )}
                             </h4>
@@ -1085,21 +1165,38 @@ export default function Landing() {
                         
                         <div className="flex items-center gap-2">
                           {!selectedTrip.isCompleted && (
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleTogglePlanMark(plan, e);
-                              }}
-                              className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
-                                isPlanCompleted
-                                  ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
-                                  : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-                              }`}
-                              title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
-                            >
-                              <CheckCircle2 size={14} />
-                            </button>
+                            <>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleToggleTargetPlan(plan, e);
+                                }}
+                                className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
+                                  isPlanTarget
+                                    ? "bg-amber-500 border-amber-600 text-white hover:bg-amber-600"
+                                    : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                                }`}
+                                title={isPlanTarget ? "Remove Target Plan" : "Set as Target Plan"}
+                              >
+                                <Star size={14} className={isPlanTarget ? "fill-white" : ""} />
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleTogglePlanMark(plan, e);
+                                }}
+                                className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
+                                  isPlanCompleted
+                                    ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
+                                    : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                                }`}
+                                title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
+                              >
+                                <CheckCircle2 size={14} />
+                              </button>
+                            </>
                           )}
                           <a
                             href={plan.path}

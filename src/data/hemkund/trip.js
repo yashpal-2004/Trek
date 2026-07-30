@@ -1,11 +1,13 @@
+import { hemkundAmounts } from "./amounts";
+
 export const trip = {
   title: "Valley of Flowers & Hemkund Sahib",
   subtitle: "A 6-day spiritual and alpine trekking journey from Delhi via Rishikesh, Govindghat, and Ghangaria base camp",
   duration: "Custom Dates",
   durationDays: 6,
   people: 4,
-  budgetMin: 7200,
-  budgetMax: 8500,
+  get budgetMin() { return hemkundAmounts.budgetTotal - 600; },
+  get budgetMax() { return hemkundAmounts.budgetTotal + 700; },
   difficulty: "Moderate",
   highestAltitude: "4,632m (15,200 ft)",
   totalDistance: "1080 km",
@@ -21,7 +23,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 6, suffix: "", description: "Full trip duration", icon: "Calendar" },
   { id: "walking", label: "Walking/Trek", value: 38, suffix: " KM", description: "Ghangaria, Valley & Hemkund", icon: "Footprints" },
-  { id: "budget", label: "Budget", value: 7.8, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
+  { id: "budget", label: "Budget", get value() { return (hemkundAmounts.budgetTotal / 1000).toFixed(1); }, suffix: "K", prefix: "₹", description: "Per person estimate", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 4632, suffix: " M (15,200 FT)", description: "Hemkund Sahib Gurudwara", icon: "TrendingUp" },
   { id: "distance", label: "Total Distance", value: 1080, suffix: " KM", description: "Rail, road & trekking", icon: "Route" },
   { id: "destinations", label: "Destinations", value: 5, suffix: "", description: "Major stops visited", icon: "MapPin" },
