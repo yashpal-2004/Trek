@@ -56,6 +56,7 @@ export const overviewCards = [
 
 export const navLinks = [
   { id: "overview", label: "Overview" },
+  { id: "routemap", label: "Map" },
   { id: "timeline", label: "Timeline" },
   { id: "itinerary", label: "Itinerary" },
   { id: "transport", label: "Transport" },

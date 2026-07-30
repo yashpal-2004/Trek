@@ -11,6 +11,15 @@ import StaySection from "../components/stay/StaySection";
 import BudgetSection from "../components/budget/BudgetSection";
 import ExpensesSection from "./Expenses";
 import ResourcesSection from "./Resources";
+import SpitiRouteMap from "../components/map/SpitiRouteMap";
+import HemkundRouteMap from "../components/map/HemkundRouteMap";
+import HamptaRouteMap from "../components/map/HamptaRouteMap";
+import YullaRouteMap from "../components/map/YullaRouteMap";
+import AnnapurnaRouteMap from "../components/map/AnnapurnaRouteMap";
+import ShrikhandRouteMap from "../components/map/ShrikhandRouteMap";
+import LadakhRouteMap from "../components/map/LadakhRouteMap";
+import SikkimRouteMap from "../components/map/SikkimRouteMap";
+import { getParentTripId } from "../data/proxyHelper";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -60,6 +69,14 @@ export default function Home() {
           <>
             <QuickStats />
             <RouteTimeline />
+            {getParentTripId() === "spiti" && <SpitiRouteMap />}
+            {getParentTripId() === "hemkund" && <HemkundRouteMap />}
+            {getParentTripId() === "hampta-pass" && <HamptaRouteMap />}
+            {getParentTripId() === "yulla" && <YullaRouteMap />}
+            {getParentTripId() === "annapurna" && <AnnapurnaRouteMap />}
+            {getParentTripId() === "shrikhand-mahadev" && <ShrikhandRouteMap />}
+            {getParentTripId() === "ladakh" && <LadakhRouteMap />}
+            {getParentTripId() === "sikkim" && <SikkimRouteMap />}
             <ItinerarySection />
             <TransportSection />
           </>
