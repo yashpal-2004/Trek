@@ -339,9 +339,9 @@ export default function Landing() {
       subtitle: "Himachal Pradesh, India",
       description: "A high-altitude mountain riding expedition from Delhi via Manali, Atal Tunnel, Kunzum Pass (14,931 ft), Kaza, Key Monastery, Hikkim & Chandratal Lake.",
       stats: {
-        duration: "6 Days",
-        distance: "1150 km Total",
-        budget: `₹${(spitiAmounts.plan2.budgetTotal / 1000).toFixed(1)}K–${(spitiAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
+        duration: "4–6 Days",
+        distance: "1430–1500 km Total",
+        budget: `₹${(spitiAmounts.plan3.budgetTotal / 1000).toFixed(1)}K–₹${(spitiAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -362,6 +362,15 @@ export default function Landing() {
           details: "Optimized 4-person group route with 2 Hero Xpulse bikes, 2 Manali scooties, and shared quad stay savings.",
           budget: `₹${spitiAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/spiti-plan2",
+        },
+        {
+          id: "spiti-plan3",
+          title: "Plan 3 (Express — No Manali Stay)",
+          duration: "4 Days",
+          route: "Delhi → Manali (Transit) → Kaza → Key & High Villages → Chandratal → Manali → Delhi",
+          details: "Express 4-day budget route for 2 riders. Skip Manali hotel stays — ride directly to Kaza on arrival day.",
+          budget: `₹${spitiAmounts.plan3.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/spiti-plan3",
         }
       ],
     },

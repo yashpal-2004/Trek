@@ -16,7 +16,7 @@ export const budget = {
       subItems: [
         { name: "Delhi-Manali Volvo Bus Round Trip (₹600 each way)", price: data.transportFares.volvoRoundTrip },
         { name: "Hero Xpulse 200 Bike Rental (3 Days Spiti, split by 4 across 2 bikes)", price: data.transportFares.xpulseRentalPerPerson },
-        { name: "Hero Xpulse 200 Fuel (Spiti ~450 km)", price: data.transportFares.xpulseFuelPerPerson },
+        { name: "Hero Xpulse 200 Fuel (Spiti ~800 km)", price: data.transportFares.xpulseFuelPerPerson },
         { name: "Manali Scooty Rental (2 Days, split by 4 across 2 scooties)", price: data.transportFares.scootyRentalPerPerson },
         { name: "Manali Scooty Fuel (2 Days local riding)", price: data.transportFares.scootyFuelPerPerson }
       ]
@@ -52,8 +52,8 @@ export const budget = {
       icon: "ShieldAlert", 
       description: "Shared Green Fee permit, entry fees, and emergency cash buffer",
       subItems: [
-        { name: "Green Permit & Entry Fees (Shared)", price: 100 },
-        { name: "Emergency Buffer", price: 200 }
+        { name: "Green Permit & Entry Fees (Shared)", price: data.calcDefaults.permits },
+        { name: "Emergency Buffer", price: data.calcDefaults.emergency }
       ]
     }
   ],

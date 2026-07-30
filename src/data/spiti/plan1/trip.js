@@ -10,7 +10,7 @@ export const trip = {
   budgetMax: 10900,
   difficulty: "Moderate to Challenging",
   highestAltitude: "4,551m (14,931 ft)",
-  totalDistance: "1150 km",
+  totalDistance: "1500 km",
   totalTrekDistance: "2 km",
   startingPoint: "Delhi",
   endingPoint: "Delhi",
@@ -22,7 +22,7 @@ export const trip = {
 
 export const quickStats = [
   { id: "days", label: "Total Days", value: 6, suffix: "", description: "Full circuit duration", icon: "Calendar" },
-  { id: "distance", label: "Total Distance", value: 1150, suffix: " KM", description: "Volvo Bus + 450 km Spiti Bike & Scooty", icon: "Route" },
+  { id: "distance", label: "Total Distance", value: 1500, suffix: " KM", description: "Volvo Bus + 800 km Spiti Bike & Scooty", icon: "Route" },
   { id: "budget", label: "Budget", value: (spitiAmounts.plan1.budgetTotal / 1000).toFixed(1), suffix: "K", prefix: "₹", description: "Per person (2 riders group)", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 4551, suffix: " M (14,931 FT)", description: "Kunzum Pass", icon: "TrendingUp" },
   { id: "passes", label: "Mountain Passes", value: 2, suffix: "", description: "Atal Tunnel & Kunzum Pass", icon: "Mountain" },

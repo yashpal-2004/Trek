@@ -19,6 +19,7 @@ export default function App() {
         <Route path="/ladakh-plan2" element={<Home />} />
         <Route path="/spiti-plan1" element={<Home />} />
         <Route path="/spiti-plan2" element={<Home />} />
+        <Route path="/spiti-plan3" element={<Home />} />
         <Route path="/annapurna-plan1" element={<Home />} />
         <Route path="/shrikhand-plan1" element={<Home />} />
         <Route path="/shrikhand-plan2" element={<Home />} />
