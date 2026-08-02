@@ -14,8 +14,10 @@ import { faqs as faqShrikhand1, faqCategories as faqCategoriesShrikhand1 } from 
 import { faqs as faqShrikhand2, faqCategories as faqCategoriesShrikhand2 } from "./shrikhand/plan2/faq";
 import { faqs as faqHampta1, faqCategories as faqCategoriesHampta1 } from "./hampta/plan1/faq";
 import { faqs as faqHampta2, faqCategories as faqCategoriesHampta2 } from "./hampta/plan2/faq";
+import { faqs as faqMadhyamaheshwar1 } from "./madhyamaheshwar/plan1/faq";
+import { faqs as faqMadhyamaheshwar2 } from "./madhyamaheshwar/plan2/faq";
+import { faqs as faqKedarkantha } from "./kedarkantha/faq";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const faq = createDynamicProxy(() => faq1, () => faq2, () => faqSikkim, () => faqYulla1, () => faqYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqSpiti1, () => faqSpiti2, () => faqAnnapurna1, () => faqShrikhand1, () => faqShrikhand2, () => faqHampta1, () => faqHampta2, () => faqSpiti3, true);
-export const faqCategories = createDynamicProxy(() => faqCategories1, () => faqCategories2, () => faqCategoriesSikkim, () => faqCategoriesYulla1, () => faqCategoriesYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqCategoriesSpiti1, () => faqCategoriesSpiti2, () => faqAnnapurna1, () => faqCategoriesShrikhand1, () => faqCategoriesShrikhand2, () => faqCategoriesHampta1, () => faqCategoriesHampta2, () => [], true);
-
+export const faq = createDynamicProxy(() => faq1, () => faq2, () => faqSikkim, () => faqYulla1, () => faqYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqSpiti1, () => faqSpiti2, () => faqAnnapurna1, () => faqShrikhand1, () => faqShrikhand2, () => faqHampta1, () => faqHampta2, () => faqSpiti3, () => faqMadhyamaheshwar1, () => faqMadhyamaheshwar2, () => faqKedarkantha, true);
+export const faqCategories = createDynamicProxy(() => faqCategories1, () => faqCategories2, () => faqCategoriesSikkim, () => faqCategoriesYulla1, () => faqCategoriesYulla2, () => [], () => [], () => [], () => faqCategoriesSpiti1, () => faqCategoriesSpiti2, () => [], () => faqCategoriesShrikhand1, () => faqCategoriesShrikhand2, () => faqCategoriesHampta1, () => faqCategoriesHampta2, () => [], () => [], () => [], () => [], true);

@@ -25,6 +25,9 @@ export default function App() {
         <Route path="/shrikhand-plan2" element={<Home />} />
         <Route path="/hampta-plan1" element={<Home />} />
         <Route path="/hampta-plan2" element={<Home />} />
+        <Route path="/madhyamaheshwar-plan1" element={<Home />} />
+        <Route path="/madhyamaheshwar-plan2" element={<Home />} />
+        <Route path="/kedarkantha" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

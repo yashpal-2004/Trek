@@ -9,6 +9,8 @@ import { spitiAmounts } from "../data/spiti/amounts";
 import { annapurnaAmounts } from "../data/annapurna/amounts";
 import { hemkundAmounts } from "../data/hemkund/amounts";
 import { rudranathAmounts } from "../data/rudranath/amounts";
+import { madhyamaheshwarAmounts } from "../data/madhyamaheshwar/amounts";
+import { kedarkanthaAmounts } from "../data/kedarkantha/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
 import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
@@ -430,6 +432,65 @@ export default function Landing() {
           details: "Shared Sumo package tour (covers North Sikkim transit, homestays, permits, and food).",
           budget: "₹6,900 / person",
           path: "/sikkim",
+        }
+      ],
+    },
+    {
+      id: "madhyamaheshwar",
+      type: "trek",
+      typeLabel: "Mountain Trek",
+      title: "Madhyamaheshwar & Budha Madhyamaheshwar",
+      subtitle: "Uttarakhand, India",
+      description: "A spiritual and scenic yatra to the high alpine meadows and ancient Panch Kedar temple of Madhyamaheshwar, optionally combining it with the sacred Kedarnath shrine.",
+      stats: {
+        duration: "5–8 Days",
+        distance: "36–68 km Trek",
+        budget: `₹${(madhyamaheshwarAmounts.plan1.budgetTotal / 1000).toFixed(1)}K–${(madhyamaheshwarAmounts.plan2.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "madhyamaheshwar-plan1",
+          title: "Plan 1 (Standard Delhi Round Trip)",
+          duration: "5 Days",
+          route: "Delhi → Rishikesh → Ukhimath → Ransi → Bantoli → Madhyamaheshwar → Budha Madhyamaheshwar → Ransi → Rishikesh → Delhi",
+          details: "Scenic 5-day route climbing to Madhyamaheshwar and Budha Madhyamaheshwar with Chaukhamba sunrise reflections.",
+          budget: `₹${madhyamaheshwarAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/madhyamaheshwar-plan1",
+        },
+        {
+          id: "madhyamaheshwar-plan2",
+          title: "Plan 2 (Kedarnath Combo Yatra)",
+          duration: "8 Days",
+          route: "Delhi → Rishikesh → Gaurikund → Kedarnath Temple → Ukhimath → Ransi → Madhyamaheshwar → Budha Madmaheshwar → Ransi → Rishikesh → Delhi",
+          details: "Extended 8-day dual pilgrimage route combining the holy Kedarnath yatra and serene Madhyamaheshwar trek.",
+          budget: `₹${madhyamaheshwarAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/madhyamaheshwar-plan2",
+        }
+      ],
+    },
+    {
+      id: "kedarkantha",
+      type: "trek",
+      typeLabel: "Winter Snow Trek",
+      title: "Kedarkantha Peak Summit",
+      subtitle: "Uttarakhand, India",
+      description: "A classic winter snow climb in the Garhwal Himalayas up to the 3,810m summit, featuring beautiful snow forest trails and the frozen Juda Ka Talab lake.",
+      stats: {
+        duration: "5 Days (Jan 2027)",
+        distance: "18 km Trek",
+        budget: `₹${(kedarkanthaAmounts.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "kedarkantha",
+          title: "Standard Winter Plan (Delhi Round Trip)",
+          duration: "5 Days",
+          route: "Delhi → Dehradun → Sankri → Juda Ka Talab → Kedarkantha Summit (3,810m) → Hargaon Camp → Sankri → Dehradun → Delhi",
+          details: "Acclimatized 5-day summit route designed for solo budget travelers with local camp renting options.",
+          budget: `₹${kedarkanthaAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/kedarkantha",
         }
       ],
     }

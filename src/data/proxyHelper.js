@@ -1,7 +1,7 @@
 export const getActiveTripKey = () => {
   if (typeof window === 'undefined') return 'rudranath-plan1';
   const segment = window.location.pathname.split('/')[1];
-  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'spiti-plan3' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2') {
+  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'spiti-plan3' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2' || segment === 'madhyamaheshwar-plan1' || segment === 'madhyamaheshwar-plan2' || segment === 'kedarkantha') {
     return segment;
   }
   return 'rudranath-plan1';
@@ -17,6 +17,8 @@ export const getParentTripId = () => {
   if (key === 'hemkund') return 'hemkund';
   if (key === 'shrikhand-plan1' || key === 'shrikhand-plan2') return 'shrikhand-mahadev';
   if (key === 'hampta-plan1' || key === 'hampta-plan2') return 'hampta-pass';
+  if (key === 'madhyamaheshwar-plan1' || key === 'madhyamaheshwar-plan2') return 'madhyamaheshwar';
+  if (key === 'kedarkantha') return 'kedarkantha';
   return key;
 };
 
@@ -26,7 +28,7 @@ export const getIsTripMainPage = () => {
   return !path.includes('stay') && !path.includes('expenses') && !path.includes('resources');
 };
 
-export const isPlan2 = typeof window !== 'undefined' && (window.location.pathname.includes('plan2') || window.location.pathname.includes('yulla-plan2') || window.location.pathname.includes('ladakh-plan2') || window.location.pathname.includes('spiti-plan2') || window.location.pathname.includes('shrikhand-plan2') || window.location.pathname.includes('hampta-plan2'));
+export const isPlan2 = typeof window !== 'undefined' && (window.location.pathname.includes('plan2') || window.location.pathname.includes('yulla-plan2') || window.location.pathname.includes('ladakh-plan2') || window.location.pathname.includes('spiti-plan2') || window.location.pathname.includes('shrikhand-plan2') || window.location.pathname.includes('hampta-plan2') || window.location.pathname.includes('madhyamaheshwar-plan2'));
 
 export const createDynamicProxy = (...args) => {
   let isArray = false;
@@ -52,6 +54,9 @@ export const createDynamicProxy = (...args) => {
     if (key === "shrikhand-plan2") return typeof getters[12] === "function" ? getters[12]() : typeof getters[1] === "function" ? getters[1]() : getters[0]();
     if (key === "hampta-plan1") return typeof getters[13] === "function" ? getters[13]() : getters[0]();
     if (key === "hampta-plan2") return typeof getters[14] === "function" ? getters[14]() : typeof getters[1] === "function" ? getters[1]() : getters[0]();
+    if (key === "madhyamaheshwar-plan1") return typeof getters[16] === "function" ? getters[16]() : getters[0]();
+    if (key === "madhyamaheshwar-plan2") return typeof getters[17] === "function" ? getters[17]() : getters[1]();
+    if (key === "kedarkantha") return typeof getters[18] === "function" ? getters[18]() : getters[0]();
     return typeof getters[0] === "function" ? getters[0]() : {};
   };
 

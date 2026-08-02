@@ -19,6 +19,8 @@ import AnnapurnaRouteMap from "../components/map/AnnapurnaRouteMap";
 import ShrikhandRouteMap from "../components/map/ShrikhandRouteMap";
 import LadakhRouteMap from "../components/map/LadakhRouteMap";
 import SikkimRouteMap from "../components/map/SikkimRouteMap";
+import MadhyamaheshwarRouteMap from "../components/map/MadhyamaheshwarRouteMap";
+import KedarkanthaRouteMap from "../components/map/KedarkanthaRouteMap";
 import { getParentTripId } from "../data/proxyHelper";
 
 export default function Home() {
@@ -77,6 +79,8 @@ export default function Home() {
             {getParentTripId() === "shrikhand-mahadev" && <ShrikhandRouteMap />}
             {getParentTripId() === "ladakh" && <LadakhRouteMap />}
             {getParentTripId() === "sikkim" && <SikkimRouteMap />}
+            {getParentTripId() === "madhyamaheshwar" && <MadhyamaheshwarRouteMap />}
+            {getParentTripId() === "kedarkantha" && <KedarkanthaRouteMap />}
             <ItinerarySection />
             <TransportSection />
           </>
