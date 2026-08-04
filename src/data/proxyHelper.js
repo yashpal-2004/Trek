@@ -16,7 +16,7 @@ export const getParentTripId = () => {
   if (key === 'annapurna-plan1') return 'annapurna';
   if (key === 'hemkund') return 'hemkund';
   if (key === 'shrikhand-plan1' || key === 'shrikhand-plan2') return 'shrikhand-mahadev';
-  if (key === 'hampta-plan1' || key === 'hampta-pass') return 'hampta-pass';
+  if (key === 'hampta-plan1' || key === 'hampta-plan2' || key === 'hampta-pass') return 'hampta-pass';
   if (key === 'madhyamaheshwar-plan1' || key === 'madhyamaheshwar-plan2') return 'madhyamaheshwar';
   if (key === 'kedarkantha') return 'kedarkantha';
   if (key === 'bir-billing' || key === 'bir-billing-plan1' || key === 'bir-billing-plan2' || key === 'bir-billing-plan3') return 'bir-billing';
