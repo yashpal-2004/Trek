@@ -21,6 +21,7 @@ import LadakhRouteMap from "../components/map/LadakhRouteMap";
 import SikkimRouteMap from "../components/map/SikkimRouteMap";
 import MadhyamaheshwarRouteMap from "../components/map/MadhyamaheshwarRouteMap";
 import KedarkanthaRouteMap from "../components/map/KedarkanthaRouteMap";
+import BirBillingRouteMap from "../components/map/BirBillingRouteMap";
 import { getParentTripId } from "../data/proxyHelper";
 
 export default function Home() {
@@ -81,6 +82,7 @@ export default function Home() {
             {getParentTripId() === "sikkim" && <SikkimRouteMap />}
             {getParentTripId() === "madhyamaheshwar" && <MadhyamaheshwarRouteMap />}
             {getParentTripId() === "kedarkantha" && <KedarkanthaRouteMap />}
+            {getParentTripId() === "bir-billing" && <BirBillingRouteMap />}
             <ItinerarySection />
             <TransportSection />
           </>

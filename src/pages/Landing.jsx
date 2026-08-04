@@ -11,6 +11,11 @@ import { hemkundAmounts } from "../data/hemkund/amounts";
 import { rudranathAmounts } from "../data/rudranath/amounts";
 import { madhyamaheshwarAmounts } from "../data/madhyamaheshwar/amounts";
 import { kedarkanthaAmounts } from "../data/kedarkantha/amounts";
+import { birBillingAmounts as birBillingAmountsPlan1 } from "../data/bir-billing/plan1/amounts";
+import { birBillingAmounts as birBillingAmountsPlan2 } from "../data/bir-billing/plan2/amounts";
+import { birBillingAmounts as birBillingAmountsPlan3 } from "../data/bir-billing/plan3/amounts";
+import { jibhiAmounts as jibhiAmountsPlan1 } from "../data/jibhi/plan1/amounts";
+import { jibhiAmounts as jibhiAmountsPlan2 } from "../data/jibhi/plan2/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
 import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
@@ -491,6 +496,83 @@ export default function Landing() {
           details: "Acclimatized 5-day summit route designed for solo budget travelers with local camp renting options.",
           budget: `₹${kedarkanthaAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/kedarkantha",
+        }
+      ],
+    },
+    {
+      id: "bir-billing",
+      type: "trip",
+      typeLabel: "Adventure Trip",
+      title: "Bir Billing Paragliding",
+      subtitle: "Himachal Pradesh, India",
+      description: "Experience paragliding at Asia's highest takeoff site, combined with a scenic pine forest trek and local monastery exploration.",
+      stats: {
+        duration: "4 Days",
+        distance: "7 km Trek",
+        budget: `₹${(birBillingAmountsPlan2.budgetTotal / 1000).toFixed(1)}K - ₹${(birBillingAmountsPlan1.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "bir-billing-plan1",
+          title: "Couples Plan (Private Rooms & Scooties)",
+          duration: "4 Days",
+          route: "Sonipat → Bir Colony (Private Stay) → Billing camp via scooter → Return ride to Bir → Sonipat",
+          details: "Two couples setup with private double hotel rooms, rented scooties, and shared fuel.",
+          budget: `₹${birBillingAmountsPlan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/bir-billing-plan1",
+        },
+        {
+          id: "bir-billing-plan2",
+          title: "Solo Explorer Plan (Dorms & Scooty - No Flight)",
+          duration: "4 Days",
+          route: "Sonipat → Bir Colony (Dorm Stay) → Explore villages/waterfalls by scooter → Camp at Billing → Sonipat",
+          details: "Designed for solo travelers using hostels and zipping around by scooter. No paragliding.",
+          budget: `₹${birBillingAmountsPlan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/bir-billing-plan2",
+        },
+        {
+          id: "bir-billing-plan3",
+          title: "Solo Flyer Plan (Dorms & Scooty - With Flight)",
+          duration: "4 Days",
+          route: "Sonipat → Bir Colony (Dorm Stay) → Scooter explore → Cab to Billing camp → Paraglide down to Bir → Sonipat",
+          details: "Solo package including hostel beds, 1-day scooter hire, and a tandem paragliding flight.",
+          budget: `₹${birBillingAmountsPlan3.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/bir-billing-plan3",
+        }
+      ],
+    },
+    {
+      id: "jibhi",
+      type: "trip",
+      typeLabel: "Adventure Trip",
+      title: "Jibhi & Tirthan Valley",
+      subtitle: "Himachal Pradesh, India",
+      description: "Explore the magical Jibhi Valley, hike to holy Serolsar Lake, and admire the majestic 10-story high Chehni Kothi tower temple.",
+      stats: {
+        duration: "4 Days",
+        distance: "5 km Trek",
+        budget: `₹${(jibhiAmountsPlan2.budgetTotal / 1000).toFixed(1)}K - ₹${(jibhiAmountsPlan1.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "jibhi-plan1",
+          title: "Couples Plan (Private Rooms & Scooties)",
+          duration: "4 Days",
+          route: "Sonipat → Aut Tunnel → Jibhi (Private stay) via local bus → Ride scooters to Jalori Pass, Chehni Kothi & Gushaini → Sonipat",
+          details: "Two couples setup with cozy double rooms, 2 scooties, local bus transits from Aut tunnel, and shared fuel.",
+          budget: `₹${jibhiAmountsPlan1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/jibhi-plan1",
+        },
+        {
+          id: "jibhi-plan2",
+          title: "Solo Explorer Plan (Dorms & Scooty)",
+          duration: "4 Days",
+          route: "Sonipat → Aut Tunnel → Jibhi (Dorm stay) → Ride scooter to Jalori Pass, Serolsar Lake & Gushaini → Sonipat",
+          details: "Perfect solo travel budget utilizing hostel beds, local bus transits, and scooter rental.",
+          budget: `₹${jibhiAmountsPlan2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/jibhi-plan2",
         }
       ],
     }

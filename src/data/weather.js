@@ -17,10 +17,15 @@ import { weather as weatherHampta2, safety as safetyHampta2, networkCoverage as 
 import { weather as weatherMadhyamaheshwar1, safety as safetyMadhyamaheshwar1 } from "./madhyamaheshwar/plan1/weather";
 import { weather as weatherMadhyamaheshwar2, safety as safetyMadhyamaheshwar2 } from "./madhyamaheshwar/plan2/weather";
 import { weather as weatherKedarkantha, safety as safetyKedarkantha } from "./kedarkantha/weather";
+import { weather as weatherBirBillingPlan1, safety as safetyBirBillingPlan1 } from "./bir-billing/plan1/weather";
+import { weather as weatherBirBillingPlan2, safety as safetyBirBillingPlan2 } from "./bir-billing/plan2/weather";
+import { weather as weatherBirBillingPlan3, safety as safetyBirBillingPlan3 } from "./bir-billing/plan3/weather";
+import { weather as weatherJibhiPlan1, safety as safetyJibhiPlan1 } from "./jibhi/plan1/weather";
+import { weather as weatherJibhiPlan2, safety as safetyJibhiPlan2 } from "./jibhi/plan2/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2, () => weatherSpiti3, () => weatherMadhyamaheshwar1, () => weatherMadhyamaheshwar2, () => weatherKedarkantha);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, () => safetySpiti3, () => safetyMadhyamaheshwar1, () => safetyMadhyamaheshwar2, () => safetyKedarkantha, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2, () => weatherSpiti3, () => weatherMadhyamaheshwar1, () => weatherMadhyamaheshwar2, () => weatherKedarkantha, () => weatherBirBillingPlan1, () => weatherBirBillingPlan2, () => weatherBirBillingPlan3, () => weatherJibhiPlan1, () => weatherJibhiPlan2);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, () => safetySpiti3, () => safetyMadhyamaheshwar1, () => safetyMadhyamaheshwar2, () => safetyKedarkantha, () => safetyBirBillingPlan1, () => safetyBirBillingPlan2, () => safetyBirBillingPlan3, () => safetyJibhiPlan1, () => safetyJibhiPlan2, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
@@ -73,4 +78,14 @@ const networkCoverageKedarkantha = [
   { place: "Juda Ka Talab", signal: "No Network", level: 0, carriers: "None", note: "Complete dead zone. Inform contacts beforehand" }
 ];
 
-export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, () => networkCoverageSpiti, () => networkCoverageMadhyamaheshwar, () => networkCoverageMadhyamaheshwar, () => networkCoverageKedarkantha, true);
+const networkCoverageBirBilling = [
+  { place: "Bir Colony", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage in the town" },
+  { place: "Billing Take-off", signal: "Good", level: 3, carriers: "Jio, Airtel", note: "Good 4G signal on the takeoff ridge" }
+];
+
+const networkCoverageJibhi = [
+  { place: "Jibhi Valley", signal: "Excellent", level: 4, carriers: "Jio, Airtel", note: "Good 4G/5G signal inside the valley" },
+  { place: "Jalori Pass", signal: "Moderate", level: 2, carriers: "Jio", note: "Network can drop on some sections of the Serolsar Lake trail" }
+];
+
+export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, () => networkCoverageSpiti, () => networkCoverageMadhyamaheshwar, () => networkCoverageMadhyamaheshwar, () => networkCoverageKedarkantha, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageJibhi, () => networkCoverageJibhi, true);

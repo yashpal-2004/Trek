@@ -28,6 +28,12 @@ export default function App() {
         <Route path="/madhyamaheshwar-plan1" element={<Home />} />
         <Route path="/madhyamaheshwar-plan2" element={<Home />} />
         <Route path="/kedarkantha" element={<Home />} />
+        <Route path="/bir-billing" element={<Home />} />
+        <Route path="/bir-billing-plan1" element={<Home />} />
+        <Route path="/bir-billing-plan2" element={<Home />} />
+        <Route path="/bir-billing-plan3" element={<Home />} />
+        <Route path="/jibhi-plan1" element={<Home />} />
+        <Route path="/jibhi-plan2" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );
