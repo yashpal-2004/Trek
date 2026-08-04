@@ -33,6 +33,7 @@ export default function Landing() {
   const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "timeline"
   const [expandedTripId, setExpandedTripId] = useState(null);
+  const [sortBy, setSortBy] = useState("money");
 
   const handleToggleTargetPlan = (plan, e) => {
     if (e) {
@@ -580,6 +581,26 @@ export default function Landing() {
 
   const allTrips = [...trips, ...completedTrips];
 
+  const getMinBudget = (trip) => {
+    if (!trip.stats || !trip.stats.budget) return 0;
+    const cleanStr = String(trip.stats.budget).replace(/,/g, '');
+    const matchK = cleanStr.match(/(\d+(?:\.\d+)?)\s*K/i);
+    if (matchK) {
+      return parseFloat(matchK[1]) * 1000;
+    }
+    const matchNum = cleanStr.match(/(\d+)/);
+    if (matchNum) {
+      return parseInt(matchNum[1], 10);
+    }
+    return 0;
+  };
+
+  const getDurationDays = (trip) => {
+    if (!trip.stats || !trip.stats.duration) return 0;
+    const match = String(trip.stats.duration).match(/(\d+)\s*Day/i);
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
   const filteredTrips = allTrips.filter(trip => {
     const isDone = isTripCompleted(trip);
     const matchesStatus = activeTab === "done" ? isDone : !isDone;
@@ -587,8 +608,14 @@ export default function Landing() {
     return matchesStatus && matchesCategory;
   });
 
-  const trekItems = filteredTrips.filter(t => t.type === "trek");
-  const tripItems = filteredTrips.filter(t => t.type === "trip");
+  const sortedTrips = [...filteredTrips].sort((a, b) => {
+    if (sortBy === "money") return getMinBudget(a) - getMinBudget(b);
+    if (sortBy === "days") return getDurationDays(a) - getDurationDays(b);
+    return 0;
+  });
+
+  const trekItems = sortedTrips.filter(t => t.type === "trek");
+  const tripItems = sortedTrips.filter(t => t.type === "trip");
 
   if (isLoading) {
     return (
@@ -1065,6 +1092,34 @@ export default function Landing() {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
+            {/* Sort Controls */}
+            {viewMode === "grid" && (
+              <div className="flex bg-black/5 p-1 rounded-2xl">
+                <button
+                  onClick={() => setSortBy("money")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                    sortBy === "money"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                  title="Sort by Money"
+                >
+                  <Wallet size={12} /> Money
+                </button>
+                <button
+                  onClick={() => setSortBy("days")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                    sortBy === "days"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                  title="Sort by Duration"
+                >
+                  <Calendar size={12} /> Days
+                </button>
+              </div>
+            )}
+
             {/* View Mode Switcher */}
             <div className="flex gap-1 bg-black/5 p-1 rounded-2xl">
               <button
@@ -1181,7 +1236,7 @@ export default function Landing() {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {filteredTrips.map(renderTripCard)}
+              {sortedTrips.map(renderTripCard)}
             </div>
           </div>
         )}
