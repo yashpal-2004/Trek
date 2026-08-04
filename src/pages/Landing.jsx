@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
@@ -34,6 +34,9 @@ export default function Landing() {
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "timeline"
   const [expandedTripId, setExpandedTripId] = useState(null);
   const [sortBy, setSortBy] = useState("money");
+  const [compareList, setCompareList] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
+  const [comparePlanIdx, setComparePlanIdx] = useState([0, 0]); // plan index for each compared trip
 
   const handleToggleTargetPlan = (plan, e) => {
     if (e) {
@@ -627,19 +630,37 @@ export default function Landing() {
     );
   }
 
+  const toggleCompare = (trip, e) => {
+    e.stopPropagation();
+    setCompareList(prev => {
+      if (prev.includes(trip.id)) return prev.filter(id => id !== trip.id);
+      if (prev.length >= 2) return prev;
+      return [...prev, trip.id];
+    });
+  };
+
   const renderTripCard = (trip) => {
     const isCompleted = isTripCompleted(trip);
     const isTrek = trip.type === "trek";
     const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? trip.plans[0] : trip.plans.find(p => targetPlans.includes(p.id))) : null;
+    const isInCompare = compareList.includes(trip.id);
+    const compareDisabled = compareList.length >= 2 && !isInCompare;
 
     return (
       <div
         key={trip.id}
         onClick={() => setSelectedTrip(trip)}
-        className={`bg-white/60 hover:bg-white border border-black/10 hover:border-black/25 rounded-[32px] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between cursor-pointer group relative overflow-hidden ${
+        className={`hover:bg-white border hover:border-black/25 rounded-[32px] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between cursor-pointer group relative overflow-hidden ${
           isCompleted ? "opacity-90 grayscale-[20%]" : ""
+        } ${
+          isInCompare
+            ? "bg-violet-50/60 border-violet-300 ring-2 ring-violet-200/60"
+            : "bg-white/60 border-black/10"
         }`}
       >
+        {isInCompare && (
+          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 to-purple-400 rounded-t-[32px]" />
+        )}
         <div>
           <div className="flex justify-between items-start mb-4">
             <div>
@@ -673,6 +694,22 @@ export default function Landing() {
             </div>
             
             <div className="flex items-center gap-2">
+              {/* Compare Toggle Button */}
+              <button
+                onClick={(e) => toggleCompare(trip, e)}
+                disabled={compareDisabled}
+                className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                  isInCompare
+                    ? "bg-violet-600 border-violet-700 text-white shadow-md"
+                    : compareDisabled
+                    ? "border-black/5 bg-black/5 text-slate-300 cursor-not-allowed"
+                    : "border-black/10 bg-white hover:bg-violet-50 hover:border-violet-300 text-slate-400 hover:text-violet-600"
+                }`}
+                title={isInCompare ? "Remove from compare" : compareDisabled ? "Max 2 trips for comparison" : "Add to compare"}
+              >
+                {isInCompare ? <Check size={15} /> : <GitCompareArrows size={15} />}
+              </button>
+
               {!trip.isCompleted && (
                 <button
                   onClick={(e) => toggleTripCompleted(trip, e)}
@@ -1533,6 +1570,258 @@ export default function Landing() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Floating Compare Bar */}
+      <AnimatePresence>
+        {compareList.length > 0 && !showCompare && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-black text-white px-5 py-3 rounded-[28px] shadow-2xl shadow-black/30"
+          >
+            <GitCompareArrows size={16} className="text-violet-400 shrink-0" />
+            <span className="text-xs font-black uppercase tracking-wider whitespace-nowrap">
+              {compareList.length === 1 ? "Select 1 more to compare" : "2 trips ready"}
+            </span>
+            {compareList.length === 2 && (
+              <button
+                onClick={() => { setComparePlanIdx([0, 0]); setShowCompare(true); }}
+                className="bg-violet-500 hover:bg-violet-400 text-white text-[11px] font-black uppercase tracking-wider px-4 py-2 rounded-2xl transition-colors whitespace-nowrap"
+              >
+                Compare Now
+              </button>
+            )}
+            <button
+              onClick={() => setCompareList([])}
+              className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors shrink-0"
+              title="Clear"
+            >
+              <X size={13} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Comparison Modal */}
+      <AnimatePresence>
+        {showCompare && compareList.length === 2 && (() => {
+          const tripA = allTrips.find(t => t.id === compareList[0]);
+          const tripB = allTrips.find(t => t.id === compareList[1]);
+          if (!tripA || !tripB) return null;
+
+          const planA = tripA.plans[comparePlanIdx[0]] || tripA.plans[0];
+          const planB = tripB.plans[comparePlanIdx[1]] || tripB.plans[0];
+
+          const parsePlanBudget = (budgetStr) => {
+            if (!budgetStr) return 0;
+            const m = String(budgetStr).replace(/,/g, "").match(/(\d+)/);
+            return m ? parseInt(m[1], 10) : 0;
+          };
+
+          const parsePlanDuration = (durStr) => {
+            if (!durStr) return 0;
+            const m = String(durStr).match(/(\d+)\s*Day/i);
+            return m ? parseInt(m[1], 10) : 0;
+          };
+
+          const rows = [
+            { label: "Type", icon: <Footprints size={13} />, a: tripA.typeLabel, b: tripB.typeLabel },
+            { label: "Location", icon: <MapPin size={13} />, a: tripA.subtitle, b: tripB.subtitle },
+            {
+              label: "Duration", icon: <Calendar size={13} />,
+              a: planA.duration, b: planB.duration,
+              highlight: (va, vb) => {
+                const da = parsePlanDuration(va);
+                const db = parsePlanDuration(vb);
+                if (!da || !db || da === db) return null;
+                return da < db ? "a" : "b";
+              },
+              highlightLabel: "Shorter",
+            },
+            { label: "Distance", icon: <Route size={13} />, a: tripA.stats.distance, b: tripB.stats.distance },
+            {
+              label: "Plan Budget", icon: <Wallet size={13} />,
+              a: planA.budget, b: planB.budget,
+              highlight: (va, vb) => {
+                const ma = parsePlanBudget(va);
+                const mb = parsePlanBudget(vb);
+                if (!ma || !mb || ma === mb) return null;
+                return ma < mb ? "a" : "b";
+              },
+              highlightLabel: "Cheaper",
+            },
+            {
+              label: "Route", icon: <Route size={13} />,
+              a: planA.route, b: planB.route,
+            },
+            {
+              label: "Details", icon: <Sparkles size={13} />,
+              a: planA.details, b: planB.details,
+            },
+          ];
+
+          const accentA = "violet";
+          const accentB = "sky";
+
+          return (
+            <motion.div
+              key="compare-overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+              onClick={() => setShowCompare(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: 16 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 16 }}
+                transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                onClick={e => e.stopPropagation()}
+                className="bg-[#f2efe9] w-full max-w-3xl rounded-[32px] max-h-[88vh] flex flex-col shadow-2xl overflow-hidden"
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between px-8 pt-7 pb-5 border-b border-black/10 shrink-0">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-2xl bg-violet-500/10 flex items-center justify-center">
+                      <GitCompareArrows size={17} className="text-violet-600" />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Side by Side</p>
+                      <h2 className="text-lg font-black uppercase tracking-tight leading-none" style={{ fontFamily: "'Anton', sans-serif" }}>Trip Comparison</h2>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowCompare(false)}
+                    className="w-8 h-8 rounded-2xl border border-black/10 flex items-center justify-center bg-white hover:bg-black/5 transition-colors"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
+
+                {/* Trip headers + Plan Selectors — fixed height, no scroll */}
+                <div className="grid grid-cols-2 gap-3 px-8 pt-5 pb-4 shrink-0">
+                  {[tripA, tripB].map((trip, i) => {
+                    const selectedIdx = comparePlanIdx[i];
+                    return (
+                      <div key={trip.id} className={`rounded-2xl px-4 py-3.5 border ${
+                        i === 0 ? "bg-violet-50 border-violet-200" : "bg-sky-50 border-sky-200"
+                      }`}>
+                        {/* Trip label + title row */}
+                        <div className="flex items-start gap-2 mb-2.5">
+                          <span className={`text-[9px] font-extrabold uppercase font-mono px-1.5 py-0.5 rounded-lg shrink-0 mt-0.5 ${
+                            i === 0 ? "bg-violet-500/15 text-violet-700" : "bg-sky-500/15 text-sky-700"
+                          }`}>
+                            {i === 0 ? "A" : "B"}
+                          </span>
+                          <div>
+                            <h3 className="text-sm font-black uppercase tracking-tight leading-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                              {trip.title}
+                            </h3>
+                            <p className="text-[10px] text-slate-500 font-medium leading-none mt-0.5">{trip.subtitle}</p>
+                          </div>
+                        </div>
+
+                        {/* Plan Selector — compact numbered pills */}
+                        {trip.plans.length > 1 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {trip.plans.map((plan, pIdx) => {
+                              // Short label: strip parenthetical, truncate to ~14 chars
+                              const shortLabel = plan.title.replace(/\s*\(.*?\)\s*/g, "").trim();
+                              const label = shortLabel.length > 16 ? shortLabel.slice(0, 15) + "…" : shortLabel;
+                              return (
+                                <button
+                                  key={plan.id}
+                                  onClick={() => {
+                                    const next = [...comparePlanIdx];
+                                    next[i] = pIdx;
+                                    setComparePlanIdx(next);
+                                  }}
+                                  title={plan.title}
+                                  className={`text-[9px] font-black uppercase tracking-wider px-2 py-1 rounded-lg transition-all border whitespace-nowrap ${
+                                    selectedIdx === pIdx
+                                      ? i === 0
+                                        ? "bg-violet-600 text-white border-violet-700"
+                                        : "bg-sky-600 text-white border-sky-700"
+                                      : "bg-white/80 text-slate-500 border-black/10 hover:border-black/25 hover:text-black"
+                                  }`}
+                                >
+                                  {label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Comparison Rows — scrollable */}
+                <div className="overflow-y-auto flex-1 px-8 pb-8">
+                  <div className="space-y-1.5">
+                    {rows.map((row, idx) => {
+                      const winnerSide = row.highlight ? row.highlight(row.a, row.b) : null;
+                      return (
+                        <div key={idx} className="grid grid-cols-[1fr_72px_1fr] gap-2 items-stretch">
+                          {/* Left (A) */}
+                          <div className={`rounded-2xl px-4 py-3 border flex flex-col justify-center items-end ${
+                            winnerSide === "a" ? "bg-emerald-50 border-emerald-200" : "bg-white/70 border-black/[0.07]"
+                          }`}>
+                            {winnerSide === "a" && (
+                              <span className="text-[8px] font-extrabold text-emerald-600 uppercase tracking-wider mb-0.5">{row.highlightLabel}</span>
+                            )}
+                            <p className="text-xs font-bold text-black leading-snug text-right">{row.a || "—"}</p>
+                          </div>
+
+                          {/* Center label */}
+                          <div className="flex flex-col items-center justify-center text-center">
+                            <div className="w-7 h-7 rounded-xl bg-black/5 flex items-center justify-center text-slate-500 mb-1">
+                              {row.icon}
+                            </div>
+                            <p className="text-[8px] font-black uppercase tracking-wider text-slate-400 leading-tight">{row.label}</p>
+                          </div>
+
+                          {/* Right (B) */}
+                          <div className={`rounded-2xl px-4 py-3 border flex flex-col justify-center items-start ${
+                            winnerSide === "b" ? "bg-emerald-50 border-emerald-200" : "bg-white/70 border-black/[0.07]"
+                          }`}>
+                            {winnerSide === "b" && (
+                              <span className="text-[8px] font-extrabold text-emerald-600 uppercase tracking-wider mb-0.5">{row.highlightLabel}</span>
+                            )}
+                            <p className="text-xs font-bold text-black leading-snug">{row.b || "—"}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="grid grid-cols-2 gap-3 pt-5 border-t border-black/10 mt-5">
+                    {[tripA, tripB].map((trip, i) => (
+                      <button
+                        key={trip.id}
+                        onClick={() => { setShowCompare(false); setSelectedTrip(trip); }}
+                        className={`py-3 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-colors ${
+                          i === 0
+                            ? "bg-violet-600 hover:bg-violet-700 text-white"
+                            : "bg-sky-600 hover:bg-sky-700 text-white"
+                        }`}
+                      >
+                        <ArrowUpRight size={14} />
+                        View {trip.title.split(" ")[0]} Plans
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 }
+
