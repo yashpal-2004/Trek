@@ -2,62 +2,73 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mountain, Landmark, Home, Waves, MapPin, Tent, Route, Star, Info } from "lucide-react";
 import Container from "../layout/Container";
-import { routeWaypoints, routeStats, typeConfig } from "../../data/bir-billing/plan1/routeMap";
+import { routeWaypoints, routeStats, typeConfig } from "../../data/bir-billing/routeMap";
 
 const LUCIDE_MAP = {
   city: Home, town: Home, trailhead: MapPin, village: Home, basecamp: Tent,
   landmark: Landmark, trailstart: Route, gurudwara: Landmark, lake: Waves
 };
 
-const DISPLAY_CATS = ["All", "Launch Pad", "Village", "Town / Hub", "City"];
-
-const MIN_ALT = 220;
-const MAX_ALT = 2400;
-const ALT_RANGE = MAX_ALT - MIN_ALT;
-const MAX_DIST = 907;
-
-const toSVG = (dist, alt) => ({
-  x: 80 + (dist / MAX_DIST) * 1060,
-  y: 310 - ((alt - MIN_ALT) / ALT_RANGE) * 280
-});
-
-const MAIN_ROUTE_IDS = [1, 2, 3, 4, 5];
-
-const getWpById = (id) => routeWaypoints.find(w => w.id === id);
-
-const makePathD = (ids) =>
-  ids.map((id, i) => {
-    const w = getWpById(id);
-    if (!w) return "";
-    const { x, y } = toSVG(w.distance, w.altitude);
-    return `${i === 0 ? "M" : "L"} ${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(" ");
-
-const MAIN_PATH = makePathD(MAIN_ROUTE_IDS);
-
-const MAIN_POINTS = MAIN_ROUTE_IDS.map(id => {
-  const w = getWpById(id);
-  return toSVG(w.distance, w.altitude);
-});
-const LAST = MAIN_POINTS[MAIN_POINTS.length - 1];
-const FIRST = MAIN_POINTS[0];
-const FILL_PATH = MAIN_PATH + ` L ${LAST.x.toFixed(1)},310 L ${FIRST.x.toFixed(1)},310 Z`;
-
-const LABEL_POINTS = [
-  { id: 1, label: "Sonipat" },
-  { id: 3, label: "Bir Colony\n1,525m" },
-  { id: 4, label: "Billing Takeoff\n2,400m" },
-  { id: 5, label: "Sonipat\n(Return)" }
-];
-
-const altLines = [220, 1000, 1525, 2400];
+const DISPLAY_CATS = ["All", "Launch Pad", "Village", "Town / Hub", "City", "Valley", "Nature", "Water Body", "Art & Culture", "Heritage", "Viewpoint", "Shopping"];
 
 export default function BirBillingRouteMap() {
   const [filter, setFilter] = useState("All");
 
   const filtered = filter === "All"
     ? routeWaypoints
-    : routeWaypoints.filter(w => typeConfig[w.type]?.label === filter);
+    : routeWaypoints.filter(w => typeConfig[w.type]?.label === filter || w.category === filter);
+
+  // Dynamic calculations
+  const altitudes = routeWaypoints.map(w => w.altitude);
+  const distances = routeWaypoints.map(w => w.distance);
+  const minAltitude = Math.min(...altitudes, 200);
+  const maxAltitude = Math.max(...altitudes, 2400);
+  const altitudeRange = maxAltitude - minAltitude || 1;
+  const maxDistance = Math.max(...distances, 1);
+
+  const toSVG = (dist, alt) => ({
+    x: 80 + (dist / maxDistance) * 1060,
+    y: 310 - ((alt - minAltitude) / altitudeRange) * 280
+  });
+
+  const getWpById = (id) => routeWaypoints.find(w => w.id === id);
+
+  const MAIN_ROUTE_IDS = routeWaypoints.map(w => w.id);
+
+  const makePathD = (ids) =>
+    ids.map((id, i) => {
+      const w = getWpById(id);
+      if (!w) return "";
+      const { x, y } = toSVG(w.distance, w.altitude);
+      return `${i === 0 ? "M" : "L"} ${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(" ");
+
+  const MAIN_PATH = makePathD(MAIN_ROUTE_IDS);
+
+  const MAIN_POINTS = MAIN_ROUTE_IDS.map(id => {
+    const w = getWpById(id);
+    return toSVG(w.distance, w.altitude);
+  });
+  const LAST = MAIN_POINTS[MAIN_POINTS.length - 1] || { x: 1140, y: 310 };
+  const FIRST = MAIN_POINTS[0] || { x: 80, y: 310 };
+  const FILL_PATH = MAIN_PATH + ` L ${LAST.x.toFixed(1)},310 L ${FIRST.x.toFixed(1)},310 Z`;
+
+  const LABEL_POINTS = routeWaypoints
+    .filter(w => w.highlight || w.id === 1 || w.id === routeWaypoints.length)
+    .map(w => ({
+      id: w.id,
+      label: `${w.name}\n${w.altLabel}`
+    }));
+
+  const altLines = [
+    minAltitude,
+    Math.round(minAltitude + altitudeRange * 0.33),
+    Math.round(minAltitude + altitudeRange * 0.66),
+    maxAltitude
+  ];
+
+  // Dynamic vertical distance ticks (5 ticks)
+  const distTicks = Array.from({ length: 5 }, (_, i) => Math.round((maxDistance / 4) * i));
 
   return (
     <section id="routemap" className="scroll-mt-20">
@@ -116,8 +127,8 @@ export default function BirBillingRouteMap() {
             })}
 
             {/* Vertical Distance Markers */}
-            {[0, 410, 490, 497, 987].map(dist => {
-              const svgVal = toSVG(dist, MIN_ALT);
+            {distTicks.map(dist => {
+              const svgVal = toSVG(dist, minAltitude);
               return (
                 <g key={dist}>
                   <line x1={svgVal.x} y1="30" x2={svgVal.x} y2="310" stroke="rgba(0,0,0,0.03)" />
