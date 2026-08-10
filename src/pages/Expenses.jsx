@@ -24,7 +24,10 @@ export default function Expenses({ isSection = false }) {
   const activeKey = getActiveTripKey();
   const parentTripId = getParentTripId();
   const isPlan2 = activeKey === "plan2";
-  const [members, setMembers] = useFirestore(`trek_members_${parentTripId}`, ["Yashpal", "Vansh"]);
+  const defaultMembers = parentTripId === "bir-billing"
+    ? ["Yashpal", "Vaishnavi", "Adarsh", "Anshika"]
+    : ["Yashpal", "Vansh"];
+  const [members, setMembers] = useFirestore(`trek_members_${parentTripId}`, defaultMembers);
   const planName = activeKey === "plan2" ? "Plan 2" : (activeKey === "sikkim" ? "Sikkim Trip" : "Plan 1");
 
   const { expenses, addExpense, deleteExpense, totalSpent } = useExpense();
@@ -35,7 +38,7 @@ export default function Expenses({ isSection = false }) {
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
   const [paidBy, setPaidBy] = useState("Yashpal");
-  const [splitWith, setSplitWith] = useState(["Yashpal", "Vansh"]);
+  const [splitWith, setSplitWith] = useState(defaultMembers);
   const [paidAmounts, setPaidAmounts] = useState({});
   const [settleLater, setSettleLater] = useState(false);
   const [showSettleLaterOnly, setShowSettleLaterOnly] = useState(false);
