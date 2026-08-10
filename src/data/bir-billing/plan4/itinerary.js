@@ -4,49 +4,46 @@ export const itinerary = [
     day: 1,
     date: "26-27 Aug",
     weekday: "Day 1",
-    title: "Sonipat → Dharamshala → Bir",
-    subtitle: "Overnight Volvo from Sonipat, scooty pickup in Dharamshala, and explore McLeod Ganj to Bir",
-    overview: "Board the overnight Volvo bus from Sonipat bypass on the evening of 26 August. Arrive in Dharamshala early morning on 27 August. Rent scooties at the stand and begin your sightseeing. Explore McLeod Ganj, Bhagsu Waterfall, Dharamkot, Naddi, Dal Lake, and St. John in the Wilderness Church. Ride towards Bir, passing Palampur Tea Gardens, and check into your hotel. Visit Chokling Monastery in the evening.",
-    travel: "Sonipat → Dharamshala (Bus) then Dharamshala → McLeod Ganj → Palampur → Bir Colony (Scooty)",
+    title: "Sonipat → Dharamshala & McLeod Ganj",
+    subtitle: "Overnight Volvo from Sonipat, check into Dharamshala MMT hotel, and explore McLeod Ganj",
+    overview: "Board the overnight Volvo bus from Sonipat bypass on the evening of 26 August. Arrive in Dharamshala early morning on 27 August. Rent scooties near the stand, check into your Dharamshala hotel, and begin your sightseeing. Explore McLeod Ganj, Bhagsu Waterfall, Dharamkot, Naddi viewpoint, Dal Lake, and St. John in the Wilderness Church. Settle in for the night in Dharamshala.",
+    travel: "Sonipat → Dharamshala (Bus) then Dharamshala → McLeod Ganj & back (Scooty)",
     travelMode: "AC Volvo + Scooty Ride",
-    distance: "475 km bus + 95 km scooty",
-    travelTime: "10 Hours bus + 4 Hours riding",
+    distance: "475 km bus + 35 km scooty",
+    travelTime: "10 Hours bus + 1.5 Hours riding",
     estimatedCost: 1400,
     weather: "Pleasant, 16°C to 24°C",
     trekDistance: "2 km (Short walks)",
     highestAltitude: "2082m",
-    stay: "Bir Hotel / Guesthouse (Night 1)",
-    food: "Breakfast in Dharamshala (₹80), lunch in McLeod Ganj (₹200), tea at Palampur (₹50), dinner in Bir (₹200)",
-    notes: "Renting scooties in Dharamshala allows you to explore McLeod Ganj and Dharamkot before heading to your Bir hotel base.",
+    stay: "Dharamshala MMT Hotel (ID: 201912162216117653) (₹290/person sharing)",
+    stayUrl: "https://www.makemytrip.com/hotels/hotel-details/?hotelId=201912162216117653&_uCurrency=INR&checkin=08272026&checkout=08292026&city=CTKANG&country=IN&lat=32.25013&lng=76.30458&locusId=CTKANG&locusType=city&rank=1&reference=hotel&roomStayQualifier=2e0e&rsc=1e2e0e&searchText=Dharamshala&sort=price-asc%7C%7C%7C--&type=city&viewType=BUDGET&mtkeys=undefined",
+    food: "Breakfast in Dharamshala (₹80), lunch in McLeod Ganj (₹200), dinner in Dharamshala (₹180)",
+    notes: "Staying in Dharamshala on Night 1 gives you plenty of time to explore the McLeod Ganj and Dharamkot cafes without rushing.",
     warnings: [
       "Keep dynamic bus boarding coordinates ready for the Sonipat bypass stop."
     ],
     packing: ["Sunglasses", "Light jacket", "Sturdy walking shoes", "Driving License"],
     images: [],
-    mapLink: "https://maps.google.com/?q=Bir+Tibetan+Colony",
+    mapLink: "https://www.makemytrip.com/hotels/hotel-details/?hotelId=201912162216117653&_uCurrency=INR&checkin=08272026&checkout=08292026&city=CTKANG&country=IN&lat=32.25013&lng=76.30458&locusId=CTKANG&locusType=city&rank=1&reference=hotel&roomStayQualifier=2e0e&rsc=1e2e0e&searchText=Dharamshala&sort=price-asc%7C%7C%7C--&type=city&viewType=BUDGET&mtkeys=undefined",
     tips: [
-      "Pack light or use a backpack so it is easy to carry on the scooty ride from Dharamshala to Bir.",
+      "Check in at the hotel first to drop off your bags before riding up to McLeod Ganj.",
       "Check the scooty brakes and lights before starting the climb to McLeod Ganj."
     ],
     photography: [
       "Misty pine forests around St. John in the Wilderness",
-      "Green terraces of Palampur Tea Gardens"
+      "Sunset views of the Dhauladhar range from Naddi Viewpoint"
     ],
-    highlights: ["Overnight Volvo transfer", "McLeod Ganj & waterfalls", "Palampur Tea Gardens"],
-    meals: ["Highway Breakfast", "McLeod Cafe Lunch", "Bir Monastery Dinner"],
+    highlights: ["Overnight Volvo transfer", "McLeod Ganj & waterfalls", "Naddi Viewpoint sunset"],
+    meals: ["Highway Breakfast", "McLeod Cafe Lunch", "Dharamshala Dinner"],
     activities: [
-      { time: "07:00 AM (27 Aug)", title: "Arrive Dharamshala", description: "Collect rented scooties near Dharamshala stand" },
-      { time: "08:30 AM (27 Aug)", title: "McLeod Ganj & Bhagsu", description: "Explore Dalai Lama Temple, Bhagsu Waterfall, and Dharamkot" },
-      { time: "11:30 AM (27 Aug)", title: "Naddi, Dal Lake & Church", description: "Visit Naddi viewpoint, Dal Lake, and St. John Church" },
-      { time: "02:30 PM (27 Aug)", title: "Palampur Tea Gardens", description: "Stop for photos and fresh tea at Palampur" },
-      { time: "05:30 PM (27 Aug)", title: "Bir Colony check-in", description: "Check in at Bir hotel and visit Chokling Monastery" }
+      { time: "07:00 AM (27 Aug)", title: "Arrive Dharamshala", description: "Collect rented scooties and check in at Dharamshala hotel" },
+      { time: "09:30 AM (27 Aug)", title: "McLeod Ganj & Bhagsu", description: "Explore Dalai Lama Temple, Bhagsu Waterfall, and Dharamkot" },
+      { time: "02:00 PM (27 Aug)", title: "Naddi, Dal Lake & Church", description: "Visit Naddi viewpoint, Dal Lake, and St. John Church" }
     ],
     schedule: [
       { time: "08:30 PM (26 Aug)", activity: "Board overnight Volvo bus from Sonipat bypass" },
-      { time: "07:00 AM (27 Aug)", activity: "Arrive Dharamshala and pick up rented scooties" },
-      { time: "08:30 AM (27 Aug)", activity: "Explore McLeod Ganj, Bhagsu, Dharamkot, Naddi, Dal Lake & St. John Church" },
-      { time: "02:30 PM (27 Aug)", activity: "Ride through Palampur Tea Gardens" },
-      { time: "05:30 PM (27 Aug)", activity: "Reach Bir Tibetan Colony & check into hotel" }
+      { time: "07:00 AM (27 Aug)", activity: "Arrive Dharamshala, pick up rented scooties and check in" },
+      { time: "09:30 AM (27 Aug)", activity: "Explore McLeod Ganj, Bhagsu, Dharamkot, Naddi, Dal Lake & St. John Church" }
     ]
   },
   {
@@ -54,19 +51,19 @@ export const itinerary = [
     day: 2,
     date: "28 Aug",
     weekday: "Day 2",
-    title: "Bir → Billing Exploration",
-    subtitle: "Explore Deer Park, Bir Market, and climb to the Billing takeoff ridge",
-    overview: "Spend the morning exploring Bir. Visit the peaceful Deer Park Institute for meditation and walk through the bustling Bir Market. Stop at the famous Bir Landing Site to watch pilots touch down. In the afternoon, ascend the winding road through the lush Billing Forest Area, stopping at Billing Viewpoint, and reach the high-altitude Billing takeoff site.",
-    travel: "Bir Colony ↔ Billing Take-off Point",
+    title: "Dharamshala → Palampur → Bir & Billing",
+    subtitle: "Ride via Tea Gardens, explore Deer Park & Landing Site, and climb to Billing Viewpoint",
+    overview: "After breakfast, check out from Dharamshala and ride towards Bir Colony (approx. 65 km). Stop at the scenic Palampur Tea Gardens along the way. Settle into your Bir stay. In the afternoon, visit Deer Park Institute, walk through Bir Market, and watch pilots touch down at Bir Landing Site. Ride up through the Billing Forest Area to watch takeoff launches and sunset views from Billing Viewpoint.",
+    travel: "Dharamshala → Palampur → Bir Colony → Billing Take-off & return",
     travelMode: "Scooty Ride",
-    distance: "30 km round trip",
-    travelTime: "1.5 Hours",
-    estimatedCost: 600,
-    weather: "Cool & Windy, 10°C to 18°C",
+    distance: "65 km ride to Bir + 30 km takeoff loop",
+    travelTime: "3.5 Hours total riding",
+    estimatedCost: 800,
+    weather: "Cool & Windy, 10°C to 18°C on Ridge",
     trekDistance: "0 km",
     highestAltitude: "2400m",
-    stay: "Bir Hotel / Guesthouse (Night 2)",
-    food: "Breakfast in Bir (₹80), lunch at Landing Site cafe (₹150), dinner in Bir Market (₹180)",
+    stay: "Bir Hotel / Guesthouse (₹343/person sharing)",
+    food: "Breakfast in Dharamshala (₹80), lunch in Palampur (₹120), dinner in Bir Colony (₹200)",
     notes: "Keep warm layers ready for the ride up to Billing; the temperature drops significantly.",
     warnings: [
       "Ride slowly on the steep, single-lane road climbing to Billing."
@@ -82,19 +79,20 @@ export const itinerary = [
       "Spectacular launch actions at Billing Take-off",
       "Lush green canopy of Billing Forest Area"
     ],
-    highlights: ["Deer Park Institute", "Bir Landing Site sunset", "Billing Viewpoint views"],
-    meals: ["Local Bir Breakfast", "Landing Site Lunch", "Market Dinner"],
+    highlights: ["Palampur Tea Gardens ride", "Deer Park & Landing Site", "Billing Viewpoint views"],
+    meals: ["Dharamshala Breakfast", "Palampur Lunch", "Bir Colony Dinner"],
     activities: [
-      { time: "09:30 AM", title: "Deer Park & Market", description: "Visit Deer Park Institute and shop in Bir Market" },
-      { time: "11:30 AM", title: "Bir Landing Site", description: "Watch paragliders land and explore the area" },
-      { time: "02:00 PM", title: "Billing Forest Area", description: "Scenic ride up through dense oak and pine woods" },
-      { time: "04:00 PM", title: "Billing Takeoff & Viewpoint", description: "Enjoy panoramic valley views from the launch pad" }
+      { time: "08:30 AM", title: "Depart Dharamshala", description: "Ride via Palampur Tea Gardens to Bir Colony" },
+      { time: "11:30 AM", title: "Deer Park & Market", description: "Visit Deer Park Institute and shop in Bir Market" },
+      { time: "02:00 PM", title: "Bir Landing Site & check-in", description: "Watch paraglider landings and check into Bir hotel" },
+      { time: "03:30 PM", title: "Billing Forest & Takeoff", description: "Ride up through Billing Forest Area to Billing Viewpoint" }
     ],
     schedule: [
-      { time: "09:30 AM", activity: "Visit Deer Park Institute and Bir Market" },
-      { time: "11:30 AM", activity: "Hang out at Bir Landing Site" },
-      { time: "02:00 PM", activity: "Ride up through Billing Forest Area" },
-      { time: "04:00 PM", activity: "Relax at Billing Viewpoint and watch paragliding takeoff" }
+      { time: "08:30 AM", activity: "Depart Dharamshala hotel on scooties" },
+      { time: "10:00 AM", activity: "Stop at Palampur Tea Gardens" },
+      { time: "11:30 AM", activity: "Arrive in Bir, visit Deer Park & Bir Market" },
+      { time: "02:00 PM", activity: "Settle into Bir hotel base & hang out at Bir Landing Site" },
+      { time: "03:30 PM", activity: "Ride up through Billing Forest Area to Billing Viewpoint" }
     ]
   },
   {

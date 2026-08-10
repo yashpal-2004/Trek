@@ -12,11 +12,11 @@ export const budget = {
       amount: data.transportCategory, 
       color: "#3B82F6", 
       icon: "Bus", 
-      description: "Sonipat-Dharamshala overnight semi-sleeper Volvo + Dharamshala scooty rental & petrol split between 4 people",
+      description: "Sonipat-Dharamshala overnight Volvo + Dharamshala scooty rental & petrol split between 4 people",
       subItems: [
         { name: "Sonipat ↔ Dharamshala Volvo Round Trip", price: 1200 },
         { name: "Dharamshala Scooty Rental (2 scooties for 3 days, split by 4)", price: 750 },
-        { name: "Petrol / Fuel for Scooties (split by 4 for Dharamshala-Bir round trip)", price: 300 }
+        { name: "Petrol / Fuel for Scooties (split by 4 for entire loop)", price: 300 }
       ]
     },
     { 
@@ -25,9 +25,10 @@ export const budget = {
       amount: data.accommodationCategory, 
       color: "#10B981", 
       icon: "Bed", 
-      description: "2 Nights in a private couple room at Bir (2 rooms total for 2 couples)",
+      description: "1 Night in Dharamshala (MMT Hotel) + 1 Night in Bir (Guesthouse) for 2 couples",
       subItems: [
-        { name: "Bir Hotel Private Room (2 Nights, MMT Booking for 2 couples)", price: 687 }
+        { name: "Dharamshala MMT Hotel (1 Night, split by 2)", price: 290 },
+        { name: "Bir Hotel / Guesthouse (1 Night, split by 2)", price: 343 }
       ]
     },
     { 
@@ -43,9 +44,9 @@ export const budget = {
     },
   ],
   dailyEstimate: [
-    { day: 1, amount: 2900, label: "Bus to Dharamshala, Scooty rental pickup & ride to Bir + Check-in" },
-    { day: 2, amount: 450, label: "Explore McLeod Ganj / Dharamshala sightseeings, return to Bir hotel" },
-    { day: 3, amount: 1450, label: "Ride up to Billing takeoff ridge, descend to Dharamshala, return scooties & return bus" },
+    { day: 1, amount: 2440, label: "Board overnight bus, rent scooties, explore McLeod Ganj & check in at Dharamshala MMT hotel" },
+    { day: 2, amount: 463, label: "Ride from Dharamshala via Palampur Tea Gardens to Bir, check in & watch sunset at Billing takeoff" },
+    { day: 3, amount: 1031, label: "Checkout from Bir, ride to Barot Valley & Luhardi, visit Andretta, return scooties & board return bus" },
   ],
   calculatorDefaults: data.calcDefaults,
 };
@@ -53,26 +54,51 @@ export const budget = {
 export const stayOptions = [
   {
     id: 1,
-    destination: "Bir Tibetan Colony",
+    destination: "Dharamshala",
     image: "https://r1imghtlak.mmtcdn.com/195eaeb4-71eb-4331-baf4-da7fe025018b.jpg?downsize=810:*",
-    budget: data.stays.bir.budget,
-    mid: data.stays.bir.mid,
-    premium: data.stays.bir.premium,
+    budget: 200,
+    mid: 290,
+    premium: 600,
     gmvnn: false,
     camping: false,
     hostel: false,
     facilities: ["Wi-Fi", "Hot showers", "Private rooms", "Double Bed"],
-    pros: ["Super budget-friendly rate on MMT", "Stay at one base point for both nights"],
-    cons: ["Need to ride back from Dharamshala at night"],
-    tips: "Book the MMT deal early for the couple double room discount.",
-    rating: 4.6,
+    pros: ["MMT budget option near town stand", "Great McLeod Ganj access"],
+    cons: ["Need to checkout next morning"],
+    tips: "Book early to secure the MMT deal rate.",
+    rating: 4.5,
+    mapLink: "https://www.makemytrip.com/hotels/hotel-details/?hotelId=201912162216117653&_uCurrency=INR&checkin=08272026&checkout=08292026&city=CTKANG&country=IN&lat=32.25013&lng=76.30458&locusId=CTKANG&locusType=city&rank=1&reference=hotel&roomStayQualifier=2e0e&rsc=1e2e0e&searchText=Dharamshala&sort=price-asc%7C%7C%7C--&type=city&viewType=BUDGET&mtkeys=undefined",
+    hotels: [
+      { 
+        name: "Dharamshala MMT Hotel (1 Night)", 
+        price: 290, 
+        offline: false,
+        link: "https://www.makemytrip.com/hotels/hotel-details/?hotelId=201912162216117653&_uCurrency=INR&checkin=08272026&checkout=08292026&city=CTKANG&country=IN&lat=32.25013&lng=76.30458&locusId=CTKANG&locusType=city&rank=1&reference=hotel&roomStayQualifier=2e0e&rsc=1e2e0e&searchText=Dharamshala&sort=price-asc%7C%7C%7C--&type=city&viewType=BUDGET&mtkeys=undefined"
+      }
+    ]
+  },
+  {
+    id: 2,
+    destination: "Bir Tibetan Colony",
+    image: "https://r1imghtlak.mmtcdn.com/195eaeb4-71eb-4331-baf4-da7fe025018b.jpg?downsize=810:*",
+    budget: 250,
+    mid: 343,
+    premium: 800,
+    gmvnn: false,
+    camping: false,
+    hostel: false,
+    facilities: ["Wi-Fi", "Hot water", "Mountain views"],
+    pros: ["Close to landing site and cafes", "Very peaceful valley stays"],
+    cons: ["Slightly colder at night"],
+    tips: "Book a hotel close to the paragliding landing field to watch pilots land.",
+    rating: 4.7,
     mapLink: "https://maps.google.com/?q=Bir+Tibetan+Colony",
     hotels: [
       { 
-        name: "Bir MMT Selected Hotel (2 Nights)", 
-        price: 687, 
+        name: "Bir Hotel / Guesthouse (1 Night)", 
+        price: 343, 
         offline: false,
-        link: "https://www.makemytrip.com/hotels/hotel-details/?checkin=08272026&checkout=08292026&locusId=CTXVB&locusType=city&city=CTXVB&country=IN&searchText=&roomStayQualifier=2e0e&_uCurrency=INR&reference=hotel&hotelId=202401152015113433&rf=directSearch&topHtlId=202401152015113433&type=hotel&rsc=1e2e0e&isPropSearch=T"
+        link: "https://maps.google.com/?q=Bir+Tibetan+Colony"
       }
     ]
   }

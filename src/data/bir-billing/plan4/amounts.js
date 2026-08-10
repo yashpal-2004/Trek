@@ -11,17 +11,18 @@ const totalFuel = fuelPerScooty * scootiesCount; // 1200
 const scootyRentalPerPerson = totalScootyRental / groupSize; // 750
 const fuelPerPerson = totalFuel / groupSize; // 300
 
-const birRoomRateForTwoNights = 1374; // MakeMyTrip rate for 1 room for 2 nights
+const dharamshalaRoomRateForOneNight = 580; // ₹580 for 2 persons (₹290 per person)
+const birRoomRateForOneNight = 687; // ₹687 for 2 persons (₹343.5 per person)
 const roomsCount = 2; // 2 rooms for 2 couples
 
-const totalStayCost = birRoomRateForTwoNights * roomsCount; // 2748
-const birStayPerPerson = totalStayCost / groupSize; // 687 per person for both nights
+const totalStayCost = (dharamshalaRoomRateForOneNight + birRoomRateForOneNight) * roomsCount; // 2534
+const birStayPerPerson = totalStayCost / groupSize; // 633.5 per person for both nights
 
 const transportCategory = busFareRoundTrip + scootyRentalPerPerson + fuelPerPerson; // 2250
-const accommodationCategory = birStayPerPerson; // 687
+const accommodationCategory = Math.round(birStayPerPerson); // 634
 const foodCategory = 3 * 350; // 3 days * 350 = 1050
 
-const budgetTotal = transportCategory + accommodationCategory + foodCategory; // 3987
+const budgetTotal = transportCategory + accommodationCategory + foodCategory; // 3934
 
 export const birBillingAmounts = {
   budgetTotal,
