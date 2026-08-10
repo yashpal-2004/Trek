@@ -12,11 +12,11 @@ export const budget = {
       amount: data.transportCategory, 
       color: "#3B82F6", 
       icon: "Bus", 
-      description: "Sonipat-Dharamshala overnight Volvo + Dharamshala scooty rental & petrol split between 4 people",
+      description: "Sonipat-Dharamshala overnight Volvo + 280 km Dharamshala scooty loop (Day 1 local: ~35 km | Day 2 to Bir/Billing: ~95 km | Day 3 Barot & Andretta: ~150 km)",
       subItems: [
         { name: "Sonipat ↔ Dharamshala Volvo Round Trip", price: 1200 },
         { name: "Dharamshala Scooty Rental (2 scooties for 3 days, split by 4)", price: 750 },
-        { name: "Petrol / Fuel for Scooties (split by 4 for entire loop)", price: 300 }
+        { name: "Petrol / Fuel for Scooties (split by 4 for ~280 km loop)", price: 300 }
       ]
     },
     { 
