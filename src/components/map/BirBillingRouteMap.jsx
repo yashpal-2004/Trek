@@ -53,12 +53,40 @@ export default function BirBillingRouteMap() {
   const FIRST = MAIN_POINTS[0] || { x: 80, y: 310 };
   const FILL_PATH = MAIN_PATH + ` L ${LAST.x.toFixed(1)},310 L ${FIRST.x.toFixed(1)},310 Z`;
 
-  const LABEL_POINTS = routeWaypoints
-    .filter(w => w.highlight || w.id === 1 || w.id === routeWaypoints.length)
-    .map(w => ({
-      id: w.id,
-      label: `${w.name}\n${w.altLabel}`
-    }));
+  // Selected milestone waypoints to avoid text overlapping
+  let milestones = [];
+  if (routeWaypoints.length > 0) {
+    const startWp = routeWaypoints[0];
+    const endWp = routeWaypoints[routeWaypoints.length - 1];
+    
+    // Find highest altitude waypoint
+    const highestWp = [...routeWaypoints].sort((a, b) => b.altitude - a.altitude)[0];
+    
+    // Find other key stops (Dharamshala, Bir Tibetan Colony, Barot Valley) if they exist
+    const dharamshalaWp = routeWaypoints.find(w => w.name === "Dharamshala");
+    const birWp = routeWaypoints.find(w => w.name === "Bir Tibetan Colony");
+    const barotWp = routeWaypoints.find(w => w.name === "Barot Valley");
+    
+    // Add start and end
+    milestones.push(startWp);
+    
+    // Add key intermediates if they aren't duplicates of start/end
+    if (dharamshalaWp && dharamshalaWp.id !== startWp.id && dharamshalaWp.id !== endWp.id) milestones.push(dharamshalaWp);
+    if (birWp && birWp.id !== startWp.id && birWp.id !== endWp.id) milestones.push(birWp);
+    if (highestWp && highestWp.id !== startWp.id && highestWp.id !== endWp.id && highestWp.id !== birWp?.id) milestones.push(highestWp);
+    if (barotWp && barotWp.id !== startWp.id && barotWp.id !== endWp.id) milestones.push(barotWp);
+    
+    if (endWp.id !== startWp.id) milestones.push(endWp);
+    
+    // Remove duplicates and sort by distance
+    milestones = Array.from(new Set(milestones)).sort((a, b) => a.distance - b.distance);
+  }
+
+  const LABEL_POINTS = milestones.map((w, idx) => ({
+    id: w.id,
+    label: `${w.name}\n${w.altLabel}`,
+    position: idx % 2 === 0 ? "above" : "below"
+  }));
 
   const altLines = [
     minAltitude,
@@ -157,20 +185,24 @@ export default function BirBillingRouteMap() {
               );
             })}
 
-            {/* Named labels above crucial locations */}
+            {/* Named labels above/below crucial locations */}
             {LABEL_POINTS.map(lbl => {
               const w = getWpById(lbl.id);
               if (!w) return null;
               const { x, y } = toSVG(w.distance, w.altitude);
               const lines = lbl.label.split("\n");
+              const isAbove = lbl.position === "above";
+              const lineY2 = isAbove ? y - 25 : y + 25;
+              const textY = isAbove ? y - 32 : y + 35;
+              const subtitleY = isAbove ? y - 22 : y + 45;
               return (
                 <g key={lbl.id}>
-                  <line x1={x} y1={y - 8} x2={x} y2={y - 25} stroke="#000000" strokeWidth="0.8" strokeOpacity="0.15" />
-                  <text x={x} y={y - 32} textAnchor="middle" fontSize="10" fontWeight="black" fill="#1E293B" className="uppercase tracking-tight">
+                  <line x1={x} y1={isAbove ? y - 8 : y + 8} x2={x} y2={lineY2} stroke="#000000" strokeWidth="0.8" strokeOpacity="0.15" />
+                  <text x={x} y={textY} textAnchor="middle" fontSize="10" fontWeight="black" fill="#1E293B" className="uppercase tracking-tight">
                     {lines[0]}
                   </text>
                   {lines[1] && (
-                    <text x={x} y={y - 22} textAnchor="middle" fontSize="9" fontWeight="bold" fill="#64748B">
+                    <text x={x} y={subtitleY} textAnchor="middle" fontSize="9" fontWeight="bold" fill="#64748B">
                       {lines[1]}
                     </text>
                   )}
