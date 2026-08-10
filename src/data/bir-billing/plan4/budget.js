@@ -54,7 +54,7 @@ export const stayOptions = [
   {
     id: 1,
     destination: "Bir Tibetan Colony",
-    image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80",
+    image: "https://r1imghtlak.mmtcdn.com/195eaeb4-71eb-4331-baf4-da7fe025018b.jpg?downsize=810:*",
     budget: data.stays.bir.budget,
     mid: data.stays.bir.mid,
     premium: data.stays.bir.premium,
@@ -68,7 +68,12 @@ export const stayOptions = [
     rating: 4.6,
     mapLink: "https://maps.google.com/?q=Bir+Tibetan+Colony",
     hotels: [
-      { name: "Bir MMT Selected Hotel (2 Nights)", price: 687, offline: false }
+      { 
+        name: "Bir MMT Selected Hotel (2 Nights)", 
+        price: 687, 
+        offline: false,
+        link: "https://www.makemytrip.com/hotels/hotel-details/?checkin=08272026&checkout=08292026&locusId=CTXVB&locusType=city&city=CTXVB&country=IN&searchText=&roomStayQualifier=2e0e&_uCurrency=INR&reference=hotel&hotelId=202401152015113433&rf=directSearch&topHtlId=202401152015113433&type=hotel&rsc=1e2e0e&isPropSearch=T"
+      }
     ]
   }
 ];
