@@ -20,8 +20,9 @@ import { itinerary as itineraryKedarkantha } from "./kedarkantha/itinerary";
 import { itinerary as itineraryBirBillingPlan1 } from "./bir-billing/plan1/itinerary";
 import { itinerary as itineraryBirBillingPlan2 } from "./bir-billing/plan2/itinerary";
 import { itinerary as itineraryBirBillingPlan3 } from "./bir-billing/plan3/itinerary";
+import { itinerary as itineraryBirBillingPlan4 } from "./bir-billing/plan4/itinerary";
 import { itinerary as itineraryJibhiPlan1 } from "./jibhi/plan1/itinerary";
 import { itinerary as itineraryJibhiPlan2 } from "./jibhi/plan2/itinerary";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const itinerary = createDynamicProxy(() => itinerary1, () => itinerary2, () => itinerarySikkim, () => itineraryYulla1, () => itineraryYulla2, () => itineraryHemkund, () => itineraryLadakh1, () => itineraryLadakh2, () => itinerarySpiti1, () => itinerarySpiti2, () => itineraryAnnapurna1, () => itineraryShrikhand1, () => itineraryShrikhand2, () => itineraryHampta1, () => itineraryHampta2, () => itinerarySpiti3, () => itineraryMadhyamaheshwar1, () => itineraryMadhyamaheshwar2, () => itineraryKedarkantha, () => itineraryBirBillingPlan1, () => itineraryBirBillingPlan2, () => itineraryBirBillingPlan3, () => itineraryJibhiPlan1, () => itineraryJibhiPlan2, true);
+export const itinerary = createDynamicProxy(() => itinerary1, () => itinerary2, () => itinerarySikkim, () => itineraryYulla1, () => itineraryYulla2, () => itineraryHemkund, () => itineraryLadakh1, () => itineraryLadakh2, () => itinerarySpiti1, () => itinerarySpiti2, () => itineraryAnnapurna1, () => itineraryShrikhand1, () => itineraryShrikhand2, () => itineraryHampta1, () => itineraryHampta2, () => itinerarySpiti3, () => itineraryMadhyamaheshwar1, () => itineraryMadhyamaheshwar2, () => itineraryKedarkantha, () => itineraryBirBillingPlan1, () => itineraryBirBillingPlan2, () => itineraryBirBillingPlan3, () => itineraryBirBillingPlan4, () => itineraryJibhiPlan1, () => itineraryJibhiPlan2, true);

@@ -3,9 +3,9 @@ import { foodGuide as foodGuide2 } from "./rudranath/plan2/food";
 import { foodGuide as foodGuideSikkim } from "./sikkim/food";
 import { foodGuide as foodGuideYulla1 } from "./yulla/plan1/food";
 import { foodGuide as foodGuideYulla2 } from "./yulla/plan2/food";
-import { foodItems as foodGuideHemkund } from "./hemkund/food";
-import { foodItems as foodGuideLadakh1 } from "./ladakh/plan1/food";
-import { foodItems as foodGuideLadakh2 } from "./ladakh/plan2/food";
+import { foodGuide as foodGuideHemkund } from "./hemkund/food";
+import { foodGuide as foodGuideLadakh1 } from "./ladakh/plan1/food";
+import { foodGuide as foodGuideLadakh2 } from "./ladakh/plan2/food";
 import { foodGuide as foodGuideSpiti1 } from "./spiti/plan1/food";
 import { foodGuide as foodGuideSpiti2 } from "./spiti/plan2/food";
 import { foodGuide as foodGuideSpiti3 } from "./spiti/plan3/food";
@@ -20,9 +20,10 @@ import { foodGuide as foodGuideKedarkantha } from "./kedarkantha/food";
 import { foodGuide as foodGuideBirBillingPlan1 } from "./bir-billing/plan1/food";
 import { foodGuide as foodGuideBirBillingPlan2 } from "./bir-billing/plan2/food";
 import { foodGuide as foodGuideBirBillingPlan3 } from "./bir-billing/plan3/food";
+import { foodGuide as foodGuideBirBillingPlan4 } from "./bir-billing/plan4/food";
 import { foodGuide as foodGuideJibhiPlan1 } from "./jibhi/plan1/food";
 import { foodGuide as foodGuideJibhiPlan2 } from "./jibhi/plan2/food";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const foodGuide = createDynamicProxy(() => foodGuide1, () => foodGuide2, () => foodGuideSikkim, () => foodGuideYulla1, () => foodGuideYulla2, () => foodGuideHemkund, () => foodGuideLadakh1, () => foodGuideLadakh2, () => foodGuideSpiti1, () => foodGuideSpiti2, () => foodGuideAnnapurna1, () => foodGuideShrikhand1, () => foodGuideShrikhand2, () => foodGuideHampta1, () => foodGuideHampta2, () => foodGuideSpiti3, () => foodGuideMadhyamaheshwar1, () => foodGuideMadhyamaheshwar2, () => foodGuideKedarkantha, () => foodGuideBirBillingPlan1, () => foodGuideBirBillingPlan2, () => foodGuideBirBillingPlan3, () => foodGuideJibhiPlan1, () => foodGuideJibhiPlan2);
+export const foodGuide = createDynamicProxy(() => foodGuide1, () => foodGuide2, () => foodGuideSikkim, () => foodGuideYulla1, () => foodGuideYulla2, () => foodGuideHemkund, () => foodGuideLadakh1, () => foodGuideLadakh2, () => foodGuideSpiti1, () => foodGuideSpiti2, () => foodGuideAnnapurna1, () => foodGuideShrikhand1, () => foodGuideShrikhand2, () => foodGuideHampta1, () => foodGuideHampta2, () => foodGuideSpiti3, () => foodGuideMadhyamaheshwar1, () => foodGuideMadhyamaheshwar2, () => foodGuideKedarkantha, () => foodGuideBirBillingPlan1, () => foodGuideBirBillingPlan2, () => foodGuideBirBillingPlan3, () => foodGuideBirBillingPlan4, () => foodGuideJibhiPlan1, () => foodGuideJibhiPlan2);
 

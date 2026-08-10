@@ -20,12 +20,13 @@ import { weather as weatherKedarkantha, safety as safetyKedarkantha } from "./ke
 import { weather as weatherBirBillingPlan1, safety as safetyBirBillingPlan1 } from "./bir-billing/plan1/weather";
 import { weather as weatherBirBillingPlan2, safety as safetyBirBillingPlan2 } from "./bir-billing/plan2/weather";
 import { weather as weatherBirBillingPlan3, safety as safetyBirBillingPlan3 } from "./bir-billing/plan3/weather";
+import { weather as weatherBirBillingPlan4, safety as safetyBirBillingPlan4 } from "./bir-billing/plan4/weather";
 import { weather as weatherJibhiPlan1, safety as safetyJibhiPlan1 } from "./jibhi/plan1/weather";
 import { weather as weatherJibhiPlan2, safety as safetyJibhiPlan2 } from "./jibhi/plan2/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2, () => weatherSpiti3, () => weatherMadhyamaheshwar1, () => weatherMadhyamaheshwar2, () => weatherKedarkantha, () => weatherBirBillingPlan1, () => weatherBirBillingPlan2, () => weatherBirBillingPlan3, () => weatherJibhiPlan1, () => weatherJibhiPlan2);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, () => safetySpiti3, () => safetyMadhyamaheshwar1, () => safetyMadhyamaheshwar2, () => safetyKedarkantha, () => safetyBirBillingPlan1, () => safetyBirBillingPlan2, () => safetyBirBillingPlan3, () => safetyJibhiPlan1, () => safetyJibhiPlan2, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2, () => weatherSpiti3, () => weatherMadhyamaheshwar1, () => weatherMadhyamaheshwar2, () => weatherKedarkantha, () => weatherBirBillingPlan1, () => weatherBirBillingPlan2, () => weatherBirBillingPlan3, () => weatherBirBillingPlan4, () => weatherJibhiPlan1, () => weatherJibhiPlan2);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, () => safetySpiti3, () => safetyMadhyamaheshwar1, () => safetyMadhyamaheshwar2, () => safetyKedarkantha, () => safetyBirBillingPlan1, () => safetyBirBillingPlan2, () => safetyBirBillingPlan3, () => safetyBirBillingPlan4, () => safetyJibhiPlan1, () => safetyJibhiPlan2, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
@@ -88,4 +89,19 @@ const networkCoverageJibhi = [
   { place: "Jalori Pass", signal: "Moderate", level: 2, carriers: "Jio", note: "Network can drop on some sections of the Serolsar Lake trail" }
 ];
 
-export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, () => networkCoverageSpiti, () => networkCoverageMadhyamaheshwar, () => networkCoverageMadhyamaheshwar, () => networkCoverageKedarkantha, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageJibhi, () => networkCoverageJibhi, true);
+const networkCoverageHemkund = [
+  { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
+  { place: "Govindghat", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "4G available near transit points" },
+  { place: "Ghangaria", signal: "Weak", level: 1, carriers: "BSNL, Jio (spots)", note: "Highly intermittent. Mobile data is extremely slow/unusable" },
+  { place: "Valley of Flowers", signal: "No Network", level: 0, carriers: "None", note: "Protected national park zone. Complete silence" },
+  { place: "Hemkund Sahib", signal: "Weak", level: 1, carriers: "BSNL (intermittent)", note: "Limited connectivity at the top of the lake ridge" }
+];
+
+const networkCoverageLadakh = [
+  { place: "Leh Town", signal: "Excellent", level: 4, carriers: "Jio, Airtel (Postpaid)", note: "Good 4G/5G coverage in town area. Prepaids from outside J&K do not work" },
+  { place: "Nubra Valley", signal: "Moderate", level: 2, carriers: "Jio, Airtel", note: "Connectivity at Hunder & Diskit, drops in remote spots" },
+  { place: "Pangong Lake", signal: "Weak", level: 1, carriers: "Jio only", note: "Limited solar-powered towers. Highly unstable" },
+  { place: "Khardung La Pass", signal: "Weak", level: 1, carriers: "Jio, Airtel", note: "Intermittent network at the peak" }
+];
+
+export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageHemkund, () => networkCoverageLadakh, () => networkCoverageLadakh, () => networkCoverageSpiti, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, () => networkCoverageSpiti, () => networkCoverageMadhyamaheshwar, () => networkCoverageMadhyamaheshwar, () => networkCoverageKedarkantha, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageJibhi, () => networkCoverageJibhi, true);

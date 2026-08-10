@@ -14,6 +14,7 @@ import { kedarkanthaAmounts } from "../data/kedarkantha/amounts";
 import { birBillingAmounts as birBillingAmountsPlan1 } from "../data/bir-billing/plan1/amounts";
 import { birBillingAmounts as birBillingAmountsPlan2 } from "../data/bir-billing/plan2/amounts";
 import { birBillingAmounts as birBillingAmountsPlan3 } from "../data/bir-billing/plan3/amounts";
+import { birBillingAmounts as birBillingAmountsPlan4 } from "../data/bir-billing/plan4/amounts";
 import { jibhiAmounts as jibhiAmountsPlan1 } from "../data/jibhi/plan1/amounts";
 import { jibhiAmounts as jibhiAmountsPlan2 } from "../data/jibhi/plan2/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
@@ -543,6 +544,15 @@ export default function Landing() {
           details: "Solo package including hostel beds, 1-day scooter hire, and a tandem paragliding flight.",
           budget: `₹${birBillingAmountsPlan3.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/bir-billing-plan3",
+        },
+        {
+          id: "bir-billing-plan4",
+          title: "Group Dharamshala Scooty Plan (4 Pax - Split Cost)",
+          duration: "4 Days",
+          route: "Sonipat → Dharamshala via bus → Rent 2 Scooties → Ride to Bir base (2 Nights) & Billing → Dharamshala return",
+          details: "Four people group renting two scooties directly from Dharamshala. Stay at Bir hotel (MMT booking) for both nights with shared costs split equally.",
+          budget: `₹${birBillingAmountsPlan4.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/bir-billing-plan4",
         }
       ],
     },

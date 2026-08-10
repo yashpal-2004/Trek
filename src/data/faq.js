@@ -20,9 +20,10 @@ import { faqs as faqKedarkantha } from "./kedarkantha/faq";
 import { faqs as faqBirBillingPlan1 } from "./bir-billing/plan1/faq";
 import { faqs as faqBirBillingPlan2 } from "./bir-billing/plan2/faq";
 import { faqs as faqBirBillingPlan3 } from "./bir-billing/plan3/faq";
+import { faqs as faqBirBillingPlan4 } from "./bir-billing/plan4/faq";
 import { faqs as faqJibhiPlan1 } from "./jibhi/plan1/faq";
 import { faqs as faqJibhiPlan2 } from "./jibhi/plan2/faq";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const faq = createDynamicProxy(() => faq1, () => faq2, () => faqSikkim, () => faqYulla1, () => faqYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqSpiti1, () => faqSpiti2, () => faqAnnapurna1, () => faqShrikhand1, () => faqShrikhand2, () => faqHampta1, () => faqHampta2, () => faqSpiti3, () => faqMadhyamaheshwar1, () => faqMadhyamaheshwar2, () => faqKedarkantha, () => faqBirBillingPlan1, () => faqBirBillingPlan2, () => faqBirBillingPlan3, () => faqJibhiPlan1, () => faqJibhiPlan2, true);
-export const faqCategories = createDynamicProxy(() => faqCategories1, () => faqCategories2, () => faqCategoriesSikkim, () => faqCategoriesYulla1, () => faqCategoriesYulla2, () => [], () => [], () => [], () => faqCategoriesSpiti1, () => faqCategoriesSpiti2, () => [], () => faqCategoriesShrikhand1, () => faqCategoriesShrikhand2, () => faqCategoriesHampta1, () => faqCategoriesHampta2, () => [], () => [], () => [], () => [], () => [], () => [], () => [], () => [], () => [], true);
+export const faq = createDynamicProxy(() => faq1, () => faq2, () => faqSikkim, () => faqYulla1, () => faqYulla2, () => faqHemkund, () => faqLadakh1, () => faqLadakh2, () => faqSpiti1, () => faqSpiti2, () => faqAnnapurna1, () => faqShrikhand1, () => faqShrikhand2, () => faqHampta1, () => faqHampta2, () => faqSpiti3, () => faqMadhyamaheshwar1, () => faqMadhyamaheshwar2, () => faqKedarkantha, () => faqBirBillingPlan1, () => faqBirBillingPlan2, () => faqBirBillingPlan3, () => faqBirBillingPlan4, () => faqJibhiPlan1, () => faqJibhiPlan2, true);
+export const faqCategories = createDynamicProxy(() => faqCategories1, () => faqCategories2, () => faqCategoriesSikkim, () => faqCategoriesYulla1, () => faqCategoriesYulla2, () => [], () => [], () => [], () => faqCategoriesSpiti1, () => faqCategoriesSpiti2, () => [], () => faqCategoriesShrikhand1, () => faqCategoriesShrikhand2, () => faqCategoriesHampta1, () => faqCategoriesHampta2, () => [], () => [], () => [], () => [], () => [], () => [], () => [], () => [], () => [], () => [], true);

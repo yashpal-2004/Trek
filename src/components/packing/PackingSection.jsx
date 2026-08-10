@@ -9,8 +9,12 @@ import { CheckCircle2, Circle, Package } from "lucide-react";
 
 export default function PackingSection() {
   const [checked, setChecked] = useLocalStorage(STORAGE_KEYS.packingChecklist, {});
+
+  const getItemId = (item) => item.id || item.name;
+  const getCategoryTitle = (cat) => cat.category || cat.name;
+
   const allItems = packing.flatMap((cat) => cat.items);
-  const checkedCount = allItems.filter((item) => checked[item.id]).length;
+  const checkedCount = allItems.filter((item) => checked[getItemId(item)]).length;
   const totalCount = allItems.length;
   const pct = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
   const isComplete = checkedCount === totalCount;
@@ -19,9 +23,9 @@ export default function PackingSection() {
 
   const toggleCategory = (category) => {
     const catItems = category.items;
-    const allChecked = catItems.every((item) => checked[item.id]);
+    const allChecked = catItems.every((item) => checked[getItemId(item)]);
     const updates = {};
-    catItems.forEach((item) => { updates[item.id] = !allChecked; });
+    catItems.forEach((item) => { updates[getItemId(item)] = !allChecked; });
     setChecked((prev) => ({ ...prev, ...updates }));
   };
 
@@ -64,18 +68,19 @@ export default function PackingSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {packing.map((category) => {
             const Icon = getIcon(category.icon, Package);
-            const catChecked = category.items.filter((i) => checked[i.id]).length;
+            const catTitle = getCategoryTitle(category);
+            const catChecked = category.items.filter((i) => checked[getItemId(i)]).length;
             const catPct = Math.round((catChecked / category.items.length) * 100);
 
             return (
-              <div key={category.category} className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-5 hover:border-black/20 transition-all">
+              <div key={catTitle} className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[24px] p-5 hover:border-black/20 transition-all">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-black/5 flex items-center justify-center">
                       <Icon size={14} className="text-black/60" />
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-xs uppercase tracking-tight">{category.category}</h3>
+                      <h3 className="font-extrabold text-xs uppercase tracking-tight">{catTitle}</h3>
                       <p className="text-[10px] text-slate-400">{catChecked}/{category.items.length} packed</p>
                     </div>
                   </div>
@@ -97,9 +102,10 @@ export default function PackingSection() {
 
                 <ul className="space-y-2">
                   {category.items.map((item) => {
-                    const done = !!checked[item.id];
+                    const itemId = getItemId(item);
+                    const done = !!checked[itemId];
                     return (
-                      <li key={item.id}>
+                      <li key={itemId}>
                         <label className="flex items-center gap-2.5 cursor-pointer group">
                           <span className="shrink-0">
                             {done
@@ -107,7 +113,7 @@ export default function PackingSection() {
                               : <Circle size={16} className="text-slate-300 group-hover:text-slate-400 transition-colors" />
                             }
                           </span>
-                          <input type="checkbox" checked={done} onChange={() => toggle(item.id)} className="sr-only" />
+                          <input type="checkbox" checked={done} onChange={() => toggle(itemId)} className="sr-only" />
                           <span className={`text-xs font-medium flex-1 ${done ? "line-through text-slate-400" : "text-slate-700"}`}>
                             {item.name}
                           </span>
