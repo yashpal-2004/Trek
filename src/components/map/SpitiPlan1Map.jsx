@@ -18,8 +18,8 @@ const PLAN1_WAYPOINTS = [
   { id: 12, name: "Hikkim",               lat: 32.2871, lng: 78.0498, alt: "4,440m",  type: "village", date: "22 Aug 1:30 PM", color: "#8B5CF6", desc: "World's Highest Post Office — 14,567 ft" },
   { id: 13, name: "Komic",                lat: 32.2761, lng: 78.0621, alt: "4,587m",  type: "village", date: "22 Aug 3:00 PM", color: "#8B5CF6", desc: "World's highest motorable village — 15,027 ft" },
   { id: 14, name: "Langza",               lat: 32.2511, lng: 78.0821, alt: "4,400m",  type: "village", date: "22 Aug 3:30 PM", color: "#8B5CF6", desc: "Giant Buddha statue facing Chau Chau Kang Nilda peak" },
-  { id: 15, name: "Chandratal Lake",      lat: 32.4788, lng: 77.6151, alt: "4,300m",  type: "lake",    date: "23 Aug 10:30 AM", color: "#0EA5E9", desc: "The Moon Lake — turquoise glacial crescent at 14,100 ft" },
-  { id: 16, name: "Manali (Return)",       lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "23 Aug 7 PM", color: "#F59E0B", desc: "Return to Manali — 1 night stay, keep Xpulse for Day 4" },
+  { id: 15, name: "Chandratal Lake",      lat: 32.4788, lng: 77.6151, alt: "4,300m",  type: "lake",    date: "23 Aug 1:00 PM", color: "#0EA5E9", desc: "The Moon Lake — turquoise glacial crescent. Camp overnight near the lake." },
+  { id: 16, name: "Manali (Return)",       lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "24 Aug 1:00 PM", color: "#F59E0B", desc: "Return to Manali — Handover bike by 4:30 PM and board evening Volvo" },
   { id: 17, name: "Delhi (Return)",        lat: 28.6669, lng: 77.2284, alt: "215m",    type: "city",    date: "25 Aug 7 AM", color: "#6366F1", desc: "Arrive Delhi by overnight Volvo, return to Sonipat" },
 ];
 
