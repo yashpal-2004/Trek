@@ -1,14 +1,14 @@
 export const spitiAmounts = {
-  plan1: { // 2 Persons Variant
-    budgetTotal: 10900,
-    transportCategory: 5950, // Volvo bus (₹1200) + Xpulse rental (₹1950) + Xpulse fuel (₹1400) + Scooty rental (₹500) + Scooty fuel (₹900)
-    accommodationCategory: 3200, // Manali stay (₹1500) + Kaza stay (₹1700)
+  plan1: { // 2 Persons Variant — 20 Aug evening bus, no Manali stays, 2 nights Kaza + 1 night Chandratal Camp, 4-day Xpulse, no scooty
+    budgetTotal: 9750,
+    transportCategory: 5400, // Volvo bus (₹1200) + Xpulse rental 4 days (₹2600) + Xpulse fuel (₹1400) + Sonipat-Delhi local (₹200)
+    accommodationCategory: 2600, // Kaza stay 2 Nights (₹1700) + Chandratal Camp 1 Night (₹900)
     foodCategory: 1750, // 5 days @ ₹350/day
-    emergencyCategory: 0, // Permits, green fee & emergency buffer
+    emergencyCategory: 0,
 
     calcDefaults: {
-      transport: 5950,
-      stay: 3200,
+      transport: 5400,
+      stay: 2600,
       food: 1750,
       emergency: 0,
       shopping: 0,
@@ -16,16 +16,17 @@ export const spitiAmounts = {
     },
 
     stays: {
-      manali: { budget: 500, mid: 750, premium: 1500, hotelPrice: 750 },
-      kaza: { budget: 600, mid: 850, premium: 1800, homestayPrice: 850 }
+      kaza: { budget: 600, mid: 850, premium: 1800, homestayPrice: 850 },
+      chandratal: { budget: 700, mid: 900, premium: 1500, campPrice: 900 }
     },
 
     transportFares: {
       volvoRoundTrip: 1200,
-      xpulseRentalPerPerson: 1950,
+      xpulseRentalPerPerson: 2600,
       xpulseFuelPerPerson: 1400,
-      scootyRentalPerPerson: 500,
-      scootyFuelPerPerson: 900
+      sonipatDelhiLocal: 200,
+      scootyRentalPerPerson: 0,
+      scootyFuelPerPerson: 0
     }
   },
 

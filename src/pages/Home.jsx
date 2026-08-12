@@ -11,7 +11,7 @@ import StaySection from "../components/stay/StaySection";
 import BudgetSection from "../components/budget/BudgetSection";
 import ExpensesSection from "./Expenses";
 import ResourcesSection from "./Resources";
-import SpitiRouteMap from "../components/map/SpitiRouteMap";
+import SpitiPlan1Map from "../components/map/SpitiPlan1Map";
 import HemkundRouteMap from "../components/map/HemkundRouteMap";
 import HamptaRouteMap from "../components/map/HamptaRouteMap";
 import YullaRouteMap from "../components/map/YullaRouteMap";
@@ -72,7 +72,7 @@ export default function Home() {
           <>
             <QuickStats />
             <RouteTimeline />
-            {getParentTripId() === "spiti" && <SpitiRouteMap />}
+            {getParentTripId() === "spiti" && <SpitiPlan1Map />}
             {getParentTripId() === "hemkund" && <HemkundRouteMap />}
             {getParentTripId() === "hampta-pass" && <HamptaRouteMap />}
             {getParentTripId() === "yulla" && <YullaRouteMap />}

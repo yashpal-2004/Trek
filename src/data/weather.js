@@ -52,11 +52,16 @@ const networkCoverageYulla = [
 ];
 
 const networkCoverageSpiti = [
-  { place: "Manali", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the town" },
-  { place: "Atal Tunnel / Lahaul", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "4G works near South & North portals" },
-  { place: "Batal / Kunzum Pass", signal: "No Network", level: 0, carriers: "None", note: "Absolute zero signal. Inform contacts beforehand" },
-  { place: "Kaza Base", signal: "Good", level: 3, carriers: "Jio, BSNL", note: "4G in Kaza town, drops on high village climbs" },
-  { place: "Chandratal Lake", signal: "No Network", level: 0, carriers: "None", note: "No cellular coverage around the lake area" }
+  { place: "Sonipat", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage — last reliable network before the mountain journey" },
+  { place: "Delhi (ISBT Kashmiri Gate)", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G. Board bus from here on 20 Aug night" },
+  { place: "Manali", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G throughout the town — download offline maps before leaving on 21 Aug" },
+  { place: "Atal Tunnel / Lahaul", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "4G works near South & North portals, drops inside the tunnel" },
+  { place: "Gramphu / Chhatru Corridor", signal: "No Network", level: 0, carriers: "None", note: "Network dies completely after Gramphu. Inform family before this stretch" },
+  { place: "Batal / Kunzum Pass", signal: "No Network", level: 0, carriers: "None", note: "Absolute zero signal. August nallah crossings ahead — last chance to inform contacts is Manali" },
+  { place: "Kaza Base", signal: "Good", level: 3, carriers: "Jio, BSNL", note: "4G in Kaza town, drops on high village climbs above 4,000m" },
+  { place: "Key Monastery / Kibber", signal: "Weak", level: 1, carriers: "Jio (spots only)", note: "Highly intermittent on monastery plateau. BSNL tower at Kibber can be weak" },
+  { place: "Hikkim / Komic / Langza", signal: "No Network", level: 0, carriers: "None", note: "Above 4,400m — complete dead zone. World's Highest Post Office at Hikkim has no cell signal" },
+  { place: "Chandratal Lake", signal: "No Network", level: 0, carriers: "None", note: "No cellular coverage in the lake basin. Last signal was at Batal camp area" },
 ];
 
 const networkCoverageAnnapurna = [
