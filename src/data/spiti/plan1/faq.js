@@ -5,7 +5,7 @@ export const faq = [
   },
   {
     question: "How is the road condition between Manali and Kaza?",
-    answer: "Tarmac road exists from Manali to Gramphu via Atal Tunnel. Gramphu to Batal & Kunzum Pass is unpaved dirt, gravel, and water streams (nallahs). High clearance bikes like Hero Xpulse 200 are ideal."
+    answer: "Tarmac road exists from Manali to Gramphu via Atal Tunnel. Gramphu to Batal & Kunzum Pass is unpaved dirt, gravel, and water streams (nallahs). High clearance adventure tourers like the Royal Enfield Himalayan are ideal."
   },
   {
     question: "Which mobile network works in Spiti Valley?",

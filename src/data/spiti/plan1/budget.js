@@ -12,12 +12,12 @@ export const budget = {
       amount: data.transportCategory,
       color: "#2563EB",
       icon: "Bus",
-      description: "Sonipat-Delhi local + Delhi-Manali Volvo AC bus round trip + Hero Xpulse 200 rental (4 Days) + Xpulse Fuel",
+      description: "Sonipat-Delhi local + Delhi-Manali Volvo AC bus round trip + Royal Enfield Himalayan rental (4 Days) + Fuel",
       subItems: [
         { name: "Sonipat \u2192 Delhi Local Bus/Train (each way)", price: data.transportFares.sonipatDelhiLocal },
         { name: "Delhi-Manali Volvo Bus Round Trip (\u20b9600 each way)", price: data.transportFares.volvoRoundTrip },
-        { name: "Hero Xpulse 200 Bike Rental (4 Days, split by 2)", price: data.transportFares.xpulseRentalPerPerson },
-        { name: "Hero Xpulse 200 Fuel (Manali + Spiti ~840 km)", price: data.transportFares.xpulseFuelPerPerson },
+        { name: "Royal Enfield Himalayan Bike Rental (4 Days)", price: data.transportFares.bikeRentalPerPerson },
+        { name: "Himalayan Fuel (Manali + Spiti ~840 km)", price: data.transportFares.bikeFuelPerPerson },
       ]
     },
     {
@@ -58,10 +58,10 @@ export const budget = {
   ],
   dailyEstimate: [
     { day: 0, amount: 900,  label: "20 Aug \u2014 Sonipat \u2192 Delhi \u2192 Board Volvo Bus to Manali" },
-    { day: 1, amount: 2200, label: "21 Aug \u2014 Arrive Manali \u2192 Pick up Xpulse \u2192 Ride to Kaza via Kunzum Pass" },
+    { day: 1, amount: 2200, label: "21 Aug \u2014 Arrive Manali \u2192 Pick up Himalayan \u2192 Ride to Kaza via Kunzum Pass" },
     { day: 2, amount: 1200, label: "22 Aug \u2014 Kaza \u2192 Key \u2192 Chicham \u2192 Hikkim \u2192 Komic \u2192 Langza" },
     { day: 3, amount: 1900, label: "23 Aug \u2014 Kaza \u2192 Kunzum Pass \u2192 Chandratal Lake Camping" },
-    { day: 4, amount: 1650, label: "24 Aug \u2014 Chandratal \u2192 Manali \u2192 Return Bike \u2192 Evening Volvo Bus" },
+    { day: 4, amount: 1650, label: "24 Aug \u2014 Chandratal \u2192 Manali \u2192 Return Himalayan \u2192 Evening Volvo Bus" },
     { day: 5, amount: 200,  label: "25 Aug \u2014 Arrive Delhi \u2192 Return to Sonipat" },
   ],
   calculatorDefaults: data.calcDefaults,

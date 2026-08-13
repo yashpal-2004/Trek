@@ -32,58 +32,58 @@ export const transport = [
   },
   {
     id: 3,
-    from: "Manali (Pickup Xpulse 200)",
+    from: "Manali (Pickup RE Himalayan)",
     to: "Kaza via Atal Tunnel & Kunzum Pass",
-    mode: "Hero Xpulse 200",
+    mode: "RE Himalayan",
     distance: "200 km",
     duration: "8\u20139 hrs",
-    fare: data.transportFares.xpulseRentalPerPerson,
-    cheapest: data.transportFares.xpulseRentalPerPerson,
+    fare: data.transportFares.bikeRentalPerPerson,
+    cheapest: data.transportFares.bikeRentalPerPerson,
     alternative: "Shared Tempo Traveler (slower, less scenic)",
-    frequency: "Xpulse Day 1 \u2014 21 Aug (depart 09:30 AM)",
-    notes: "Pick up Xpulse 200 at 08:30 AM directly from bus stand. No Manali hotel stay. Cross Atal Tunnel, off-road past Batal, scale Kunzum Pass (14,931 ft) \u2014 4-day rental per person split by 2 riders",
+    frequency: "Himalayan Day 1 \u2014 21 Aug (depart 09:30 AM)",
+    notes: "Pick up RE Himalayan at 08:30 AM directly from bus stand. No Manali hotel stay. Cross Atal Tunnel, off-road past Batal, scale Kunzum Pass (14,931 ft) \u2014 4-day rental per person",
     busType: "Motorcycle"
   },
   {
     id: 4,
     from: "Kaza Base",
     to: "Key Monastery, Hikkim, Komic & Langza",
-    mode: "Hero Xpulse 200",
+    mode: "RE Himalayan",
     distance: "90 km",
     duration: "5.5 hrs",
     fare: 0,
     cheapest: 0,
     alternative: "Shared Local Taxi",
-    frequency: "Xpulse Day 2 \u2014 22 Aug",
-    notes: "Included in 4-day Xpulse rental. Ride across Chicham Bridge (Asia\u2019s highest suspension bridge), post cards at Hikkim (14,567 ft), visit Komic & Langza",
+    frequency: "Himalayan Day 2 \u2014 22 Aug",
+    notes: "Included in 4-day Himalayan rental. Ride across Chicham Bridge (Asia\u2019s highest suspension bridge), post cards at Hikkim (14,567 ft), visit Komic & Langza",
     busType: "Motorcycle"
   },
   {
     id: 5,
     from: "Kaza",
     to: "Chandratal Lake",
-    mode: "Hero Xpulse 200",
+    mode: "RE Himalayan",
     distance: "120 km",
     duration: "5 hrs",
     fare: 0,
     cheapest: 0,
     alternative: "Shared Sumo",
-    frequency: "Xpulse Day 3 \u2014 23 Aug",
-    notes: "Included in 4-day Xpulse rental. Cross Kunzum Pass (14,931 ft), take dirt track to Chandratal. Overnight stay in camps near the lake.",
+    frequency: "Himalayan Day 3 \u2014 23 Aug",
+    notes: "Included in 4-day Himalayan rental. Cross Kunzum Pass (14,931 ft), take dirt track to Chandratal. Overnight stay in camps near the lake.",
     busType: "Motorcycle"
   },
   {
     id: 6,
     from: "Chandratal Lake",
     to: "Manali (via Chhatru & Atal Tunnel)",
-    mode: "Hero Xpulse 200",
+    mode: "RE Himalayan",
     distance: "130 km",
     duration: "6 hrs",
     fare: 0,
     cheapest: 0,
     alternative: "Shared local taxi",
-    frequency: "Xpulse Day 4 \u2014 24 Aug (return bike by 04:30 PM)",
-    notes: "Final day on the bike \u2014 ride from Chandratal through Batal nallahs, Atal Tunnel back to Manali. Return Xpulse by 04:30 PM.",
+    frequency: "Himalayan Day 4 \u2014 24 Aug (return bike by 04:30 PM)",
+    notes: "Final day on the bike \u2014 ride from Chandratal through Batal nallahs, Atal Tunnel back to Manali. Return Himalayan by 04:30 PM.",
     busType: "Motorcycle"
   },
   {
@@ -102,4 +102,4 @@ export const transport = [
   }
 ];
 
-export const transportModes = ["All", "Volvo AC Bus", "Hero Xpulse 200", "Local Bus / Train"];
+export const transportModes = ["All", "Volvo AC Bus", "RE Himalayan", "Local Bus / Train"];
