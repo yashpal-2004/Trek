@@ -8,7 +8,7 @@ export const trip = {
   durationDays: 6,
   people: 2,
   budgetMin: 9600,
-  budgetMax: 10200,
+  budgetMax: 10300,
   difficulty: "Moderate to Challenging",
   highestAltitude: "4,551m (14,931 ft)",
   totalDistance: "1550 km",
@@ -63,7 +63,7 @@ export const expenseCategories = ["Transport", "Accommodation", "Food", "Permits
 
 export const STORAGE_KEYS = {
   expenseTracker: "expenses-spiti-p1",
-  budgetCalculator: "budget-values-spiti-p1-v4",
+  budgetCalculator: "budget-values-spiti-p1-v5",
   completedTreks: "completed-treks-spiti-p1",
   packingChecklist: "packing-checklist-spiti-p1",
   completedDays: "completed-days-spiti-p1",

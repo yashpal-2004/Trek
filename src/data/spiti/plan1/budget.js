@@ -14,7 +14,7 @@ export const budget = {
       icon: "Bus",
       description: "Direct Sonipat-Manali Volvo AC bus round trip + Royal Enfield Himalayan rental (4 Days) + Fuel",
       subItems: [
-        { name: "Sonipat-Manali Volvo Bus Round Trip (₹550 going, ₹670 return)", price: data.transportFares.volvoRoundTrip },
+        { name: "Sonipat-Manali Volvo Bus Round Trip (₹600 going, ₹670 return)", price: data.transportFares.volvoRoundTrip },
         { name: "Royal Enfield Himalayan Bike Rental (4 Days)", price: data.transportFares.bikeRentalPerPerson },
         { name: "Himalayan Fuel (Manali + Spiti + Shipki La ~950 km)", price: data.transportFares.bikeFuelPerPerson },
       ]
