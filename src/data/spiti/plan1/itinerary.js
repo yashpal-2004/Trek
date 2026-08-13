@@ -215,18 +215,18 @@ export const itinerary = [
     day: 4,
     date: "24 Aug",
     weekday: "Sun",
-    title: "Kaza → Losar → Kunzum Pass → Atal Tunnel → Manali → Evening Volvo to Delhi",
-    subtitle: "Ride from Kaza back to Manali, return RE Himalayan, explore Mall Road, board overnight Volvo bus",
-    overview: "Depart Kaza homestay at 07:00 AM on the RE Himalayan (Day 4 of 4). Ride back through Losar, cross the high Kunzum Pass (14,931 ft), and transit along the glacial riverbeds of Batal, Chhatru, and Gramphu. Cross the Atal Tunnel to enter Manali by 01:30 PM. Have lunch in Old Manali, return the bike to the rental shop by 04:30 PM, collect the security deposit, and spend the remaining time exploring Mall Road on foot. Board the overnight Volvo AC bus back to Delhi.",
-    travel: "Kaza → Losar → Kunzum Pass → Batal → Chhatru → Atal Tunnel → Manali → Delhi (Overnight Bus)",
+    title: "Kaza → Losar → Kunzum Pass → Atal Tunnel → Manali → Evening Volvo to Sonipat Bypass",
+    subtitle: "Ride from Kaza back to Manali, return RE Himalayan, explore Mall Road, board overnight Volvo bus directly to Sonipat",
+    overview: "Depart Kaza homestay at 07:00 AM on the RE Himalayan (Day 4 of 4). Ride back through Losar, cross the high Kunzum Pass (14,931 ft), and transit along the glacial riverbeds of Batal, Chhatru, and Gramphu. Cross the Atal Tunnel to enter Manali by 01:30 PM. Have lunch in Old Manali, return the bike to the rental shop by 04:30 PM, collect the security deposit, and spend the remaining time exploring Mall Road on foot. Board the overnight Volvo AC bus which drops you directly at Sonipat Bypass on NH-44.",
+    travel: "Kaza → Losar → Kunzum Pass → Batal → Chhatru → Atal Tunnel → Manali → Sonipat Bypass (Overnight Bus)",
     travelMode: "RE Himalayan (Day 4 of 4) + Volvo Bus",
-    distance: "200 km Riding + 530 km Bus",
-    travelTime: "8 Hours Riding + 12 Hours Bus",
-    estimatedCost: 1650,
+    distance: "200 km Riding + 500 km Bus",
+    travelTime: "8 Hours Riding + 11 Hours Bus",
+    estimatedCost: 1550,
     weather: "Cold morning at Kaza (8°C), warm and pleasant in Manali (22°C)",
     trekDistance: "0 km",
     highestAltitude: "4551m (Kunzum Pass)",
-    stay: "Overnight Volvo Bus to Delhi",
+    stay: "Overnight Volvo Bus to Sonipat",
     food: "Breakfast at Kaza homestay (included), lunch in Old Manali (₹220), dinner on highway dhaba (₹150)",
     notes: "No hotel stay in Manali. Drop luggage at the Volvo bus operator counter or bike rental shop upon arrival in Manali.",
     warnings: [
@@ -245,21 +245,21 @@ export const itinerary = [
       "Old Manali river view",
       "Final group photo with RE Himalayan before return"
     ],
-    highlights: ["Kunzum Pass return crossing", "Chandra river off-road ride", "Atal Tunnel return crossing", "Mall Road walk", "Overnight Volvo back to Delhi"],
+    highlights: ["Kunzum Pass return crossing", "Chandra river off-road ride", "Atal Tunnel return crossing", "Mall Road walk", "Overnight Volvo directly to Sonipat"],
     meals: ["Breakfast at Kaza Homestay", "Lunch in Old Manali", "Dinner on highway dhaba"],
     activities: [
       { time: "07:00 AM", title: "Depart Kaza", description: "Early morning checkout and departure towards Kunzum Pass" },
       { time: "11:00 AM", title: "Cross Kunzum Pass", description: "Brief stop at the pass shrine, descend to Batal" },
       { time: "01:30 PM", title: "Arrive Manali", description: "Arrive in Manali, drop luggage at agency, lunch in Old Manali" },
       { time: "04:30 PM", title: "Return Bike", description: "Complete bike check, collect security deposit" },
-      { time: "06:00 PM", title: "Board Volvo Bus", description: "Head to Volvo boarding stand, depart Manali" }
+      { time: "06:00 PM", title: "Board Volvo Bus", description: "Head to Volvo boarding stand, depart Manali towards Sonipat" }
     ],
     schedule: [
       { time: "07:00 AM", activity: "Depart Kaza on RE Himalayan" },
       { time: "11:00 AM", activity: "Cross Kunzum Pass (14,931 ft) back to Lahaul" },
       { time: "01:30 PM", activity: "Lunch in Old Manali, drop bags at bike rental office" },
       { time: "04:30 PM", activity: "Return RE Himalayan to rental yard" },
-      { time: "06:00 PM", activity: "Board overnight Volvo bus back to Delhi" }
+      { time: "06:00 PM", activity: "Board overnight Volvo bus directly to Sonipat" }
     ]
   },
   {
@@ -267,39 +267,39 @@ export const itinerary = [
     day: 5,
     date: "25 Aug",
     weekday: "Mon",
-    title: "Arrive Delhi & Travel back to Sonipat",
-    subtitle: "Morning arrival in Delhi ISBT, local transit back to Sonipat",
-    overview: "Arrive in Delhi ISBT Kashmiri Gate around 07:00 AM. Take a local train or bus back to Sonipat, arriving back home by mid-morning. End of the Spiti valley road expedition.",
-    travel: "Delhi ISBT → Sonipat (Local train or bus)",
-    travelMode: "Local Train / Bus",
-    distance: "50 km",
-    travelTime: "1.5 Hours",
-    estimatedCost: 100,
-    weather: "Delhi: Warm & sunny, 30°C",
+    title: "Arrive Sonipat Bypass & Return Home",
+    subtitle: "Early morning deboarding at Sonipat Bypass on NH-44",
+    overview: "Deboard the Volvo AC bus directly at Sonipat Bypass on NH-44 around 05:00 AM on 25 Aug, avoiding any detour to Delhi. Take a local auto-rickshaw or have a family member pick you up to reach home. End of an unforgettable Spiti Valley road expedition.",
+    travel: "Sonipat Bypass → Home (Local auto or pickup)",
+    travelMode: "Local Transit / Pickup",
+    distance: "5 km",
+    travelTime: "15 Mins",
+    estimatedCost: 0,
+    weather: "Sonipat: Morning cool breeze, 24°C",
     trekDistance: "0 km",
     highestAltitude: "220m",
     stay: "Home Sweet Home",
-    food: "Breakfast at home or transit snack (₹50)",
-    notes: "Inform family of arrival time from the bus when entering Delhi borders.",
+    food: "Breakfast at home",
+    notes: "Inform family of your expected arrival time when the bus crosses Kurukshetra/Karnal.",
     warnings: [
-      "Ensure you have collected all personal belongings from the Volvo overhead storage before de-boarding."
+      "Ensure you collect all luggage and riding gear from the Volvo luggage compartment at Sonipat Bypass."
     ],
     packing: ["Personal bags"],
     images: [],
     mapLink: "https://maps.google.com/?q=Sonipat",
     tips: [
-      "Local trains from Old Delhi or Sabzi Mandi station to Sonipat are very frequent and economical."
+      "Keep the Volvo driver and conductor informed that you will deboard at Sonipat Bypass so they do not carry you through to Delhi."
     ],
-    photography: ["Final arrival selfie at Sonipat railway station"],
-    highlights: ["Completion of the high altitude riding loop", "Safe return home"],
-    meals: ["Transit breakfast"],
+    photography: ["Final arrival photo at Sonipat Bypass"],
+    highlights: ["Safe arrival at Sonipat", "Trip completed successfully"],
+    meals: ["Breakfast at home"],
     activities: [
-      { time: "07:00 AM", title: "Arrive Delhi ISBT", description: "Volvo arrives at Delhi ISBT Kashmiri Gate" },
-      { time: "08:30 AM", title: "Arrive Sonipat", description: "Reach Sonipat rail station or bus stand, head home" }
+      { time: "05:00 AM", title: "Deboard Sonipat Bypass", description: "Deboard the Volvo bus directly on NH-44 Sonipat Bypass" },
+      { time: "05:30 AM", title: "Arrive Home", description: "Reach home, unpack bags, trip complete" }
     ],
     schedule: [
-      { time: "07:00 AM", activity: "Arrive Delhi ISBT Kashmiri Gate via Volvo bus" },
-      { time: "08:30 AM", activity: "Travel back to Sonipat; end of journey" }
+      { time: "05:00 AM", activity: "Deboard directly at Sonipat Bypass on NH-44" },
+      { time: "05:30 AM", activity: "Reach home and unpack; end of journey" }
     ]
   }
 ];
