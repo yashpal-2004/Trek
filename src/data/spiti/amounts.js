@@ -1,14 +1,14 @@
 export const spitiAmounts = {
-  plan1: { // 2 Persons Variant — 20 Aug evening bus, no Manali stays, 2 nights Kaza + 1 night Chandratal Camp, 4-day Royal Enfield Himalayan, no scooty
-    budgetTotal: 10150,
-    transportCategory: 5800, // Volvo bus (₹1200) + Himalayan rental 4 days (₹3000) + fuel (₹1400) + Sonipat-Delhi local (₹200)
-    accommodationCategory: 2600, // Kaza stay 2 Nights (₹1700) + Chandratal Camp 1 Night (₹900)
+  plan1: { // 2 Persons Variant — 20 Aug evening bus, no Manali stays, 3 nights Kaza only (No Chandratal), 4-day Royal Enfield Himalayan, no scooty
+    budgetTotal: 9920, // 5620 + 2550 + 1750
+    transportCategory: 5620, // Direct Sonipat-Manali Volvo round trip (₹1220) + Himalayan rental 4 days (₹3000) + fuel (₹1400)
+    accommodationCategory: 2550, // Kaza stay 3 Nights (₹2550)
     foodCategory: 1750, // 5 days @ ₹350/day
     emergencyCategory: 0,
 
     calcDefaults: {
-      transport: 5800,
-      stay: 2600,
+      transport: 5620,
+      stay: 2550,
       food: 1750,
       emergency: 0,
       shopping: 0,
@@ -16,15 +16,14 @@ export const spitiAmounts = {
     },
 
     stays: {
-      kaza: { budget: 600, mid: 850, premium: 1800, homestayPrice: 850 },
-      chandratal: { budget: 700, mid: 900, premium: 1500, campPrice: 900 }
+      kaza: { budget: 600, mid: 850, premium: 1800, homestayPrice: 850 }
     },
 
     transportFares: {
-      volvoRoundTrip: 1200,
+      volvoRoundTrip: 1220,
       bikeRentalPerPerson: 3000,
       bikeFuelPerPerson: 1400,
-      sonipatDelhiLocal: 200,
+      sonipatDelhiLocal: 0,
       scootyRentalPerPerson: 0,
       scootyFuelPerPerson: 0
     }

@@ -4,43 +4,41 @@ export const itinerary = [
     day: 0,
     date: "20 Aug",
     weekday: "Wed Night",
-    title: "Sonipat \u2192 Delhi \u2192 Board Volvo Bus to Manali",
-    subtitle: "Evening departure from Delhi ISBT Kashmiri Gate \u2014 overnight journey to Manali",
-    overview: "Travel from Sonipat to Delhi ISBT Kashmiri Gate. Board the Volvo AC overnight bus to Manali departing around 07:30\u201308:00 PM. The bus takes the Chandigarh\u2013Swarghat\u2013Mandi\u2013Kullu highway, arriving Manali around 08:00 AM the next morning.",
-    travel: "Sonipat \u2192 Delhi (Local Train/Bus) \u2192 ISBT Kashmiri Gate \u2192 Manali (Overnight Volvo)",
+    title: "Sonipat → Board Volvo Bus directly to Manali",
+    subtitle: "Late evening departure directly from Sonipat bypass — overnight journey to Manali",
+    overview: "Report at the Sonipat bypass boarding point. Board the direct Volvo AC overnight bus to Manali departing around 09:30–10:00 PM. The bus bypasses Delhi and heads straight through the Chandigarh–Mandi highway, arriving Manali around 08:00 AM the next morning.",
+    travel: "Sonipat Bypass → Manali (Direct Overnight Volvo)",
     travelMode: "Volvo AC Bus",
-    distance: "550 km",
-    travelTime: "11\u201312 Hours",
+    distance: "500 km",
+    travelTime: "10 Hours",
     estimatedCost: 900,
-    weather: "Delhi: Hot & humid, 32\u00b0C",
+    weather: "Sonipat: Warm, 30°C",
     trekDistance: "0 km",
-    highestAltitude: "215m",
+    highestAltitude: "220m",
     stay: "Overnight Volvo Bus",
-    food: "Dinner at ISBT or highway dhaba (\u20b9150)",
-    notes: "Book Volvo AC bus in advance (HRTC / RedBus). Reach ISBT Kashmiri Gate by 06:30 PM for bus boarding.",
+    food: "Dinner at local highway outlet before boarding (₹150)",
+    notes: "Book Sonipat-Manali direct Volvo bus in advance (HRTC / private operators). Arrive at Sonipat bypass point 30 minutes before boarding.",
     warnings: [
       "Keep original ID proof ready for bus boarding",
-      "Keep valuables in front bag; do not place laptop / camera in overhead luggage rack"
+      "Keep phone fully charged; coordinate with the bus conductor for pickup location"
     ],
-    packing: ["Neck pillow for overnight bus", "Warm layer for early morning Manali", "Snacks for overnight journey", "Phone charger / power bank"],
+    packing: ["Neck pillow for overnight bus", "Warm jacket for morning Manali arrival", "Water bottle & snacks"],
     images: [],
-    mapLink: "https://maps.google.com/?q=ISBT+Kashmiri+Gate+Delhi",
+    mapLink: "https://maps.google.com/?q=Sonipat",
     tips: [
-      "Reach ISBT Kashmiri Gate by 06:30 PM; buses tend to depart on time",
-      "Book bus seat well in advance \u2014 window seats on left side have better valley views"
+      "Boarding at Sonipat bypass avoids Delhi traffic and saves 2 hours of transit time.",
+      "Most operators stop at Murthal for a quick pickup, which is close by."
     ],
-    photography: ["Delhi ISBT night lights before boarding"],
-    highlights: ["Evening departure from Delhi", "Overnight journey through Himachal valleys"],
-    meals: ["Dinner at ISBT / Highway dhaba"],
+    photography: ["Boarding the Volvo coach at Sonipat bypass"],
+    highlights: ["Boarding directly from Sonipat", "Overnight sleeper highway run"],
+    meals: ["Dinner near Sonipat Bypass"],
     activities: [
-      { time: "04:00 PM", title: "Depart Sonipat", description: "Travel to Delhi ISBT Kashmiri Gate via local train or bus" },
-      { time: "06:30 PM", title: "Reach ISBT Kashmiri Gate", description: "Report at bus bay, confirm seat booking" },
-      { time: "08:00 PM", title: "Board Volvo Bus", description: "Board Volvo AC bus to Manali \u2014 overnight journey begins" }
+      { time: "09:00 PM", title: "Report at Bypass", description: "Arrive at Sonipat bypass boarding point" },
+      { time: "09:45 PM", title: "Board Volvo Bus", description: "Board direct Volvo AC bus to Manali — overnight journey begins" }
     ],
     schedule: [
-      { time: "04:00 PM", activity: "Depart Sonipat towards Delhi ISBT Kashmiri Gate" },
-      { time: "06:30 PM", activity: "Reach ISBT, report at Volvo bus bay" },
-      { time: "08:00 PM", activity: "Board Volvo AC bus \u2014 overnight journey to Manali begins" }
+      { time: "09:00 PM", activity: "Report at Sonipat bypass boarding point" },
+      { time: "09:45 PM", activity: "Board Volvo AC bus — overnight journey to Manali" }
     ]
   },
   {
@@ -48,23 +46,23 @@ export const itinerary = [
     day: 1,
     date: "21 Aug",
     weekday: "Thu",
-    title: "Manali Arrival \u2192 Atal Tunnel \u2192 Kunzum Pass \u2192 Kaza",
-    subtitle: "Arrive Manali 8 AM, pick up RE Himalayan and ride directly to Kaza via Atal Tunnel & Kunzum Pass (14,931 ft) \u2014 no Manali stay",
+    title: "Manali Arrival → Atal Tunnel → Kunzum Pass → Kaza",
+    subtitle: "Arrive Manali 8 AM, pick up RE Himalayan and ride directly to Kaza via Atal Tunnel & Kunzum Pass (14,931 ft) — no Manali stay",
     overview: "Arrive in Manali around 08:00 AM via overnight Volvo bus. Head straight to the bike rental shop, pick up the RE Himalayan (Day 1 of 4-day rental), freshen up quickly, fuel up, and depart by 09:30 AM. Transit through the 9 km Atal Tunnel to enter Lahaul Valley, ride alongside the Chandra River past Gramphu, Chhatru, and Batal. Stop for lunch at the famous Chacha-Chachi Dhaba at Batal. Scale the switchbacks up Kunzum Pass (4,551m / 14,931 ft), do a quick parikrama at Kunzum Mata Temple, and descend into Spiti Valley reaching Kaza homestay by late afternoon.",
-    travel: "Manali \u2192 Atal Tunnel \u2192 Gramphu \u2192 Chhatru \u2192 Batal \u2192 Kunzum Pass \u2192 Losar \u2192 Kaza",
+    travel: "Manali → Atal Tunnel → Gramphu → Chhatru → Batal → Kunzum Pass → Losar → Kaza",
     travelMode: "RE Himalayan (Day 1 of 4)",
     distance: "200 km",
-    travelTime: "8\u20139 Hours",
+    travelTime: "8–9 Hours",
     estimatedCost: 2200,
-    weather: "Manali: 18\u00b0C, Kunzum Pass: 0\u00b0C to 8\u00b0C, Kaza: 8\u00b0C to 15\u00b0C",
+    weather: "Manali: 18°C, Kunzum Pass: 0°C to 8°C, Kaza: 8°C to 15°C",
     trekDistance: "0 km",
     highestAltitude: "4551m (Kunzum Pass)",
-    stay: "Homestay / Hotel in Kaza (\u20b9850/person with dinner & breakfast)",
-    food: "Quick breakfast in Manali (\u20b9120), lunch at Batal Chacha-Chachi Dhaba (\u20b9150), dinner in Kaza homestay (\u20b9200)",
-    notes: "No Manali hotel stay \u2014 pick up bike and ride straight to Kaza. Depart by 09:30 AM at the latest to cross Kunzum Pass safely before afternoon nallah flows intensify.",
+    stay: "Homestay / Hotel in Kaza (₹850/person with dinner & breakfast)",
+    food: "Quick breakfast in Manali (₹120), lunch at Batal Chacha-Chachi Dhaba (₹150), dinner in Kaza homestay (₹200)",
+    notes: "No Manali hotel stay — pick up bike and ride straight to Kaza. Depart by 09:30 AM at the latest to cross Kunzum Pass safely before afternoon nallah flows intensify.",
     warnings: [
       "Arrive at bike rental store by 08:30 AM; confirm booking the previous day via phone",
-      "Water crossings (nallahs) swell after 01:00 PM due to snow melt \u2014 cross Batal stretch before noon",
+      "Water crossings (nallahs) swell after 01:00 PM due to snow melt — cross Batal stretch before noon",
       "High altitude AMS risk at Kunzum Pass; stay hydrated, do not rush"
     ],
     packing: ["Thermal layers & fleece", "Windproof riding jacket & pants", "Waterproof riding gloves", "Driving Licence (Original)", "ORSL / Diamox / AMS meds", "Cash (ATM in Kaza intermittent)"],
@@ -82,12 +80,12 @@ export const itinerary = [
       "Prayer flags fluttering at Kunzum Pass summit",
       "First dramatic view of Spiti river valley entering Losar"
     ],
-    highlights: ["No Manali stop \u2014 ride straight to Spiti", "Atal Tunnel crossing", "Batal Dhaba lunch", "Kunzum Pass summit (14,931 ft)", "Kaza high altitude town"],
+    highlights: ["No Manali stop — ride straight to Spiti", "Atal Tunnel crossing", "Batal Dhaba lunch", "Kunzum Pass summit (14,931 ft)", "Kaza high altitude town"],
     meals: ["Quick breakfast in Manali", "Lunch at Batal Dhaba", "Dinner at Kaza Homestay"],
     activities: [
       { time: "08:00 AM", title: "Arrive Manali", description: "Arrive by overnight Volvo bus (20 Aug night), freshen up at bus stand" },
       { time: "08:30 AM", title: "Pick Up RE Himalayan", description: "Head directly to bike rental, inspect bike, complete paperwork & pay deposit" },
-      { time: "09:30 AM", title: "Depart Manali", description: "Fuel up and ride out towards Atal Tunnel \u2014 no hotel check-in" },
+      { time: "09:30 AM", title: "Depart Manali", description: "Fuel up and ride out towards Atal Tunnel — no hotel check-in" },
       { time: "10:45 AM", title: "Atal Tunnel Crossing", description: "Cross 9.02 km tunnel into Lahaul valley, quick photo stop at North Portal" },
       { time: "12:30 PM", title: "Batal Halt", description: "Lunch at Batal Chacha-Chachi Dhaba before Kunzum climb" },
       { time: "02:00 PM", title: "Kunzum Pass Summit", description: "Reach 14,931 ft summit, visit Kunzum Mata temple & take glacier photos" },
@@ -95,8 +93,8 @@ export const itinerary = [
     ],
     schedule: [
       { time: "08:00 AM", activity: "Arrive Manali by overnight Volvo bus (20 Aug night)" },
-      { time: "08:30 AM", activity: "Pick up RE Himalayan \u2014 inspect, document & fuel up" },
-      { time: "09:30 AM", activity: "Depart Manali directly for Spiti Valley \u2014 no hotel stay" },
+      { time: "08:30 AM", activity: "Pick up RE Himalayan — inspect, document & fuel up" },
+      { time: "09:30 AM", activity: "Depart Manali directly for Spiti Valley — no hotel stay" },
       { time: "10:45 AM", activity: "Cross Atal Tunnel into Lahaul Valley" },
       { time: "12:30 PM", activity: "Lunch halt at Batal Dhaba" },
       { time: "02:00 PM", activity: "Cross Kunzum Pass (14,931 ft) into Spiti" },
@@ -108,20 +106,19 @@ export const itinerary = [
     day: 2,
     date: "22 Aug",
     weekday: "Fri",
-    title: "Kaza \u2192 Key Monastery \u2192 Chicham Bridge \u2192 Hikkim \u2192 Komic \u2192 Langza",
-    subtitle: "Ride to 1,000-year-old Key Monastery, highest suspension bridge in Asia, world's highest post office & fossil village",
-    overview: "Spend the day exploring Spiti's iconic high-altitude circuit on the RE Himalayan (Day 2 of 4). Ride to Key Monastery perched dramatically on a cliff, continue to Chicham Bridge (highest suspension bridge in Asia at 13,596 ft). In the afternoon, ascend to Hikkim (14,567 ft) to post postcards from the World's Highest Post Office, visit Komic (15,027 ft, world's highest motorable village), and Langza to see the gigantic Lord Buddha statue facing snow peaks.",
-    travel: "Kaza \u2192 Key Monastery \u2192 Kibber \u2192 Chicham Bridge \u2192 Hikkim \u2192 Komic \u2192 Langza \u2192 Kaza",
+    title: "Kaza → Key Monastery → Chicham Bridge → Hikkim → Komic → Langza → Kaza",
+    subtitle: "Explore 1000-year-old Key Monastery, Chicham Bridge, and the highest high-altitude villages",
+    overview: "Spend the day exploring Spiti's iconic high-altitude circuit on the RE Himalayan (Day 2 of 4). Ride to Key Monastery perched dramatically on a cliff, then continue to Chicham Bridge (highest suspension bridge in Asia at 13,596 ft). In the afternoon, ascend to Hikkim (14,567 ft) to post postcards from the World's Highest Post Office, visit Komic (15,027 ft, world's highest motorable village), and Langza to see the gigantic Lord Buddha statue facing the snow peaks. Return to Kaza for the night.",
+    travel: "Kaza → Key Monastery → Chicham Bridge → Hikkim → Komic → Langza → Kaza",
     travelMode: "RE Himalayan (Day 2 of 4)",
     distance: "90 km (Circuit)",
     travelTime: "6 Hours",
     estimatedCost: 1200,
-    weekday: "Fri",
-    weather: "Sunny with chilly mountain breeze, 5\u00b0C to 16\u00b0C",
+    weather: "Sunny with chilly mountain breeze, 5°C to 16°C",
     trekDistance: "0 km",
     highestAltitude: "4587m (15,027 ft in Komic)",
-    stay: "Homestay / Hotel in Kaza (\u20b9850/person with dinner & breakfast)",
-    food: "Monastery tea break (\u20b950), lunch at Kibber / Langza homestay (\u20b9200), dinner in Kaza (\u20b9200)",
+    stay: "Homestay / Hotel in Kaza (₹850/person with dinner & breakfast)",
+    food: "Monastery tea break (₹50), lunch at Langza village homestay (₹200), dinner in Kaza (₹200)",
     notes: "Buy postcards and stamps in Kaza or Hikkim in advance to post them at Hikkim Post Office.",
     warnings: [
       "Steep high-altitude climbs to Komic & Hikkim; keep bike engine in 1st/2nd gear",
@@ -144,16 +141,16 @@ export const itinerary = [
     highlights: ["Key Monastery prayer hall", "Chicham Bridge gorge", "Hikkim Postcard posting", "Komic Highest Motorable Village", "Langza Buddha statue"],
     meals: ["Breakfast at Kaza homestay", "Lunch at Langza village dhaba", "Dinner at Kaza homestay"],
     activities: [
-      { time: "08:30 AM", title: "Ride to Key Monastery", description: "Visit 1,000-year-old Gelugpa monastery, interact with young lamas" },
-      { time: "11:00 AM", title: "Chicham Bridge Crossing", description: "Ride across Asia's highest suspension bridge and view deep gorge" },
-      { time: "01:30 PM", title: "Hikkim Post Office", description: "Post handwritten postcards from World's Highest Post Office (14,567 ft)" },
+      { time: "08:30 AM", title: "Ride to Key Monastery", description: "Visit Key Monastery, interact with young lamas" },
+      { time: "11:00 AM", title: "Chicham Bridge Crossing", description: "Ride across Asia's highest suspension bridge" },
+      { time: "01:30 PM", title: "Hikkim Post Office", description: "Post handwritten postcards from World's Highest Post Office" },
       { time: "03:00 PM", title: "Komic & Langza", description: "Visit Tangyud Monastery in Komic & giant Buddha statue in Langza" },
       { time: "05:30 PM", title: "Return to Kaza", description: "Ride back to Kaza market, dinner and evening rest" }
     ],
     schedule: [
-      { time: "08:30 AM", activity: "Ride from Kaza to Key Monastery and explore prayer halls" },
+      { time: "08:30 AM", activity: "Ride from Kaza to Key Monastery and explore" },
       { time: "11:00 AM", activity: "Ride across Chicham Bridge and visit Kibber village" },
-      { time: "01:30 PM", activity: "Visit Hikkim Post Office & post postcards to family" },
+      { time: "01:30 PM", activity: "Visit Hikkim Post Office & post postcards" },
       { time: "03:00 PM", activity: "Explore Komic (15,027 ft) & Buddha statue at Langza" },
       { time: "05:30 PM", activity: "Return to Kaza homestay for evening rest and dinner" }
     ]
@@ -163,49 +160,54 @@ export const itinerary = [
     day: 3,
     date: "23 Aug",
     weekday: "Sat",
-    title: "Kaza \u2192 Kunzum Pass \u2192 Chandratal Lake Camping",
-    subtitle: "Ride from Kaza via Kunzum Pass, off-road detour to Chandratal Lake, overnight stay in camps",
-    overview: "Start early from Kaza at 07:00 AM on the RE Himalayan (Day 3 of 4). Ride back over Kunzum Pass (4,551m / 14,931 ft) and take the off-road detour from Batal to Chandratal Lake (The Moon Lake at 14,100 ft). Spend the afternoon walking along the turquoise glacial lake. In the evening, check into your wilderness camp near Chandratal for an overnight stay under the stars.",
-    travel: "Kaza \u2192 Losar \u2192 Kunzum Pass \u2192 Chandratal Lake camps",
+    title: "Kaza → Shipki La Pass (China Border) → Khab Confluence → Tabo & Dhankar Monasteries",
+    subtitle: "Scale the India-China border pass before 2:00 PM closure, visit Khab confluence, ancient Tabo & cliffside Dhankar",
+    overview: "Embark on an early morning dash to the India-China border on the RE Himalayan (Day 3 of 4). Ride straight from Kaza to Khab Confluence (where Spiti and Sutlej rivers collide) and scale the winding loops to Shipki La Pass (active military border checkpoint at 13,000+ ft) to ensure arrival well before the 02:00 PM daily closure. On the return leg, enjoy a late lunch and tour the 1000-year-old UNESCO mud temples at Tabo, then climb up to the cliff-hanging Dhankar Monastery before returning to Kaza by evening.",
+    travel: "Kaza → Khab → Shipki La Pass → Tabo → Dhankar → Kaza",
     travelMode: "RE Himalayan (Day 3 of 4)",
-    distance: "120 km",
-    travelTime: "5 Hours",
-    estimatedCost: 1900,
-    weather: "Sunny but freezing winds at Chandratal, dropping below 0\u00b0C at night",
-    trekDistance: "2 km (Around lake)",
-    highestAltitude: "4551m",
-    stay: "Chandratal Swiss Tents / Camps (\u20b9900/person with dinner & breakfast)",
-    food: "Breakfast in Losar (\u20b9120), lunch at Batal dhaba (\u20b9150), dinner at Chandratal camp (included)",
-    notes: "Very cold night ahead at 14,100 ft. Put on all thermal layers before sunset. No cell network.",
+    distance: "340 km round trip",
+    travelTime: "9 Hours",
+    estimatedCost: 1800,
+    weather: "Sunny but freezing and windy at the pass summit, 8°C to 18°C",
+    trekDistance: "0 km",
+    highestAltitude: "3930m (Shipki La Border Post)",
+    stay: "Homestay / Hotel in Kaza (₹850/person with dinner & breakfast)",
+    food: "Breakfast in Kaza (₹80), lunch at Tabo local cafe (₹150), dinner in Kaza (₹200)",
+    notes: "Inner Line Permit (ILP) is required to travel beyond Khab towards Shipki La. Obtain this beforehand at Reckong Peo or Kaza SDM office. Visitors must reach the checkpost before 2:00 PM as the pass closes for civilian entries daily at 2:00 PM sharp.",
     warnings: [
-      "Chandratal detour road is narrow dirt track; yield space to oncoming camper vehicles",
-      "Do not swim or step inside Chandratal Lake water (sacred & freezing)"
+      "This is an active military zone. Strictly follow army directions at Shipki La check post.",
+      "A long, exhausting riding day (340 km). Start by 06:00 AM at the latest."
     ],
-    packing: ["Trekking shoes for lake walk", "Camera", "Fleece & down jackets", "Thermals"],
+    packing: ["Inner Line Permit documents", "Physical original IDs", "Warm windcheater layer", "Energy bars & ORS"],
     images: [],
-    mapLink: "https://maps.google.com/?q=Chandratal+Lake",
+    mapLink: "https://maps.google.com/?q=Shipki+La",
     tips: [
-      "Leave Kaza by 07:00 AM to reach Chandratal by 12:00 PM",
-      "Drink hot tea at the camp to stay warm and combat high-altitude cold"
+      "Leave Kaza by 06:00 AM to comfortably reach Shipki La Pass by 10:30 AM, avoiding any risk of afternoon closure.",
+      "No photography is allowed around the military border post; keep cameras packed."
     ],
     photography: [
-      "Crescent shape of Chandratal lake reflecting surrounding snow peaks",
-      "Off-road dirt trail along Chandra river valley",
-      "Glacial lake panorama in late afternoon light"
+      "Khab bridge showing Spiti and Sutlej waters colliding",
+      "Stunning views of Leo Pargial peak rising above the pass",
+      "Tabo Monastery ancient mud complex",
+      "Dhankar monastery cliffs against the desert sky"
     ],
-    highlights: ["Chandratal turquoise glacial lake", "Kunzum Pass crossing", "High-altitude wilderness camping under the stars"],
-    meals: ["Breakfast at Losar", "Lunch at Batal Dhaba", "Dinner at Chandratal Camp"],
+    highlights: ["Shipki La Border Pass (visited early)", "Khab Confluence", "Tabo UNESCO mud temples", "Dhankar cliffside stupas"],
+    meals: ["Breakfast at Kaza homestay", "Lunch at Tabo local cafe", "Dinner at Kaza homestay"],
     activities: [
-      { time: "07:00 AM", title: "Depart Kaza", description: "Morning departure on Himalayan towards Losar & Kunzum" },
-      { time: "11:30 AM", title: "Cross Kunzum Pass", description: "Scale Kunzum Pass, brief stop at the temple" },
-      { time: "01:00 PM", title: "Chandratal Lake Visit", description: "Ride the 14 km dirt track to Chandratal, walk to the lake" },
-      { time: "05:00 PM", title: "Check into Camp", description: "Arrive at camp, settle in, hot tea, and enjoy the sunset" }
+      { time: "06:00 AM", title: "Early Departure Kaza", description: "Ride straight down Spiti highway towards Khab" },
+      { time: "09:30 AM", title: "Khab Confluence", description: "Brief photo stop at Spiti-Sutlej junction, begin Shipki La loops climb" },
+      { time: "10:30 AM", title: "Shipki La Border Post", description: "Reach border post (well before 2:00 PM closure), interact with army personnel" },
+      { time: "01:00 PM", title: "Tabo Monastery (Lunch)", description: "Ride back to Tabo for lunch and tour the 1000-year-old mud stupas & caves" },
+      { time: "04:30 PM", title: "Dhankar Monastery", description: "Ascend clay cliffs to visit the cliff-hanging Dhankar Monastery" },
+      { time: "07:30 PM", title: "Arrive Kaza", description: "Return to homestay, warm dinner" }
     ],
     schedule: [
-      { time: "07:00 AM", activity: "Depart Kaza on RE Himalayan" },
-      { time: "11:30 AM", activity: "Cross Kunzum Pass (14,931 ft)" },
-      { time: "01:00 PM", activity: "Visit Chandratal Lake and walk to shore" },
-      { time: "05:00 PM", activity: "Check into Chandratal camp, dinner and stargazing" }
+      { time: "06:00 AM", activity: "Depart Kaza early on RE Himalayan" },
+      { time: "09:30 AM", activity: "Arrive Khab, climb loops to Shipki La" },
+      { time: "10:30 AM", activity: "Visit Shipki La border post (pre-2:00 PM entry)" },
+      { time: "01:00 PM", activity: "Tour Tabo Monastery and lunch" },
+      { time: "04:30 PM", activity: "Visit Dhankar cliff monastery" },
+      { time: "07:30 PM", activity: "Return to Kaza homestay for dinner" }
     ]
   },
   {
@@ -213,19 +215,19 @@ export const itinerary = [
     day: 4,
     date: "24 Aug",
     weekday: "Sun",
-    title: "Chandratal \u2192 Chhatru \u2192 Atal Tunnel \u2192 Manali \u2192 Evening Volvo to Delhi",
-    subtitle: "Ride from Chandratal back to Manali, return RE Himalayan, explore Mall Road, board overnight Volvo bus",
-    overview: "Depart Chandratal camp at 07:00 AM on the RE Himalayan (Day 4 of 4). Ride through Batal and the rough off-road riverbeds of Chhatru and Gramphu. Cross the Atal Tunnel to enter Manali by 01:00 PM. Have lunch in Old Manali, return the bike to the rental shop by 04:30 PM, collect the security deposit, and spend the remaining time exploring Mall Road on foot. Board the overnight Volvo AC bus back to Delhi.",
-    travel: "Chandratal \u2192 Batal \u2192 Chhatru \u2192 Atal Tunnel \u2192 Manali \u2192 Delhi (Overnight Bus)",
+    title: "Kaza → Losar → Kunzum Pass → Atal Tunnel → Manali → Evening Volvo to Delhi",
+    subtitle: "Ride from Kaza back to Manali, return RE Himalayan, explore Mall Road, board overnight Volvo bus",
+    overview: "Depart Kaza homestay at 07:00 AM on the RE Himalayan (Day 4 of 4). Ride back through Losar, cross the high Kunzum Pass (14,931 ft), and transit along the glacial riverbeds of Batal, Chhatru, and Gramphu. Cross the Atal Tunnel to enter Manali by 01:30 PM. Have lunch in Old Manali, return the bike to the rental shop by 04:30 PM, collect the security deposit, and spend the remaining time exploring Mall Road on foot. Board the overnight Volvo AC bus back to Delhi.",
+    travel: "Kaza → Losar → Kunzum Pass → Batal → Chhatru → Atal Tunnel → Manali → Delhi (Overnight Bus)",
     travelMode: "RE Himalayan (Day 4 of 4) + Volvo Bus",
-    distance: "130 km Riding + 530 km Bus",
-    travelTime: "6 Hours Riding + 12 Hours Bus",
+    distance: "200 km Riding + 530 km Bus",
+    travelTime: "8 Hours Riding + 12 Hours Bus",
     estimatedCost: 1650,
-    weather: "Cold morning at Chandratal (5\u00b0C), warm and pleasant in Manali (22\u00b0C)",
+    weather: "Cold morning at Kaza (8°C), warm and pleasant in Manali (22°C)",
     trekDistance: "0 km",
-    highestAltitude: "4300m",
+    highestAltitude: "4551m (Kunzum Pass)",
     stay: "Overnight Volvo Bus to Delhi",
-    food: "Breakfast at Chandratal camp (included), lunch in Old Manali (\u20b9220), dinner on highway dhaba (\u20b9150)",
+    food: "Breakfast at Kaza homestay (included), lunch in Old Manali (₹220), dinner on highway dhaba (₹150)",
     notes: "No hotel stay in Manali. Drop luggage at the Volvo bus operator counter or bike rental shop upon arrival in Manali.",
     warnings: [
       "Return RE Himalayan by 04:30 PM to avoid extra rental charges",
@@ -235,29 +237,29 @@ export const itinerary = [
     images: [],
     mapLink: "https://maps.google.com/?q=Manali+Bus+Stand",
     tips: [
-      "Depart camp early to avoid swell in water crossings between Batal and Chhatru",
-      "Carry exact cash for final bike rental settlement"
+      "Depart Kaza early to cross Kunzum Pass and water streams before they swell in the afternoon.",
+      "Carry exact cash for final bike rental settlement."
     ],
     photography: [
       "Chandra river crossings on the bike",
       "Old Manali river view",
       "Final group photo with RE Himalayan before return"
     ],
-    highlights: ["Chandra river off-road ride", "Atal Tunnel return crossing", "Mall Road walk", "Overnight Volvo back to Delhi"],
-    meals: ["Breakfast at Chandratal Camp", "Lunch in Old Manali", "Dinner on highway dhaba"],
+    highlights: ["Kunzum Pass return crossing", "Chandra river off-road ride", "Atal Tunnel return crossing", "Mall Road walk", "Overnight Volvo back to Delhi"],
+    meals: ["Breakfast at Kaza Homestay", "Lunch in Old Manali", "Dinner on highway dhaba"],
     activities: [
-      { time: "07:00 AM", title: "Depart Chandratal", description: "Early morning ride on Himalayan towards Batal & Chhatru" },
-      { time: "10:30 AM", title: "Cross Atal Tunnel", description: "Enter back into Lahaul & cross tunnel to Manali" },
-      { time: "01:00 PM", title: "Old Manali Lunch", description: "Quick lunch in Old Manali cafes, pack gear" },
-      { time: "04:30 PM", title: "Return RE Himalayan", description: "Hand over bike at rental store, verify condition, collect deposit" },
-      { time: "06:00 PM", title: "Board Volvo Bus", description: "Board overnight Volvo AC bus back to Delhi" }
+      { time: "07:00 AM", title: "Depart Kaza", description: "Early morning checkout and departure towards Kunzum Pass" },
+      { time: "11:00 AM", title: "Cross Kunzum Pass", description: "Brief stop at the pass shrine, descend to Batal" },
+      { time: "01:30 PM", title: "Arrive Manali", description: "Arrive in Manali, drop luggage at agency, lunch in Old Manali" },
+      { time: "04:30 PM", title: "Return Bike", description: "Complete bike check, collect security deposit" },
+      { time: "06:00 PM", title: "Board Volvo Bus", description: "Head to Volvo boarding stand, depart Manali" }
     ],
     schedule: [
-      { time: "07:00 AM", activity: "Depart Chandratal camp on RE Himalayan" },
-      { time: "10:30 AM", activity: "Cross Atal Tunnel into Manali" },
-      { time: "01:00 PM", activity: "Lunch in Old Manali & pack bags" },
-      { time: "04:30 PM", activity: "Return RE Himalayan at rental store and collect deposit" },
-      { time: "06:00 PM", activity: "Board overnight Volvo bus to Delhi" }
+      { time: "07:00 AM", activity: "Depart Kaza on RE Himalayan" },
+      { time: "11:00 AM", activity: "Cross Kunzum Pass (14,931 ft) back to Lahaul" },
+      { time: "01:30 PM", activity: "Lunch in Old Manali, drop bags at bike rental office" },
+      { time: "04:30 PM", activity: "Return RE Himalayan to rental yard" },
+      { time: "06:00 PM", activity: "Board overnight Volvo bus back to Delhi" }
     ]
   },
   {
@@ -265,35 +267,39 @@ export const itinerary = [
     day: 5,
     date: "25 Aug",
     weekday: "Mon",
-    title: "Arrival in Delhi \u2192 Sonipat",
-    subtitle: "Early morning arrival at ISBT Kashmiri Gate, Delhi, then return to Sonipat",
-    overview: "Arrive at ISBT Kashmiri Gate / Majnu ka Tilla in Delhi around 07:00 AM on 25 Aug. Take a local train or bus from Delhi back to Sonipat. End of an unforgettable Spiti Valley & Manali riding adventure.",
-    travel: "Kullu \u2192 Mandi \u2192 Swarghat \u2192 Delhi \u2192 Sonipat",
-    travelMode: "Volvo Bus + Local Transport",
-    distance: "530 km Bus + 50 km Local",
-    travelTime: "12 Hours Bus + 1.5 Hours Local",
-    estimatedCost: 200,
-    weather: "Delhi morning weather, 28\u00b0C to 36\u00b0C",
+    title: "Arrive Delhi & Travel back to Sonipat",
+    subtitle: "Morning arrival in Delhi ISBT, local transit back to Sonipat",
+    overview: "Arrive in Delhi ISBT Kashmiri Gate around 07:00 AM. Take a local train or bus back to Sonipat, arriving back home by mid-morning. End of the Spiti valley road expedition.",
+    travel: "Delhi ISBT → Sonipat (Local train or bus)",
+    travelMode: "Local Train / Bus",
+    distance: "50 km",
+    travelTime: "1.5 Hours",
+    estimatedCost: 100,
+    weather: "Delhi: Warm & sunny, 30°C",
     trekDistance: "0 km",
-    highestAltitude: "215m",
-    stay: "Home in Sonipat",
-    food: "Morning tea/breakfast in Delhi (\u20b9150)",
-    notes: "Trip concludes upon return to Sonipat.",
-    warnings: [],
-    packing: [],
+    highestAltitude: "220m",
+    stay: "Home Sweet Home",
+    food: "Breakfast at home or transit snack (₹50)",
+    notes: "Inform family of arrival time from the bus when entering Delhi borders.",
+    warnings: [
+      "Ensure you have collected all personal belongings from the Volvo overhead storage before de-boarding."
+    ],
+    packing: ["Personal bags"],
     images: [],
-    mapLink: "https://maps.google.com/?q=ISBT+Kashmiri+Gate+Delhi",
-    tips: ["Take Delhi Metro from Kashmiri Gate for easy connectivity to Sonipat train"],
-    photography: ["Final group photo at Kashmiri Gate bus terminal"],
-    highlights: ["Arrival in Delhi", "Return to Sonipat", "Trip complete"],
-    meals: ["Morning tea in Delhi"],
+    mapLink: "https://maps.google.com/?q=Sonipat",
+    tips: [
+      "Local trains from Old Delhi or Sabzi Mandi station to Sonipat are very frequent and economical."
+    ],
+    photography: ["Final arrival selfie at Sonipat railway station"],
+    highlights: ["Completion of the high altitude riding loop", "Safe return home"],
+    meals: ["Transit breakfast"],
     activities: [
-      { time: "07:00 AM", title: "Arrival in Delhi", description: "Arrive at ISBT Kashmiri Gate, Delhi by overnight Volvo bus" },
-      { time: "08:30 AM", title: "Return to Sonipat", description: "Board train / bus from Delhi to Sonipat. Trip concludes." }
+      { time: "07:00 AM", title: "Arrive Delhi ISBT", description: "Volvo arrives at Delhi ISBT Kashmiri Gate" },
+      { time: "08:30 AM", title: "Arrive Sonipat", description: "Reach Sonipat rail station or bus stand, head home" }
     ],
     schedule: [
-      { time: "07:00 AM", activity: "Arrive in Delhi by Volvo AC bus" },
-      { time: "08:30 AM", activity: "Board local transport to Sonipat. Trip ends." }
+      { time: "07:00 AM", activity: "Arrive Delhi ISBT Kashmiri Gate via Volvo bus" },
+      { time: "08:30 AM", activity: "Travel back to Sonipat; end of journey" }
     ]
   }
 ];

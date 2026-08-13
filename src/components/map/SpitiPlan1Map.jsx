@@ -4,23 +4,25 @@ import { Mountain, MapPin, Navigation, Info, ZoomIn, ZoomOut, Locate } from "luc
 
 // Spiti Plan 1 route waypoints with real GPS coordinates
 const PLAN1_WAYPOINTS = [
-  { id: 1,  name: "Sonipat",               lat: 28.9931, lng: 77.0151, alt: "215m",    type: "start",   date: "20 Aug Eve",  color: "#6366F1", desc: "Starting point — depart for Delhi ISBT" },
-  { id: 2,  name: "Delhi (ISBT Kashmiri Gate)", lat: 28.6669, lng: 77.2284, alt: "215m", type: "city",  date: "20 Aug Night", color: "#6366F1", desc: "Board Volvo AC bus to Manali at 8 PM" },
-  { id: 3,  name: "Manali",                lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "21 Aug 8 AM", color: "#F59E0B", desc: "Arrive, pick up Xpulse 200, ride to Kaza" },
-  { id: 4,  name: "Atal Tunnel (North Portal)", lat: 32.3638, lng: 77.0802, alt: "3,050m", type: "landmark", date: "21 Aug 10:45 AM", color: "#F59E0B", desc: "9 km tunnel — entry into Lahaul Valley" },
-  { id: 5,  name: "Gramphu / Chhatru",    lat: 32.4498, lng: 77.0350, alt: "3,150m",  type: "junction",date: "21 Aug 11:30 AM", color: "#EF4444", desc: "No network zone begins here" },
-  { id: 6,  name: "Batal",                 lat: 32.3852, lng: 77.6021, alt: "3,960m",  type: "rest",    date: "21 Aug 12:30 PM", color: "#EF4444", desc: "Chacha-Chachi Dhaba — famous lunch stop" },
-  { id: 7,  name: "Kunzum Pass",           lat: 32.4578, lng: 77.6298, alt: "4,551m",  type: "pass",    date: "21 Aug 2:00 PM", color: "#EF4444", desc: "Highest point — 14,931 ft. Visit Kunzum Mata temple" },
-  { id: 8,  name: "Losar",                 lat: 32.4728, lng: 77.7192, alt: "4,080m",  type: "village", date: "21 Aug 3:00 PM", color: "#10B981", desc: "First village in Spiti Valley" },
-  { id: 9,  name: "Kaza",                  lat: 32.2258, lng: 78.0710, alt: "3,800m",  type: "town",    date: "21 Aug 5:30 PM", color: "#10B981", desc: "2-night base camp in Spiti Valley" },
-  { id: 10, name: "Key Monastery",         lat: 32.3038, lng: 78.0127, alt: "4,166m",  type: "monastery",date: "22 Aug 8:30 AM", color: "#8B5CF6", desc: "1,000-year-old Gelugpa monastery on a cliff" },
-  { id: 11, name: "Chicham Bridge",        lat: 32.3421, lng: 78.0012, alt: "4,140m",  type: "landmark",date: "22 Aug 11:00 AM", color: "#8B5CF6", desc: "Asia's highest suspension bridge (13,596 ft)" },
-  { id: 12, name: "Hikkim",               lat: 32.2871, lng: 78.0498, alt: "4,440m",  type: "village", date: "22 Aug 1:30 PM", color: "#8B5CF6", desc: "World's Highest Post Office — 14,567 ft" },
-  { id: 13, name: "Komic",                lat: 32.2761, lng: 78.0621, alt: "4,587m",  type: "village", date: "22 Aug 3:00 PM", color: "#8B5CF6", desc: "World's highest motorable village — 15,027 ft" },
-  { id: 14, name: "Langza",               lat: 32.2511, lng: 78.0821, alt: "4,400m",  type: "village", date: "22 Aug 3:30 PM", color: "#8B5CF6", desc: "Giant Buddha statue facing Chau Chau Kang Nilda peak" },
-  { id: 15, name: "Chandratal Lake",      lat: 32.4788, lng: 77.6151, alt: "4,300m",  type: "lake",    date: "23 Aug 1:00 PM", color: "#0EA5E9", desc: "The Moon Lake — turquoise glacial crescent. Camp overnight near the lake." },
-  { id: 16, name: "Manali (Return)",       lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "24 Aug 1:00 PM", color: "#F59E0B", desc: "Return to Manali — Handover bike by 4:30 PM and board evening Volvo" },
-  { id: 17, name: "Delhi (Return)",        lat: 28.6669, lng: 77.2284, alt: "215m",    type: "city",    date: "25 Aug 7 AM", color: "#6366F1", desc: "Arrive Delhi by overnight Volvo, return to Sonipat" },
+  { id: 1,  name: "Sonipat",               lat: 28.9931, lng: 77.0151, alt: "220m",    type: "start",   date: "20 Aug Night", color: "#6366F1", desc: "Starting point — board Volvo AC bus directly to Manali" },
+  { id: 2,  name: "Manali",                lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "21 Aug 8 AM", color: "#F59E0B", desc: "Arrive, pick up RE Himalayan, ride to Kaza" },
+  { id: 3,  name: "Atal Tunnel (North Portal)", lat: 32.3638, lng: 77.0802, alt: "3,050m", type: "landmark", date: "21 Aug 10:45 AM", color: "#F59E0B", desc: "9 km tunnel — entry into Lahaul Valley" },
+  { id: 4,  name: "Gramphu / Chhatru",    lat: 32.4498, lng: 77.0350, alt: "3,150m",  type: "junction",date: "21 Aug 11:30 AM", color: "#EF4444", desc: "No network zone begins here" },
+  { id: 5,  name: "Batal",                 lat: 32.3852, lng: 77.6021, alt: "3,960m",  type: "rest",    date: "21 Aug 12:30 PM", color: "#EF4444", desc: "Chacha-Chachi Dhaba — famous lunch stop" },
+  { id: 6,  name: "Kunzum Pass",           lat: 32.4578, lng: 77.6298, alt: "4,551m",  type: "pass",    date: "21 Aug 2:00 PM", color: "#EF4444", desc: "Highest point — 14,931 ft. Visit Kunzum Mata temple" },
+  { id: 7,  name: "Losar",                 lat: 32.4728, lng: 77.7192, alt: "4,080m",  type: "village", date: "21 Aug 3:00 PM", color: "#10B981", desc: "First village in Spiti Valley" },
+  { id: 8,  name: "Kaza Base",             lat: 32.2258, lng: 78.0710, alt: "3,800m",  type: "town",    date: "21 Aug 5:30 PM", color: "#10B981", desc: "3-night base camp in Spiti Valley" },
+  { id: 9,  name: "Key Monastery",         lat: 32.3038, lng: 78.0127, alt: "4,166m",  type: "monastery",date: "22 Aug 8:30 AM", color: "#8B5CF6", desc: "1,000-year-old Gelugpa monastery on a cliff" },
+  { id: 10, name: "Chicham Bridge",        lat: 32.3421, lng: 78.0012, alt: "4,140m",  type: "landmark",date: "22 Aug 11:00 AM", color: "#8B5CF6", desc: "Asia's highest suspension bridge (13,596 ft)" },
+  { id: 11, name: "Hikkim",               lat: 32.2871, lng: 78.0498, alt: "4,440m",  type: "village", date: "22 Aug 1:30 PM", color: "#8B5CF6", desc: "World's Highest Post Office — 14,567 ft" },
+  { id: 12, name: "Komic",                lat: 32.2761, lng: 78.0621, alt: "4,587m",  type: "village", date: "22 Aug 3:00 PM", color: "#8B5CF6", desc: "World's highest motorable village — 15,027 ft" },
+  { id: 13, name: "Langza",               lat: 32.2511, lng: 78.0821, alt: "4,400m",  type: "village", date: "22 Aug 3:30 PM", color: "#8B5CF6", desc: "Giant Buddha statue facing Chau Chau Kang Nilda peak" },
+  { id: 14, name: "Khab Confluence",      lat: 31.8150, lng: 78.6300, alt: "2,500m",  type: "junction",date: "23 Aug 9:30 AM", color: "#FF5533", desc: "Confluence of Spiti and Sutlej rivers" },
+  { id: 15, name: "Shipki La Pass",       lat: 31.8122, lng: 78.7428, alt: "3,930m",  type: "pass",    date: "23 Aug 10:30 AM", color: "#FF5533", desc: "India-China border pass (Closes at 2:00 PM)" },
+  { id: 16, name: "Tabo Monastery",       lat: 32.0953, lng: 78.3812, alt: "3,280m",  type: "monastery",date: "23 Aug 1:00 PM", color: "#FF5533", desc: "UNESCO mud temples and ancient paintings" },
+  { id: 17, name: "Dhankar Monastery",    lat: 32.1281, lng: 78.2136, alt: "3,890m",  type: "monastery",date: "23 Aug 4:30 PM", color: "#FF5533", desc: "Spectacular fort monastery perched on clay cliffs" },
+  { id: 18, name: "Manali (Return)",       lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "24 Aug 1:30 PM", color: "#F59E0B", desc: "Return RE Himalayan and board overnight Volvo" },
+  { id: 19, name: "Sonipat (Return)",      lat: 28.9931, lng: 77.0151, alt: "220m",    type: "city",    date: "25 Aug 7 AM", color: "#6366F1", desc: "Arrive directly back at Sonipat bypass" },
 ];
 
 const TYPE_CONFIG = {
@@ -38,11 +40,11 @@ const TYPE_CONFIG = {
 
 // Day groupings for the legend
 const DAY_COLORS = [
-  { label: "20 Aug — Delhi Departure",         color: "#6366F1" },
+  { label: "20 Aug — Sonipat Boarding",        color: "#6366F1" },
   { label: "21 Aug — Manali → Kaza",           color: "#F59E0B" },
-  { label: "22 Aug — Kaza Circuit",            color: "#8B5CF6" },
-  { label: "23 Aug — Chandratal → Manali",     color: "#0EA5E9" },
-  { label: "25 Aug — Delhi Arrival",           color: "#6366F1" },
+  { label: "22 Aug — High Villages Circuit",   color: "#8B5CF6" },
+  { label: "23 Aug — Shipki La & UNESCO Stops",color: "#FF5533" },
+  { label: "24-25 Aug — Return to Sonipat",    color: "#6366F1" },
 ];
 
 export default function SpitiInteractiveMap() {
@@ -78,31 +80,39 @@ export default function SpitiInteractiveMap() {
       }).addTo(map);
 
       // Draw route polyline — main route
-      const mainRouteCoords = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(
+      const mainRouteCoords = [1, 2, 3, 4, 5, 6, 7, 8].map(
         (id) => { const w = PLAN1_WAYPOINTS.find(p => p.id === id); return [w.lat, w.lng]; }
       );
       Leaflet.polyline(mainRouteCoords, {
         color: "#F59E0B", weight: 4, opacity: 0.9, dashArray: null
       }).addTo(map);
 
-      // Kaza circuit branch
-      const circuitCoords = [9, 10, 11, 12, 13, 14, 9].map(
+      // Kaza circuit branch (Day 2)
+      const circuitCoords = [8, 9, 10, 11, 12, 13, 8].map(
         (id) => { const w = PLAN1_WAYPOINTS.find(p => p.id === id); return [w.lat, w.lng]; }
       );
       Leaflet.polyline(circuitCoords, {
         color: "#8B5CF6", weight: 3, opacity: 0.85, dashArray: "8 5"
       }).addTo(map);
 
-      // Kaza → Chandratal → Manali return
-      const returnCoords = [9, 15, 16].map(
+      // Kaza → Shipki La → Tabo → Dhankar → Kaza (Day 3)
+      const borderCoords = [8, 14, 15, 16, 17, 8].map(
+        (id) => { const w = PLAN1_WAYPOINTS.find(p => p.id === id); return [w.lat, w.lng]; }
+      );
+      Leaflet.polyline(borderCoords, {
+        color: "#FF5533", weight: 3, opacity: 0.85, dashArray: "6 4"
+      }).addTo(map);
+
+      // Kaza → Manali (Return)
+      const returnCoords = [8, 18].map(
         (id) => { const w = PLAN1_WAYPOINTS.find(p => p.id === id); return [w.lat, w.lng]; }
       );
       Leaflet.polyline(returnCoords, {
-        color: "#0EA5E9", weight: 3, opacity: 0.85, dashArray: "6 4"
+        color: "#F59E0B", weight: 3, opacity: 0.85, dashArray: "8 5"
       }).addTo(map);
 
-      // Manali → Delhi (schematic dashed line)
-      const delhiLine = [16, 17].map(
+      // Manali → Sonipat return line
+      const delhiLine = [18, 19].map(
         (id) => { const w = PLAN1_WAYPOINTS.find(p => p.id === id); return [w.lat, w.lng]; }
       );
       Leaflet.polyline(delhiLine, {
@@ -112,7 +122,7 @@ export default function SpitiInteractiveMap() {
       // Add markers
       PLAN1_WAYPOINTS.forEach((wp) => {
         const cfg = TYPE_CONFIG[wp.type] || TYPE_CONFIG.town;
-        const isKey = [3, 7, 9, 12, 13, 15].includes(wp.id);
+        const isKey = [2, 6, 8, 9, 15, 16, 17].includes(wp.id);
         const size = isKey ? 14 : 10;
 
         const icon = Leaflet.divIcon({
