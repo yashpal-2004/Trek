@@ -7,7 +7,7 @@ import { getActiveTripKey, getParentTripId } from "../data/proxyHelper";
 import { formatCurrency } from "../utils/currency";
 import Container from "../components/layout/Container";
 import { transport } from "../data/transport";
-import { stayOptions } from "../data/budget";
+import { stayOptions, budget } from "../data/budget";
 import { useFirestore } from "../hooks/useFirestore";
 
 const categoryColors = {
@@ -112,39 +112,57 @@ export default function Expenses({ isSection = false }) {
   }, [transport]);
 
   const stayPresets = useMemo(() => {
-    return stayOptions.map((item, idx) => ({
-      value: `stay_${item.id || item.name || idx}`,
-      label: `Stay: ${item.destination || item.name || 'Homestay'}`,
-      amountPerPerson: item.budget || item.mid || item.pricePerNight || 0,
-      category: "Accommodation",
-      notes: `Stay at ${item.destination || item.name || 'Homestay'}`,
-    }));
+    return stayOptions.map((item, idx) => {
+      const price = item.pricePerNight || item.budget || item.mid || 0;
+      const nightsCount = item.nights || 1;
+      return {
+        value: `stay_${item.id || item.name || idx}`,
+        label: `Stay: ${item.destination || item.name || 'Homestay'} (${nightsCount} Night${nightsCount > 1 ? 's' : ''})`,
+        amountPerPerson: price * nightsCount,
+        category: "Accommodation",
+        notes: `Stay at ${item.destination || item.name || 'Homestay'} for ${nightsCount} nights`,
+      };
+    });
   }, [stayOptions]);
+
+  const otherPresets = useMemo(() => {
+    const list = [];
+    budget?.categories?.forEach((cat) => {
+      if (cat.id === "transport" || cat.id === "accommodation") return;
+      if (cat.subItems) {
+        cat.subItems.forEach((sub, idx) => {
+          list.push({
+            value: `other_${cat.id}_${idx}`,
+            label: `${cat.label}: ${sub.name}`,
+            amountPerPerson: sub.price || 0,
+            category: cat.id === "emergency" ? "Emergency" : (cat.label || "Other"),
+            notes: sub.name,
+          });
+        });
+      }
+    });
+    return list;
+  }, [budget]);
 
   const handlePresetChange = (presetValue) => {
     setSelectedPreset(presetValue);
+    let p = null;
     if (presetValue.startsWith("transport_")) {
-      const p = transportPresets.find((x) => x.value === presetValue);
-      if (p) {
-        const totalAmt = p.amountPerPerson * members.length;
-        setCategory(p.category);
-        setAmount(totalAmt);
-        setNotes(p.notes);
-        const newPaid = {};
-        members.forEach((m) => { newPaid[m] = p.amountPerPerson; });
-        setPaidAmounts(newPaid);
-      }
+      p = transportPresets.find((x) => x.value === presetValue);
     } else if (presetValue.startsWith("stay_")) {
-      const p = stayPresets.find((x) => x.value === presetValue);
-      if (p) {
-        const totalAmt = p.amountPerPerson * members.length;
-        setCategory(p.category);
-        setAmount(totalAmt);
-        setNotes(p.notes);
-        const newPaid = {};
-        members.forEach((m) => { newPaid[m] = p.amountPerPerson; });
-        setPaidAmounts(newPaid);
-      }
+      p = stayPresets.find((x) => x.value === presetValue);
+    } else if (presetValue.startsWith("other_")) {
+      p = otherPresets.find((x) => x.value === presetValue);
+    }
+
+    if (p) {
+      const totalAmt = p.amountPerPerson * members.length;
+      setCategory(p.category);
+      setAmount(totalAmt);
+      setNotes(p.notes);
+      const newPaid = {};
+      members.forEach((m) => { newPaid[m] = p.amountPerPerson; });
+      setPaidAmounts(newPaid);
     } else {
       const cat = presetValue.replace("custom_", "");
       const match = expenseCategories.find((c) => c.toLowerCase() === cat.toLowerCase());
@@ -164,6 +182,8 @@ export default function Expenses({ isSection = false }) {
       return transportPresets.find((x) => x.value === selectedPreset);
     } else if (selectedPreset.startsWith("stay_")) {
       return stayPresets.find((x) => x.value === selectedPreset);
+    } else if (selectedPreset.startsWith("other_")) {
+      return otherPresets.find((x) => x.value === selectedPreset);
     } else {
       const customOptions = expenseCategories.map((cat) => ({
         value: `custom_${cat.toLowerCase()}`,
@@ -171,7 +191,7 @@ export default function Expenses({ isSection = false }) {
       }));
       return customOptions.find((x) => x.value === selectedPreset);
     }
-  }, [selectedPreset, transportPresets, stayPresets, expenseCategories]);
+  }, [selectedPreset, transportPresets, stayPresets, otherPresets, expenseCategories]);
 
   const handleCheckboxChange = (name) => {
     setSplitWith((prev) =>
@@ -349,6 +369,22 @@ export default function Expenses({ isSection = false }) {
                                   <span className="text-[10px] text-slate-400 font-mono">₹{p.amountPerPerson}/p</span>
                                 </button>
                               ))}
+                              {otherPresets.length > 0 && (
+                                <>
+                                  <div className="px-4 py-1.5 text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase bg-slate-50/50 mt-2">Other Presets from Itinerary</div>
+                                  {otherPresets.map((p) => (
+                                    <button
+                                      key={p.value}
+                                      type="button"
+                                      onClick={() => { handlePresetChange(p.value); setIsOpen(false); }}
+                                      className={`w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-black/5 transition-colors flex justify-between items-center ${selectedPreset === p.value ? "bg-black/5 text-black" : "text-slate-700"}`}
+                                    >
+                                      <span>{p.label}</span>
+                                      <span className="text-[10px] text-slate-400 font-mono">₹{p.amountPerPerson}/p</span>
+                                    </button>
+                                  ))}
+                                </>
+                              )}
                               <div className="px-4 py-1.5 text-[9px] font-black font-mono tracking-widest text-slate-400 uppercase bg-slate-50/50 mt-2">Custom Expenses (Ad-hoc)</div>
                               {expenseCategories.map((cat) => {
                                 const value = `custom_${cat.toLowerCase()}`;

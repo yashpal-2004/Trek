@@ -73,7 +73,7 @@ export const transport = [
     busType: "Motorcycle"
   },
   {
-    id: 6,
+    id: 7,
     from: "Manali",
     to: "Sonipat",
     mode: "Volvo AC Bus",
@@ -85,6 +85,20 @@ export const transport = [
     frequency: "Evening (06:00 PM – 07:00 PM)",
     notes: "Board overnight Volvo at 06:00 PM on 24 Aug. Arrive directly at Sonipat bypass by ~05:00 AM on 25 Aug.",
     busType: "AC Volvo"
+  },
+  {
+    id: 8,
+    from: "Himalayan Fuel",
+    to: "Manali + Spiti (~840 km)",
+    mode: "Fuel",
+    distance: "840 km",
+    duration: "Entire Trip",
+    fare: data.transportFares.bikeFuelPerPerson,
+    cheapest: data.transportFares.bikeFuelPerPerson,
+    alternative: "None",
+    frequency: "Refuel at Manali & Kaza",
+    notes: "Total estimated fuel cost for the entire Spiti riding circuit.",
+    busType: "Fuel"
   }
 ];
 

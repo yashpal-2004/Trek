@@ -51,5 +51,17 @@ export const safety = [
       "Share your live itinerary with family before departing — specify Kaza homestay contact number",
       "Ride in pairs; never separate on unmarked terrain between Batal and Kunzum"
     ]
+  },
+  {
+    id: 4,
+    title: "Critical Fuel Stations & Dry Zones",
+    icon: "Fuel",
+    description: "There are only two refueling points on this entire mountain route. A 200 km dry zone lies between Manali and Kaza.",
+    tips: [
+      "Manali Town: Tank up to 100% capacity on 21 Aug morning before heading towards Atal Tunnel.",
+      "Kaza Indian Oil Pump: The only fuel station in Spiti. Refuel here immediately on arrival (21 Aug eve) and before the Shipki La pass ride (23 Aug).",
+      "No Tandi detour: The itinerary does not pass Keylong/Tandi. Do not expect any fuel pumps on the Gramphu-Batal-Kaza stretch.",
+      "Carry spare fuel: Keep 2-3 litres of reserve petrol in robust bottles/jerry cans for emergencies."
+    ]
   }
 ];

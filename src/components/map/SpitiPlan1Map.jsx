@@ -4,25 +4,25 @@ import { Mountain, MapPin, Navigation, Info, ZoomIn, ZoomOut, Locate } from "luc
 
 // Spiti Plan 1 route waypoints with real GPS coordinates
 const PLAN1_WAYPOINTS = [
-  { id: 1,  name: "Sonipat",               lat: 28.9931, lng: 77.0151, alt: "220m",    type: "start",   date: "20 Aug Night", color: "#6366F1", desc: "Starting point — board Volvo AC bus directly to Manali" },
-  { id: 2,  name: "Manali",                lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "21 Aug 8 AM", color: "#F59E0B", desc: "Arrive, pick up RE Himalayan, ride to Kaza" },
-  { id: 3,  name: "Atal Tunnel (North Portal)", lat: 32.3638, lng: 77.0802, alt: "3,050m", type: "landmark", date: "21 Aug 10:45 AM", color: "#F59E0B", desc: "9 km tunnel — entry into Lahaul Valley" },
-  { id: 4,  name: "Gramphu / Chhatru",    lat: 32.4498, lng: 77.0350, alt: "3,150m",  type: "junction",date: "21 Aug 11:30 AM", color: "#EF4444", desc: "No network zone begins here" },
-  { id: 5,  name: "Batal",                 lat: 32.3852, lng: 77.6021, alt: "3,960m",  type: "rest",    date: "21 Aug 12:30 PM", color: "#EF4444", desc: "Chacha-Chachi Dhaba — famous lunch stop" },
-  { id: 6,  name: "Kunzum Pass",           lat: 32.4578, lng: 77.6298, alt: "4,551m",  type: "pass",    date: "21 Aug 2:00 PM", color: "#EF4444", desc: "Highest point — 14,931 ft. Visit Kunzum Mata temple" },
-  { id: 7,  name: "Losar",                 lat: 32.4728, lng: 77.7192, alt: "4,080m",  type: "village", date: "21 Aug 3:00 PM", color: "#10B981", desc: "First village in Spiti Valley" },
-  { id: 8,  name: "Kaza Base",             lat: 32.2258, lng: 78.0710, alt: "3,800m",  type: "town",    date: "21 Aug 5:30 PM", color: "#10B981", desc: "3-night base camp in Spiti Valley" },
-  { id: 9,  name: "Key Monastery",         lat: 32.3038, lng: 78.0127, alt: "4,166m",  type: "monastery",date: "22 Aug 8:30 AM", color: "#8B5CF6", desc: "1,000-year-old Gelugpa monastery on a cliff" },
-  { id: 10, name: "Chicham Bridge",        lat: 32.3421, lng: 78.0012, alt: "4,140m",  type: "landmark",date: "22 Aug 11:00 AM", color: "#8B5CF6", desc: "Asia's highest suspension bridge (13,596 ft)" },
-  { id: 11, name: "Hikkim",               lat: 32.2871, lng: 78.0498, alt: "4,440m",  type: "village", date: "22 Aug 1:30 PM", color: "#8B5CF6", desc: "World's Highest Post Office — 14,567 ft" },
-  { id: 12, name: "Komic",                lat: 32.2761, lng: 78.0621, alt: "4,587m",  type: "village", date: "22 Aug 3:00 PM", color: "#8B5CF6", desc: "World's highest motorable village — 15,027 ft" },
-  { id: 13, name: "Langza",               lat: 32.2511, lng: 78.0821, alt: "4,400m",  type: "village", date: "22 Aug 3:30 PM", color: "#8B5CF6", desc: "Giant Buddha statue facing Chau Chau Kang Nilda peak" },
-  { id: 14, name: "Khab Confluence",      lat: 31.8150, lng: 78.6300, alt: "2,500m",  type: "junction",date: "23 Aug 9:30 AM", color: "#FF5533", desc: "Confluence of Spiti and Sutlej rivers" },
-  { id: 15, name: "Shipki La Pass",       lat: 31.8122, lng: 78.7428, alt: "3,930m",  type: "pass",    date: "23 Aug 10:30 AM", color: "#FF5533", desc: "India-China border pass (Closes at 2:00 PM)" },
-  { id: 16, name: "Tabo Monastery",       lat: 32.0953, lng: 78.3812, alt: "3,280m",  type: "monastery",date: "23 Aug 1:00 PM", color: "#FF5533", desc: "UNESCO mud temples and ancient paintings" },
-  { id: 17, name: "Dhankar Monastery",    lat: 32.1281, lng: 78.2136, alt: "3,890m",  type: "monastery",date: "23 Aug 4:30 PM", color: "#FF5533", desc: "Spectacular fort monastery perched on clay cliffs" },
-  { id: 18, name: "Manali (Return)",       lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "24 Aug 1:30 PM", color: "#F59E0B", desc: "Return RE Himalayan and board overnight Volvo" },
-  { id: 19, name: "Sonipat (Return)",      lat: 28.9931, lng: 77.0151, alt: "220m",    type: "city",    date: "25 Aug 7 AM", color: "#6366F1", desc: "Arrive directly back at Sonipat bypass" },
+  { id: 1,  name: "Sonipat",               lat: 28.9931, lng: 77.0151, alt: "220m",    type: "start",   date: "20 Aug Night", color: "#6366F1", desc: "Starting point — board Volvo AC bus directly to Manali", dist: "0 km" },
+  { id: 2,  name: "Manali (Refuel Point)", lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "21 Aug 8 AM", color: "#F59E0B", desc: "Arrive, pick up RE Himalayan, fill tank to 100% capacity, ride to Kaza", isFuelStation: true, dist: "530 km" },
+  { id: 3,  name: "Atal Tunnel (North Portal)", lat: 32.3638, lng: 77.0802, alt: "3,050m", type: "landmark", date: "21 Aug 10:45 AM", color: "#F59E0B", desc: "9 km tunnel — entry into Lahaul Valley", dist: "30 km" },
+  { id: 4,  name: "Gramphu / Chhatru",    lat: 32.4498, lng: 77.0350, alt: "3,150m",  type: "junction",date: "21 Aug 11:30 AM", color: "#EF4444", desc: "No network zone begins here", dist: "25 km" },
+  { id: 5,  name: "Batal",                 lat: 32.3852, lng: 77.6021, alt: "3,960m",  type: "rest",    date: "21 Aug 12:30 PM", color: "#EF4444", desc: "Chacha-Chachi Dhaba — famous lunch stop", dist: "65 km" },
+  { id: 6,  name: "Kunzum Pass",           lat: 32.4578, lng: 77.6298, alt: "4,551m",  type: "pass",    date: "21 Aug 2:00 PM", color: "#EF4444", desc: "Highest point — 14,931 ft. Visit Kunzum Mata temple", dist: "12 km" },
+  { id: 7,  name: "Losar",                 lat: 32.4728, lng: 77.7192, alt: "4,080m",  type: "village", date: "21 Aug 3:00 PM", color: "#10B981", desc: "First village in Spiti Valley", dist: "18 km" },
+  { id: 8,  name: "Kaza Base (Refuel Point)", lat: 32.2258, lng: 78.0710, alt: "3,800m",  type: "town",    date: "21 Aug 5:30 PM", color: "#10B981", desc: "3-night base camp. Refuel at the Kaza Indian Oil pump (only fuel station in Spiti Valley)", isFuelStation: true, dist: "50 km" },
+  { id: 9,  name: "Key Monastery",         lat: 32.3038, lng: 78.0127, alt: "4,166m",  type: "monastery",date: "22 Aug 8:30 AM", color: "#8B5CF6", desc: "1,000-year-old Gelugpa monastery on a cliff", dist: "14 km" },
+  { id: 10, name: "Chicham Bridge",        lat: 32.3421, lng: 78.0012, alt: "4,140m",  type: "landmark",date: "22 Aug 11:00 AM", color: "#8B5CF6", desc: "Asia's highest suspension bridge (13,596 ft)", dist: "8 km" },
+  { id: 11, name: "Hikkim",               lat: 32.2871, lng: 78.0498, alt: "4,440m",  type: "village", date: "22 Aug 1:30 PM", color: "#8B5CF6", desc: "World's Highest Post Office — 14,567 ft", dist: "22 km" },
+  { id: 12, name: "Komic",                lat: 32.2761, lng: 78.0621, alt: "4,587m",  type: "village", date: "22 Aug 3:00 PM", color: "#8B5CF6", desc: "World's highest motorable village — 15,027 ft", dist: "4 km" },
+  { id: 13, name: "Langza",               lat: 32.2511, lng: 78.0821, alt: "4,400m",  type: "village", date: "22 Aug 3:30 PM", color: "#8B5CF6", desc: "Giant Buddha statue facing Chau Chau Kang Nilda peak", dist: "8 km" },
+  { id: 14, name: "Khab Confluence",      lat: 31.8150, lng: 78.6300, alt: "2,500m",  type: "junction",date: "23 Aug 9:30 AM", color: "#FF5533", desc: "Confluence of Spiti and Sutlej rivers", dist: "120 km" },
+  { id: 15, name: "Shipki La Pass",       lat: 31.8122, lng: 78.7428, alt: "3,930m",  type: "pass",    date: "23 Aug 10:30 AM", color: "#FF5533", desc: "India-China border pass (Closes at 2:00 PM)", dist: "22 km" },
+  { id: 16, name: "Tabo Monastery",       lat: 32.0953, lng: 78.3812, alt: "3,280m",  type: "monastery",date: "23 Aug 1:00 PM", color: "#FF5533", desc: "UNESCO mud temples and ancient paintings", dist: "48 km" },
+  { id: 17, name: "Dhankar Monastery",    lat: 32.1281, lng: 78.2136, alt: "3,890m",  type: "monastery",date: "23 Aug 4:30 PM", color: "#FF5533", desc: "Spectacular fort monastery perched on clay cliffs", dist: "32 km" },
+  { id: 18, name: "Manali (Return)",       lat: 32.2432, lng: 77.1892, alt: "2,050m",  type: "town",    date: "24 Aug 1:30 PM", color: "#F59E0B", desc: "Return RE Himalayan, refuel if returning with full tank, board overnight Volvo", dist: "200 km" },
+  { id: 19, name: "Sonipat (Return)",      lat: 28.9931, lng: 77.0151, alt: "220m",    type: "city",    date: "25 Aug 7 AM", color: "#6366F1", desc: "Arrive directly back at Sonipat bypass", dist: "530 km" },
 ];
 
 const TYPE_CONFIG = {
@@ -125,18 +125,33 @@ export default function SpitiInteractiveMap() {
         const isKey = [2, 6, 8, 9, 15, 16, 17].includes(wp.id);
         const size = isKey ? 14 : 10;
 
+        const htmlContent = wp.isFuelStation
+          ? `<div style="
+              width:22px; height:22px;
+              background:#EF4444;
+              border: 2px solid white;
+              border-radius:50%;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+              cursor:pointer;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              font-size:11px;
+            ">⛽</div>`
+          : `<div style="
+              width:${size}px; height:${size}px;
+              background:${cfg.color};
+              border: 2.5px solid white;
+              border-radius:50%;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+              cursor:pointer;
+            "></div>`;
+
         const icon = Leaflet.divIcon({
           className: "",
-          html: `<div style="
-            width:${size}px; height:${size}px;
-            background:${cfg.color};
-            border: 2.5px solid white;
-            border-radius:50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-            cursor:pointer;
-          "></div>`,
-          iconSize: [size, size],
-          iconAnchor: [size / 2, size / 2],
+          html: htmlContent,
+          iconSize: wp.isFuelStation ? [22, 22] : [size, size],
+          iconAnchor: wp.isFuelStation ? [11, 11] : [size / 2, size / 2],
         });
 
         const marker = Leaflet.marker([wp.lat, wp.lng], { icon })
@@ -245,33 +260,41 @@ export default function SpitiInteractiveMap() {
         <div className="w-full lg:w-72 bg-[#F5F0E8] border-t lg:border-t-0 lg:border-l border-black/8 overflow-y-auto">
           <div className="p-4">
             <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400 mb-3">Waypoints · {PLAN1_WAYPOINTS.length} Stops</p>
-            <div className="space-y-1.5">
-              {PLAN1_WAYPOINTS.map((wp) => {
+            <div className="space-y-1">
+              {PLAN1_WAYPOINTS.map((wp, idx) => {
                 const cfg = TYPE_CONFIG[wp.type] || TYPE_CONFIG.town;
                 const isActive = selected?.id === wp.id;
                 return (
-                  <button
-                    key={wp.id}
-                    onClick={() => flyTo(wp)}
-                    className={`w-full text-left px-3 py-2.5 rounded-[14px] transition-all flex items-center gap-3 group ${
-                      isActive
-                        ? "bg-black text-white"
-                        : "bg-white/60 hover:bg-white border border-transparent hover:border-black/10"
-                    }`}
-                  >
-                    <div
-                      className="w-2.5 h-2.5 rounded-full shrink-0"
-                      style={{ backgroundColor: isActive ? "white" : cfg.color }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-xs font-bold truncate ${isActive ? "text-white" : "text-black"}`}>
-                        {wp.name}
-                      </p>
-                      <p className={`text-[9px] font-mono truncate ${isActive ? "text-white/60" : "text-slate-400"}`}>
-                        {wp.date} · {wp.alt}
-                      </p>
-                    </div>
-                  </button>
+                  <div key={wp.id} className="relative">
+                    {idx > 0 && (
+                      <div className="flex items-center pl-7 py-0.5 gap-1 text-[9px] font-black font-mono text-slate-400">
+                        <span className="w-1 border-l-2 border-black/10 border-dashed h-3 mr-1" />
+                        <span>↓ {wp.dist}</span>
+                      </div>
+                    )}
+                    <button
+                      onClick={() => flyTo(wp)}
+                      className={`w-full text-left px-3 py-2.5 rounded-[14px] transition-all flex items-center gap-3 group ${
+                        isActive
+                          ? "bg-black text-white"
+                          : "bg-white/60 hover:bg-white border border-transparent hover:border-black/10"
+                      }`}
+                    >
+                      <div
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: isActive ? "white" : cfg.color }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-xs font-bold truncate ${isActive ? "text-white" : "text-black"} flex items-center gap-1.5`}>
+                          {wp.name}
+                          {wp.isFuelStation && <span className="text-[10px] shrink-0" title="Fuel Station">⛽</span>}
+                        </p>
+                        <p className={`text-[9px] font-mono truncate ${isActive ? "text-white/60" : "text-slate-400"}`}>
+                          {wp.date} · {wp.alt}
+                        </p>
+                      </div>
+                    </button>
+                  </div>
                 );
               })}
             </div>
