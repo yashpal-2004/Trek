@@ -17,6 +17,8 @@ export default function App() {
         <Route path="/hemkund" element={<Home />} />
         <Route path="/ladakh-plan1" element={<Home />} />
         <Route path="/ladakh-plan2" element={<Home />} />
+        <Route path="/ladakh-plan3" element={<Home />} />
+        <Route path="/ladakh-plan4" element={<Home />} />
         <Route path="/spiti-plan1" element={<Home />} />
         <Route path="/spiti-plan2" element={<Home />} />
         <Route path="/spiti-plan3" element={<Home />} />

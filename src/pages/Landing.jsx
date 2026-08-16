@@ -397,9 +397,9 @@ export default function Landing() {
       subtitle: "Ladakh & Jammu-Kashmir, India",
       description: "An ultimate 12-day self-scooty expedition from Hisar conquering high-altitude passes (Khardung La, Chang La, Zoji La, Baralacha La), Pangong Lake & Nubra Valley.",
       stats: {
-        duration: "12 Days",
-        distance: "2850 km Riding",
-        budget: `₹${(ladakhAmounts.plan1.budgetTotal / 1000).toFixed(1)}K–${(ladakhAmounts.plan2.budgetTotal / 1000).toFixed(1)}K`,
+        duration: "8-12 Days",
+        distance: "1450-2850 km",
+        budget: `₹${(ladakhAmounts.plan1.budgetTotal / 1000).toFixed(1)}K–${(ladakhAmounts.plan3.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -420,6 +420,24 @@ export default function Landing() {
           details: "High pass thrill route entering via Manali, Atal Tunnel & Baralacha La, exploring Ladakh, and returning via Zoji La & Srinagar.",
           budget: `₹${ladakhAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/ladakh-plan2",
+        },
+        {
+          id: "ladakh-plan3",
+          title: "Plan 3 (Flight + Rental Bike + HRTC Bus Return)",
+          duration: "8 Days",
+          route: "Delhi → Leh (Flight) → Leh local (Rental Bike) → Nubra → Pangong → Leh → Keylong (HRTC Bus) → Delhi",
+          details: "Time-saving fly-in adventure: Flight to Leh, rent motorbikes in Ladakh for local valleys, and return budget-friendly via HRTC bus.",
+          budget: `₹${ladakhAmounts.plan3.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/ladakh-plan3",
+        },
+        {
+          id: "ladakh-plan4",
+          title: "Plan 4 (HRTC Bus Both Ways + Rental Bike)",
+          duration: "9 Days",
+          route: "Delhi → Keylong (HRTC Bus) → Leh → Leh local sightseeing → Nubra → Pangong → Leh (Rental Bike) → Keylong → Delhi (HRTC Bus)",
+          details: "Ultimate pocket-friendly overland circuit: Legendary HRTC Delhi-Leh ordinary bus both ways, 5 nights in Ladakh with a rental bike for Nubra & Pangong valleys.",
+          budget: `₹${ladakhAmounts.plan4.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/ladakh-plan4",
         }
       ],
     },

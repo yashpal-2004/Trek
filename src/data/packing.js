@@ -26,7 +26,9 @@ import { packingCategories as packingJibhiPlan2 } from "./jibhi/plan2/packing";
 import { packing as packingUjjain } from "./ujjain/packing";
 import { packing as packingAuli } from "./auli/packing";
 import { packing as packingKashmir } from "./kashmir/packing";
+import { packingCategories as packingLadakh3 } from "./ladakh/plan3/packing";
+import { packingCategories as packingLadakh4 } from "./ladakh/plan4/packing";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const packing = createDynamicProxy(() => packing1, () => packing2, () => packingSikkim, () => packingYulla1, () => packingYulla2, () => packingHemkund, () => packingLadakh1, () => packingLadakh2, () => packingSpiti1, () => packingSpiti2, () => packingAnnapurna1, () => packingShrikhand1, () => packingShrikhand2, () => packingHampta1, () => packingHampta2, () => packingSpiti3, () => packingMadhyamaheshwar1, () => packingMadhyamaheshwar2, () => packingKedarkantha, () => packingBirBillingPlan1, () => packingBirBillingPlan2, () => packingBirBillingPlan3, () => packingBirBillingPlan4, () => packingJibhiPlan1, () => packingJibhiPlan2, () => packingUjjain, () => packingAuli, () => packingKashmir, true);
+export const packing = createDynamicProxy(() => packing1, () => packing2, () => packingSikkim, () => packingYulla1, () => packingYulla2, () => packingHemkund, () => packingLadakh1, () => packingLadakh2, () => packingSpiti1, () => packingSpiti2, () => packingAnnapurna1, () => packingShrikhand1, () => packingShrikhand2, () => packingHampta1, () => packingHampta2, () => packingSpiti3, () => packingMadhyamaheshwar1, () => packingMadhyamaheshwar2, () => packingKedarkantha, () => packingBirBillingPlan1, () => packingBirBillingPlan2, () => packingBirBillingPlan3, () => packingBirBillingPlan4, () => packingJibhiPlan1, () => packingJibhiPlan2, () => packingUjjain, () => packingAuli, () => packingKashmir, () => packingLadakh3, () => packingLadakh4, true);
 

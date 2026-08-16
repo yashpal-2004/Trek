@@ -65,5 +65,67 @@ export const ladakhAmounts = {
       scootyServiceCheck: 1000,
       innerLinePermit: 600
     }
+  },
+
+  plan3: { // Flight to Leh, rental bike in Ladakh, HRTC bus return
+    budgetTotal: 23000,
+    transportCategory: 12900, // Flight (₹5000) + Bike Rental (₹4800) + Bike Fuel (₹1500) + HRTC Bus (₹1600)
+    accommodationCategory: 4800, // 6 Nights shared stay
+    foodCategory: 2800, // 7 Days food @ ₹400/day
+    emergencyCategory: 2500, // Permits, activities, buffer
+
+    calcDefaults: {
+      transport: 12900,
+      stay: 4800,
+      food: 2800,
+      emergency: 1500,
+      shopping: 500,
+      permits: 500
+    },
+
+    stays: {
+      leh: { budget: 500, mid: 1000, premium: 2000, hotelPrice: 600 },
+      nubra: { budget: 600, mid: 1200, premium: 2200, homestayPrice: 700 },
+      pangong: { budget: 700, mid: 1400, premium: 2500, campPrice: 800 },
+      keylong: { budget: 500, mid: 1000, premium: 1800, hotelPrice: 600 }
+    },
+
+    transportFares: {
+      oneWayFlightToLeh: 5000,
+      bikeRentalLeh: 4800, // 4 Days @ ₹1200/day
+      bikeFuel: 1500,
+      hrtcLehDelhiBus: 1600
+    }
+  },
+
+  plan4: { // HRTC bus both ways, rental bike in Ladakh
+    budgetTotal: 17000,
+    transportCategory: 9500, // Bus both ways (₹3200) + Bike Rental (₹4800) + Bike Fuel (₹1500)
+    accommodationCategory: 3600, // 5 Nights shared stay
+    foodCategory: 2400, // 7 Days food @ ₹340/day
+    emergencyCategory: 1500, // Permits, activities, minor buffer
+
+    calcDefaults: {
+      transport: 9500,
+      stay: 3600,
+      food: 2400,
+      emergency: 1000,
+      shopping: 200,
+      permits: 300
+    },
+
+    stays: {
+      leh: { budget: 500, mid: 1000, premium: 2000, hotelPrice: 600 },
+      nubra: { budget: 600, mid: 1200, premium: 2200, homestayPrice: 700 },
+      pangong: { budget: 700, mid: 1400, premium: 2500, campPrice: 800 },
+      keylong: { budget: 500, mid: 1000, premium: 1800, hotelPrice: 600 }
+    },
+
+    transportFares: {
+      hrtcDelhiLehBus: 1600,
+      hrtcLehDelhiBus: 1600,
+      bikeRentalLeh: 4800, // 4 Days @ ₹1200/day
+      bikeFuel: 1500
+    }
   }
 };
