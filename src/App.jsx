@@ -36,6 +36,8 @@ export default function App() {
         <Route path="/jibhi-plan1" element={<Home />} />
         <Route path="/jibhi-plan2" element={<Home />} />
         <Route path="/ujjain" element={<Home />} />
+        <Route path="/auli" element={<Home />} />
+        <Route path="/kashmir" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

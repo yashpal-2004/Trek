@@ -21,7 +21,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 3, suffix: "", description: "Weekend duration", icon: "Calendar" },
   { id: "distance", label: "Total Distance", value: 1700, suffix: " KM", description: "Sonipat-Ujjain Bus Round Trip", icon: "Route" },
-  { id: "budget", label: "Budget", value: "4.5K", suffix: "", prefix: "₹", description: "Per person (2 people sharing)", icon: "Wallet" },
+  { id: "budget", label: "Budget", value: 4.5, suffix: "K", prefix: "₹", description: "Per person (2 people sharing)", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 511, suffix: " M", description: "Malwa Plateau Elevation", icon: "TrendingUp" },
   { id: "passes", label: "Jyotirlingas", value: 1, suffix: "", description: "Mahakaleshwar Jyotirlinga", icon: "MapPin" },
   { id: "destinations", label: "Major Stops", value: 5, suffix: "", description: "Mahakal Temple, Kal Bhairav, Harsiddhi, Ram Ghat, Mangalnath", icon: "MapPin" },

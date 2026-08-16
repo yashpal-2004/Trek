@@ -24,10 +24,12 @@ import { weather as weatherBirBillingPlan4, safety as safetyBirBillingPlan4 } fr
 import { weather as weatherJibhiPlan1, safety as safetyJibhiPlan1 } from "./jibhi/plan1/weather";
 import { weather as weatherJibhiPlan2, safety as safetyJibhiPlan2 } from "./jibhi/plan2/weather";
 import { weather as weatherUjjain, safety as safetyUjjain } from "./ujjain/weather";
+import { weather as weatherAuli, safety as safetyAuli } from "./auli/weather";
+import { weather as weatherKashmir, safety as safetyKashmir } from "./kashmir/weather";
 import { createDynamicProxy, getActiveTripKey } from "./proxyHelper";
 
-export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2, () => weatherSpiti3, () => weatherMadhyamaheshwar1, () => weatherMadhyamaheshwar2, () => weatherKedarkantha, () => weatherBirBillingPlan1, () => weatherBirBillingPlan2, () => weatherBirBillingPlan3, () => weatherBirBillingPlan4, () => weatherJibhiPlan1, () => weatherJibhiPlan2, () => weatherUjjain);
-export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, () => safetySpiti3, () => safetyMadhyamaheshwar1, () => safetyMadhyamaheshwar2, () => safetyKedarkantha, () => safetyBirBillingPlan1, () => safetyBirBillingPlan2, () => safetyBirBillingPlan3, () => safetyBirBillingPlan4, () => safetyJibhiPlan1, () => safetyJibhiPlan2, () => safetyUjjain, true);
+export const weather = createDynamicProxy(() => weather1, () => weather2, () => weatherSikkim, () => weatherYulla1, () => weatherYulla2, () => weatherHemkund, () => weatherLadakh1, () => weatherLadakh2, () => weatherSpiti1, () => weatherSpiti2, () => weatherAnnapurna1, () => weatherShrikhand1, () => weatherShrikhand2, () => weatherHampta1, () => weatherHampta2, () => weatherSpiti3, () => weatherMadhyamaheshwar1, () => weatherMadhyamaheshwar2, () => weatherKedarkantha, () => weatherBirBillingPlan1, () => weatherBirBillingPlan2, () => weatherBirBillingPlan3, () => weatherBirBillingPlan4, () => weatherJibhiPlan1, () => weatherJibhiPlan2, () => weatherUjjain, () => weatherAuli, () => weatherKashmir);
+export const safety = createDynamicProxy(() => safety1, () => safety2, () => safetySikkim, () => safetyYulla1, () => safetyYulla2, () => safetyHemkund, () => safetyLadakh1, () => safetyLadakh2, () => safetySpiti1, () => safetySpiti2, () => safetyAnnapurna1, () => safetyShrikhand1, () => safetyShrikhand2, () => safetyHampta1, () => safetyHampta2, () => safetySpiti3, () => safetyMadhyamaheshwar1, () => safetyMadhyamaheshwar2, () => safetyKedarkantha, () => safetyBirBillingPlan1, () => safetyBirBillingPlan2, () => safetyBirBillingPlan3, () => safetyBirBillingPlan4, () => safetyJibhiPlan1, () => safetyJibhiPlan2, () => safetyUjjain, () => safetyAuli, () => safetyKashmir, true);
 
 const networkCoverageGarhwal = [
   { place: "Haridwar", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage throughout the city" },
@@ -128,4 +130,21 @@ const networkCoverageUjjain = [
   { place: "Ujjain", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G throughout the city and Mahakal temple premises" }
 ];
 
-export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageHemkund, () => networkCoverageLadakh, () => networkCoverageLadakh, () => networkCoverageSpitiPlan1, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, () => networkCoverageSpiti, () => networkCoverageMadhyamaheshwar, () => networkCoverageMadhyamaheshwar, () => networkCoverageKedarkantha, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageJibhi, () => networkCoverageJibhi, () => networkCoverageUjjain, true);
+const networkCoverageAuli = [
+  { place: "Sonipat", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage — board Volvo bus here" },
+  { place: "Rishikesh", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G throughout the city" },
+  { place: "Joshimath", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "4G works well in Joshimath town, drops in narrow valleys" },
+  { place: "Auli Slopes", signal: "Moderate", level: 2, carriers: "Jio, Airtel", note: "Intermittent signal on the slopes; mobile data is functional in open areas" },
+  { place: "Gorson Bugyal", signal: "Weak", level: 1, carriers: "Jio (spots only)", note: "Highly unstable. No BSNL signal. Download maps before trekking" }
+];
+
+const networkCoverageKashmir = [
+  { place: "Delhi", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G coverage — board train here" },
+  { place: "Jammu Tawi", signal: "Excellent", level: 4, carriers: "All networks", note: "Full 4G/5G throughout the transit hub" },
+  { place: "Banihal", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "Good 4G signal at station, drops slightly inside Pir Panjal tunnel" },
+  { place: "Srinagar (Dal Lake)", signal: "Excellent", level: 4, carriers: "Jio, Airtel, BSNL", note: "Excellent 4G/5G coverage. Postpaid SIM only works" },
+  { place: "Gulmarg Meadows", signal: "Good", level: 3, carriers: "Jio, Airtel", note: "Good signal in meadows, drops to weak/spots at Gondola Phase 2 top" },
+  { place: "Pahalgam", signal: "Good", level: 3, carriers: "Jio, Airtel, BSNL", note: "Good 4G coverage in main town area, intermittent along Lidder river track" }
+];
+
+export const networkCoverage = createDynamicProxy(() => networkCoverageGarhwal, () => networkCoverageGarhwal, () => networkCoverageSikkim, () => networkCoverageYulla, () => networkCoverageYulla, () => networkCoverageHemkund, () => networkCoverageLadakh, () => networkCoverageLadakh, () => networkCoverageSpitiPlan1, () => networkCoverageSpiti, () => networkCoverageAnnapurna, () => networkCoverageShrikhand1, () => networkCoverageShrikhand2, () => networkCoverageHampta1, () => networkCoverageHampta2, () => networkCoverageSpiti, () => networkCoverageMadhyamaheshwar, () => networkCoverageMadhyamaheshwar, () => networkCoverageKedarkantha, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageBirBilling, () => networkCoverageJibhi, () => networkCoverageJibhi, () => networkCoverageUjjain, () => networkCoverageAuli, () => networkCoverageKashmir, true);

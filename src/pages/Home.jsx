@@ -23,6 +23,8 @@ import MadhyamaheshwarRouteMap from "../components/map/MadhyamaheshwarRouteMap";
 import KedarkanthaRouteMap from "../components/map/KedarkanthaRouteMap";
 import BirBillingRouteMap from "../components/map/BirBillingRouteMap";
 import UjjainRouteMap from "../components/map/UjjainRouteMap";
+import AuliRouteMap from "../components/map/AuliRouteMap";
+import KashmirRouteMap from "../components/map/KashmirRouteMap";
 import { getParentTripId } from "../data/proxyHelper";
 
 export default function Home() {
@@ -85,6 +87,8 @@ export default function Home() {
             {getParentTripId() === "kedarkantha" && <KedarkanthaRouteMap />}
             {getParentTripId() === "bir-billing" && <BirBillingRouteMap />}
             {getParentTripId() === "ujjain" && <UjjainRouteMap />}
+            {getParentTripId() === "auli" && <AuliRouteMap />}
+            {getParentTripId() === "kashmir" && <KashmirRouteMap />}
             <ItinerarySection />
             <TransportSection />
           </>

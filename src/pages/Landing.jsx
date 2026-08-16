@@ -18,6 +18,8 @@ import { birBillingAmounts as birBillingAmountsPlan4 } from "../data/bir-billing
 import { jibhiAmounts as jibhiAmountsPlan1 } from "../data/jibhi/plan1/amounts";
 import { jibhiAmounts as jibhiAmountsPlan2 } from "../data/jibhi/plan2/amounts";
 import { ujjainAmounts } from "../data/ujjain/amounts";
+import { auliAmounts } from "../data/auli/amounts";
+import { kashmirAmounts } from "../data/kashmir/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
 import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
@@ -613,6 +615,56 @@ export default function Landing() {
           details: "Spiritual weekend escape utilizing direct overnight sleeper coach from Sonipat bypass, local e-rickshaws, and cozy hotel stay.",
           budget: `₹${ujjainAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/ujjain",
+        }
+      ],
+    },
+    {
+      id: "auli",
+      type: "trip",
+      typeLabel: "Winter Adventure",
+      title: "Auli Snow & Skiing",
+      subtitle: "Uttarakhand, India",
+      description: "Witness pristine snow-covered slopes, enjoy one of Asia's longest ropeway cable cars, learn skiing, and trek to Gorson Bugyal.",
+      stats: {
+        duration: "5 Days",
+        distance: "1,100 km Round-Trip",
+        budget: `₹${(auliAmounts.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "auli",
+          title: "Budget Adventure Plan (Ordinary Bus & GMOU Local Bus)",
+          duration: "5 Days",
+          route: "Sonipat → Rishikesh (Ordinary Bus) → Joshimath (GMOU Local Bus) → Auli slopes (Ropeway) → Gorson Bugyal → Sonipat",
+          details: "Winter escape utilizing ordinary roadways bus from Sonipat bypass, state-run mountain buses, and hotel stays in Joshimath.",
+          budget: `₹${auliAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/auli",
+        }
+      ],
+    },
+    {
+      id: "kashmir",
+      type: "trip",
+      typeLabel: "Valley Expedition",
+      title: "Kashmir Valley Wanderer",
+      subtitle: "Jammu & Kashmir, India",
+      description: "Enjoy peaceful shikara rides on Dal Lake, stay in traditional wooden houseboats, walk Gulmarg's meadows, and explore Lidder river in Pahalgam.",
+      stats: {
+        duration: "6 Days",
+        distance: "1,700 km Round-Trip",
+        budget: `₹${(kashmirAmounts.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "kashmir",
+          title: "Standard Valley Plan (Train & Shared Cabs)",
+          duration: "6 Days",
+          route: "Delhi → Jammu (Train) → Banihal (Shared Cab) → Srinagar (Local DEMU Train) → Gulmarg & Pahalgam → Delhi",
+          details: "Budget exploration using overnight sleeper train, mountain highway shared cabs, local valley train shuttle, and budget stays.",
+          budget: `₹${kashmirAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/kashmir",
         }
       ],
     }
