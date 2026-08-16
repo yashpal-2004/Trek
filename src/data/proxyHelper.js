@@ -1,7 +1,7 @@
 export const getActiveTripKey = () => {
   if (typeof window === 'undefined') return 'rudranath-plan1';
   const segment = window.location.pathname.split('/')[1];
-  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'spiti-plan3' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2' || segment === 'madhyamaheshwar-plan1' || segment === 'madhyamaheshwar-plan2' || segment === 'kedarkantha' || segment === 'bir-billing' || segment === 'bir-billing-plan1' || segment === 'bir-billing-plan2' || segment === 'bir-billing-plan3' || segment === 'bir-billing-plan4' || segment === 'jibhi-plan1' || segment === 'jibhi-plan2') {
+  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'spiti-plan3' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2' || segment === 'madhyamaheshwar-plan1' || segment === 'madhyamaheshwar-plan2' || segment === 'kedarkantha' || segment === 'bir-billing' || segment === 'bir-billing-plan1' || segment === 'bir-billing-plan2' || segment === 'bir-billing-plan3' || segment === 'bir-billing-plan4' || segment === 'jibhi-plan1' || segment === 'jibhi-plan2' || segment === 'ujjain') {
     return segment;
   }
   return 'rudranath-plan1';
@@ -65,6 +65,7 @@ export const createDynamicProxy = (...args) => {
     if (key === "bir-billing-plan4") return typeof getters[22] === "function" ? getters[22]() : getters[3]();
     if (key === "jibhi-plan1") return typeof getters[23] === "function" ? getters[23]() : getters[0]();
     if (key === "jibhi-plan2") return typeof getters[24] === "function" ? getters[24]() : getters[1]();
+    if (key === "ujjain") return typeof getters[25] === "function" ? getters[25]() : getters[0]();
     return typeof getters[0] === "function" ? getters[0]() : {};
   };
 

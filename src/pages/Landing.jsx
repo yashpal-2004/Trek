@@ -17,6 +17,7 @@ import { birBillingAmounts as birBillingAmountsPlan3 } from "../data/bir-billing
 import { birBillingAmounts as birBillingAmountsPlan4 } from "../data/bir-billing/plan4/amounts";
 import { jibhiAmounts as jibhiAmountsPlan1 } from "../data/jibhi/plan1/amounts";
 import { jibhiAmounts as jibhiAmountsPlan2 } from "../data/jibhi/plan2/amounts";
+import { ujjainAmounts } from "../data/ujjain/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
 import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
@@ -589,6 +590,31 @@ export default function Landing() {
           path: "/jibhi-plan2",
         }
       ],
+    },
+    {
+      id: "ujjain",
+      type: "trip",
+      typeLabel: "Spiritual Road Trip",
+      title: "Ujjain Mahakal Darshan",
+      subtitle: "Madhya Pradesh, India",
+      description: "Experience the spiritual vibrations of Mahakaleshwar Jyotirlinga, witness the lighting of oil lamps at Harsiddhi Shaktipeeth, and explore the ancient holy city of Ujjain on a budget weekend trip.",
+      stats: {
+        duration: "3 Days",
+        distance: "1,700 km Round-Trip",
+        budget: `₹${(ujjainAmounts.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "ujjain",
+          title: "Standard Bus Plan (AC Sleeper & E-Rickshaws)",
+          duration: "3 Days",
+          route: "Sonipat → Ujjain (AC Sleeper Bus) → Mahakal Mandir & Lok Corridor → Kal Bhairav & Mangalnath → Sonipat",
+          details: "Spiritual weekend escape utilizing direct overnight sleeper coach from Sonipat bypass, local e-rickshaws, and cozy hotel stay.",
+          budget: `₹${ujjainAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/ujjain",
+        }
+      ],
     }
   ];
 
@@ -744,23 +770,65 @@ export default function Landing() {
           </p>
 
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-black/5">
-            <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
-              <Calendar size={14} className="mx-auto text-slate-400 mb-1" />
-              <p className="text-[10px] font-black uppercase text-slate-400">Days</p>
-              <p className="text-xs font-black mt-0.5">{trip.stats.duration}</p>
-            </div>
-            <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
-              <Route size={14} className="mx-auto text-slate-400 mb-1" />
-              <p className="text-[10px] font-black uppercase text-slate-400">{isTrek ? "Trek" : "Distance"}</p>
-              <p className="text-xs font-black mt-0.5">{trip.stats.distance}</p>
-            </div>
-            <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
-              <Wallet size={14} className="mx-auto text-slate-400 mb-1" />
-              <p className="text-[10px] font-black uppercase text-slate-400">Budget</p>
-              <p className="text-xs font-black mt-0.5">{trip.stats.budget}</p>
-            </div>
-          </div>
+          {(() => {
+            const completedPlan = isCompleted ? trip.plans.find(p => completedPlans.includes(p.id)) : null;
+            if (completedPlan) {
+              const actualCostVal = actualCosts[completedPlan.id];
+              const actualDaysMatch = completedPlan.duration.match(/(\d+)\s*Days?/i);
+              const actualDays = actualDaysMatch ? `${actualDaysMatch[1]} Days` : completedPlan.duration;
+              
+              const rangeMatch = trip.stats.distance.match(/(\d+)\s*–\s*(\d+)/);
+              let actualDistance = trip.stats.distance.replace(/\s*Trek|\s*Total/i, "");
+              if (rangeMatch) {
+                actualDistance = completedPlan.id.endsWith("-plan1") ? `${rangeMatch[2]} km` : `${rangeMatch[1]} km`;
+              }
+              if (isTrek) actualDistance += " Trek";
+
+              const formattedBudget = actualCostVal !== undefined 
+                ? `₹${actualCostVal.toLocaleString("en-IN")}` 
+                : completedPlan.budget.split("/")[0].trim();
+
+              return (
+                <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-black/5">
+                  <div className="bg-emerald-50 rounded-2xl p-3 text-center border border-emerald-100">
+                    <Calendar size={14} className="mx-auto text-emerald-500 mb-1" />
+                    <p className="text-[10px] font-black uppercase text-emerald-600">Actual Days</p>
+                    <p className="text-xs font-black text-emerald-800 mt-0.5">{actualDays}</p>
+                  </div>
+                  <div className="bg-emerald-50 rounded-2xl p-3 text-center border border-emerald-100">
+                    <Route size={14} className="mx-auto text-emerald-500 mb-1" />
+                    <p className="text-[10px] font-black uppercase text-emerald-600">Actual {isTrek ? "Trek" : "Dist"}</p>
+                    <p className="text-xs font-black text-emerald-800 mt-0.5">{actualDistance}</p>
+                  </div>
+                  <div className="bg-emerald-50 rounded-2xl p-3 text-center border border-emerald-100">
+                    <Wallet size={14} className="mx-auto text-emerald-500 mb-1" />
+                    <p className="text-[10px] font-black uppercase text-emerald-600">Actual Cost</p>
+                    <p className="text-xs font-black text-emerald-800 mt-0.5">{formattedBudget}</p>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-black/5">
+                <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
+                  <Calendar size={14} className="mx-auto text-slate-400 mb-1" />
+                  <p className="text-[10px] font-black uppercase text-slate-400">Days</p>
+                  <p className="text-xs font-black mt-0.5">{trip.stats.duration}</p>
+                </div>
+                <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
+                  <Route size={14} className="mx-auto text-slate-400 mb-1" />
+                  <p className="text-[10px] font-black uppercase text-slate-400">{isTrek ? "Trek" : "Distance"}</p>
+                  <p className="text-xs font-black mt-0.5">{trip.stats.distance}</p>
+                </div>
+                <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
+                  <Wallet size={14} className="mx-auto text-slate-400 mb-1" />
+                  <p className="text-[10px] font-black uppercase text-slate-400">Budget</p>
+                  <p className="text-xs font-black mt-0.5">{trip.stats.budget}</p>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
     );

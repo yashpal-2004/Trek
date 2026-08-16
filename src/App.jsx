@@ -35,6 +35,7 @@ export default function App() {
         <Route path="/bir-billing-plan4" element={<Home />} />
         <Route path="/jibhi-plan1" element={<Home />} />
         <Route path="/jibhi-plan2" element={<Home />} />
+        <Route path="/ujjain" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );
