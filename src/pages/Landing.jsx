@@ -20,6 +20,7 @@ import { jibhiAmounts as jibhiAmountsPlan2 } from "../data/jibhi/plan2/amounts";
 import { ujjainAmounts } from "../data/ujjain/amounts";
 import { auliAmounts } from "../data/auli/amounts";
 import { kashmirAmounts } from "../data/kashmir/amounts";
+import { kashmirPlan2Amounts } from "../data/kashmir/plan2/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
 import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
@@ -671,18 +672,27 @@ export default function Landing() {
       stats: {
         duration: "6 Days",
         distance: "1,700 km Round-Trip",
-        budget: `₹${(kashmirAmounts.budgetTotal / 1000).toFixed(1)}K`,
+        budget: `₹${(kashmirAmounts.budgetTotal / 1000).toFixed(1)}K - ₹${(kashmirPlan2Amounts.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
-          id: "kashmir",
-          title: "Standard Valley Plan (Train & Shared Cabs)",
+          id: "kashmir-plan1",
+          title: "Plan 1: Standard Plan (Train & Shared Cabs)",
           duration: "6 Days",
           route: "Delhi → Jammu (Train) → Banihal (Shared Cab) → Srinagar (Local DEMU Train) → Gulmarg & Pahalgam → Delhi",
           details: "Budget exploration using overnight sleeper train, mountain highway shared cabs, local valley train shuttle, and budget stays.",
           budget: `₹${kashmirAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/kashmir",
+        },
+        {
+          id: "kashmir-plan2",
+          title: "Plan 2: Self-Ride Plan (Srinagar Bike Rental)",
+          duration: "6 Days",
+          route: "Delhi → Jammu (Train) → Banihal (Shared Cab) → Srinagar (Local DEMU Train) → Rent RE Himalayan in Srinagar → Gulmarg & Pahalgam → Delhi",
+          details: "Self-ride exploration. Rent a Royal Enfield Himalayan in Srinagar to explore local gardens, Gulmarg, and Pahalgam loops freely.",
+          budget: `₹${kashmirPlan2Amounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/kashmir-plan2",
         }
       ],
     }

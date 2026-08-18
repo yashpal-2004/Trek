@@ -1,12 +1,12 @@
-export const kashmirAmounts = {
-  budgetTotal: 9153,
-  transportCategory: 4300, // Train (₹900) + Transit Cabs (₹900) + DEMU (₹100) + Day-trips (₹2400)
+export const kashmirPlan2Amounts = {
+  budgetTotal: 9603,
+  transportCategory: 4750, // Train (₹900) + Transit Cabs (₹900) + DEMU (₹100) + Bike Rent (₹2250) + Fuel (₹600)
   accommodationCategory: 2400, // 4 Nights double-sharing stay (Houseboat + Hotel)
   foodCategory: 1500, // 5 Days food @ ₹300/day
   emergencyCategory: 953, // Activities & entries + Jio Postpaid SIM (₹353)
 
   calcDefaults: {
-    transport: 4300,
+    transport: 4750,
     stay: 2400,
     food: 1500,
     emergency: 953,
@@ -22,7 +22,8 @@ export const kashmirAmounts = {
     trainRoundTrip: 900,
     jammuBanihalCab: 900,
     valleyDemuTrain: 100,
-    localDayTripsCabs: 2400,
+    bikeRentalPerPerson: 2250,
+    bikeFuelPerPerson: 600,
     jioPostpaidSIM: 353
   }
 };

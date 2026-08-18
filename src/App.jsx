@@ -40,6 +40,8 @@ export default function App() {
         <Route path="/ujjain" element={<Home />} />
         <Route path="/auli" element={<Home />} />
         <Route path="/kashmir" element={<Home />} />
+        <Route path="/kashmir-plan1" element={<Home />} />
+        <Route path="/kashmir-plan2" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

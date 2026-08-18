@@ -1,28 +1,29 @@
-import { kashmirAmounts } from "./amounts";
+import { kashmirPlan2Amounts } from "./amounts";
 
 export const budget = {
-  total: kashmirAmounts.budgetTotal,
+  total: kashmirPlan2Amounts.budgetTotal,
   perPerson: true,
   currency: "INR",
   categories: [
     {
       id: "transport",
       label: "Transportation & Cabs",
-      amount: kashmirAmounts.transportCategory,
+      amount: kashmirPlan2Amounts.transportCategory,
       color: "#2563EB",
       icon: "Bus",
-      description: "Delhi-Jammu Sleeper Train + Shared cabs to Srinagar/Pahalgam/Gulmarg + local DEMU train",
+      description: "Delhi-Jammu Sleeper Train + Cabs to Banihal + DEMU train to Srinagar + RE Himalayan rental (split between 2 people) & Fuel",
       subItems: [
-        { name: "Delhi-Jammu Train Round-Trip (Sleeper)", price: kashmirAmounts.transportFares.trainRoundTrip },
-        { name: "Jammu-Banihal Shared Cab Round-Trip", price: kashmirAmounts.transportFares.jammuBanihalCab },
-        { name: "Banihal-Srinagar Local DEMU Train Ticket", price: kashmirAmounts.transportFares.valleyDemuTrain },
-        { name: "Srinagar local & Gulmarg/Pahalgam Shared Cabs", price: kashmirAmounts.transportFares.localDayTripsCabs }
+        { name: "Delhi-Jammu Train Round-Trip (Sleeper)", price: kashmirPlan2Amounts.transportFares.trainRoundTrip },
+        { name: "Jammu-Banihal Shared Cab Round-Trip", price: kashmirPlan2Amounts.transportFares.jammuBanihalCab },
+        { name: "Banihal-Srinagar Local DEMU Train Ticket", price: kashmirPlan2Amounts.transportFares.valleyDemuTrain },
+        { name: "RE Himalayan Bike Rental (3 Days sharing)", price: kashmirPlan2Amounts.transportFares.bikeRentalPerPerson },
+        { name: "Motorcycle Petrol/Fuel (350 km circuit)", price: kashmirPlan2Amounts.transportFares.bikeFuelPerPerson }
       ]
     },
     {
       id: "accommodation",
       label: "Accommodation",
-      amount: kashmirAmounts.accommodationCategory,
+      amount: kashmirPlan2Amounts.accommodationCategory,
       color: "#10B981",
       icon: "Bed",
       description: "Houseboat stay (Dal Lake) + Srinagar clean hotel stay (4 Nights)",
@@ -34,38 +35,38 @@ export const budget = {
     {
       id: "food",
       label: "Food & Meals",
-      amount: kashmirAmounts.foodCategory,
+      amount: kashmirPlan2Amounts.foodCategory,
       color: "#F59E0B",
       icon: "Utensils",
-      description: "Daily breakfast, street food snacks, and authentic Kashmiri dinner",
+      description: "Daily breakfast, local cafes, and traditional Kashmiri cuisine",
       subItems: [
-        { name: "5 Days Meals (₹300/day per person)", price: kashmirAmounts.foodCategory }
+        { name: "5 Days Meals (₹300/day per person)", price: kashmirPlan2Amounts.foodCategory }
       ]
     },
     {
       id: "emergency",
       label: "Sightseeing & Activities",
-      amount: kashmirAmounts.emergencyCategory,
+      amount: kashmirPlan2Amounts.emergencyCategory,
       color: "#EF4444",
       icon: "ShieldAlert",
-      description: "Dal Lake Shikara rides, entry fees, and mandatory J&K postpaid SIM connection",
+      description: "Dal Lake Shikara rides, local garden entry tickets, and mandatory J&K postpaid SIM connection",
       subItems: [
         { name: "Shikara Ride (2 Hours double sharing)", price: 400 },
         { name: "Mughal Garden & local entry tickets", price: 200 },
-        { name: "Jio Postpaid SIM (J&K Roaming Plan)", price: kashmirAmounts.transportFares.jioPostpaidSIM }
+        { name: "Jio Postpaid SIM (J&K Roaming Plan)", price: kashmirPlan2Amounts.transportFares.jioPostpaidSIM }
       ]
     }
   ],
   dailyEstimate: [
     { day: 0, amount: 450, label: "Day 0 Night — Board overnight sleeper train from Delhi" },
-    { day: 1, amount: 1600, label: "Day 1 — Transit cab & train to Srinagar, check in houseboat" },
-    { day: 2, amount: 1900, label: "Day 2 — Day trip to Gulmarg, walk around meadows, return" },
-    { day: 3, amount: 1900, label: "Day 3 — Day trip to Pahalgam Lidder river valleys, return" },
-    { day: 4, amount: 1200, label: "Day 4 — Mughal Gardens & local Srinagar sites explore" },
-    { day: 5, amount: 2000, label: "Day 5 — Travel back to Jammu, board return night train" },
+    { day: 1, amount: 1600, label: "Day 1 — Transit to Srinagar, check in houseboat, pick up rental bike" },
+    { day: 2, amount: 2050, label: "Day 2 — Self-ride day trip to Gulmarg & Gondola explore" },
+    { day: 3, amount: 2150, label: "Day 3 — Self-ride day trip to Pahalgam valley, return" },
+    { day: 4, amount: 1200, label: "Day 4 — Explore Srinagar local gardens & old town on motorcycle" },
+    { day: 5, amount: 1350, label: "Day 5 — Drop off rental bike, DEMU train and cab back to Jammu, board train" },
     { day: 6, amount: 450, label: "Day 6 Morning — Arrive back in Delhi" }
   ],
-  calculatorDefaults: kashmirAmounts.calcDefaults,
+  calculatorDefaults: kashmirPlan2Amounts.calcDefaults,
 };
 
 export const stayOptions = [

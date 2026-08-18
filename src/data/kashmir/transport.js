@@ -50,7 +50,7 @@ export const transport = [
     mode: "Shared Cab",
     distance: "50 - 95 km",
     duration: "2 - 2.5 hrs",
-    fare: kashmirAmounts.transportFares.localDayTripsCabs / 4,
+    fare: 600,
     cheapest: 300,
     alternative: "Local tourism bus",
     frequency: "Regular morning runs from Tourist Reception Centre (TRC)",
