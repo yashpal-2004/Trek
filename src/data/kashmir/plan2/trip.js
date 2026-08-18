@@ -1,3 +1,5 @@
+import { kashmirPlan2Amounts } from "./amounts";
+
 export const trip = {
   title: "Kashmir Valley Wanderer - Srinagar Bike Rental",
   subtitle: "A 6-day scenic self-ride expedition on a Royal Enfield Himalayan through Srinagar, Gulmarg, and Pahalgam",
@@ -21,7 +23,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 6, suffix: "", description: "Valley exploration duration", icon: "Calendar" },
   { id: "distance", label: "Total Distance", value: 1700, suffix: " KM", description: "Delhi-Srinagar Round Trip", icon: "Route" },
-  { id: "budget", label: "Budget", value: 9.3, suffix: "K", prefix: "₹", description: "Per person (2 people sharing bike/stay)", icon: "Wallet" },
+  { id: "budget", label: "Budget", value: parseFloat((kashmirPlan2Amounts.budgetTotal / 1000).toFixed(2)), suffix: "K", prefix: "₹", description: "Per person (2 people sharing bike/stay)", icon: "Wallet" },
   { id: "altitude", label: "Highest Point", value: 2650, suffix: " M", description: "Gulmarg Gondola Altitude", icon: "TrendingUp" },
   { id: "passes", label: "Valley Hikes", value: 2, suffix: "", description: "Gulmarg slopes & Pahalgam river walks", icon: "MapPin" },
   { id: "destinations", label: "Major Stops", value: 5, suffix: "", description: "Jammu, Srinagar, Gulmarg, Pahalgam, Banihal", icon: "MapPin" },
