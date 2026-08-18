@@ -12,12 +12,17 @@ export function useFirestore(key, initialValue) {
     storedValueRef.current = storedValue;
   }, [storedValue]);
 
+  const initialValueRef = useRef(initialValue);
+  useEffect(() => {
+    initialValueRef.current = initialValue;
+  }, [initialValue]);
+
   // 1. Fetch initial value and listen to updates from Firestore
   useEffect(() => {
     const docRef = doc(db, "trek_app_data", key);
 
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
-      const value = docSnap.exists() ? docSnap.data().data : initialValue;
+      const value = docSnap.exists() ? docSnap.data().data : initialValueRef.current;
       setStoredValue(value);
       setIsLoading(false);
     }, (error) => {
@@ -26,7 +31,7 @@ export function useFirestore(key, initialValue) {
     });
 
     return () => unsubscribe();
-  }, [key, initialValue]);
+  }, [key]);
 
   // 2. Set value to Firestore
   const setValue = useCallback(

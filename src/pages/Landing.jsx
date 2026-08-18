@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useFirestore } from "../hooks/useFirestore";
@@ -32,9 +32,11 @@ export default function Landing() {
   const [completedPlans, setCompletedPlans, isLoading] = useFirestore("trek_completed_plans", []);
   const [targetPlans, setTargetPlans] = useFirestore("trek_target_plans", []);
   const [actualCosts, setActualCosts] = useFirestore("trek_actual_costs", {});
+  const [archivedPlans, setArchivedPlans] = useFirestore("trek_archived_plans", []);
+  const [archivedTrips, setArchivedTrips] = useFirestore("trek_archived_trips", []);
   const [costPromptModal, setCostPromptModal] = useState(null); // { plan, defaultCost }
   const [inputActualCost, setInputActualCost] = useState("");
-  const [activeTab, setActiveTab] = useState("active"); // "active" or "done"
+  const [activeTab, setActiveTab] = useState("active"); // "active", "done", or "archived"
   const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "timeline"
   const [expandedTripId, setExpandedTripId] = useState(null);
@@ -42,6 +44,36 @@ export default function Landing() {
   const [compareList, setCompareList] = useState([]);
   const [showCompare, setShowCompare] = useState(false);
   const [comparePlanIdx, setComparePlanIdx] = useState([0, 0]); // plan index for each compared trip
+
+  const handleToggleArchiveTrip = (trip, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const isArchived = archivedTrips.includes(trip.id);
+    let updatedArchived;
+    if (isArchived) {
+      updatedArchived = archivedTrips.filter(tid => tid !== trip.id);
+    } else {
+      updatedArchived = [...archivedTrips, trip.id];
+    }
+    setArchivedTrips(updatedArchived);
+  };
+
+  const handleToggleArchivePlan = (plan, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const isArchived = archivedPlans.includes(plan.id);
+    let updatedArchived;
+    if (isArchived) {
+      updatedArchived = archivedPlans.filter(pid => pid !== plan.id);
+    } else {
+      updatedArchived = [...archivedPlans, plan.id];
+    }
+    setArchivedPlans(updatedArchived);
+  };
 
   const handleToggleTargetPlan = (plan, e) => {
     if (e) {
@@ -722,7 +754,10 @@ export default function Landing() {
 
   const filteredTrips = allTrips.filter(trip => {
     const isDone = isTripCompleted(trip);
-    const matchesStatus = activeTab === "done" ? isDone : !isDone;
+    const isArchived = archivedTrips.includes(trip.id);
+    const matchesStatus = activeTab === "archived"
+      ? isArchived
+      : (!isArchived && (activeTab === "done" ? isDone : !isDone));
     const matchesCategory = categoryTab === "all" || trip.type === categoryTab;
     return matchesStatus && matchesCategory;
   });
@@ -758,7 +793,7 @@ export default function Landing() {
   const renderTripCard = (trip) => {
     const isCompleted = isTripCompleted(trip);
     const isTrek = trip.type === "trek";
-    const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? trip.plans[0] : trip.plans.find(p => targetPlans.includes(p.id))) : null;
+    const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? (!archivedPlans.includes(trip.plans[0].id) ? trip.plans[0] : null) : trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id))) : null;
     const isInCompare = compareList.includes(trip.id);
     const compareDisabled = compareList.length >= 2 && !isInCompare;
 
@@ -839,6 +874,17 @@ export default function Landing() {
                   <CheckCircle2 size={18} />
                 </button>
               )}
+              <button
+                onClick={(e) => handleToggleArchiveTrip(trip, e)}
+                className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                  archivedTrips.includes(trip.id)
+                    ? "bg-slate-700 border-slate-800 text-white shadow-md"
+                    : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                }`}
+                title={archivedTrips.includes(trip.id) ? "Unarchive Trip" : "Archive Trip"}
+              >
+                <Archive size={15} />
+              </button>
               <div className="w-10 h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
                 <ArrowUpRight size={18} />
               </div>
@@ -981,7 +1027,7 @@ export default function Landing() {
                   const isCompleted = isTripCompleted(trip);
                   const isTrek = trip.type === "trek";
                   const isExpanded = expandedTripId === trip.id;
-                  const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? trip.plans[0] : trip.plans.find(p => targetPlans.includes(p.id))) : null;
+                  const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? (!archivedPlans.includes(trip.plans[0].id) ? trip.plans[0] : null) : trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id))) : null;
 
                   return (
                     <motion.div
@@ -1081,6 +1127,17 @@ export default function Landing() {
                                 </button>
                               )}
 
+                              <button
+                                onClick={(e) => handleToggleArchiveTrip(trip, e)}
+                                className={`w-9 h-9 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                                  archivedTrips.includes(trip.id)
+                                    ? "bg-slate-700 border-slate-800 text-white shadow-md"
+                                    : "border-black/15 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                                }`}
+                                title={archivedTrips.includes(trip.id) ? "Unarchive Trip" : "Archive Trip"}
+                              >
+                                <Archive size={14} />
+                              </button>
                               {/* Open Full Itinerary Modal */}
                               <button
                                 onClick={() => setSelectedTrip(trip)}
@@ -1145,10 +1202,10 @@ export default function Landing() {
     );
   };
 
-  const completedTripsList = allTrips.filter(t => isTripCompleted(t));
+  const completedTripsList = allTrips.filter(t => isTripCompleted(t) && !archivedTrips.includes(t.id));
   const totalSpent = completedTripsList.reduce((sum, trip) => {
     if (trip.spentTotal !== undefined && trip.spentTotal !== null) return sum + trip.spentTotal;
-    const donePlan = trip.plans.find(p => completedPlans.includes(p.id));
+    const donePlan = trip.plans.find(p => completedPlans.includes(p.id) && !archivedPlans.includes(p.id));
     if (!donePlan) return sum;
     const val = actualCosts[donePlan.id];
     return sum + (val !== undefined && val !== null && !isNaN(parseFloat(val)) ? parseFloat(val) : parseNumericBudget(donePlan.budget));
@@ -1170,7 +1227,7 @@ export default function Landing() {
   const getTripBudgetBounds = (trip) => {
     let min = Infinity;
     let max = -Infinity;
-    (trip.plans || []).forEach(plan => {
+    (trip.plans || []).filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
       const bounds = parseBudgetRange(plan.budget);
       if (bounds.min > 0 && bounds.min < min) min = bounds.min;
       if (bounds.max > max) max = bounds.max;
@@ -1180,11 +1237,27 @@ export default function Landing() {
     return { min, max };
   };
 
-  const activeTrips = trips.filter(t => !isTripCompleted(t));
+  const activeTrips = trips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id));
   const activeTreksCount = activeTrips.filter(t => t.type === "trek").length;
   const activeRoadTripsCount = activeTrips.filter(t => t.type === "trip").length;
   const upcomingRange = activeTrips.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  const archivedTripsList = allTrips.filter(t => archivedTrips.includes(t.id));
+  const archivedTreksCount = archivedTripsList.filter(t => t.type === "trek").length;
+  const archivedRoadTripsCount = archivedTripsList.filter(t => t.type === "trip").length;
+  const archivedRange = archivedTripsList.reduce((acc, trip) => {
+    let min = Infinity;
+    let max = -Infinity;
+    (trip.plans || []).forEach(plan => {
+      const bounds = parseBudgetRange(plan.budget);
+      if (bounds.min > 0 && bounds.min < min) min = bounds.min;
+      if (bounds.max > max) max = bounds.max;
+    });
+    if (min === Infinity) min = 0;
+    if (max === -Infinity) max = min;
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
@@ -1196,6 +1269,12 @@ export default function Landing() {
         <a href="/" className="font-extrabold text-xl tracking-tight uppercase hover:opacity-75 transition-opacity flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-black"></span>
           Treks & Expeditions
+        </a>
+        <a
+          href="/wardrobe"
+          className="px-4 py-2 rounded-xl text-xs font-mono font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-all shadow-sm"
+        >
+          My Wardrobe
         </a>
       </header>
 
@@ -1241,6 +1320,23 @@ export default function Landing() {
               </p>
               <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
                 {activeTreksCount} Trek{activeTreksCount === 1 ? "" : "s"} • {activeRoadTripsCount} Road Trip{activeRoadTripsCount === 1 ? "" : "s"}
+              </p>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 min-w-[185px] shadow-sm">
+              <div className="flex items-center gap-1.5 mb-1">
+                <div className="w-2 h-2 rounded-full bg-slate-500" />
+                <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Archived Est.</span>
+              </div>
+              <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                {archivedRange.min === archivedRange.max ? (
+                  `₹${archivedRange.min.toLocaleString("en-IN")}`
+                ) : (
+                  `₹${archivedRange.min.toLocaleString("en-IN")} – ₹${archivedRange.max.toLocaleString("en-IN")}`
+                )}
+              </p>
+              <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
+                {archivedTreksCount} Trek{archivedTreksCount === 1 ? "" : "s"} • {archivedRoadTripsCount} Road Trip{archivedRoadTripsCount === 1 ? "" : "s"}
               </p>
             </div>
           </div>
@@ -1362,6 +1458,16 @@ export default function Landing() {
                 }`}
               >
                 Done
+              </button>
+              <button
+                onClick={() => setActiveTab("archived")}
+                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                  activeTab === "archived"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-slate-500 hover:text-black"
+                }`}
+              >
+                Archived
               </button>
             </div>
           </div>
@@ -1506,111 +1612,140 @@ export default function Landing() {
 
               {/* Plan Options Stack */}
               <div className="space-y-4">
-                 {selectedTrip.plans.map((plan) => {
-                  const isPlanCompleted = completedPlans.includes(plan.id);
-                  const isPlanTarget = selectedTrip.plans.length === 1 ? true : targetPlans.includes(plan.id);
-                  return (
-                    <div
-                      key={plan.id}
-                      className={`relative bg-white hover:bg-white/80 border rounded-2xl p-5 transition-all shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group ${
-                        isPlanCompleted
-                          ? "border-emerald-500/35 bg-emerald-500/[0.01]"
-                          : isPlanTarget
-                            ? "border-amber-500/40 bg-amber-500/[0.01] ring-1 ring-amber-500/20"
-                            : "border-black/5 hover:border-black/25"
-                      }`}
-                    >
-                      <a
-                        href={plan.path}
-                        className="flex-1 min-w-0"
+                  {selectedTrip.plans.map((plan) => {
+                    const isPlanCompleted = completedPlans.includes(plan.id);
+                    const isPlanTarget = selectedTrip.plans.length === 1 ? true : targetPlans.includes(plan.id);
+                    const isPlanArchived = archivedPlans.includes(plan.id);
+                    return (
+                      <div
+                        key={plan.id}
+                        className={`relative bg-white hover:bg-white/80 border rounded-2xl p-5 transition-all shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group ${
+                          isPlanArchived
+                            ? "opacity-50 saturate-50 border-dashed border-black/20"
+                            : isPlanCompleted
+                              ? "border-emerald-500/35 bg-emerald-500/[0.01]"
+                              : isPlanTarget
+                                ? "border-amber-500/40 bg-amber-500/[0.01] ring-1 ring-amber-500/20"
+                                : "border-black/5 hover:border-black/25"
+                        }`}
                       >
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <h4 className="font-extrabold text-sm text-black flex items-center gap-1.5">
-                              {plan.title}
-                              {isPlanCompleted && (
-                                <span className="bg-emerald-500/10 text-emerald-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase">
-                                  Completed
-                                </span>
-                              )}
-                              {isPlanTarget && !isPlanCompleted && (
-                                <span className="bg-amber-500/10 text-amber-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase border border-amber-500/25 flex items-center gap-0.5">
-                                  <Star size={9} className="fill-amber-500 text-amber-500" /> Target
-                                </span>
-                              )}
-                            </h4>
-                            <span className="text-[9px] font-bold font-mono tracking-wide text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
-                              {plan.duration}
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-slate-500 font-medium line-clamp-1">{plan.route}</p>
-                          <p className="text-[11px] text-slate-400 font-medium leading-relaxed">{plan.details}</p>
-                        </div>
-                      </a>
-                      
-                      <div className="flex items-center gap-3 self-stretch sm:self-auto justify-between border-t sm:border-t-0 border-black/5 pt-3 sm:pt-0 shrink-0">
-                        <div className="text-right">
-                          {isPlanCompleted && actualCosts[plan.id] !== undefined ? (
-                            <>
-                              <span className="text-[9px] font-bold font-mono text-emerald-600 uppercase tracking-widest block leading-none">Spent / Person</span>
-                              <span className="text-sm font-black text-emerald-700 leading-none mt-1 inline-block">
-                                ₹{actualCosts[plan.id].toLocaleString("en-IN")}
+                        <a
+                          href={plan.path}
+                          className="flex-1 min-w-0"
+                        >
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h4 className="font-extrabold text-sm text-black flex items-center gap-1.5">
+                                {plan.title}
+                                {isPlanArchived && (
+                                  <span className="bg-slate-500/15 text-slate-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase">
+                                    Archived
+                                  </span>
+                                )}
+                                {isPlanCompleted && (
+                                  <span className="bg-emerald-500/10 text-emerald-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase">
+                                    Completed
+                                  </span>
+                                )}
+                                {isPlanTarget && !isPlanCompleted && !isPlanArchived && (
+                                  <span className="bg-amber-500/10 text-amber-600 text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-full font-sans uppercase border border-amber-500/25 flex items-center gap-0.5">
+                                    <Star size={9} className="fill-amber-500 text-amber-500" /> Target
+                                  </span>
+                                )}
+                              </h4>
+                              <span className="text-[9px] font-bold font-mono tracking-wide text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                                {plan.duration}
                               </span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-widest block leading-none">Est. Cost</span>
-                              <span className="text-sm font-black text-black leading-none mt-1 inline-block">{plan.budget}</span>
-                            </>
-                          )}
-                        </div>
+                            </div>
+                            <p className="text-[11px] text-slate-500 font-medium line-clamp-1">{plan.route}</p>
+                            <p className="text-[11px] text-slate-400 font-medium leading-relaxed">{plan.details}</p>
+                          </div>
+                        </a>
                         
-                        <div className="flex items-center gap-2">
-                          {!selectedTrip.isCompleted && (
-                            <>
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleToggleTargetPlan(plan, e);
-                                }}
-                                className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
-                                  isPlanTarget
-                                    ? "bg-amber-500 border-amber-600 text-white hover:bg-amber-600"
-                                    : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-                                }`}
-                                title={isPlanTarget ? "Remove Target Plan" : "Set as Target Plan"}
-                              >
-                                <Star size={14} className={isPlanTarget ? "fill-white" : ""} />
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleTogglePlanMark(plan, e);
-                                }}
-                                className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
-                                  isPlanCompleted
-                                    ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
-                                    : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
-                                }`}
-                                title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
-                              >
-                                <CheckCircle2 size={14} />
-                              </button>
-                            </>
-                          )}
-                          <a
-                            href={plan.path}
-                            className="w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center bg-slate-50 group-hover:bg-black group-hover:text-white transition-colors shrink-0"
-                          >
-                            <ArrowUpRight size={14} />
-                          </a>
+                        <div className="flex items-center gap-3 self-stretch sm:self-auto justify-between border-t sm:border-t-0 border-black/5 pt-3 sm:pt-0 shrink-0">
+                          <div className="text-right">
+                            {isPlanCompleted && actualCosts[plan.id] !== undefined ? (
+                              <>
+                                <span className="text-[9px] font-bold font-mono text-emerald-600 uppercase tracking-widest block leading-none">Spent / Person</span>
+                                <span className="text-sm font-black text-emerald-700 leading-none mt-1 inline-block">
+                                  ₹{actualCosts[plan.id].toLocaleString("en-IN")}
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-[9px] font-bold font-mono text-slate-400 uppercase tracking-widest block leading-none">Est. Cost</span>
+                                <span className="text-sm font-black text-black leading-none mt-1 inline-block">{plan.budget}</span>
+                              </>
+                            )}
+                          </div>
+                          
+                          <div className="flex items-center gap-2">
+                            {!selectedTrip.isCompleted && (
+                              <>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleToggleArchivePlan(plan, e);
+                                  }}
+                                  className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
+                                    isPlanArchived
+                                      ? "bg-slate-700 border-slate-800 text-white hover:bg-slate-800"
+                                      : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                                  }`}
+                                  title={isPlanArchived ? "Unarchive Plan" : "Archive Plan"}
+                                >
+                                  <Archive size={14} />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleToggleTargetPlan(plan, e);
+                                  }}
+                                  disabled={isPlanArchived}
+                                  className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
+                                    isPlanTarget
+                                      ? "bg-amber-500 border-amber-600 text-white hover:bg-amber-600"
+                                      : isPlanArchived
+                                        ? "border-black/5 bg-black/5 text-slate-300 cursor-not-allowed"
+                                        : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                                  }`}
+                                  title={isPlanTarget ? "Remove Target Plan" : "Set as Target Plan"}
+                                >
+                                  <Star size={14} className={isPlanTarget ? "fill-white" : ""} />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleTogglePlanMark(plan, e);
+                                  }}
+                                  disabled={isPlanArchived}
+                                  className={`w-8 h-8 rounded-xl border flex items-center justify-center transition-colors shrink-0 ${
+                                    isPlanCompleted
+                                      ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
+                                      : isPlanArchived
+                                        ? "border-black/5 bg-black/5 text-slate-300 cursor-not-allowed"
+                                        : "border-black/10 bg-slate-50 hover:bg-slate-100 text-slate-400 hover:text-slate-600"
+                                  }`}
+                                  title={isPlanCompleted ? "Edit Actual Cost / Unmark" : "Mark Done & Enter Actual Cost"}
+                                >
+                                  <CheckCircle2 size={14} />
+                                </button>
+                              </>
+                            )}
+                            <a
+                              href={plan.path}
+                              className="w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center bg-slate-50 group-hover:bg-black group-hover:text-white transition-colors shrink-0"
+                            >
+                              <ArrowUpRight size={14} />
+                            </a>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
 
               {/* Itemized Expenses Breakdown Table if available */}

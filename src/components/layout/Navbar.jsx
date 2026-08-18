@@ -72,6 +72,12 @@ export default function Navbar() {
             >
               {plan === "sikkim" ? "All Trips" : "Switch Plan"}
             </a>
+            <a
+              href="/wardrobe"
+              className="text-xs font-semibold text-secondary hover:text-black transition-colors bg-transparent hover:bg-black/5 px-2.5 py-1 rounded-[8px] border border-black/15 ml-2"
+            >
+              My Wardrobe
+            </a>
           </div>
 
 
