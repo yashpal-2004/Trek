@@ -715,7 +715,7 @@ export default function Landing() {
           route: "Delhi → Jammu (Train) → Banihal (Shared Cab) → Srinagar (Local DEMU Train) → Gulmarg & Pahalgam → Delhi",
           details: "Budget exploration using overnight sleeper train, mountain highway shared cabs, local valley train shuttle, and budget stays.",
           budget: `₹${kashmirAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
-          path: "/kashmir",
+          path: "/kashmir-plan1",
         },
         {
           id: "kashmir-plan2",
