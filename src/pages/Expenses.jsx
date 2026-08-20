@@ -703,6 +703,8 @@ export default function Expenses({ isSection = false }) {
     const groupBudgetLimit = limitPerPerson * members.length;
     const percentage = totalSpent > 0 ? Math.min(Math.round((totalSpent / groupBudgetLimit) * 100), 100) : 0;
     const avgSpentPerPerson = Math.round(totalSpent / members.length);
+    const diff = groupBudgetLimit - totalSpent;
+    const avgDiffPerPerson = limitPerPerson - avgSpentPerPerson;
     
     let colorClass = "bg-emerald-500";
     let textClass = "text-emerald-700 bg-emerald-50";
@@ -718,25 +720,36 @@ export default function Expenses({ isSection = false }) {
     }
 
     return (
-      <div className={`w-full bg-white/70 backdrop-blur-md border ${borderClass} rounded-[28px] p-6 shadow-sm mb-6`}>
+      <div className={"w-full bg-white/70 backdrop-blur-md border rounded-[28px] p-6 shadow-sm mb-6 " + borderClass}>
         <div className="flex justify-between items-center mb-2.5">
           <div>
             <h3 className="font-extrabold text-sm uppercase tracking-tight text-slate-800">Trip Budget Tracker</h3>
-            <p className="text-[10px] text-slate-400 font-medium mt-0.5">Pool spent relative to total budget limit (scaled for {members.length} members)</p>
+            <p className="text-[10px] text-slate-400 font-medium mt-0.5">{"Pool spent relative to total budget limit (scaled for " + members.length + " members)"}</p>
           </div>
-          <span className={`text-xs font-black px-2.5 py-1 rounded-xl ${textClass}`}>
-            {percentage}% Used
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            {diff > 0 ? (
+              <span className="text-xs font-black px-2.5 py-1 rounded-xl text-emerald-700 bg-emerald-50 border border-emerald-100">
+                {"Saved: ₹" + diff.toLocaleString("en-IN")} <span className="text-[10px] font-semibold opacity-75">{"(₹" + avgDiffPerPerson.toLocaleString("en-IN") + "/p)"}</span>
+              </span>
+            ) : diff < 0 ? (
+              <span className="text-xs font-black px-2.5 py-1 rounded-xl text-red-700 bg-red-50 border border-red-100">
+                {"Over: ₹" + Math.abs(diff).toLocaleString("en-IN")} <span className="text-[10px] font-semibold opacity-75">{"(₹" + Math.abs(avgDiffPerPerson).toLocaleString("en-IN") + "/p)"}</span>
+              </span>
+            ) : null}
+            <span className={"text-xs font-black px-2.5 py-1 rounded-xl " + textClass}>
+              {percentage}% Used
+            </span>
+          </div>
         </div>
         <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden mb-2">
           <div
-            className={`h-full transition-all duration-500 rounded-full ${colorClass}`}
-            style={{ width: `${percentage}%` }}
+            className={"h-full transition-all duration-500 rounded-full " + colorClass}
+            style={{ width: percentage + "%" }}
           />
         </div>
         <div className="flex justify-between items-center text-xs font-bold text-slate-500">
-          <span>Spent: ₹{totalSpent.toLocaleString("en-IN")} <span className="text-[10px] font-medium text-slate-400">(Avg ₹{avgSpentPerPerson.toLocaleString("en-IN")}/p)</span></span>
-          <span>Budget limit: ₹{groupBudgetLimit.toLocaleString("en-IN")} <span className="text-[10px] font-medium text-slate-400">(₹{limitPerPerson.toLocaleString("en-IN")}/p)</span></span>
+          <span>Spent: ₹{totalSpent.toLocaleString("en-IN")} <span className="text-[10px] font-medium text-slate-400">{"(Avg ₹" + avgSpentPerPerson.toLocaleString("en-IN") + "/p)"}</span></span>
+          <span>Budget limit: ₹{groupBudgetLimit.toLocaleString("en-IN")} <span className="text-[10px] font-medium text-slate-400">{"(₹" + limitPerPerson.toLocaleString("en-IN") + "/p)"}</span></span>
         </div>
       </div>
     );
@@ -1106,6 +1119,91 @@ export default function Expenses({ isSection = false }) {
     );
   };
 
+  const getCategorySpentAndBudget = () => {
+    const idToNameMap = {
+      transport: "Transport",
+      accommodation: "Accommodation",
+      food: "Food",
+      emergency: "Emergency",
+      rafting: "Rafting",
+      shopping: "Shopping",
+      other: "Other"
+    };
+
+    const budgetCategories = budget?.categories || [];
+    
+    return budgetCategories.map((bc) => {
+      const expCategoryName = idToNameMap[bc.id] || bc.label;
+      const spent = expenses
+        .filter((e) => {
+          return (e.category || "").toLowerCase() === bc.id.toLowerCase() ||
+                 (e.category || "").toLowerCase() === (idToNameMap[bc.id] || "").toLowerCase();
+        })
+        .reduce((sum, e) => sum + Number(e.amount), 0);
+
+      const limitPerPerson = bc.amount || 0;
+      const groupLimit = limitPerPerson * members.length;
+      const pct = groupLimit > 0 ? Math.min(Math.round((spent / groupLimit) * 100), 100) : 0;
+      
+      return {
+        id: bc.id,
+        label: bc.label,
+        spent,
+        limit: groupLimit,
+        percentage: pct,
+        color: bc.color || "#3b82f6"
+      };
+    });
+  };
+
+  const renderSegmentedCategoryBudgets = () => {
+    const categoryBudgets = getCategorySpentAndBudget();
+    if (categoryBudgets.length === 0) return null;
+
+    return (
+      <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
+        <div>
+          <h2 className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400 mb-0.5">Category Budgets</h2>
+          <p className="text-xs font-bold text-slate-800 mb-4">Targeted group limits & usage</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+          {categoryBudgets.map((cb) => {
+            let barColor = "bg-blue-600";
+            if (cb.percentage > 85) barColor = "bg-red-500";
+            else if (cb.percentage > 60) barColor = "bg-amber-500";
+
+            const diff = cb.limit - cb.spent;
+
+            return (
+              <div key={cb.id} className="space-y-1.5">
+                <div className="flex justify-between items-center text-xs font-bold">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-slate-700">{cb.label}</span>
+                    {diff > 0 ? (
+                      <span className="text-[9px] font-black font-mono uppercase bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded">Saved: ₹{diff.toLocaleString("en-IN")}</span>
+                    ) : diff < 0 ? (
+                      <span className="text-[9px] font-black font-mono uppercase bg-red-50 text-red-600 px-1.5 py-0.5 rounded">Over: ₹{Math.abs(diff).toLocaleString("en-IN")}</span>
+                    ) : null}
+                  </div>
+                  <span className="text-slate-500">
+                    ₹{cb.spent.toLocaleString("en-IN")} / ₹{cb.limit.toLocaleString("en-IN")}
+                    <span className="text-[10px] text-slate-400 font-medium ml-1">({cb.percentage}%)</span>
+                  </span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${barColor}`}
+                    style={{ width: `${cb.percentage}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   const renderPoolSummaryCard = () => (
     <div className="bg-black text-white rounded-[28px] p-7 shadow-sm flex flex-col justify-between">
       <div className="flex items-center gap-2 mb-5">
@@ -1202,6 +1300,8 @@ export default function Expenses({ isSection = false }) {
                 {renderPieChartCard()}
                 {renderCumulativeSpendingChart()}
               </div>
+
+              {renderSegmentedCategoryBudgets()}
 
               <div className="flex justify-start">
                 <button
@@ -1482,6 +1582,8 @@ export default function Expenses({ isSection = false }) {
             {renderPieChartCard()}
             {renderCumulativeSpendingChart()}
           </div>
+
+          {renderSegmentedCategoryBudgets()}
 
           <div className="flex justify-start mb-6">
             <button
