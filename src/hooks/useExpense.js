@@ -30,5 +30,5 @@ export function useExpense() {
     return totals;
   }, [expenses]);
 
-  return { expenses, addExpense, updateExpense, deleteExpense, totalSpent, remainingBudget, dailyTotals };
+  return { expenses, setExpenses, addExpense, updateExpense, deleteExpense, totalSpent, remainingBudget, dailyTotals };
 }

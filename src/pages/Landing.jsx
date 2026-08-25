@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../utils/firebase";
 
 import { useFirestore } from "../hooks/useFirestore";
 import { yullaAmounts } from "../data/yulla/amounts";
@@ -35,7 +37,110 @@ export default function Landing() {
   const [archivedPlans, setArchivedPlans] = useFirestore("trek_archived_plans", []);
   const [archivedTrips, setArchivedTrips] = useFirestore("trek_archived_trips", []);
   const [costPromptModal, setCostPromptModal] = useState(null); // { plan, defaultCost }
+  const [passcodePromptTripId, setPasscodePromptTripId] = useState(null);
+  const [passcodeInput, setPasscodeInput] = useState("");
+  const [passcodeError, setPasscodeError] = useState(false);
+  const [isLedgerUnlocked, setIsLedgerUnlocked] = useState(false);
   const [inputActualCost, setInputActualCost] = useState("");
+  const [activePlanExpenses, setActivePlanExpenses] = useState([]);
+  const [activePlanMembers, setActivePlanMembers] = useState([]);
+
+  // Dynamically subscribe to active plan's expenses in Firestore
+  useEffect(() => {
+    if (!costPromptModal) {
+      setActivePlanExpenses([]);
+      return;
+    }
+    const storageKey = getExpenseTrackerKey(costPromptModal.id);
+    const docRef = doc(db, "trek_app_data", storageKey);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setActivePlanExpenses(docSnap.data().data || []);
+      } else {
+        setActivePlanExpenses([]);
+      }
+    }, (error) => {
+      console.error("Error loading plan expenses:", error);
+    });
+    return () => unsubscribe();
+  }, [costPromptModal]);
+
+  // Dynamically subscribe to active plan's members in Firestore
+  useEffect(() => {
+    if (!costPromptModal) {
+      setActivePlanMembers([]);
+      return;
+    }
+    const parentId = getParentTripId(costPromptModal.id);
+    const docRef = doc(db, "trek_app_data", `trek_members_${parentId}`);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setActivePlanMembers(docSnap.data().data || []);
+      } else {
+        setActivePlanMembers(getDefaultMembers(parentId));
+      }
+    }, (error) => {
+      console.error("Error loading plan members:", error);
+      setActivePlanMembers(getDefaultMembers(parentId));
+    });
+    return () => unsubscribe();
+  }, [costPromptModal]);
+
+  const handleVerifyPasscodeModal = (e) => {
+    e.preventDefault();
+    if (passcodeInput === "1612") {
+      setIsLedgerUnlocked(true);
+      setExpandedTripId(passcodePromptTripId);
+      setPasscodePromptTripId(null);
+      setPasscodeInput("");
+      setPasscodeError(false);
+    } else {
+      setPasscodeError(true);
+    }
+  };
+
+  const getLedgerCostPerMember = () => {
+    if (!activePlanExpenses || activePlanExpenses.length === 0) return {};
+    const parentId = getParentTripId(costPromptModal.id);
+    
+    const breakdown = {};
+    activePlanMembers.forEach((m) => {
+      breakdown[m] = 0;
+    });
+
+    activePlanExpenses.forEach((exp) => {
+      if (exp.settleLater) return;
+      const amt = Number(exp.amount) || 0;
+      const sharers = exp.splitWith || activePlanMembers;
+      const activeSharers = sharers.filter((m) => activePlanMembers.includes(m));
+
+      if (activeSharers.length > 0) {
+        if (exp.splitType === "unequal" && exp.splitAmounts) {
+          activeSharers.forEach((m) => {
+            breakdown[m] = (breakdown[m] || 0) + Number(exp.splitAmounts[m] || 0);
+          });
+        } else {
+          const sharePerPerson = amt / sharers.length;
+          activeSharers.forEach((m) => {
+            breakdown[m] = (breakdown[m] || 0) + sharePerPerson;
+          });
+        }
+      }
+    });
+
+    return breakdown;
+  };
+
+  // Pre-fill input with Yashpal's ledger cost if no manual cost is set yet
+  useEffect(() => {
+    if (!costPromptModal) return;
+    const memberCosts = getLedgerCostPerMember();
+    if (actualCosts[costPromptModal.id] === undefined) {
+      const yashpalCost = memberCosts["Yashpal"] !== undefined ? memberCosts["Yashpal"] : (Object.values(memberCosts)[0] || 0);
+      setInputActualCost(String(Math.round(yashpalCost)));
+    }
+  }, [activePlanExpenses, activePlanMembers, costPromptModal]);
+
   const [activeTab, setActiveTab] = useState("active"); // "active", "done", or "archived"
   const [categoryTab, setCategoryTab] = useState("all"); // "all", "trek", "trip"
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "timeline"
@@ -101,10 +206,92 @@ export default function Landing() {
     return match ? parseInt(match[1].replace(/,/g, ""), 10) : 0;
   };
 
+  const getParentTripId = (key) => {
+    if (key === 'rudranath-plan1' || key === 'rudranath-plan2' || key === 'plan1' || key === 'plan2') return 'rudranath';
+    if (key === 'yulla-plan1' || key === 'yulla-plan2') return 'yulla';
+    if (key === 'ladakh-plan1' || key === 'ladakh-plan2' || key === 'ladakh-plan3' || key === 'ladakh-plan4') return 'ladakh';
+    if (key === 'spiti-plan1' || key === 'spiti-plan2' || key === 'spiti-plan3') return 'spiti';
+    if (key === 'annapurna-plan1') return 'annapurna';
+    if (key === 'hemkund') return 'hemkund';
+    if (key === 'shrikhand-plan1' || key === 'shrikhand-plan2') return 'shrikhand-mahadev';
+    if (key === 'hampta-plan1' || key === 'hampta-plan2' || key === 'hampta-pass') return 'hampta-pass';
+    if (key === 'madhyamaheshwar-plan1' || key === 'madhyamaheshwar-plan2') return 'madhyamaheshwar';
+    if (key === 'kedarkantha') return 'kedarkantha';
+    if (key === 'bir-billing' || key === 'bir-billing-plan1' || key === 'bir-billing-plan2' || key === 'bir-billing-plan3' || key === 'bir-billing-plan4') return 'bir-billing';
+    if (key === 'jibhi-plan1' || key === 'jibhi-plan2') return 'jibhi';
+    if (key === 'kashmir' || key === 'kashmir-plan1' || key === 'kashmir-plan2') return 'kashmir';
+    return key;
+  };
+
+  const getDefaultMembers = (parentTripId) => {
+    return parentTripId === "bir-billing"
+      ? ["Yashpal", "Vaishnavi", "Adarsh", "Anshika"]
+      : ["Yashpal", "Vansh"];
+  };
+
+  const getExpenseTrackerKey = (planId) => {
+    const keysMap = {
+      "yulla-plan2": "expenses-yulla",
+      "yulla-plan1": "expenses-yulla-p2",
+      "ujjain": "expenses-ujjain",
+      "spiti-plan3": "expenses-spiti-p3",
+      "spiti-plan2": "expenses-spiti-p2",
+      "spiti-plan1": "expenses-spiti-p1",
+      "sikkim": "expenses-sikkim",
+      "madhyamaheshwar-plan2": "expenses-madhyamaheshwar-plan2",
+      "madhyamaheshwar-plan1": "expenses-madhyamaheshwar",
+      "ladakh-plan4": "expenses-ladakh-p4",
+      "ladakh-plan3": "expenses-ladakh-p3",
+      "ladakh-plan2": "expenses-ladakh-p2",
+      "ladakh-plan1": "expenses-ladakh-p1",
+      "kashmir-plan1": "expenses-kashmir",
+      "kashmir-plan2": "expenses-kashmir-plan2",
+      "kedarkantha": "expenses-kedarkantha",
+      "jibhi-plan2": "expenses-jibhi-plan2",
+      "jibhi-plan1": "expenses-jibhi-plan1",
+      "hemkund": "expenses-hemkund",
+      "auli": "expenses-auli",
+      "bir-billing-plan3": "expenses-bir-billing-plan3",
+      "bir-billing-plan2": "expenses-bir-billing-plan2",
+      "bir-billing-plan4": "expenses-bir-billing-plan4",
+      "bir-billing-plan1": "expenses-bir-billing",
+      "bir-billing": "expenses-bir-billing",
+      "annapurna-plan1": "expenses-annapurna-p1",
+    };
+    return keysMap[planId] || `expenses-${planId}`;
+  };
+
+  const getLedgerCostPerPerson = (planId) => {
+    try {
+      const storageKey = getExpenseTrackerKey(planId);
+      const rawExpenses = localStorage.getItem(storageKey);
+      if (!rawExpenses) return null;
+      
+      const expensesList = JSON.parse(rawExpenses);
+      if (!Array.isArray(expensesList) || expensesList.length === 0) return null;
+      
+      const parentId = getParentTripId(planId);
+      const rawMembers = localStorage.getItem(`trek_members_${parentId}`);
+      const membersList = rawMembers ? JSON.parse(rawMembers) : getDefaultMembers(parentId);
+      
+      const activeMembersCount = Array.isArray(membersList) && membersList.length > 0 ? membersList.length : 2;
+      
+      const total = expensesList
+        .filter((e) => !e.settleLater)
+        .reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+      
+      return Math.round(total / activeMembersCount);
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
   const openCostPrompt = (plan, e) => {
     if (e) e.stopPropagation();
     const existing = actualCosts[plan.id];
-    const defaultVal = existing !== undefined ? existing : parseNumericBudget(plan.budget);
+    const ledgerCost = getLedgerCostPerPerson(plan.id);
+    const defaultVal = existing !== undefined ? existing : (ledgerCost !== null ? ledgerCost : parseNumericBudget(plan.budget));
     setInputActualCost(defaultVal ? String(defaultVal) : "");
     setCostPromptModal(plan);
   };
@@ -210,7 +397,7 @@ export default function Landing() {
         {
           id: "rudranath-plan1",
           title: "Plan 1 (Standard Route)",
-          duration: "2 Jul – 10 Jul 2026 (9 Days)",
+          duration: "9 Days (2 Jul – 10 Jul 2026)",
           route: "Hisar → Haridwar → Sagar → Rudranath → Chopta → Kalpeshwar → Rishikesh → Hisar",
           details: "Includes Kalpeshwar (Panch Kedar temple) and a leisure day exploring Rishikesh ghats.",
           budget: `₹${rudranathAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
@@ -219,7 +406,7 @@ export default function Landing() {
         {
           id: "rudranath-plan2",
           title: "Plan 2 (Direct Route)",
-          duration: "3 Jul – 8 Jul 2026 (6 Days)",
+          duration: "6 Days (3 Jul – 8 Jul 2026)",
           route: "Hisar (3 Jul 5:00 PM) → Haridwar → Sagar → Rudranath → Chopta → Kartik Swami → Hisar (8 Jul 10:00 PM)",
           details: "Fast-paced route departing Hisar 3 Jul 5:00 PM, returning 8 Jul 10:00 PM.",
           budget: `₹${rudranathAmounts.plan2.budgetTotal.toLocaleString("en-IN")} / person`,
@@ -396,7 +583,7 @@ export default function Landing() {
         {
           id: "spiti-plan1",
           title: "Plan 1 (2 Persons Variant)",
-          duration: "6 Days",
+          duration: "6 Days (20 Aug – 25 Aug 2026)",
           route: "Sonipat → Manali directly → Kaza (3 Nights Base) → Key, Dhankar & Tabo Monasteries → Shipki La Pass → Manali → Sonipat directly",
           details: "Direct Sonipat-Manali Volvo round-trip + 4-day RE Himalayan bike rental + 3 Nights Kaza homestay base (No Delhi transit, no Chandratal).",
           budget: `₹${spitiAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
@@ -874,17 +1061,19 @@ export default function Landing() {
                   <CheckCircle2 size={18} />
                 </button>
               )}
-              <button
-                onClick={(e) => handleToggleArchiveTrip(trip, e)}
-                className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
-                  archivedTrips.includes(trip.id)
-                    ? "bg-slate-700 border-slate-800 text-white shadow-md"
-                    : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
-                }`}
-                title={archivedTrips.includes(trip.id) ? "Unarchive Trip" : "Archive Trip"}
-              >
-                <Archive size={15} />
-              </button>
+              {!isCompleted && (
+                <button
+                  onClick={(e) => handleToggleArchiveTrip(trip, e)}
+                  className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                    archivedTrips.includes(trip.id)
+                      ? "bg-slate-700 border-slate-800 text-white shadow-md"
+                      : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                  }`}
+                  title={archivedTrips.includes(trip.id) ? "Unarchive Trip" : "Archive Trip"}
+                >
+                  <Archive size={15} />
+                </button>
+              )}
               <div className="w-10 h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
                 <ArrowUpRight size={18} />
               </div>
@@ -1003,6 +1192,12 @@ export default function Landing() {
           const yearTotalSpent = yearTrips.reduce((sum, t) => {
             if (isTripCompleted(t)) {
               if (t.spentTotal !== undefined && t.spentTotal !== null) return sum + t.spentTotal;
+              const donePlan = t.plans?.find(p => completedPlans.includes(p.id));
+              if (donePlan) {
+                const val = actualCosts[donePlan.id];
+                const numericVal = (val !== undefined && val !== null && !isNaN(parseFloat(val))) ? parseFloat(val) : parseNumericBudget(donePlan.budget);
+                return sum + numericVal;
+              }
             }
             return sum;
           }, 0);
@@ -1066,7 +1261,10 @@ export default function Landing() {
                                 {trip.subtitle}
                               </span>
                               <span className="text-[10px] font-mono font-black text-slate-700 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
-                                {trip.stats.duration}
+                                {isCompleted ? (() => {
+                                  const donePlan = trip.plans.find(p => completedPlans.includes(p.id));
+                                  return donePlan ? donePlan.duration : trip.stats.duration;
+                                })() : trip.stats.duration}
                               </span>
                             </div>
 
@@ -1108,36 +1306,50 @@ export default function Landing() {
 
                             <div className="flex items-center gap-2">
                               {/* Quick Expense Drawer Toggle for Completed Trips */}
-                              {isCompleted && trip.expenses && trip.expenses.length > 0 && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setExpandedTripId(isExpanded ? null : trip.id);
-                                  }}
-                                  className={`px-3 py-1.5 rounded-2xl text-[11px] font-black uppercase font-mono tracking-wider border transition-all flex items-center gap-1.5 ${
-                                    isExpanded
-                                      ? "bg-black text-white border-black shadow-sm"
-                                      : "bg-white/80 hover:bg-white text-slate-700 border-black/15 hover:border-black/30"
-                                  }`}
-                                  title="Quick Expense Breakdown"
-                                >
-                                  <Receipt size={13} />
-                                  <span>Expense Breakdown</span>
-                                  {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                                </button>
+                              {isCompleted && (
+                                (() => {
+                                  const donePlanForTrip = trip.plans.find(p => completedPlans.includes(p.id));
+                                  if (!donePlanForTrip) return null;
+                                  return (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!isExpanded && !isLedgerUnlocked) {
+                                          setPasscodePromptTripId(trip.id);
+                                          setPasscodeInput("");
+                                          setPasscodeError(false);
+                                        } else {
+                                          setExpandedTripId(isExpanded ? null : trip.id);
+                                        }
+                                      }}
+                                      className={`px-3 py-1.5 rounded-2xl text-[11px] font-black uppercase font-mono tracking-wider border transition-all flex items-center gap-1.5 ${
+                                        isExpanded
+                                          ? "bg-black text-white border-black shadow-sm"
+                                          : "bg-white/80 hover:bg-white text-slate-700 border-black/15 hover:border-black/30"
+                                      }`}
+                                      title="Quick Expense Breakdown"
+                                    >
+                                      <Receipt size={13} />
+                                      <span>Expense Breakdown</span>
+                                      {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                                    </button>
+                                  );
+                                })()
                               )}
 
-                              <button
-                                onClick={(e) => handleToggleArchiveTrip(trip, e)}
-                                className={`w-9 h-9 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
-                                  archivedTrips.includes(trip.id)
-                                    ? "bg-slate-700 border-slate-800 text-white shadow-md"
-                                    : "border-black/15 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
-                                }`}
-                                title={archivedTrips.includes(trip.id) ? "Unarchive Trip" : "Archive Trip"}
-                              >
-                                <Archive size={14} />
-                              </button>
+                              {!isCompleted && (
+                                <button
+                                  onClick={(e) => handleToggleArchiveTrip(trip, e)}
+                                  className={`w-9 h-9 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                                    archivedTrips.includes(trip.id)
+                                      ? "bg-slate-700 border-slate-800 text-white shadow-md"
+                                      : "border-black/15 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                                  }`}
+                                  title={archivedTrips.includes(trip.id) ? "Unarchive Trip" : "Archive Trip"}
+                                >
+                                  <Archive size={14} />
+                                </button>
+                              )}
                               {/* Open Full Itinerary Modal */}
                               <button
                                 onClick={() => setSelectedTrip(trip)}
@@ -1152,42 +1364,22 @@ export default function Landing() {
 
                         {/* Interactive Inline Expense Breakdown Tray */}
                         <AnimatePresence>
-                          {isExpanded && trip.expenses && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.25 }}
-                              className="overflow-hidden border-t border-black/10 mt-5 pt-4"
-                            >
-                              <div className="flex items-center justify-between mb-3">
-                                <span className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400 flex items-center gap-1">
-                                  <Receipt size={11} /> Itemized Expense Summary
-                                </span>
-                                <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded-full">
-                                  {trip.expenses.length} Categories
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
-                                {trip.expenses.map((exp, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="bg-black/[0.02] border border-black/5 hover:border-black/15 rounded-2xl p-3 transition-all hover:bg-white"
-                                  >
-                                    <span className="text-[9px] font-black font-mono uppercase text-slate-400 block truncate">
-                                      {exp.category}
-                                    </span>
-                                    <span className="text-sm font-black font-mono text-black block mt-0.5">
-                                      {formatCurrency(exp.amount)}
-                                    </span>
-                                    <span className="text-[10px] text-slate-500 font-medium line-clamp-1 mt-0.5">
-                                      {exp.description}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </motion.div>
+                          {isExpanded && (
+                            (() => {
+                              const donePlanForTrip = trip.plans.find(p => completedPlans.includes(p.id));
+                              if (!donePlanForTrip) return null;
+                              return (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.25 }}
+                                  className="overflow-hidden border-t border-black/10 mt-5 pt-4"
+                                >
+                                  <TripExpenseBreakdown planId={donePlanForTrip.id} />
+                                </motion.div>
+                              );
+                            })()
                           )}
                         </AnimatePresence>
                       </div>
@@ -1841,6 +2033,12 @@ export default function Landing() {
                     />
                   </div>
                   <p className="text-[10px] text-slate-400 font-medium">Estimated budget reference: {costPromptModal.budget}</p>
+                  
+                  {Object.keys(getLedgerCostPerMember()).length === 0 && (
+                    <p className="text-[9px] text-slate-400 font-bold mt-1">
+                      ℹ️ No ledger expenses recorded for this trip yet
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex gap-2 pt-2">
@@ -1858,6 +2056,68 @@ export default function Landing() {
                     Save & Mark Done
                   </button>
                 </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Passcode Protection Modal for completed trips breakdown */}
+      <AnimatePresence>
+        {passcodePromptTripId !== null && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0" onClick={() => setPasscodePromptTripId(null)} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white rounded-[32px] border border-black/10 p-7 max-w-sm w-full shadow-2xl relative z-10 overflow-hidden text-center"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setPasscodePromptTripId(null)}
+                className="absolute right-4 top-4 w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center bg-white hover:bg-black/5 transition-colors"
+              >
+                <X size={14} />
+              </button>
+
+              <div className="w-12 h-12 rounded-2xl bg-black/5 flex items-center justify-center mx-auto mb-4 text-black mt-2">
+                <Lock size={20} />
+              </div>
+
+              <h3 className="font-extrabold text-lg uppercase tracking-tight">Enter Passcode</h3>
+              <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed mb-5">
+                Please enter the security code to view the itemized ledger breakdown.
+              </p>
+
+              <form onSubmit={handleVerifyPasscodeModal} className="space-y-4">
+                <div className="space-y-1">
+                  <input
+                    type="password"
+                    required
+                    placeholder="Security Code"
+                    value={passcodeInput}
+                    onChange={(e) => { setPasscodeInput(e.target.value); setPasscodeError(false); }}
+                    className={`w-full px-4 py-3 rounded-xl border text-center font-mono font-black text-lg focus:outline-none transition-colors ${
+                      passcodeError 
+                        ? "border-red-300 focus:border-red-500 bg-red-50/50" 
+                        : "border-black/10 focus:border-black bg-white"
+                    }`}
+                  />
+                  {passcodeError && (
+                    <p className="text-[10px] text-red-600 font-bold mt-1">
+                      ❌ Incorrect security passcode
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-colors shadow-md cursor-pointer"
+                >
+                  Verify Access
+                </button>
               </form>
             </motion.div>
           </div>
@@ -2117,4 +2377,184 @@ export default function Landing() {
     </div>
   );
 }
+
+const TripExpenseBreakdown = ({ planId }) => {
+  const [expenses, setExpenses] = useState([]);
+  const [membersList, setMembersList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!planId) return;
+    const storageKey = getExpenseTrackerKey(planId);
+    const docRef = doc(db, "trek_app_data", storageKey);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setExpenses(docSnap.data().data || []);
+      }
+      setLoading(false);
+    }, (error) => {
+      console.error("Error loading plan expenses:", error);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [planId]);
+
+  useEffect(() => {
+    if (!planId) return;
+    const parentId = getParentTripId(planId);
+    const docRef = doc(db, "trek_app_data", `trek_members_${parentId}`);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setMembersList(docSnap.data().data || []);
+      } else {
+        setMembersList(getDefaultMembers(parentId));
+      }
+    }, (error) => {
+      setMembersList(getDefaultMembers(parentId));
+    });
+    return () => unsubscribe();
+  }, [planId]);
+
+  const getParentTripId = (key) => {
+    if (key === 'rudranath-plan1' || key === 'rudranath-plan2' || key === 'plan1' || key === 'plan2') return 'rudranath';
+    if (key === 'yulla-plan1' || key === 'yulla-plan2') return 'yulla';
+    if (key === 'ladakh-plan1' || key === 'ladakh-plan2' || key === 'ladakh-plan3' || key === 'ladakh-plan4') return 'ladakh';
+    if (key === 'spiti-plan1' || key === 'spiti-plan2' || key === 'spiti-plan3') return 'spiti';
+    if (key === 'annapurna-plan1') return 'annapurna';
+    if (key === 'hemkund') return 'hemkund';
+    if (key === 'shrikhand-plan1' || key === 'shrikhand-plan2') return 'shrikhand-mahadev';
+    if (key === 'hampta-plan1' || key === 'hampta-plan2' || key === 'hampta-pass') return 'hampta-pass';
+    if (key === 'madhyamaheshwar-plan1' || key === 'madhyamaheshwar-plan2') return 'madhyamaheshwar';
+    if (key === 'kedarkantha') return 'kedarkantha';
+    if (key === 'bir-billing' || key === 'bir-billing-plan1' || key === 'bir-billing-plan2' || key === 'bir-billing-plan3' || key === 'bir-billing-plan4') return 'bir-billing';
+    if (key === 'jibhi-plan1' || key === 'jibhi-plan2') return 'jibhi';
+    if (key === 'kashmir' || key === 'kashmir-plan1' || key === 'kashmir-plan2') return 'kashmir';
+    return key;
+  };
+
+  const getDefaultMembers = (parentTripId) => {
+    return parentTripId === "bir-billing"
+      ? ["Yashpal", "Vaishnavi", "Adarsh", "Anshika"]
+      : ["Yashpal", "Vansh"];
+  };
+
+  const getExpenseTrackerKey = (planId) => {
+    const keysMap = {
+      "yulla-plan2": "expenses-yulla",
+      "yulla-plan1": "expenses-yulla-p2",
+      "ujjain": "expenses-ujjain",
+      "spiti-plan3": "expenses-spiti-p3",
+      "spiti-plan2": "expenses-spiti-p2",
+      "spiti-plan1": "expenses-spiti-p1",
+      "sikkim": "expenses-sikkim",
+      "madhyamaheshwar-plan2": "expenses-madhyamaheshwar-plan2",
+      "madhyamaheshwar-plan1": "expenses-madhyamaheshwar",
+      "ladakh-plan4": "expenses-ladakh-p4",
+      "ladakh-plan3": "expenses-ladakh-p3",
+      "ladakh-plan2": "expenses-ladakh-p2",
+      "ladakh-plan1": "expenses-ladakh-p1",
+      "kashmir-plan1": "expenses-kashmir",
+      "kashmir-plan2": "expenses-kashmir-plan2",
+      "kedarkantha": "expenses-kedarkantha",
+      "jibhi-plan2": "expenses-jibhi-plan2",
+      "jibhi-plan1": "expenses-jibhi-plan1",
+      "hemkund": "expenses-hemkund",
+      "auli": "expenses-auli",
+      "bir-billing-plan3": "expenses-bir-billing-plan3",
+      "bir-billing-plan2": "expenses-bir-billing-plan2",
+      "bir-billing-plan4": "expenses-bir-billing-plan4",
+      "bir-billing-plan1": "expenses-bir-billing",
+      "bir-billing": "expenses-bir-billing",
+      "annapurna-plan1": "expenses-annapurna-p1",
+    };
+    return keysMap[planId] || `expenses-${planId}`;
+  };
+
+  if (loading) {
+    return <p className="text-[10px] text-slate-400 font-mono animate-pulse">Loading actual expenses...</p>;
+  }
+
+  // Calculate Yashpal's category breakdown
+  const breakdown = {};
+  const activeMembers = membersList.length > 0 ? membersList : ["Yashpal", "Vansh"];
+  
+  expenses.forEach((exp) => {
+    if (exp.settleLater) return;
+    const amt = Number(exp.amount) || 0;
+    const sharers = exp.splitWith || activeMembers;
+    const cat = exp.category || "Other";
+    const activeSharers = sharers.filter((m) => activeMembers.includes(m));
+
+    if (activeSharers.length > 0 && activeSharers.includes("Yashpal")) {
+      let yashpalShare = 0;
+      if (exp.splitType === "unequal" && exp.splitAmounts) {
+        yashpalShare = Number(exp.splitAmounts["Yashpal"] || 0);
+      } else {
+        yashpalShare = amt / sharers.length;
+      }
+      breakdown[cat] = (breakdown[cat] || 0) + yashpalShare;
+    }
+  });
+
+  const totalSpent = Object.values(breakdown).reduce((sum, v) => sum + v, 0);
+
+  if (totalSpent === 0) {
+    return <p className="text-[10px] text-slate-400 italic">No ledger expenses recorded for Yashpal on this trip</p>;
+  }
+
+  const categoryColors = {
+    Transport: { dot: "bg-blue-500", text: "text-blue-700" },
+    Accommodation: { dot: "bg-emerald-500", text: "text-emerald-700" },
+    Food: { dot: "bg-amber-500", text: "text-amber-700" },
+    Rafting: { dot: "bg-purple-500", text: "text-purple-700" },
+    Emergency: { dot: "bg-red-500", text: "text-red-700" },
+    Shopping: { dot: "bg-pink-500", text: "text-pink-700" },
+    Other: { dot: "bg-slate-500", text: "text-slate-700" }
+  };
+
+  const formatCurrency = (val) => {
+    if (val === undefined || val === null || isNaN(val)) return "₹0";
+    const num = Number(val);
+    const formatted = num.toLocaleString("en-IN", {
+      minimumFractionDigits: num % 1 !== 0 ? 2 : 0,
+      maximumFractionDigits: 2,
+    });
+    return `₹${formatted}`;
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between border-b border-black/5 pb-2">
+        <span className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400 flex items-center gap-1">
+          <Receipt size={11} /> Yashpal's Ledger Breakdown
+        </span>
+        <span className="text-[10px] font-mono font-bold text-emerald-700 bg-emerald-500/10 px-2.5 py-0.5 rounded-full">
+          Total Share: {formatCurrency(Math.round(totalSpent))}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+        {Object.entries(breakdown).map(([cat, val]) => {
+          const colors = categoryColors[cat] || categoryColors.Other;
+          return (
+            <div
+              key={cat}
+              className="bg-white border border-black/5 hover:border-black/15 rounded-2xl p-3.5 transition-all shadow-xs"
+            >
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                <span className="text-[9px] font-black font-mono uppercase text-slate-400 block truncate">
+                  {cat}
+                </span>
+              </div>
+              <span className="text-base font-black font-mono text-black block">
+                {formatCurrency(Math.round(val))}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 

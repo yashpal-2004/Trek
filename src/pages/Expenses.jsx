@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
 import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Trash2, Receipt, Users, Wallet, AlertCircle, TrendingUp, IndianRupee, ChevronDown, Pencil, X, ArrowRight, Search, Download, Settings } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Receipt, Users, Wallet, AlertCircle, TrendingUp, IndianRupee, ChevronDown, Pencil, X, ArrowRight, Search, Download, Settings, Lock } from "lucide-react";
 import { useExpense } from "../hooks/useExpense";
 import { expenseCategories } from "../data/trip";
 import { getActiveTripKey, getParentTripId } from "../data/proxyHelper";
@@ -29,7 +29,9 @@ export default function Expenses({ isSection = false }) {
     ? ["Yashpal", "Vaishnavi", "Adarsh", "Anshika"]
     : ["Yashpal", "Vansh"];
   const [members, setMembers] = useFirestore(`trek_members_${parentTripId}`, defaultMembers);
+  const [completedPlans] = useFirestore("trek_completed_plans", []);
   const [advances, setAdvances] = useFirestore(`trek_advances_${parentTripId}`, []);
+  const isCurrentPlanCompleted = completedPlans.includes(activeKey);
   const planName = activeKey === "plan2" ? "Plan 2" : (activeKey === "sikkim" ? "Sikkim Trip" : "Plan 1");
 
   // Advance form state
@@ -38,7 +40,7 @@ export default function Expenses({ isSection = false }) {
   const [advAmount, setAdvAmount] = useState("");
   const [advNotes, setAdvNotes] = useState("");
 
-  const { expenses, addExpense, updateExpense, deleteExpense, totalSpent } = useExpense();
+  const { expenses, setExpenses, addExpense, updateExpense, deleteExpense, totalSpent } = useExpense();
 
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [category, setCategory] = useState("Transport");
@@ -61,6 +63,22 @@ export default function Expenses({ isSection = false }) {
   const [filterPayer, setFilterPayer] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
   const [deleteAdvanceTargetId, setDeleteAdvanceTargetId] = useState(null);
+
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const handleVerifyPassword = (e) => {
+    e.preventDefault();
+    if (passwordInput === "1612") {
+      setIsUnlocked(true);
+      setPasswordError(false);
+    } else {
+      setPasswordError(true);
+    }
+  };
+
+  const shouldShowLock = isCurrentPlanCompleted && !isUnlocked;
 
   const [breakdownType, setBreakdownType] = useState("paid"); // "paid" or "share"
 
@@ -103,6 +121,59 @@ export default function Expenses({ isSection = false }) {
       delete copy[oldName];
       setPaidAmounts(copy);
     }
+    if (splitAmounts[oldName] !== undefined) {
+      const copy = { ...splitAmounts };
+      copy[trimmed] = copy[oldName];
+      delete copy[oldName];
+      setSplitAmounts(copy);
+    }
+
+    // Cascade name edit to cash advances
+    setAdvances((prev) =>
+      prev.map((adv) => {
+        const copy = { ...adv };
+        if (adv.from === oldName) copy.from = trimmed;
+        if (adv.to === oldName) copy.to = trimmed;
+        return copy;
+      })
+    );
+
+    // Cascade name edit to expenses
+    setExpenses((prev) =>
+      prev.map((exp) => {
+        let copy = { ...exp };
+        let needsUpdate = false;
+
+        if (exp.paidBy === oldName) {
+          copy.paidBy = trimmed;
+          needsUpdate = true;
+        }
+
+        if (exp.splitWith && exp.splitWith.includes(oldName)) {
+          copy.splitWith = exp.splitWith.map((m) => (m === oldName ? trimmed : m));
+          needsUpdate = true;
+        }
+
+        if (exp.paidAmounts && exp.paidAmounts[oldName] !== undefined) {
+          const pCopy = { ...exp.paidAmounts };
+          pCopy[trimmed] = pCopy[oldName];
+          delete pCopy[oldName];
+          copy.paidAmounts = pCopy;
+          needsUpdate = true;
+        }
+
+        if (exp.splitAmounts && exp.splitAmounts[oldName] !== undefined) {
+          const sCopy = { ...exp.splitAmounts };
+          sCopy[trimmed] = sCopy[oldName];
+          delete sCopy[oldName];
+          copy.splitAmounts = sCopy;
+          needsUpdate = true;
+        }
+
+        return needsUpdate ? copy : exp;
+      })
+    );
+
     setEditingMember(null);
   };
 
@@ -1043,14 +1114,23 @@ export default function Expenses({ isSection = false }) {
                                 {m}
                               </span>
                             )}
-                            <button
-                              type="button"
-                              disabled={members.length <= 1}
-                              onClick={() => handleDeleteMember(m)}
-                              className="p-1 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 disabled:opacity-30 transition-colors"
-                            >
-                              <Trash2 size={12} />
-                            </button>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <button
+                                type="button"
+                                onClick={() => { setEditingMember(m); setEditNameValue(m); }}
+                                className="p-1 hover:bg-amber-50 rounded-lg text-slate-400 hover:text-amber-600 transition-colors cursor-pointer"
+                              >
+                                <Pencil size={11} />
+                              </button>
+                              <button
+                                type="button"
+                                disabled={members.length <= 1}
+                                onClick={() => handleDeleteMember(m)}
+                                className="p-1 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 disabled:opacity-30 transition-colors cursor-pointer"
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1617,10 +1697,113 @@ export default function Expenses({ isSection = false }) {
           );
         })}
       </div>
+
+      {/* Category differences comparison block */}
+      {members.length === 2 && (
+        <div className="mt-4 pt-4 border-t border-black/5 space-y-2">
+          <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Category Differences</p>
+          <div className="space-y-1.5">
+            {Object.keys(categoryColors).map((cat) => {
+              const memberA = members[0];
+              const memberB = members[1];
+              
+              const dataA = personWiseCategoryExpenses[memberA] || { paid: { total: 0 }, share: { total: 0 } };
+              const dataB = personWiseCategoryExpenses[memberB] || { paid: { total: 0 }, share: { total: 0 } };
+              
+              const valA = breakdownType === "paid" ? (dataA.paid[cat] || 0) : (dataA.share[cat] || 0);
+              const valB = breakdownType === "paid" ? (dataB.paid[cat] || 0) : (dataB.share[cat] || 0);
+              
+              const diff = valA - valB;
+              if (Math.abs(diff) < 0.5) return null; // ignore very tiny/zero diffs
+
+              const colors = categoryColors[cat] || categoryColors.Other;
+              const payerName = diff > 0 ? memberA : memberB;
+              const receiverName = diff > 0 ? memberB : memberA;
+              
+              return (
+                <div key={cat} className="flex justify-between items-center text-[10px] font-bold p-2 bg-black/[0.01] border border-black/5 rounded-xl">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                    <span className="text-slate-600">{cat}</span>
+                  </div>
+                  <span className="text-slate-700 text-right">
+                    <span className="font-extrabold text-black">{payerName}</span> spent <span className="font-mono text-black font-extrabold">₹{Math.round(Math.abs(diff)).toLocaleString("en-IN")}</span> more than {receiverName}
+                  </span>
+                </div>
+              );
+            })}
+            {Object.keys(categoryColors).every((cat) => {
+              const memberA = members[0];
+              const memberB = members[1];
+              const dataA = personWiseCategoryExpenses[memberA] || { paid: { total: 0 }, share: { total: 0 } };
+              const dataB = personWiseCategoryExpenses[memberB] || { paid: { total: 0 }, share: { total: 0 } };
+              const valA = breakdownType === "paid" ? (dataA.paid[cat] || 0) : (dataA.share[cat] || 0);
+              const valB = breakdownType === "paid" ? (dataB.paid[cat] || 0) : (dataB.share[cat] || 0);
+              return Math.abs(valA - valB) < 0.5;
+            }) && (
+              <p className="text-[10px] text-slate-400 italic text-center py-1">No category-wise differences</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 
   if (isSection) {
+    if (isCurrentPlanCompleted && !isUnlocked) {
+      return (
+        <section id="expenses" className="pt-20 pb-20 md:pt-24 md:pb-28 bg-[#f2efe9] scroll-mt-20 border-t border-black/5">
+          <Container className="max-w-sm text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[32px] p-8 shadow-xl"
+            >
+              <div className="w-14 h-14 rounded-[22px] bg-black/5 flex items-center justify-center mx-auto mb-5 text-black">
+                <Lock size={22} />
+              </div>
+              
+              <h2 className="text-xl font-black uppercase tracking-tight mb-1.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+                Ledger Locked
+              </h2>
+              <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
+                Enter the security code to view the active expenses ledger, settle up sheets, and cash advances.
+              </p>
+
+              <form onSubmit={handleVerifyPassword} className="space-y-4">
+                <div className="space-y-1.5">
+                  <input
+                    type="password"
+                    required
+                    placeholder="Enter Passcode"
+                    value={passwordInput}
+                    onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                    className={`w-full px-4 py-3 rounded-xl border text-center font-mono font-black text-lg focus:outline-none transition-colors ${
+                      passwordError 
+                        ? "border-red-300 focus:border-red-500 bg-red-50/50" 
+                        : "border-black/10 focus:border-black bg-white"
+                    }`}
+                  />
+                  {passwordError && (
+                    <p className="text-[10px] text-red-600 font-bold mt-1">
+                      ❌ Incorrect security passcode
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-colors shadow-md cursor-pointer"
+                >
+                  Access Ledger
+                </button>
+              </form>
+            </motion.div>
+          </Container>
+        </section>
+      );
+    }
+
     return (
       <section id="expenses" className="pt-20 pb-20 md:pt-24 md:pb-28 bg-[#f2efe9] scroll-mt-20 border-t border-black/5">
         <Container>
@@ -1912,291 +2095,337 @@ export default function Expenses({ isSection = false }) {
         </Container>
       </header>
 
-      <Container className="mt-8">
-        {renderBudgetProgressTracker()}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {shouldShowLock ? (
+        <Container className="mt-20 max-w-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[32px] p-8 text-center shadow-xl"
+          >
+            <div className="w-14 h-14 rounded-[22px] bg-black/5 flex items-center justify-center mx-auto mb-5 text-black">
+              <Lock size={22} />
+            </div>
+            
+            <h2 className="text-xl font-black uppercase tracking-tight mb-1.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+              Ledger Locked
+            </h2>
+            <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
+              Enter the security code to view the active expenses ledger, settle up sheets, and cash advances.
+            </p>
 
-        {/* Left Column: Form + Ledger */}
-        <div className="lg:col-span-2 space-y-6">
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {renderPoolSummaryCard()}
-            {renderPieChartCard()}
-            {renderCumulativeSpendingChart()}
-          </div>
-
-          {renderSegmentedCategoryBudgets()}
-
-          <div className="flex justify-start mb-6">
-            <button
-              onClick={() => { setEditingId(null); setSplitWith(members); setShowExpenseModal(true); }}
-              className="inline-flex items-center gap-2 bg-black text-white rounded-2xl px-5 py-3 hover:bg-black/85 transition-all shadow-md group cursor-pointer"
-            >
-              <Plus size={16} className="text-white" />
-              <span className="font-extrabold text-sm tracking-tight">Add Shared Expense</span>
-            </button>
-          </div>
-          {/* Expense Ledger */}
-          <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">
-                  <Receipt size={15} className="text-slate-700" />
-                </div>
-                <h2 className="font-extrabold text-base uppercase tracking-tight">Shared Ledger</h2>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowSettleLaterOnly(!showSettleLaterOnly)}
-                  className={`px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer select-none transition-all ${showSettleLaterOnly ? "bg-black text-white border-black" : "bg-white border-black/10 text-slate-600 hover:border-black/25"}`}
-                >
-                  Settle Later Only
-                </button>
-                {expenses.length > 0 && (
-                  <span className="text-[10px] font-bold font-mono text-slate-400 bg-black/5 px-2 py-1.5 rounded-lg">
-                    {filteredExpenses.length} entries
-                  </span>
+            <form onSubmit={handleVerifyPassword} className="space-y-4">
+              <div className="space-y-1.5">
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter Passcode"
+                  value={passwordInput}
+                  onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                  className={`w-full px-4 py-3 rounded-xl border text-center font-mono font-black text-lg focus:outline-none transition-colors ${
+                    passwordError 
+                      ? "border-red-300 focus:border-red-500 bg-red-50/50" 
+                      : "border-black/10 focus:border-black bg-white"
+                  }`}
+                />
+                {passwordError && (
+                  <p className="text-[10px] text-red-600 font-bold mt-1">
+                    ❌ Incorrect security passcode
+                  </p>
                 )}
               </div>
+
+              <button
+                type="submit"
+                className="w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-black text-white hover:bg-black/80 transition-colors shadow-md cursor-pointer"
+              >
+                Access Ledger
+              </button>
+            </form>
+          </motion.div>
+        </Container>
+      ) : (
+        <Container className="mt-8">
+          {renderBudgetProgressTracker()}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          {/* Left Column: Form + Ledger */}
+          <div className="lg:col-span-2 space-y-6">
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              {renderPoolSummaryCard()}
+              {renderPieChartCard()}
+              {renderCumulativeSpendingChart()}
             </div>
 
-              {/* Filter controls row */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-6 p-4 bg-slate-50/50 rounded-2xl border border-black/5">
-                {/* Search query input */}
-                <div className="sm:col-span-5 relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <Search size={14} />
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Search note or category..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 border border-black/10 bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-black text-xs font-semibold"
-                  />
+            {renderSegmentedCategoryBudgets()}
+
+            <div className="flex justify-start mb-6">
+              <button
+                onClick={() => { setEditingId(null); setSplitWith(members); setShowExpenseModal(true); }}
+                className="inline-flex items-center gap-2 bg-black text-white rounded-2xl px-5 py-3 hover:bg-black/85 transition-all shadow-md group cursor-pointer"
+              >
+                <Plus size={16} className="text-white" />
+                <span className="font-extrabold text-sm tracking-tight">Add Shared Expense</span>
+              </button>
+            </div>
+            {/* Expense Ledger */}
+            <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">
+                    <Receipt size={15} className="text-slate-700" />
+                  </div>
+                  <h2 className="font-extrabold text-base uppercase tracking-tight">Shared Ledger</h2>
                 </div>
-                {/* Payer filter select */}
-                <div className="sm:col-span-3">
-                  <select
-                    value={filterPayer}
-                    onChange={(e) => setFilterPayer(e.target.value)}
-                    className="w-full px-3 py-2 border border-black/10 bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-black text-xs font-semibold"
-                  >
-                    <option value="all">All Payers</option>
-                    {members.map(m => <option key={m} value={m}>{m}</option>)}
-                    <option value="Share">Multiple</option>
-                  </select>
-                </div>
-                {/* Category filter select */}
-                <div className="sm:col-span-3">
-                  <select
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value)}
-                    className="w-full px-3 py-2 border border-black/10 bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-black text-xs font-semibold"
-                  >
-                    <option value="all">All Categories</option>
-                    {Object.keys(categoryColors).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                  </select>
-                </div>
-                {/* CSV Export action */}
-                <div className="sm:col-span-1 flex justify-end">
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={handleExportXLS}
-                    title="Export current view to CSV"
-                    className="w-full sm:w-auto flex items-center justify-center p-2 border border-black/10 bg-white hover:bg-black hover:text-white rounded-xl transition-all cursor-pointer text-slate-600"
+                    onClick={() => setShowSettleLaterOnly(!showSettleLaterOnly)}
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer select-none transition-all ${showSettleLaterOnly ? "bg-black text-white border-black" : "bg-white border-black/10 text-slate-600 hover:border-black/25"}`}
                   >
-                    <Download size={14} />
+                    Settle Later Only
                   </button>
+                  {expenses.length > 0 && (
+                    <span className="text-[10px] font-bold font-mono text-slate-400 bg-black/5 px-2 py-1.5 rounded-lg">
+                      {filteredExpenses.length} entries
+                    </span>
+                  )}
                 </div>
               </div>
 
-            {filteredExpenses.length === 0 ? (
-              <div className="flex flex-col items-center py-16 text-slate-400 gap-3">
-                <Receipt size={36} className="opacity-25" />
-                <p className="text-sm font-medium">No expenses match the filter.</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {filteredExpenses.map((exp) => {
-                  const sharers = exp.splitWith || members;
-                  const payer = exp.paidBy || members[0];
-                  const colors = categoryColors[exp.category] || categoryColors.Other;
+                {/* Filter controls row */}
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-6 p-4 bg-slate-50/50 rounded-2xl border border-black/5">
+                  {/* Search query input */}
+                  <div className="sm:col-span-5 relative">
+                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                      <Search size={14} />
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Search note or category..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-9 pr-4 py-2 border border-black/10 bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-black text-xs font-semibold"
+                    />
+                  </div>
+                  {/* Payer filter select */}
+                  <div className="sm:col-span-3">
+                    <select
+                      value={filterPayer}
+                      onChange={(e) => setFilterPayer(e.target.value)}
+                      className="w-full px-3 py-2 border border-black/10 bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-black text-xs font-semibold"
+                    >
+                      <option value="all">All Payers</option>
+                      {members.map(m => <option key={m} value={m}>{m}</option>)}
+                      <option value="Share">Multiple</option>
+                    </select>
+                  </div>
+                  {/* Category filter select */}
+                  <div className="sm:col-span-3">
+                    <select
+                      value={filterCategory}
+                      onChange={(e) => setFilterCategory(e.target.value)}
+                      className="w-full px-3 py-2 border border-black/10 bg-white rounded-xl focus:outline-none focus:ring-1 focus:ring-black text-xs font-semibold"
+                    >
+                      <option value="all">All Categories</option>
+                      {Object.keys(categoryColors).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+                  </div>
+                  {/* CSV Export action */}
+                  <div className="sm:col-span-1 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleExportXLS}
+                      title="Export current view to CSV"
+                      className="w-full sm:w-auto flex items-center justify-center p-2 border border-black/10 bg-white hover:bg-black hover:text-white rounded-xl transition-all cursor-pointer text-slate-600"
+                    >
+                      <Download size={14} />
+                    </button>
+                  </div>
+                </div>
 
-                  let payerText = <span className="font-bold text-slate-600">{payer}</span>;
-                  if (payer === "Share" && exp.paidAmounts) {
-                    payerText = (
-                      <span className="font-medium text-slate-500">
-                        {Object.entries(exp.paidAmounts)
-                          .filter(([, amt]) => Number(amt) > 0)
-                          .map(([m, amt]) => `${m} (₹${amt})`)
-                          .join(" & ")}
-                      </span>
-                    );
-                  }
+              {filteredExpenses.length === 0 ? (
+                <div className="flex flex-col items-center py-16 text-slate-400 gap-3">
+                  <Receipt size={36} className="opacity-25" />
+                  <p className="text-sm font-medium">No expenses match the filter.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {filteredExpenses.map((exp) => {
+                    const sharers = exp.splitWith || members;
+                    const payer = exp.paidBy || members[0];
+                    const colors = categoryColors[exp.category] || categoryColors.Other;
 
-                  return (
-                    <div key={exp.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-black/5 hover:border-black/15 transition-all group">
-                      <div className={`w-2 h-8 rounded-full shrink-0 ${colors.dot}`} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <p className="font-bold text-sm truncate">{exp.notes}</p>
-                          <span className={`text-[9px] font-black font-mono uppercase px-1.5 py-0.5 rounded-md shrink-0 ${colors.bg} ${colors.text}`}>{exp.category}</span>
-                          {exp.settleLater && (
-                            <span className="text-[9px] font-black font-mono uppercase px-1.5 py-0.5 rounded-md shrink-0 bg-amber-100 text-amber-800">Settle Later</span>
-                          )}
+                    let payerText = <span className="font-bold text-slate-600">{payer}</span>;
+                    if (payer === "Share" && exp.paidAmounts) {
+                      payerText = (
+                        <span className="font-bold text-slate-600" title={Object.entries(exp.paidAmounts).map(([m, a]) => `${m}: ₹${a}`).join(", ")}>
+                          Multiple
+                        </span>
+                      );
+                    }
+                    return (
+                      <div key={exp.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-black/5 hover:border-black/15 transition-all group">
+                        <div className={`w-2 h-8 rounded-full shrink-0 ${colors.dot}`} />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <p className="font-bold text-sm truncate">{exp.notes}</p>
+                            <span className={`text-[9px] font-black font-mono uppercase px-1.5 py-0.5 rounded-md shrink-0 ${colors.bg} ${colors.text}`}>{exp.category}</span>
+                            {exp.settleLater && (
+                              <span className="text-[9px] font-black font-mono uppercase px-1.5 py-0.5 rounded-md shrink-0 bg-amber-100 text-amber-800">Settle Later</span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-400">
+                            {payerText} paid · split with {sharers.filter(m => members.includes(m)).join(", ")} · {exp.date}
+                          </p>
                         </div>
-                        <p className="text-[11px] text-slate-400">
-                          {payerText} paid · split with {sharers.filter(m => members.includes(m)).join(", ")} · {exp.date}
-                        </p>
+                        <p className="font-black text-base shrink-0">{formatCurrency(exp.amount)}</p>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                          <button onClick={() => handleStartEdit(exp)} className="p-1.5 hover:bg-amber-50 hover:text-amber-500 rounded-xl text-slate-300 transition-colors">
+                            <Pencil size={13} />
+                          </button>
+                          <button
+                            onClick={() => setDeleteTargetId(exp.id)}
+                            className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-slate-300 transition-colors"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
                       </div>
-                      <p className="font-black text-base shrink-0">{formatCurrency(exp.amount)}</p>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <button onClick={() => handleStartEdit(exp)} className="p-1.5 hover:bg-amber-50 hover:text-amber-500 rounded-xl text-slate-300 transition-colors">
-                          <Pencil size={13} />
-                        </button>
-                        <button
-                          onClick={() => setDeleteTargetId(exp.id)}
-                          className="p-1.5 hover:bg-red-50 hover:text-red-500 rounded-xl text-slate-300 transition-colors"
-                        >
-                          <Trash2 size={14} />
-                        </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-5">
+
+            {/* Settle Up */}
+            <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">
+                  <TrendingUp size={15} className="text-slate-700" />
+                </div>
+                <h2 className="font-extrabold text-base uppercase tracking-tight">Settle Up</h2>
+              </div>
+
+              {balances.settlements.length === 0 ? (
+                <div className="flex flex-col items-center py-8 text-center gap-2">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center mb-1">
+                    <AlertCircle size={22} className="text-emerald-500" />
+                  </div>
+                  <p className="font-bold text-sm text-slate-700">All balanced!</p>
+                  <p className="text-xs text-slate-400">No pending settlements.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {balances.settlements.map((set, idx) => (
+                    <div key={idx} className="p-4 bg-black/[0.03] rounded-2xl border border-black/5">
+                      <div className="flex justify-between items-center">
+                        <div className="text-sm">
+                          <span className="font-black text-red-600">{set.from}</span>
+                          <span className="text-slate-400 mx-1.5 text-xs">owes</span>
+                          <span className="font-black text-emerald-700">{set.to}</span>
+                        </div>
+                        <span className="font-black text-base">{formatCurrency(set.amount)}</span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-5">
-
-          {/* Settle Up */}
-          <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center">
-                <TrendingUp size={15} className="text-slate-700" />
-              </div>
-              <h2 className="font-extrabold text-base uppercase tracking-tight">Settle Up</h2>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {balances.settlements.length === 0 ? (
-              <div className="flex flex-col items-center py-8 text-center gap-2">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center mb-1">
-                  <AlertCircle size={22} className="text-emerald-500" />
+            {/* Cash Advances */}
+            <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-8 h-8 rounded-xl bg-green-100 flex items-center justify-center">
+                  <ArrowRight size={15} className="text-green-700" />
                 </div>
-                <p className="font-bold text-sm text-slate-700">All balanced!</p>
-                <p className="text-xs text-slate-400">No pending settlements.</p>
+                <div>
+                  <h2 className="font-extrabold text-base uppercase tracking-tight">Cash Advances</h2>
+                  <p className="text-[10px] text-slate-400 font-medium">Money given upfront before trip expenses</p>
+                </div>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {balances.settlements.map((set, idx) => (
-                  <div key={idx} className="p-4 bg-black/[0.03] rounded-2xl border border-black/5">
-                    <div className="flex justify-between items-center">
-                      <div className="text-sm">
-                        <span className="font-black text-red-600">{set.from}</span>
-                        <span className="text-slate-400 mx-1.5 text-xs">owes</span>
-                        <span className="font-black text-emerald-700">{set.to}</span>
+              <form onSubmit={handleAddAdvance} className="space-y-3 mb-5">
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className={labelCls}>Given By</label>
+                    <select value={advFrom} onChange={(e) => setAdvFrom(e.target.value)} required className={inputCls + " py-2.5"}>
+                      <option value="">Select</option>
+                      {members.map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className={labelCls}>Given To</label>
+                    <select value={advTo} onChange={(e) => setAdvTo(e.target.value)} required className={inputCls + " py-2.5"}>
+                      <option value="">Select</option>
+                      {members.filter(m => m !== advFrom).map((m) => <option key={m} value={m}>{m}</option>)}
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className={labelCls}>Amount (₹)</label>
+                    <input type="number" min="1" value={advAmount} onChange={(e) => setAdvAmount(e.target.value)} placeholder="0" required className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Note (optional)</label>
+                    <input type="text" value={advNotes} onChange={(e) => setAdvNotes(e.target.value)} placeholder="e.g. before trip" className={inputCls} />
+                  </div>
+                </div>
+                <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-2xl transition-all text-sm">Record Advance</button>
+              </form>
+              {advances.length > 0 && (
+                <div className="space-y-2 border-t border-black/5 pt-4">
+                  {advances.map((adv) => (
+                    <div key={adv.id} className="flex items-center justify-between p-3 bg-green-50/60 rounded-2xl border border-green-100 group">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 text-sm">
+                          <span className="font-black text-green-700">{adv.from}</span>
+                          <ArrowRight size={12} className="text-slate-400 shrink-0" />
+                          <span className="font-black text-slate-700">{adv.to}</span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 font-medium mt-0.5">{adv.notes || "Cash advance"} · {adv.date}</p>
                       </div>
-                      <span className="font-black text-base">{formatCurrency(set.amount)}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="font-extrabold text-sm text-green-700">₹{Number(adv.amount).toLocaleString("en-IN")}</span>
+                        <button onClick={() => handleDeleteAdvance(adv.id)} className="p-1 hover:bg-red-100 hover:text-red-500 rounded-lg text-slate-300 transition-colors opacity-0 group-hover:opacity-100">
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
                     </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Net Balance Sheet */}
+            <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
+              <h2 className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400 mb-4">Net Balance Sheet</h2>
+              <div className="space-y-2">
+                {Object.entries(balances.netBalances).map(([name, bal]) => (
+                  <div key={name} className="flex justify-between items-center py-2.5 border-b border-black/5 last:border-0">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black ${bal >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
+                        {name[0]}
+                      </div>
+                      <span className="font-bold text-sm">{name}</span>
+                    </div>
+                    <span className={`font-mono text-sm font-extrabold ${bal >= 0 ? "text-emerald-700" : "text-red-600"}`}>
+                      {bal >= 0 ? "+" : ""}{formatCurrency(Math.abs(Math.round(bal)))}
+                    </span>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-
-          {/* Cash Advances */}
-          <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-8 h-8 rounded-xl bg-green-100 flex items-center justify-center">
-                <ArrowRight size={15} className="text-green-700" />
-              </div>
-              <div>
-                <h2 className="font-extrabold text-base uppercase tracking-tight">Cash Advances</h2>
-                <p className="text-[10px] text-slate-400 font-medium">Money given upfront before trip expenses</p>
-              </div>
             </div>
-            <form onSubmit={handleAddAdvance} className="space-y-3 mb-5">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className={labelCls}>Given By</label>
-                  <select value={advFrom} onChange={(e) => setAdvFrom(e.target.value)} required className={inputCls + " py-2.5"}>
-                    <option value="">Select</option>
-                    {members.map((m) => <option key={m} value={m}>{m}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className={labelCls}>Given To</label>
-                  <select value={advTo} onChange={(e) => setAdvTo(e.target.value)} required className={inputCls + " py-2.5"}>
-                    <option value="">Select</option>
-                    {members.filter(m => m !== advFrom).map((m) => <option key={m} value={m}>{m}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className={labelCls}>Amount (₹)</label>
-                  <input type="number" min="1" value={advAmount} onChange={(e) => setAdvAmount(e.target.value)} placeholder="0" required className={inputCls} />
-                </div>
-                <div>
-                  <label className={labelCls}>Note (optional)</label>
-                  <input type="text" value={advNotes} onChange={(e) => setAdvNotes(e.target.value)} placeholder="e.g. before trip" className={inputCls} />
-                </div>
-              </div>
-              <button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-2xl transition-all text-sm">Record Advance</button>
-            </form>
-            {advances.length > 0 && (
-              <div className="space-y-2 border-t border-black/5 pt-4">
-                {advances.map((adv) => (
-                  <div key={adv.id} className="flex items-center justify-between p-3 bg-green-50/60 rounded-2xl border border-green-100 group">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5 text-sm">
-                        <span className="font-black text-green-700">{adv.from}</span>
-                        <ArrowRight size={12} className="text-slate-400 shrink-0" />
-                        <span className="font-black text-slate-700">{adv.to}</span>
-                      </div>
-                      <p className="text-[10px] text-slate-400 font-medium mt-0.5">{adv.notes || "Cash advance"} · {adv.date}</p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="font-extrabold text-sm text-green-700">₹{Number(adv.amount).toLocaleString("en-IN")}</span>
-                      <button onClick={() => handleDeleteAdvance(adv.id)} className="p-1 hover:bg-red-100 hover:text-red-500 rounded-lg text-slate-300 transition-colors opacity-0 group-hover:opacity-100">
-                        <Trash2 size={12} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
-          {/* Net Balance Sheet */}
-          <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
-            <h2 className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400 mb-4">Net Balance Sheet</h2>
-            <div className="space-y-2">
-              {Object.entries(balances.netBalances).map(([name, bal]) => (
-                <div key={name} className="flex justify-between items-center py-2.5 border-b border-black/5 last:border-0">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-7 h-7 rounded-xl flex items-center justify-center text-[10px] font-black ${bal >= 0 ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
-                      {name[0]}
-                    </div>
-                    <span className="font-bold text-sm">{name}</span>
-                  </div>
-                  <span className={`font-mono text-sm font-extrabold ${bal >= 0 ? "text-emerald-700" : "text-red-600"}`}>
-                    {bal >= 0 ? "+" : ""}{formatCurrency(Math.abs(Math.round(bal)))}
-                  </span>
-                </div>
-              ))}
-            </div>
+            {renderPersonWiseCategoryBreakdown()}
           </div>
-
-          {renderPersonWiseCategoryBreakdown()}
         </div>
-      </div>
-      </Container>
+        </Container>
+      )}
 
       {deleteTargetId !== null && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
