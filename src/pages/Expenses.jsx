@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid } from "recharts";
 import { motion } from "framer-motion";
-import { ArrowLeft, Plus, Trash2, Receipt, Users, Wallet, AlertCircle, TrendingUp, IndianRupee, ChevronDown, Pencil, X, ArrowRight, Search, Download } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Receipt, Users, Wallet, AlertCircle, TrendingUp, IndianRupee, ChevronDown, Pencil, X, ArrowRight, Search, Download, Settings } from "lucide-react";
 import { useExpense } from "../hooks/useExpense";
 import { expenseCategories } from "../data/trip";
 import { getActiveTripKey, getParentTripId } from "../data/proxyHelper";
@@ -48,6 +48,8 @@ export default function Expenses({ isSection = false }) {
   const [paidBy, setPaidBy] = useState("Yashpal");
   const [splitWith, setSplitWith] = useState(members);
   const [paidAmounts, setPaidAmounts] = useState({});
+  const [splitType, setSplitType] = useState("equal"); // "equal" or "unequal"
+  const [splitAmounts, setSplitAmounts] = useState({});
   const [settleLater, setSettleLater] = useState(false);
   const [showSettleLaterOnly, setShowSettleLaterOnly] = useState(false);
   const [newMemberName, setNewMemberName] = useState("");
@@ -59,6 +61,8 @@ export default function Expenses({ isSection = false }) {
   const [filterPayer, setFilterPayer] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
   const [deleteAdvanceTargetId, setDeleteAdvanceTargetId] = useState(null);
+
+  const [breakdownType, setBreakdownType] = useState("paid"); // "paid" or "share"
 
   const [showMemberManager, setShowMemberManager] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
@@ -324,9 +328,7 @@ export default function Expenses({ isSection = false }) {
       const match = expenseCategories.find((c) => c.toLowerCase() === cat.toLowerCase());
       const categoryName = match || (cat.charAt(0).toUpperCase() + cat.slice(1));
       setCategory(categoryName);
-      setAmount("");
-      setNotes("");
-      setPaidAmounts({});
+      // Preserve existing amount, notes, and paid amounts instead of resetting them
     }
   };
 
@@ -387,6 +389,18 @@ export default function Expenses({ isSection = false }) {
       });
     }
 
+    const formattedSplitAmounts = {};
+    if (splitType === "unequal") {
+      const sum = splitWith.reduce((total, m) => total + Number(splitAmounts[m] || 0), 0);
+      if (Math.abs(sum - Number(amount)) > 0.05) {
+        alert(`The sum of individual shares (₹${sum}) does not equal the total amount (₹${amount}). Please verify the amounts.`);
+        return;
+      }
+      splitWith.forEach((m) => {
+        formattedSplitAmounts[m] = Number(splitAmounts[m] || 0);
+      });
+    }
+
     if (editingId) {
       // Update existing expense
       const formattedPaidAmounts2 = {};
@@ -400,6 +414,8 @@ export default function Expenses({ isSection = false }) {
         paidBy,
         splitWith,
         paidAmounts: paidBy === "Share" ? formattedPaidAmounts2 : null,
+        splitType,
+        splitAmounts: splitType === "unequal" ? formattedSplitAmounts : null,
         settleLater,
       });
       setEditingId(null);
@@ -412,6 +428,8 @@ export default function Expenses({ isSection = false }) {
         paidBy,
         splitWith,
         paidAmounts: paidBy === "Share" ? formattedPaidAmounts : null,
+        splitType,
+        splitAmounts: splitType === "unequal" ? formattedSplitAmounts : null,
         settleLater,
       });
     }
@@ -422,6 +440,8 @@ export default function Expenses({ isSection = false }) {
     setCategory("Transport");
     setSplitWith(members);
     setPaidAmounts({});
+    setSplitType("equal");
+    setSplitAmounts({});
     setPaidBy(members[0] || "Yashpal");
     setSettleLater(false);
   };
@@ -435,6 +455,8 @@ export default function Expenses({ isSection = false }) {
     setPaidBy(exp.paidBy);
     setSplitWith(exp.splitWith || members);
     setPaidAmounts(exp.paidAmounts || {});
+    setSplitType(exp.splitType || "equal");
+    setSplitAmounts(exp.splitAmounts || {});
     setSettleLater(exp.settleLater || false);
     // auto-select the matching preset key if possible
     setSelectedPreset(`custom_${exp.category.toLowerCase()}`);
@@ -451,6 +473,8 @@ export default function Expenses({ isSection = false }) {
     setPaidBy(members[0]);
     setSplitWith(members);
     setPaidAmounts({});
+    setSplitType("equal");
+    setSplitAmounts({});
     setSettleLater(false);
   };
 
@@ -528,10 +552,18 @@ export default function Expenses({ isSection = false }) {
       // Debit sharers — only count current members to avoid phantom entries from old expenses
       const activeSharers = sharers.filter((m) => members.includes(m));
       if (activeSharers.length === 0) return;
-      const sharePerPerson = exp.amount / sharers.length; // keep original per-person share
-      activeSharers.forEach((m) => {
-        netBalances[m] = (netBalances[m] || 0) - sharePerPerson;
-      });
+      
+      if (exp.splitType === "unequal" && exp.splitAmounts) {
+        activeSharers.forEach((m) => {
+          const personShare = Number(exp.splitAmounts[m] || 0);
+          netBalances[m] = (netBalances[m] || 0) - personShare;
+        });
+      } else {
+        const sharePerPerson = exp.amount / sharers.length; // keep original per-person share
+        activeSharers.forEach((m) => {
+          netBalances[m] = (netBalances[m] || 0) - sharePerPerson;
+        });
+      }
     });
 
     // Factor in cash advances: giver gets credit, receiver gets debit
@@ -561,6 +593,61 @@ export default function Expenses({ isSection = false }) {
 
     return { netBalances, settlements };
   }, [expenses, members, advances]);
+
+  const personWiseCategoryExpenses = useMemo(() => {
+    const breakdown = {};
+    members.forEach((m) => {
+      breakdown[m] = {
+        paid: { total: 0 },
+        share: { total: 0 }
+      };
+      Object.keys(categoryColors).forEach((cat) => {
+        breakdown[m].paid[cat] = 0;
+        breakdown[m].share[cat] = 0;
+      });
+    });
+
+    expenses.forEach((exp) => {
+      if (exp.settleLater) return;
+      const payer = exp.paidBy || members[0];
+      const sharers = exp.splitWith || members;
+      const cat = exp.category || "Other";
+      const amt = Number(exp.amount) || 0;
+
+      // 1. Paid breakdown
+      if (payer === "Share" && exp.paidAmounts) {
+        Object.entries(exp.paidAmounts).forEach(([m, pAmt]) => {
+          if (members.includes(m)) {
+            breakdown[m].paid[cat] = (breakdown[m].paid[cat] || 0) + Number(pAmt);
+            breakdown[m].paid.total += Number(pAmt);
+          }
+        });
+      } else if (members.includes(payer)) {
+        breakdown[payer].paid[cat] = (breakdown[payer].paid[cat] || 0) + amt;
+        breakdown[payer].paid.total += amt;
+      }
+
+      // 2. Share breakdown
+      const activeSharers = sharers.filter((m) => members.includes(m));
+      if (activeSharers.length > 0) {
+        if (exp.splitType === "unequal" && exp.splitAmounts) {
+          activeSharers.forEach((m) => {
+            const personShare = Number(exp.splitAmounts[m] || 0);
+            breakdown[m].share[cat] = (breakdown[m].share[cat] || 0) + personShare;
+            breakdown[m].share.total += personShare;
+          });
+        } else {
+          const sharePerPerson = amt / sharers.length;
+          activeSharers.forEach((m) => {
+            breakdown[m].share[cat] = (breakdown[m].share[cat] || 0) + sharePerPerson;
+            breakdown[m].share.total += sharePerPerson;
+          });
+        }
+      }
+    });
+
+    return breakdown;
+  }, [expenses, members]);
 
   const categoryBreakdown = useMemo(() => {
     const totals = {};
@@ -747,9 +834,42 @@ export default function Expenses({ isSection = false }) {
             style={{ width: percentage + "%" }}
           />
         </div>
-        <div className="flex justify-between items-center text-xs font-bold text-slate-500">
+        <div className="flex justify-between items-center text-xs font-bold text-slate-500 mb-4">
           <span>Spent: ₹{totalSpent.toLocaleString("en-IN")} <span className="text-[10px] font-medium text-slate-400">{"(Avg ₹" + avgSpentPerPerson.toLocaleString("en-IN") + "/p)"}</span></span>
           <span>Budget limit: ₹{groupBudgetLimit.toLocaleString("en-IN")} <span className="text-[10px] font-medium text-slate-400">{"(₹" + limitPerPerson.toLocaleString("en-IN") + "/p)"}</span></span>
+        </div>
+
+        {/* Member-wise budget usage bars */}
+        <div className="border-t border-black/5 pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {members.map((m) => {
+            const memberLimit = limitPerPerson;
+            const memberShare = personWiseCategoryExpenses[m]?.share?.total || 0;
+            const mPct = memberLimit > 0 ? Math.min(Math.round((memberShare / memberLimit) * 100), 100) : 0;
+            const isOver = memberShare > memberLimit;
+            
+            return (
+              <div key={m} className="space-y-1 bg-black/[0.01] border border-black/5 p-3 rounded-2xl">
+                <div className="flex justify-between items-center text-xs font-bold">
+                  <span className="text-slate-700">{m}</span>
+                  <span className="text-slate-800">
+                    ₹{Math.round(memberShare).toLocaleString("en-IN")} / ₹{memberLimit.toLocaleString("en-IN")}
+                  </span>
+                </div>
+                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-1">
+                  <div 
+                    className={`h-full rounded-full transition-all duration-500 ${isOver ? "bg-red-500" : "bg-emerald-500"}`}
+                    style={{ width: `${mPct}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[9px] font-black font-mono uppercase tracking-wider">
+                  <span className="text-slate-400">{mPct}% consumed</span>
+                  <span className={isOver ? "text-red-500" : "text-emerald-600"}>
+                    {isOver ? `Over by ₹${Math.round(memberShare - memberLimit).toLocaleString("en-IN")}` : `Saved ₹${Math.round(memberLimit - memberShare).toLocaleString("en-IN")}`}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -869,68 +989,74 @@ export default function Expenses({ isSection = false }) {
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
                     <label className={labelCls}>Paid By</label>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setShowMemberManager(!showMemberManager)}
-                        className="text-[11px] font-bold text-slate-500 hover:text-black cursor-pointer px-2 py-0.5 border border-black/10 rounded-lg bg-white/50"
-                      >
-                        {showMemberManager ? "Done" : "Manage"}
-                      </button>
-                      <input
-                        type="text"
-                        placeholder="New"
-                        value={newMemberName}
-                        onChange={(e) => setNewMemberName(e.target.value)}
-                        className="px-2 py-0.5 text-[11px] rounded-lg border border-black/10 focus:outline-none w-16 bg-white/50"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAddMember}
-                        className="bg-black text-white text-[10px] font-bold px-2 py-0.5 rounded-lg hover:bg-black/80 cursor-pointer"
-                      >
-                        +
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowMemberManager(!showMemberManager)}
+                      className="text-[10px] font-black font-mono uppercase tracking-wider text-slate-400 hover:text-black transition-colors flex items-center gap-1 border border-black/10 rounded-lg px-2 py-1 bg-white/50 cursor-pointer"
+                    >
+                      <Settings size={10} className="shrink-0" /> {showMemberManager ? "Done" : "Manage"}
+                    </button>
                   </div>
                   {showMemberManager && (
-                    <div className="mb-3 p-3 bg-slate-50 rounded-2xl border border-black/5 space-y-2 max-h-40 overflow-y-auto">
-                      {members.map((m) => (
-                        <div key={m} className="flex items-center justify-between gap-2 bg-white px-3 py-1.5 rounded-xl border border-black/5">
-                          {editingMember === m ? (
-                            <input
-                              type="text"
-                              value={editNameValue}
-                              onChange={(e) => setEditNameValue(e.target.value)}
-                              onBlur={() => handleRenameMember(m, editNameValue)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") handleRenameMember(m, editNameValue);
-                              }}
-                              autoFocus
-                              className="text-xs font-bold bg-transparent border-b border-black/20 focus:outline-none w-full"
-                            />
-                          ) : (
-                            <span
-                              onClick={() => { setEditingMember(m); setEditNameValue(m); }}
-                              className="text-xs font-bold cursor-pointer hover:underline text-slate-700"
-                            >
-                              {m}
-                            </span>
-                          )}
-                          <div className="flex items-center gap-1">
+                    <div className="mb-3.5 p-3.5 bg-slate-50 rounded-2xl border border-black/5 space-y-3 max-h-56 overflow-y-auto">
+                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Manage Trip Members</p>
+                      
+                      {/* Add new member form */}
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="New member..."
+                          value={newMemberName}
+                          onChange={(e) => setNewMemberName(e.target.value)}
+                          className="flex-grow px-3 py-1.5 text-xs font-semibold rounded-xl border border-black/10 focus:outline-none focus:ring-1 focus:ring-black bg-white"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddMember}
+                          className="bg-black text-white text-xs font-black px-4 py-1.5 rounded-xl hover:bg-black/80 transition-colors cursor-pointer"
+                        >
+                          Add
+                        </button>
+                      </div>
+
+                      {/* Members List */}
+                      <div className="space-y-1.5">
+                        {members.map((m) => (
+                          <div key={m} className="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-black/5">
+                            {editingMember === m ? (
+                              <input
+                                type="text"
+                                value={editNameValue}
+                                onChange={(e) => setEditNameValue(e.target.value)}
+                                onBlur={() => handleRenameMember(m, editNameValue)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") handleRenameMember(m, editNameValue);
+                                }}
+                                autoFocus
+                                className="text-xs font-extrabold bg-transparent border-b border-black/25 focus:outline-none w-full py-0.5"
+                              />
+                            ) : (
+                              <span
+                                onClick={() => { setEditingMember(m); setEditNameValue(m); }}
+                                className="text-xs font-extrabold cursor-pointer hover:underline text-slate-700"
+                              >
+                                {m}
+                              </span>
+                            )}
                             <button
                               type="button"
                               disabled={members.length <= 1}
                               onClick={() => handleDeleteMember(m)}
-                              className="p-1 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 disabled:opacity-30"
+                              className="p-1 hover:bg-red-50 rounded-lg text-slate-400 hover:text-red-600 disabled:opacity-30 transition-colors"
                             >
-                              <Trash2 size={13} />
+                              <Trash2 size={12} />
                             </button>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
+
                   <div className="flex flex-wrap gap-2 py-1.5">
                     {members.map((m) => (
                       <button
@@ -1015,7 +1141,7 @@ export default function Expenses({ isSection = false }) {
 
               <div>
                 <label className={labelCls}>Split With</label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mb-3">
                   {members.map((m) => (
                     <label key={m} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold cursor-pointer transition-all ${splitWith.includes(m) ? "bg-black text-white border-black" : "bg-white border-black/10 text-slate-600 hover:border-black/25"}`}>
                       <input type="checkbox" checked={splitWith.includes(m)} onChange={() => handleCheckboxChange(m)} className="sr-only" />
@@ -1023,6 +1149,98 @@ export default function Expenses({ isSection = false }) {
                     </label>
                   ))}
                 </div>
+
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400">Split Method</label>
+                  <div className="flex gap-1 bg-black/5 p-0.5 rounded-xl text-[9px] font-black uppercase tracking-wider shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSplitType("equal");
+                        setSplitAmounts({});
+                      }}
+                      className={`px-2 py-1 rounded-lg transition-all cursor-pointer ${splitType === "equal" ? "bg-white text-black shadow-xs font-black" : "text-slate-500 hover:text-black font-bold"}`}
+                    >
+                      Equally
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSplitType("unequal");
+                        const currentAmt = Number(amount) || 0;
+                        const shareAmt = splitWith.length ? Math.round((currentAmt / splitWith.length) * 100) / 100 : 0;
+                        const newSplitAmounts = {};
+                        splitWith.forEach((m) => { newSplitAmounts[m] = currentAmt ? shareAmt : ""; });
+                        setSplitAmounts(newSplitAmounts);
+                      }}
+                      className={`px-2 py-1 rounded-lg transition-all cursor-pointer ${splitType === "unequal" ? "bg-white text-black shadow-xs font-black" : "text-slate-500 hover:text-black font-bold"}`}
+                    >
+                      Unequally
+                    </button>
+                  </div>
+                </div>
+
+                 {splitType === "unequal" && (
+                  <>
+                    <div className="grid grid-cols-2 gap-2 mt-2 max-h-36 overflow-y-auto p-2 bg-slate-50 border border-black/5 rounded-2xl">
+                      {splitWith.map((m) => (
+                        <div key={m}>
+                          <label className="text-[9px] font-bold text-slate-400 block mb-1">{m}'s Share (₹)</label>
+                          <input
+                            type="number"
+                            placeholder="0.00"
+                            value={splitAmounts[m] || ""}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const amt = Number(amount) || 0;
+                              setSplitAmounts((prev) => {
+                                const next = { ...prev, [m]: val };
+                                
+                                // Auto calculate for other members
+                                const otherMembers = splitWith.filter(name => name !== m);
+                                if (otherMembers.length === 1) {
+                                  const other = otherMembers[0];
+                                  const remainder = amt - Number(val || 0);
+                                  next[other] = remainder > 0 ? String(Math.round(remainder * 100) / 100) : "0";
+                                } else {
+                                  // If there are multiple other members, find if there's exactly one that is empty
+                                  const emptyOthers = otherMembers.filter(name => !next[name] || Number(next[name]) === 0);
+                                  if (emptyOthers.length === 1) {
+                                    const emptyName = emptyOthers[0];
+                                    const filledSum = splitWith
+                                      .filter(name => name !== emptyName)
+                                      .reduce((sum, name) => sum + Number(next[name] || 0), 0);
+                                    const remainder = amt - filledSum;
+                                    next[emptyName] = remainder > 0 ? String(Math.round(remainder * 100) / 100) : "0";
+                                  }
+                                }
+                                return next;
+                              });
+                            }}
+                            required
+                            className={inputCls}
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Unallocated balance indicator */}
+                    {(() => {
+                      const totalSum = splitWith.reduce((sum, name) => sum + Number(splitAmounts[name] || 0), 0);
+                      const diff = (Number(amount) || 0) - totalSum;
+                      const absDiff = Math.abs(diff);
+                      if (absDiff < 0.05) return null;
+                      return (
+                        <div className="flex justify-between items-center text-[10px] font-black font-mono uppercase tracking-wider mt-2 px-1">
+                          <span className="text-slate-400">Balance Remainder</span>
+                          <span className={diff > 0 ? "text-amber-600 animate-pulse" : "text-red-500 animate-pulse"}>
+                            {diff > 0 ? `Unallocated: ₹${absDiff.toFixed(2)}` : `Overallocated: ₹${absDiff.toFixed(2)}`}
+                          </span>
+                        </div>
+                      );
+                    })()}
+                  </>
+                )}
               </div>
 
               <div className="flex items-center gap-2.5 bg-slate-50/50 p-3 rounded-2xl border border-black/5">
@@ -1132,12 +1350,11 @@ export default function Expenses({ isSection = false }) {
 
     const budgetCategories = budget?.categories || [];
     
-    return budgetCategories.map((bc) => {
-      const expCategoryName = idToNameMap[bc.id] || bc.label;
+    const results = budgetCategories.map((bc) => {
       const spent = expenses
         .filter((e) => {
-          return (e.category || "").toLowerCase() === bc.id.toLowerCase() ||
-                 (e.category || "").toLowerCase() === (idToNameMap[bc.id] || "").toLowerCase();
+          return !e.settleLater && ((e.category || "").toLowerCase() === bc.id.toLowerCase() ||
+                 (e.category || "").toLowerCase() === (idToNameMap[bc.id] || "").toLowerCase());
         })
         .reduce((sum, e) => sum + Number(e.amount), 0);
 
@@ -1154,6 +1371,39 @@ export default function Expenses({ isSection = false }) {
         color: bc.color || "#3b82f6"
       };
     });
+
+    // Append unplanned categories with active spending
+    const plannedIds = new Set(budgetCategories.map(bc => bc.id.toLowerCase()));
+    const idToLabelMap = {
+      transport: "Transportation & Rental",
+      accommodation: "Accommodation",
+      food: "Food & Meals",
+      emergency: "Permits & Buffer",
+      rafting: "Rafting / Activities",
+      shopping: "Shopping",
+      other: "Other"
+    };
+
+    Object.entries(idToNameMap).forEach(([id, name]) => {
+      if (!plannedIds.has(id.toLowerCase())) {
+        const spent = expenses
+          .filter((e) => !e.settleLater && (e.category || "").toLowerCase() === name.toLowerCase())
+          .reduce((sum, e) => sum + Number(e.amount), 0);
+
+        if (spent > 0) {
+          results.push({
+            id: id,
+            label: idToLabelMap[id] || name,
+            spent,
+            limit: 0,
+            percentage: 0,
+            color: (categoryColors[name] || categoryColors.Other).hex
+          });
+        }
+      }
+    });
+
+    return results;
   };
 
   const renderSegmentedCategoryBudgets = () => {
@@ -1195,6 +1445,29 @@ export default function Expenses({ isSection = false }) {
                     className={`h-full rounded-full transition-all duration-500 ${barColor}`}
                     style={{ width: `${cb.percentage}%` }}
                   />
+                </div>
+                
+                {/* Member-wise share breakdown */}
+                <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-1 text-[9px] font-bold text-slate-500">
+                  {members.map((m) => {
+                    const idToNameMap = {
+                      transport: "Transport",
+                      accommodation: "Accommodation",
+                      food: "Food",
+                      emergency: "Emergency",
+                      rafting: "Rafting",
+                      shopping: "Shopping",
+                      other: "Other"
+                    };
+                    const catName = idToNameMap[cb.id] || cb.label;
+                    const memberShare = personWiseCategoryExpenses[m]?.share?.[catName] || 0;
+                    if (memberShare <= 0) return null;
+                    return (
+                      <span key={m} className="bg-black/[0.02] border border-black/5 px-1.5 py-0.5 rounded-md">
+                        {m}: <span className="text-slate-800 font-extrabold">₹{Math.round(memberShare).toLocaleString("en-IN")}</span>
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -1277,6 +1550,73 @@ export default function Expenses({ isSection = false }) {
           </div>
         </>
       )}
+    </div>
+  );
+
+  const renderPersonWiseCategoryBreakdown = () => (
+    <div className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[28px] p-7 shadow-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-[10px] font-black font-mono uppercase tracking-widest text-slate-400 mb-0.5">Person-wise Expenses</h2>
+          <p className="text-xs font-bold text-slate-800">Category-wise breakdown</p>
+        </div>
+        
+        {/* Toggle breakdown type */}
+        <div className="flex gap-1 bg-black/5 p-0.5 rounded-xl text-[9px] font-black uppercase tracking-wider shrink-0">
+          <button
+            type="button"
+            onClick={() => setBreakdownType("paid")}
+            className={`px-2 py-1 rounded-lg transition-all cursor-pointer ${breakdownType === "paid" ? "bg-white text-black shadow-xs font-black" : "text-slate-500 hover:text-black font-bold"}`}
+          >
+            Paid
+          </button>
+          <button
+            type="button"
+            onClick={() => setBreakdownType("share")}
+            className={`px-2 py-1 rounded-lg transition-all cursor-pointer ${breakdownType === "share" ? "bg-white text-black shadow-xs font-black" : "text-slate-500 hover:text-black font-bold"}`}
+          >
+            Share
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {members.map((m) => {
+          const data = personWiseCategoryExpenses[m] || { paid: { total: 0 }, share: { total: 0 } };
+          const selectedData = breakdownType === "paid" ? data.paid : data.share;
+          
+          return (
+            <div key={m} className="p-3.5 bg-black/[0.02] border border-black/5 rounded-2xl">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-extrabold text-xs text-slate-800">{m}</span>
+                <span className="font-black text-xs text-black">
+                  {formatCurrency(Math.round(selectedData.total))}
+                </span>
+              </div>
+
+              <div className="space-y-1.5 border-t border-black/5 pt-2">
+                {Object.entries(selectedData)
+                  .filter(([cat, val]) => cat !== "total" && val > 0)
+                  .map(([cat, val]) => {
+                    const colors = categoryColors[cat] || categoryColors.Other;
+                    return (
+                      <div key={cat} className="flex justify-between items-center text-[10px] font-bold">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`w-1.5 h-1.5 rounded-full ${colors.dot}`} />
+                          <span className="text-slate-500">{cat}</span>
+                        </div>
+                        <span className="text-slate-700 font-mono">{formatCurrency(Math.round(val))}</span>
+                      </div>
+                    );
+                  })}
+                {Object.entries(selectedData).filter(([cat, val]) => cat !== "total" && val > 0).length === 0 && (
+                  <p className="text-[10px] text-slate-400 italic">No category expenses recorded</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 
@@ -1517,6 +1857,8 @@ export default function Expenses({ isSection = false }) {
                   ))}
                 </div>
               </div>
+
+              {renderPersonWiseCategoryBreakdown()}
             </div>
           </div>
         </Container>
@@ -1850,6 +2192,8 @@ export default function Expenses({ isSection = false }) {
               ))}
             </div>
           </div>
+
+          {renderPersonWiseCategoryBreakdown()}
         </div>
       </div>
       </Container>
