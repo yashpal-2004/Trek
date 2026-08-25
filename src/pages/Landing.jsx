@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -1534,6 +1534,9 @@ export default function Landing() {
           </div>
         </div>
 
+        {/* Dynamic Map showing completed places */}
+        <CompletedTripsMap completedPlans={completedPlans} archivedTrips={archivedTrips} />
+
         {/* Filter Toolbar: Category Filters + Status Filters */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 border-b border-black/10 pb-6">
           {/* Category Selector Tabs */}
@@ -2557,4 +2560,274 @@ const TripExpenseBreakdown = ({ planId }) => {
     </div>
   );
 };
+
+export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
+  const mapRef = useRef(null);
+  const leafletMapRef = useRef(null);
+  const markersRef = useRef([]);
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapFilter, setMapFilter] = useState("visited");
+
+  const places = [
+    // Completed
+    { id: "amritsar", name: "Amritsar Trip", city: "Amritsar, Punjab", coords: [31.6340, 74.8723], dates: "7 Nov – 9 Nov 2025", spent: "₹1,570.05", staticCompleted: true, state: "Punjab" },
+    { id: "hisar", name: "Hisar Trip", city: "Hisar, Haryana", coords: [29.1492, 75.7217], dates: "31 Oct – 3 Nov 2025", spent: "₹5,164", staticCompleted: true, state: "Haryana" },
+    { id: "mussoorie-dehradun", name: "Mussoorie, Landour & Tehri", city: "Mussoorie, Uttarakhand", coords: [30.4598, 78.0796], dates: "23 Jan – 26 Jan 2026", spent: "₹8,637", staticCompleted: true, state: "Uttarakhand" },
+    { id: "manali-sissu-circuit", name: "Manali, Kasol & Sissu Circuit", city: "Manali, Himachal Pradesh", coords: [32.2396, 77.1887], dates: "26 Nov – 1 Dec 2025", spent: "₹4,192.50", staticCompleted: true, state: "Himachal Pradesh" },
+    { id: "jaipur-heritage", name: "Jaipur Heritage Trip", city: "Jaipur, Rajasthan", coords: [26.9124, 75.7873], dates: "9 Jan – 12 Jan 2026", spent: "₹5,631.50", staticCompleted: true, state: "Rajasthan" },
+    { id: "vrindavan-family", name: "Vrindavan Pilgrimage", city: "Vrindavan, Uttar Pradesh", coords: [27.5650, 77.7008], dates: "10 Jul – 11 Jul 2026", spent: "₹0", staticCompleted: true, state: "Uttar Pradesh" },
+    { id: "rudranath", name: "Rudranath & Tungnath Trek", city: "Rudranath, Uttarakhand", coords: [30.5284, 79.3175], dates: "3 Jul – 8 Jul 2026", spent: "₹6,352", planIds: ["rudranath-plan1", "rudranath-plan2"], state: "Uttarakhand" },
+    { id: "spiti", name: "Spiti Valley Expedition", city: "Kaza, Himachal Pradesh", coords: [32.2276, 78.0710], dates: "20 Aug – 25 Aug 2026", spent: "₹9,964", planIds: ["spiti-plan1", "spiti-plan2", "spiti-plan3"], state: "Himachal Pradesh" },
+
+    // Upcoming / Potential Archived
+    { id: "hemkund", name: "Valley of Flowers & Hemkund Sahib", city: "Hemkund, Uttarakhand", coords: [30.6925, 79.5897], dates: "6 Days", budget: "₹6.5K", planIds: ["hemkund"], state: "Uttarakhand" },
+    { id: "annapurna", name: "Annapurna Base Camp Expedition", city: "Nepal Himalayas", coords: [28.5300, 83.8780], dates: "10 Days", budget: "₹15.2K", planIds: ["annapurna-plan1"], state: "Nepal" },
+    { id: "ladakh", name: "Ladakh Self-Scooty Circuit", city: "Leh, Ladakh", coords: [34.1526, 77.5771], dates: "8-12 Days", budget: "₹16.5K", planIds: ["ladakh-plan1", "ladakh-plan2", "ladakh-plan3", "ladakh-plan4"], state: "Ladakh" },
+    { id: "sikkim", name: "Sikkim Expedition", city: "Gangtok, Sikkim", coords: [27.3314, 88.6138], dates: "7 Days", budget: "₹6.9K", planIds: ["sikkim-std"], state: "Sikkim" },
+    { id: "madhyamaheshwar", name: "Madhyamaheshwar Trek", city: "Ukhimath, Uttarakhand", coords: [30.6280, 79.2190], dates: "5–8 Days", budget: "₹4.8K", planIds: ["madhyamaheshwar-plan1", "madhyamaheshwar-plan2"], state: "Uttarakhand" },
+    { id: "kedarkantha", name: "Kedarkantha Peak Summit", city: "Sankri, Uttarakhand", coords: [31.0227, 78.1812], dates: "5 Days (Jan 2027)", budget: "₹5.6K", planIds: ["kedarkantha"], state: "Uttarakhand" },
+    { id: "bir-billing", name: "Bir Billing Paragliding", city: "Bir Billing, Himachal Pradesh", coords: [32.0427, 76.7225], dates: "4 Days", budget: "₹4.5K", planIds: ["bir-billing-plan1", "bir-billing-plan2", "bir-billing-plan3", "bir-billing-plan4"], state: "Himachal Pradesh" },
+    { id: "jibhi", name: "Jibhi & Tirthan Valley", city: "Jibhi, Himachal Pradesh", coords: [31.6371, 77.3463], dates: "4 Days", budget: "₹3.7K", planIds: ["jibhi-plan1", "jibhi-plan2"], state: "Himachal Pradesh" },
+    { id: "ujjain", name: "Ujjain Mahakal Darshan", city: "Ujjain, Madhya Pradesh", coords: [23.1760, 75.7885], dates: "3 Days", budget: "₹3.9K", planIds: ["ujjain"], state: "Madhya Pradesh" },
+    { id: "auli", name: "Auli Snow & Skiing", city: "Joshimath, Uttarakhand", coords: [30.5284, 79.5694], dates: "5 Days", budget: "₹5.3K", planIds: ["auli"], state: "Uttarakhand" },
+    { id: "kashmir", name: "Kashmir Valley Wanderer", city: "Srinagar, Kashmir", coords: [34.0837, 74.7973], dates: "6 Days", budget: "₹6.4K", planIds: ["kashmir-plan1", "kashmir-plan2"], state: "Jammu & Kashmir" },
+    { id: "shrikhand-mahadev", name: "Shrikhand Dev Trek", city: "Rampur, Himachal Pradesh", coords: [31.3916, 77.6433], dates: "6 Days", budget: "₹5.8K", planIds: ["shrikhand-mahadev-plan1", "shrikhand-mahadev-plan2"], state: "Himachal Pradesh" },
+    { id: "hampta-pass", name: "Hampta Pass Trek", city: "Manali, Himachal Pradesh", coords: [32.2274, 77.3486], dates: "5 Days", budget: "₹5.5K", planIds: ["hampta-plan1", "hampta-plan2"], state: "Himachal Pradesh" },
+
+    // Visited Spots / Checkpoints
+    { id: "atal-tunnel", name: "Atal Tunnel", city: "Lahaul & Spiti, HP", coords: [32.3638, 77.0802], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
+    { id: "dehradun", name: "Dehradun", city: "Uttarakhand", coords: [30.3165, 78.0322], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "delhi", name: "Delhi", city: "National Capital Region", coords: [28.6139, 77.2090], dates: "Visited Checkpoint", isSpot: true, state: "Delhi" },
+    { id: "elante-mall", name: "Elante Mall", city: "Chandigarh", coords: [30.7061, 76.8013], dates: "Visited Checkpoint", isSpot: true, state: "Chandigarh" },
+    { id: "golden-temple", name: "Golden Temple Amritsar", city: "Amritsar, Punjab", coords: [31.6200, 74.8765], dates: "Visited Checkpoint", isSpot: true, state: "Punjab" },
+    { id: "haridwar", name: "Haridwar", city: "Uttarakhand", coords: [29.9457, 78.1642], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "hawa-mahal", name: "Hawa Mahal", city: "Jaipur, Rajasthan", coords: [26.9239, 75.8267], dates: "Visited Checkpoint", isSpot: true, state: "Rajasthan" },
+    { id: "kalpana-chawla", name: "Kalpana Chawla Planetarium & Museum", city: "Kurukshetra, Haryana", coords: [29.9678, 76.8202], dates: "Visited Checkpoint", isSpot: true, state: "Haryana" },
+    { id: "kasol", name: "Kasol", city: "Parvati Valley, HP", coords: [32.0098, 77.3150], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
+    { id: "kullu", name: "Kullu", city: "Himachal Pradesh", coords: [31.9579, 77.1095], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
+    { id: "lahaul-valley", name: "Lahaul Valley", city: "Himachal Pradesh", coords: [32.5534, 77.2281], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
+    { id: "landour", name: "Landour", city: "Mussoorie, Uttarakhand", coords: [30.4560, 78.0930], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "nandgaon", name: "Nandgaon", city: "Uttar Pradesh", coords: [27.7126, 77.3879], dates: "Visited Checkpoint", isSpot: true, state: "Uttar Pradesh" },
+    { id: "rishikesh-laxman-jhula", name: "Rishikesh Laxman Jhula", city: "Uttarakhand", coords: [30.1299, 78.3297], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "rock-garden", name: "Rock Garden Chandigarh", city: "Chandigarh", coords: [30.7525, 76.8012], dates: "Visited Checkpoint", isSpot: true, state: "Chandigarh" },
+    { id: "sagar-village", name: "Sagar Village", city: "Uttarakhand", coords: [30.5185, 79.2825], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "salasar-balaji", name: "Salasar Balaji", city: "Rajasthan", coords: [27.7311, 74.7214], dates: "Visited Checkpoint", isSpot: true, state: "Rajasthan" },
+    { id: "sethan-valley", name: "Sethan Valley", city: "Manali, HP", coords: [32.2220, 77.2340], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
+    { id: "shimla-mall-road", name: "Shimla Mall Road", city: "Himachal Pradesh", coords: [31.1042, 77.1738], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
+    { id: "sujangarh", name: "Sujangarh", city: "Rajasthan", coords: [27.7001, 74.4716], dates: "Visited Checkpoint", isSpot: true, state: "Rajasthan" },
+    { id: "ujjain-mahakal", name: "Ujjain Mahakaleshwar Mandir", city: "Madhya Pradesh", coords: [23.1827, 75.7578], dates: "Visited Checkpoint", isSpot: true, state: "Madhya Pradesh" },
+    { id: "vaishno-devi", name: "Vaishno Devi Temple", city: "Katra, J&K", coords: [33.0308, 74.9490], dates: "Visited Checkpoint", isSpot: true, state: "Jammu & Kashmir" },
+    { id: "zakir-hussain", name: "Zakir Hussain Rose Garden", city: "Chandigarh", coords: [30.7460, 76.7825], dates: "Visited Checkpoint", isSpot: true, state: "Chandigarh" },
+    { id: "chandrashila-summit", name: "Chandrashila Summit Trek", city: "Chopta, Uttarakhand", coords: [30.5015, 79.2272], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "rudranath-spot", name: "Rudranath", city: "Uttarakhand", coords: [30.5284, 79.3175], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+    { id: "tungnath-chopta", name: "Tungnath Chopta", city: "Uttarakhand", coords: [30.4883, 79.2155], dates: "Visited Checkpoint", isSpot: true, state: "Uttarakhand" },
+  ];
+
+  const getPlaceStatus = (p) => {
+    if (p.isSpot) return "spot";
+    if (archivedTrips.includes(p.id)) return "archived";
+    if (p.staticCompleted) return "completed";
+    if (p.planIds && p.planIds.some(id => completedPlans.includes(id))) return "completed";
+    return "upcoming";
+  };
+
+  const visitedStates = Array.from(new Set(
+    places
+      .filter(p => {
+        const status = getPlaceStatus(p);
+        return (status === "completed" || status === "spot") && p.state && p.state !== "Nepal";
+      })
+      .map(p => p.state)
+  ));
+  const statesCount = visitedStates.length;
+
+  useEffect(() => {
+    if (leafletMapRef.current) return;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    document.head.appendChild(link);
+
+    import("leaflet").then((L) => {
+      const Leaflet = L.default || L;
+
+      const map = Leaflet.map(mapRef.current, {
+        center: [29.8, 77.0],
+        zoom: 6,
+        zoomControl: false,
+      });
+
+      Leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+      Leaflet.control.zoom({ position: "bottomright" }).addTo(map);
+
+      leafletMapRef.current = map;
+      setMapLoaded(true);
+    });
+  }, []);
+
+  // Update markers dynamically when map loads or filters change
+  useEffect(() => {
+    if (!leafletMapRef.current || !mapLoaded) return;
+
+    // Clear old markers
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
+
+    const L = window.L;
+
+    const filteredPlaces = places.filter(p => {
+      const status = getPlaceStatus(p);
+      if (mapFilter === "visited") return status === "completed" || status === "spot";
+      if (mapFilter === "all") return true;
+      return status === mapFilter;
+    });
+
+    filteredPlaces.forEach((p) => {
+      const status = getPlaceStatus(p);
+
+      let pingColor = "bg-sky-500/35";
+      let pinBg = "bg-sky-600";
+      let pinBorderColor = "rgba(14, 165, 233, 0.4)";
+      let pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 4.9-4.9 2-4.9-2 2-4.9"/></svg>';
+
+      if (status === "completed") {
+        pingColor = "bg-emerald-500/35";
+        pinBg = "bg-emerald-600";
+        pinBorderColor = "rgba(16, 185, 129, 0.4)";
+        pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+      } else if (status === "archived") {
+        pingColor = "bg-slate-400/30";
+        pinBg = "bg-slate-500";
+        pinBorderColor = "rgba(100, 116, 139, 0.4)";
+        pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>';
+      } else if (status === "spot") {
+        pingColor = "bg-amber-500/35";
+        pinBg = "bg-amber-600";
+        pinBorderColor = "rgba(245, 158, 11, 0.4)";
+        pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>';
+      }
+
+      const pinHtml = `
+        <div class="relative flex items-center justify-center">
+          <span class="absolute w-6 h-6 rounded-full ${pingColor} animate-ping"></span>
+          <div class="relative w-7 h-7 rounded-xl ${pinBg} border border-white text-white flex items-center justify-center shadow-lg" style="box-shadow: 0 4px 10px ${pinBorderColor};">
+            ${pinIconSvg}
+          </div>
+        </div>
+      `;
+
+      const customIcon = L.divIcon({
+        html: pinHtml,
+        className: "custom-div-icon",
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      });
+
+      let badgeHtml = "";
+      if (status === "completed") {
+        badgeHtml = `<span style="display: inline-block; font-size: 9px; font-weight: 900; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; padding: 2px 8px; border-radius: 8px; font-family: monospace;">Done (${p.spent})</span>`;
+      } else if (status === "archived") {
+        badgeHtml = `<span style="display: inline-block; font-size: 9px; font-weight: 900; background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; padding: 2px 8px; border-radius: 8px; font-family: monospace;">Archived</span>`;
+      } else if (status === "spot") {
+        badgeHtml = `<span style="display: inline-block; font-size: 9px; font-weight: 900; background: #fffbeb; border: 1px solid #fde68a; color: #b45309; padding: 2px 8px; border-radius: 8px; font-family: monospace;">Visited Spot</span>`;
+      } else {
+        badgeHtml = `<span style="display: inline-block; font-size: 9px; font-weight: 900; background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; padding: 2px 8px; border-radius: 8px; font-family: monospace;">Upcoming (Est: ${p.budget})</span>`;
+      }
+
+      const popupContent = `
+        <div style="font-family: system-ui, sans-serif; padding: 2px;">
+          <p style="margin: 0; font-size: 8px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em;">${p.city}</p>
+          <h4 style="margin: 3px 0 1px 0; font-size: 12px; font-weight: 900; color: #000; text-transform: uppercase; line-height: 1.2;">${p.name}</h4>
+          <p style="margin: 0 0 6px 0; font-size: 10px; font-weight: 500; color: #64748b;">${p.dates}</p>
+          ${badgeHtml}
+        </div>
+      `;
+
+      const marker = L.marker(p.coords, { icon: customIcon })
+        .addTo(leafletMapRef.current)
+        .bindPopup(popupContent, { maxWidth: 220 });
+
+      markersRef.current.push(marker);
+    });
+
+    // Auto-fit to bounds of visible places
+    if (filteredPlaces.length > 0) {
+      const bounds = L.latLngBounds(filteredPlaces.map(p => p.coords));
+      leafletMapRef.current.fitBounds(bounds, { padding: [45, 45] });
+    }
+  }, [completedPlans, archivedTrips, mapLoaded, mapFilter]);
+
+  return (
+    <div className="mb-10">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-4 border-b border-black/5 pb-3">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-700 font-bold">
+            <Compass size={16} />
+          </div>
+          <div>
+            <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+              My Travel Map
+            </h2>
+            <p className="text-xs text-slate-500 font-medium">Completed, upcoming, and archived expeditions across India</p>
+          </div>
+        </div>
+
+        {/* Filters and Legend */}
+        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+          {/* States counter badge */}
+          <div className="flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-[9px] font-mono font-black uppercase shadow-xs">
+            <Compass size={11} className="animate-spin-slow" />
+            <span>{statesCount} States & UTs Visited</span>
+          </div>
+
+          {/* Status Filters */}
+          <div className="flex items-center bg-black/5 p-1 rounded-xl">
+            {["visited", "all", "completed", "upcoming", "archived", "spot"].map((mode) => (
+              <button
+                key={mode}
+                onClick={() => setMapFilter(mode)}
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase font-mono tracking-wider transition-all cursor-pointer ${
+                  mapFilter === mode
+                    ? "bg-white text-black shadow-xs"
+                    : "text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                {mode === "spot" ? "spots" : mode}
+              </button>
+            ))}
+          </div>
+
+          {/* Counts */}
+          <div className="flex flex-wrap items-center gap-3 bg-white/60 border border-black/5 px-3 py-1.5 rounded-xl text-[10px] font-mono font-black uppercase">
+            <div className="flex items-center gap-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 border border-white" />
+              <span className="text-slate-600">Completed ({places.filter(p => getPlaceStatus(p) === "completed").length})</span>
+            </div>
+            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-sky-600 border border-white" />
+              <span className="text-slate-600">Upcoming ({places.filter(p => getPlaceStatus(p) === "upcoming").length})</span>
+            </div>
+            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-slate-500 border border-white" />
+              <span className="text-slate-600">Archived ({places.filter(p => getPlaceStatus(p) === "archived").length})</span>
+            </div>
+            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 border border-white" />
+              <span className="text-slate-600">Spots ({places.filter(p => getPlaceStatus(p) === "spot").length})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative bg-white/70 backdrop-blur-md border border-black/10 rounded-[32px] p-4 shadow-sm overflow-hidden h-[480px] w-full">
+        <div ref={mapRef} className="w-full h-full rounded-[24px] overflow-hidden z-10" />
+      </div>
+    </div>
+  );
+}
 
