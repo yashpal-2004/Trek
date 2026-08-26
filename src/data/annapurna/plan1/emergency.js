@@ -10,6 +10,9 @@ export const emergencyContacts = [
 export const emergencyProtocols = [
   "If experiencing AMS symptoms (headache, dizziness, nausea) above 3,000m at Deurali or MBC, STOP ascending immediately",
   "Descend immediately to Bamboo (2,310m) or Sinuwa if high-altitude symptoms do not subside overnight",
+  "Solo Trekking is officially banned in Annapurna. Hire a licensed local guide in Pokhara to avoid rejection at Birethanti checkpoint.",
+  "Only carry Indian currency in ₹100 denomination or below. INR ₹200 and ₹500 notes are strictly banned in Nepal.",
+  "Original Passport or Voter ID Card are the only valid ID documents. Aadhaar/PAN/DL are not accepted at border or permit offices.",
   "Keep ACAP permit & TIMS card inside waterproof ziplock pouch at all times",
   "Inform teahouse owners of your daily trek destination before starting each morning",
   "Carry chlorine water purification tablets to purify fresh mountain stream water",
