@@ -1,3 +1,5 @@
+import { foodGuide as foodGuideNepal1 } from "./nepal/plan1/food";
+import { foodGuide as foodGuideNepal2 } from "./nepal/plan2/food";
 import { foodGuide as foodGuide1 } from "./rudranath/plan1/food";
 import { foodGuide as foodGuide2 } from "./rudranath/plan2/food";
 import { foodGuide as foodGuideSikkim } from "./sikkim/food";

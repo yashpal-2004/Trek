@@ -20,6 +20,8 @@ import { birBillingAmounts as birBillingAmountsPlan4 } from "../data/bir-billing
 import { jibhiAmounts as jibhiAmountsPlan1 } from "../data/jibhi/plan1/amounts";
 import { jibhiAmounts as jibhiAmountsPlan2 } from "../data/jibhi/plan2/amounts";
 import { ujjainAmounts } from "../data/ujjain/amounts";
+import { nepalAmounts as nepalAmounts1 } from "../data/nepal/plan1/amounts";
+import { nepalAmounts as nepalAmounts2 } from "../data/nepal/plan2/amounts";
 import { auliAmounts } from "../data/auli/amounts";
 import { kashmirAmounts } from "../data/kashmir/amounts";
 import { kashmirPlan2Amounts } from "../data/kashmir/plan2/amounts";
@@ -257,6 +259,8 @@ export default function Landing() {
       "bir-billing-plan1": "expenses-bir-billing",
       "bir-billing": "expenses-bir-billing",
       "annapurna-plan1": "expenses-annapurna-p1",
+      "nepal-plan1": "expenses-nepal-p1",
+      "nepal-plan2": "expenses-nepal-p2",
     };
     return keysMap[planId] || `expenses-${planId}`;
   };
@@ -828,6 +832,40 @@ export default function Landing() {
           details: "Perfect solo travel budget utilizing hostel beds, local bus transits, and scooter rental.",
           budget: `₹${jibhiAmountsPlan2.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/jibhi-plan2",
+        }
+      ],
+    },
+    {
+      id: "nepal",
+      type: "trip",
+      typeLabel: "International Budget Trip",
+      title: "Nepal Budget Tour",
+      subtitle: "Kathmandu & Pokhara, Nepal",
+      description: "Cheapest international backpacking trip to Nepal from Delhi. Circle the giant Boudhanath Stupa, visit the ancient Pashupatinath Temple, witness the golden Annapurna sunrise from Sarangkot, and boat in Phewa Lake, all on an extreme shoestring budget using trains and local buses.",
+      stats: {
+        duration: "7 Days",
+        distance: "2,320 km Round-Trip",
+        budget: `₹${(nepalAmounts1.budgetTotal / 1000).toFixed(1)}K - ₹${(nepalAmounts2.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "nepal-plan1",
+          title: "Sleeper Train & Local Buses Route",
+          duration: "7 Days",
+          route: "Delhi → Gorakhpur (Sleeper Train) → Sonauli Border (Foot Crossing) → Kathmandu (Overnight Bus) → Pokhara (Tourist Bus) → Sonauli → Gorakhpur → Delhi",
+          details: "Cheapest land crossing route utilizing Indian Railways Sleeper Class, local UP roadways buses, and Nepalese overnight tourist coaches with hostel dorm stays.",
+          budget: `₹${nepalAmounts1.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/nepal-plan1",
+        },
+        {
+          id: "nepal-plan2",
+          title: "Scooty Adventure Plan (1 Scooty Shared between 2)",
+          duration: "7 Days",
+          route: "Delhi → Gorakhpur → Sonauli Border (Foot Crossing) → Kathmandu (Rent shared Scooty for local touring) → Pokhara (Rent lakeside shared Scooty) → Sonauli → Delhi",
+          details: "Cheapest land crossing combined with local freedom: share 1 rental scooty and fuel costs between 2 persons in Nepal.",
+          budget: `₹${nepalAmounts2.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/nepal-plan2",
         }
       ],
     },
@@ -2591,6 +2629,7 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
     { id: "ujjain", name: "Ujjain Mahakal Darshan", city: "Ujjain, Madhya Pradesh", coords: [23.1760, 75.7885], dates: "3 Days", budget: "₹3.9K", planIds: ["ujjain"], state: "Madhya Pradesh" },
     { id: "auli", name: "Auli Snow & Skiing", city: "Joshimath, Uttarakhand", coords: [30.5284, 79.5694], dates: "5 Days", budget: "₹5.3K", planIds: ["auli"], state: "Uttarakhand" },
     { id: "kashmir", name: "Kashmir Valley Wanderer", city: "Srinagar, Kashmir", coords: [34.0837, 74.7973], dates: "6 Days", budget: "₹6.4K", planIds: ["kashmir-plan1", "kashmir-plan2"], state: "Jammu & Kashmir" },
+    { id: "nepal-budget", name: "Nepal Budget Tour", city: "Kathmandu & Pokhara, Nepal", coords: [27.7172, 85.3240], dates: "7 Days", budget: "₹7.2K", planIds: ["nepal-plan1", "nepal-plan2"], state: "Nepal" },
     { id: "shrikhand-mahadev", name: "Shrikhand Dev Trek", city: "Rampur, Himachal Pradesh", coords: [31.3916, 77.6433], dates: "6 Days", budget: "₹5.8K", planIds: ["shrikhand-mahadev-plan1", "shrikhand-mahadev-plan2"], state: "Himachal Pradesh" },
     { id: "hampta-pass", name: "Hampta Pass Trek", city: "Manali, Himachal Pradesh", coords: [32.2274, 77.3486], dates: "5 Days", budget: "₹5.5K", planIds: ["hampta-plan1", "hampta-plan2"], state: "Himachal Pradesh" },
 
@@ -2640,6 +2679,16 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
       .map(p => p.state)
   ));
   const statesCount = visitedStates.length;
+
+  const visitedCountries = Array.from(new Set(
+    places
+      .filter(p => {
+        const status = getPlaceStatus(p);
+        return (status === "completed" || status === "spot") && p.state === "Nepal";
+      })
+      .map(p => "Nepal")
+  ));
+  const countriesCount = visitedCountries.length;
 
   useEffect(() => {
     if (leafletMapRef.current) return;
@@ -2773,7 +2822,7 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
             <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
               My Travel Map
             </h2>
-            <p className="text-xs text-slate-500 font-medium">Completed, upcoming, and archived expeditions across India</p>
+            <p className="text-xs text-slate-500 font-medium">Completed, upcoming, and archived expeditions across India & Nepal</p>
           </div>
         </div>
 
@@ -2782,7 +2831,10 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
           {/* States counter badge */}
           <div className="flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-[9px] font-mono font-black uppercase shadow-xs">
             <Compass size={11} className="animate-spin-slow" />
-            <span>{statesCount} States & UTs Visited</span>
+            <span>
+              {statesCount} States & UTs
+              {countriesCount > 0 ? " & " + countriesCount + " Country" : ""} Visited
+            </span>
           </div>
 
           {/* Status Filters */}

@@ -43,6 +43,9 @@ export default function App() {
         <Route path="/kashmir" element={<Home />} />
         <Route path="/kashmir-plan1" element={<Home />} />
         <Route path="/kashmir-plan2" element={<Home />} />
+        <Route path="/nepal" element={<Home />} />
+        <Route path="/nepal-plan1" element={<Home />} />
+        <Route path="/nepal-plan2" element={<Home />} />
         <Route path="/wardrobe" element={<Wardrobe />} />
       </Routes>
     </BrowserRouter>

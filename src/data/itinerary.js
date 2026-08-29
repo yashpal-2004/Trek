@@ -1,3 +1,5 @@
+import { itinerary as itineraryNepal1 } from "./nepal/plan1/itinerary";
+import { itinerary as itineraryNepal2 } from "./nepal/plan2/itinerary";
 import { itinerary as itinerary1 } from "./rudranath/plan1/itinerary";
 import { itinerary as itinerary2 } from "./rudranath/plan2/itinerary";
 import { itinerary as itinerarySikkim } from "./sikkim/itinerary";
@@ -31,4 +33,4 @@ import { itinerary as itineraryLadakh3 } from "./ladakh/plan3/itinerary";
 import { itinerary as itineraryLadakh4 } from "./ladakh/plan4/itinerary";
 import { createDynamicProxy } from "./proxyHelper";
 
-export const itinerary = createDynamicProxy(() => itinerary1, () => itinerary2, () => itinerarySikkim, () => itineraryYulla1, () => itineraryYulla2, () => itineraryHemkund, () => itineraryLadakh1, () => itineraryLadakh2, () => itinerarySpiti1, () => itinerarySpiti2, () => itineraryAnnapurna1, () => itineraryShrikhand1, () => itineraryShrikhand2, () => itineraryHampta1, () => itineraryHampta2, () => itinerarySpiti3, () => itineraryMadhyamaheshwar1, () => itineraryMadhyamaheshwar2, () => itineraryKedarkantha, () => itineraryBirBillingPlan1, () => itineraryBirBillingPlan2, () => itineraryBirBillingPlan3, () => itineraryBirBillingPlan4, () => itineraryJibhiPlan1, () => itineraryJibhiPlan2, () => itineraryUjjain, () => itineraryAuli, () => itineraryKashmir, () => itineraryLadakh3, () => itineraryLadakh4, () => itineraryKashmirPlan2, true);
+export const itinerary = createDynamicProxy(() => itinerary1, () => itinerary2, () => itinerarySikkim, () => itineraryYulla1, () => itineraryYulla2, () => itineraryHemkund, () => itineraryLadakh1, () => itineraryLadakh2, () => itinerarySpiti1, () => itinerarySpiti2, () => itineraryAnnapurna1, () => itineraryShrikhand1, () => itineraryShrikhand2, () => itineraryHampta1, () => itineraryHampta2, () => itinerarySpiti3, () => itineraryMadhyamaheshwar1, () => itineraryMadhyamaheshwar2, () => itineraryKedarkantha, () => itineraryBirBillingPlan1, () => itineraryBirBillingPlan2, () => itineraryBirBillingPlan3, () => itineraryBirBillingPlan4, () => itineraryJibhiPlan1, () => itineraryJibhiPlan2, () => itineraryUjjain, () => itineraryAuli, () => itineraryKashmir, () => itineraryLadakh3, () => itineraryLadakh4, () => itineraryKashmirPlan2, () => itineraryNepal1, () => itineraryNepal2, true);
