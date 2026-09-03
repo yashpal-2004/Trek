@@ -46,6 +46,27 @@ export default function App() {
         <Route path="/nepal" element={<Home />} />
         <Route path="/nepal-plan1" element={<Home />} />
         <Route path="/nepal-plan2" element={<Home />} />
+        <Route path="/varanasi" element={<Home />} />
+        <Route path="/kalpeshwar" element={<Home />} />
+        <Route path="/adi-kailash" element={<Home />} />
+        <Route path="/kinnaur-kailash" element={<Home />} />
+        <Route path="/manimahesh-kailash" element={<Home />} />
+        <Route path="/kailash-mansarovar" element={<Home />} />
+        <Route path="/badrinath" element={<Home />} />
+        <Route path="/gangotri" element={<Home />} />
+        <Route path="/yamunotri" element={<Home />} />
+        <Route path="/puri" element={<Home />} />
+        <Route path="/dwarka" element={<Home />} />
+        <Route path="/somnath" element={<Home />} />
+        <Route path="/mallikarjuna" element={<Home />} />
+        <Route path="/omkareshwar" element={<Home />} />
+        <Route path="/kedarnath" element={<Home />} />
+        <Route path="/bhimashankar" element={<Home />} />
+        <Route path="/trimbakeshwar" element={<Home />} />
+        <Route path="/vaidyanath" element={<Home />} />
+        <Route path="/nageshwar" element={<Home />} />
+        <Route path="/ramanathaswamy" element={<Home />} />
+        <Route path="/grishneshwar" element={<Home />} />
         <Route path="/wardrobe" element={<Wardrobe />} />
       </Routes>
     </BrowserRouter>

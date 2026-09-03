@@ -106,9 +106,11 @@ export default function SafetySection() {
             })}
           </div>
 
-          <p className="text-[10px] text-slate-400 mt-4 pt-4 border-t border-black/5">
-            Download offline maps (Maps.me / Google Maps offline) before leaving Gopeshwar. Carry a fully charged power bank — no charging points at Rudranath or Sagar.
-          </p>
+          {weather.networkDisclaimer && (
+            <p className="text-[10px] text-slate-400 mt-4 pt-4 border-t border-black/5">
+              {weather.networkDisclaimer}
+            </p>
+          )}
         </div>
 
         {/* Weather Table */}

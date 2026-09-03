@@ -1,7 +1,7 @@
 export const getActiveTripKey = () => {
   if (typeof window === 'undefined') return 'rudranath-plan1';
   const segment = window.location.pathname.split('/')[1];
-  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'ladakh-plan3' || segment === 'ladakh-plan4' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'spiti-plan3' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2' || segment === 'madhyamaheshwar-plan1' || segment === 'madhyamaheshwar-plan2' || segment === 'kedarkantha' || segment === 'bir-billing' || segment === 'bir-billing-plan1' || segment === 'bir-billing-plan2' || segment === 'bir-billing-plan3' || segment === 'bir-billing-plan4' || segment === 'jibhi-plan1' || segment === 'jibhi-plan2' || segment === 'ujjain' || segment === 'auli' || segment === 'kashmir' || segment === 'kashmir-plan1' || segment === 'kashmir-plan2' || segment === 'nepal' || segment === 'nepal-plan1' || segment === 'nepal-plan2') {
+  if (segment === 'rudranath-plan1' || segment === 'rudranath-plan2' || segment === 'plan1' || segment === 'plan2' || segment === 'sikkim' || segment === 'yulla-plan1' || segment === 'yulla-plan2' || segment === 'hemkund' || segment === 'ladakh-plan1' || segment === 'ladakh-plan2' || segment === 'ladakh-plan3' || segment === 'ladakh-plan4' || segment === 'spiti-plan1' || segment === 'spiti-plan2' || segment === 'spiti-plan3' || segment === 'annapurna-plan1' || segment === 'shrikhand-plan1' || segment === 'shrikhand-plan2' || segment === 'hampta-plan1' || segment === 'hampta-plan2' || segment === 'madhyamaheshwar-plan1' || segment === 'madhyamaheshwar-plan2' || segment === 'kedarkantha' || segment === 'bir-billing' || segment === 'bir-billing-plan1' || segment === 'bir-billing-plan2' || segment === 'bir-billing-plan3' || segment === 'bir-billing-plan4' || segment === 'jibhi-plan1' || segment === 'jibhi-plan2' || segment === 'ujjain' || segment === 'auli' || segment === 'kashmir' || segment === 'kashmir-plan1' || segment === 'kashmir-plan2' || segment === 'nepal' || segment === 'nepal-plan1' || segment === 'nepal-plan2' || segment === 'varanasi') {
     return segment;
   }
   return 'rudranath-plan1';
@@ -75,6 +75,7 @@ export const createDynamicProxy = (...args) => {
     if (key === "ladakh-plan4") return typeof getters[29] === "function" ? getters[29]() : getters[0]();
     if (key === "nepal" || key === "nepal-plan1") return typeof getters[31] === "function" ? getters[31]() : getters[0]();
     if (key === "nepal-plan2") return typeof getters[32] === "function" ? getters[32]() : getters[1]();
+    if (key === "varanasi") return typeof getters[33] === "function" ? getters[33]() : getters[0]();
     return typeof getters[0] === "function" ? getters[0]() : {};
   };
 

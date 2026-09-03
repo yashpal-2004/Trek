@@ -30,6 +30,27 @@ import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
 import { budget as budgetHampta2 } from "../data/hampta/plan2/budget";
 import { completedTrips } from "../data/completedTrips";
+import { budget as adiKailashBudget } from "../data/adi-kailash/budget";
+import { budget as badrinathBudget } from "../data/badrinath/budget";
+import { budget as dwarkaBudget } from "../data/dwarka/budget";
+import { budget as gangotriBudget } from "../data/gangotri/budget";
+import { budget as kailashMansarovarBudget } from "../data/kailash-mansarovar/budget";
+import { budget as kalpeshwarBudget } from "../data/kalpeshwar/budget";
+import { budget as kinnaurKailashBudget } from "../data/kinnaur-kailash/budget";
+import { budget as manimaheshKailashBudget } from "../data/manimahesh-kailash/budget";
+import { budget as puriBudget } from "../data/puri/budget";
+import { budget as yamunotriBudget } from "../data/yamunotri/budget";
+import { budget as varanasiBudget } from "../data/varanasi/budget";
+import { budget as somnathBudget } from "../data/somnath/budget";
+import { budget as mallikarjunaBudget } from "../data/mallikarjuna/budget";
+import { budget as omkareshwarBudget } from "../data/omkareshwar/budget";
+import { budget as kedarnathBudget } from "../data/kedarnath/budget";
+import { budget as bhimashankarBudget } from "../data/bhimashankar/budget";
+import { budget as trimbakeshwarBudget } from "../data/trimbakeshwar/budget";
+import { budget as vaidyanathBudget } from "../data/vaidyanath/budget";
+import { budget as nageshwarBudget } from "../data/nageshwar/budget";
+import { budget as ramanathaswamyBudget } from "../data/ramanathaswamy/budget";
+import { budget as grishneshwarBudget } from "../data/grishneshwar/budget";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -386,6 +407,7 @@ export default function Landing() {
   const trips = [
     {
       id: "rudranath",
+      tags: ["panch-kedar"],
       type: "trek",
       typeLabel: "Mountain Trek",
       title: "Rudranath & Tungnath Trek",
@@ -420,6 +442,7 @@ export default function Landing() {
     },
     {
       id: "shrikhand-mahadev",
+      tags: ["panch-kailash"],
       type: "trek",
       typeLabel: "Mountain Trek",
       title: "Shrikhand Mahadev Trek",
@@ -692,6 +715,7 @@ export default function Landing() {
     },
     {
       id: "madhyamaheshwar",
+      tags: ["panch-kedar"],
       type: "trek",
       typeLabel: "Mountain Trek",
       title: "Madhyamaheshwar & Budha Madhyamaheshwar",
@@ -955,7 +979,404 @@ export default function Landing() {
     }
   ];
 
-  const allTrips = [...trips, ...completedTrips];
+  const allTrips = [...trips, ...completedTrips,
+    {
+      id: "kalpeshwar",
+      type: "panch-kedar",
+      typeLabel: "Panch Kedar Yatra",
+      title: "Kalpeshwar Temple Yatra",
+      subtitle: "Uttarakhand, India",
+      tags: ["panch-kedar"],
+      description: "Fifth Kedar shrine in Urgam Valley where Lord Shiva's matted hair (Jata) is worshipped.",
+      stats: { duration: "4 Days", distance: "500 km", budget: "₹" + (kalpeshwarBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "kalpeshwar-plan", title: "Kalpeshwar Darshan Yatra", duration: "4 Days", route: "Rishikesh – Urgam – Kalpeshwar", details: "Serene pilgrimage trek in Urgam Valley.", budget: "₹" + kalpeshwarBudget.total.toLocaleString("en-IN") + " / person", path: "/kalpeshwar" }]
+    },
+    {
+      id: "adi-kailash",
+      type: "panch-kailash",
+      typeLabel: "Panch Kailash Yatra",
+      title: "Adi Kailash & Om Parvat Yatra",
+      subtitle: "Uttarakhand, India",
+      tags: ["panch-kailash"],
+      description: "Sacred pilgrimage to the Chhota Kailash and the natural snow-formed Om Parvat.",
+      stats: { duration: "7 Days", distance: "1100 km", budget: "₹" + (adiKailashBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "adi-kailash-plan", title: "Adi Kailash & Om Parvat Expedition", duration: "7 Days", route: "Kathgodam – Dharchula – Jolingkong – Adi Kailash", details: "Majestic Himalayan Kailash Yatra.", budget: "₹" + adiKailashBudget.total.toLocaleString("en-IN") + " / person", path: "/adi-kailash" }]
+    },
+    {
+      id: "kinnaur-kailash",
+      type: "panch-kailash",
+      typeLabel: "Panch Kailash Yatra",
+      title: "Kinnaur Kailash Yatra",
+      subtitle: "Himachal Pradesh, India",
+      tags: ["panch-kailash"],
+      description: "High altitude trek to the sacred 79-foot natural rock Shivlingam in Kinnaur.",
+      stats: { duration: "6 Days", distance: "700 km", budget: "₹" + (kinnaurKailashBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "kinnaur-kailash-plan", title: "Kinnaur Kailash Parikrama Trek", duration: "6 Days", route: "Shimla – Reckong Peo – Tangling – Kinnaur Kailash", details: "Sacred high pass mountain trek.", budget: "₹" + kinnaurKailashBudget.total.toLocaleString("en-IN") + " / person", path: "/kinnaur-kailash" }]
+    },
+    {
+      id: "manimahesh-kailash",
+      type: "panch-kailash",
+      typeLabel: "Panch Kailash Yatra",
+      title: "Manimahesh Kailash Yatra",
+      subtitle: "Himachal Pradesh, India",
+      tags: ["panch-kailash"],
+      description: "Holy pilgrimage trek to Manimahesh Lake at the base of Chamba Kailash Peak.",
+      stats: { duration: "5 Days", distance: "650 km", budget: "₹" + (manimaheshKailashBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "manimahesh-kailash-plan", title: "Manimahesh Lake Yatra", duration: "5 Days", route: "Pathankot – Chamba – Hadsar – Manimahesh Lake", details: "Holy bath in Manimahesh Lake.", budget: "₹" + manimaheshKailashBudget.total.toLocaleString("en-IN") + " / person", path: "/manimahesh-kailash" }]
+    },
+    {
+      id: "kailash-mansarovar",
+      type: "panch-kailash",
+      typeLabel: "Panch Kailash Yatra",
+      title: "Kailash Mansarovar Yatra",
+      subtitle: "Tibet, Himalayas",
+      tags: ["panch-kailash"],
+      description: "Ultimate spiritual Yatra to Mount Kailash (Abode of Lord Shiva) & Lake Mansarovar.",
+      stats: { duration: "14 Days", distance: "2500 km", budget: "₹" + (kailashMansarovarBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "kailash-mansarovar-plan", title: "Kailash Mansarovar Parikrama", duration: "14 Days", route: "Kathmandu – Kyirong – Mansarovar – Mount Kailash Kora", details: "Sacred international high altitude expedition.", budget: "₹" + kailashMansarovarBudget.total.toLocaleString("en-IN") + " / person", path: "/kailash-mansarovar" }]
+    },
+    {
+      id: "badrinath",
+      type: "char-dham",
+      typeLabel: "Char Dham Yatra",
+      title: "Badrinath Temple Yatra",
+      subtitle: "Uttarakhand, India",
+      tags: ["char-dham"],
+      description: "Sacred Vishnu temple in Chamoli, part of Char Dham & Chota Char Dham.",
+      stats: { duration: "4 Days", distance: "530 km", budget: "₹" + (badrinathBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "badrinath-plan", title: "Badrinath & Mana Village Yatra", duration: "4 Days", route: "Haridwar – Joshimath – Badrinath", details: "Holy darshan of Lord Badri Vishal.", budget: "₹" + badrinathBudget.total.toLocaleString("en-IN") + " / person", path: "/badrinath" }]
+    },
+    {
+      id: "gangotri",
+      type: "char-dham",
+      typeLabel: "Char Dham Yatra",
+      title: "Gangotri Temple Yatra",
+      subtitle: "Uttarakhand, India",
+      tags: ["char-dham"],
+      description: "Origin of river Ganga in Uttarkashi, holy shrine of Goddess Ganga.",
+      stats: { duration: "4 Days", distance: "500 km", budget: "₹" + (gangotriBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "gangotri-plan", title: "Gangotri Dham Yatra", duration: "4 Days", route: "Haridwar – Uttarkashi – Gangotri", details: "Spiritual pilgrimage along Bhagirathi river.", budget: "₹" + gangotriBudget.total.toLocaleString("en-IN") + " / person", path: "/gangotri" }]
+    },
+    {
+      id: "yamunotri",
+      type: "char-dham",
+      typeLabel: "Char Dham Yatra",
+      title: "Yamunotri Temple Yatra",
+      subtitle: "Uttarakhand, India",
+      tags: ["char-dham"],
+      description: "Source of river Yamuna, seat of Goddess Yamuna in the Garhwal Himalayas.",
+      stats: { duration: "4 Days", distance: "450 km", budget: "₹" + (yamunotriBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "yamunotri-plan", title: "Yamunotri Dham Yatra", duration: "4 Days", route: "Haridwar – Barkot – Janki Chatti – Yamunotri", details: "Sacred trek to Yamunotri shrine.", budget: "₹" + yamunotriBudget.total.toLocaleString("en-IN") + " / person", path: "/yamunotri" }]
+    },
+    {
+      id: "puri",
+      type: "char-dham",
+      typeLabel: "Char Dham Yatra",
+      title: "Jagannath Puri Yatra",
+      subtitle: "Odisha, India",
+      tags: ["char-dham"],
+      description: "Famous Eastern Char Dham temple of Lord Jagannath on the Bay of Bengal coast.",
+      stats: { duration: "3 Days", distance: "1800 km", budget: "₹" + (puriBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "puri-plan", title: "Jagannath Puri & Konark Yatra", duration: "3 Days", route: "Bhubaneswar – Puri – Konark Sun Temple", details: "Sacred Darshan & Golden Beach stay.", budget: "₹" + puriBudget.total.toLocaleString("en-IN") + " / person", path: "/puri" }]
+    },
+    {
+      id: "dwarka",
+      type: "char-dham",
+      typeLabel: "Char Dham Yatra",
+      title: "Dwarkadhish Temple Yatra",
+      subtitle: "Gujarat, India",
+      tags: ["char-dham"],
+      description: "Western Char Dham shrine of Lord Krishna located at the mouth of the Gomti river.",
+      stats: { duration: "3 Days", distance: "1300 km", budget: "₹" + (dwarkaBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "dwarka-plan", title: "Dwarkadhish & Somnath Circuit", duration: "3 Days", route: "Ahmedabad – Rajkot – Dwarka – Bet Dwarka", details: "Sacred Krishna Dham pilgrimage.", budget: "₹" + dwarkaBudget.total.toLocaleString("en-IN") + " / person", path: "/dwarka" }]
+    },
+
+    {
+      id: "varanasi",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Varanasi (Kashi Vishwanath)",
+      subtitle: "Uttar Pradesh, India",
+      description: "Sacred pilgrimage to Kashi Vishwanath Jyotirlinga along the Ganges in Varanasi.",
+      stats: {
+        duration: "3 Days",
+        distance: "1600 km",
+        budget: "₹" + (varanasiBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "varanasi-plan",
+          title: "Kashi Vishwanath Darshan & Ghat Yatra",
+          duration: "3 Days",
+          route: "Delhi – Varanasi – Sarnath – Delhi",
+          details: "Spiritual weekend trip covering Kashi Vishwanath, Ganga Aarti, and Sarnath.",
+          budget: "₹" + varanasiBudget.total.toLocaleString("en-IN") + " / person",
+          path: "/varanasi"
+        }
+      ]
+    },
+    {
+      id: "somnath",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Somnath Jyotirlinga",
+      subtitle: "Gujarat, India",
+      description: "Sacred pilgrimage to the Somnath Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (somnathBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "somnath-plan",
+          title: "Somnath Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + somnathBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "mallikarjuna",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Mallikarjuna Jyotirlinga",
+      subtitle: "Andhra Pradesh, India",
+      description: "Sacred pilgrimage to the Mallikarjuna Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (mallikarjunaBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "mallikarjuna-plan",
+          title: "Mallikarjuna Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + mallikarjunaBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "omkareshwar",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Omkareshwar Jyotirlinga",
+      subtitle: "Madhya Pradesh, India",
+      description: "Sacred pilgrimage to the Omkareshwar Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (omkareshwarBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "omkareshwar-plan",
+          title: "Omkareshwar Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + omkareshwarBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "kedarnath",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Kedarnath Jyotirlinga",
+      subtitle: "Uttarakhand, India",
+      description: "Sacred pilgrimage to the Kedarnath Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (kedarnathBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "kedarnath-plan",
+          title: "Kedarnath Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + kedarnathBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "bhimashankar",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Bhimashankar Jyotirlinga",
+      subtitle: "Maharashtra, India",
+      description: "Sacred pilgrimage to the Bhimashankar Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (bhimashankarBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "bhimashankar-plan",
+          title: "Bhimashankar Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + bhimashankarBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "trimbakeshwar",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Trimbakeshwar Jyotirlinga",
+      subtitle: "Maharashtra, India",
+      description: "Sacred pilgrimage to the Trimbakeshwar Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (trimbakeshwarBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "trimbakeshwar-plan",
+          title: "Trimbakeshwar Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + trimbakeshwarBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "vaidyanath",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Vaidyanath Jyotirlinga",
+      subtitle: "Jharkhand, India",
+      description: "Sacred pilgrimage to the Vaidyanath Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (vaidyanathBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "vaidyanath-plan",
+          title: "Vaidyanath Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + vaidyanathBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "nageshwar",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Nageshwar Jyotirlinga",
+      subtitle: "Gujarat, India",
+      description: "Sacred pilgrimage to the Nageshwar Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (nageshwarBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "nageshwar-plan",
+          title: "Nageshwar Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + nageshwarBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "ramanathaswamy",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Ramanathaswamy Jyotirlinga",
+      subtitle: "Tamil Nadu, India",
+      description: "Sacred pilgrimage to the Ramanathaswamy Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (ramanathaswamyBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "ramanathaswamy-plan",
+          title: "Ramanathaswamy Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + ramanathaswamyBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    },
+    {
+      id: "grishneshwar",
+      type: "jyotirlinga",
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Grishneshwar Jyotirlinga",
+      subtitle: "Maharashtra, India",
+      description: "Sacred pilgrimage to the Grishneshwar Jyotirlinga.",
+      stats: {
+        duration: "TBD",
+        distance: "TBD",
+        budget: "₹" + (grishneshwarBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "grishneshwar-plan",
+          title: "Grishneshwar Jyotirlinga Darshan",
+          duration: "TBD",
+          route: "TBD",
+          details: "Details coming soon.",
+          budget: "₹" + grishneshwarBudget.total.toLocaleString("en-IN") + " / person",
+          path: "#"
+        }
+      ]
+    }
+  ];
 
   const getMinBudget = (trip) => {
     if (!trip.stats || !trip.stats.budget) return 0;
@@ -995,6 +1416,10 @@ export default function Landing() {
 
   const trekItems = sortedTrips.filter(t => t.type === "trek");
   const tripItems = sortedTrips.filter(t => t.type === "trip");
+  const jyotirlingaItems = sortedTrips.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga")));
+  const panchKedarItems = sortedTrips.filter(t => t.tags && t.tags.includes("panch-kedar"));
+  const panchKailashItems = sortedTrips.filter(t => t.tags && t.tags.includes("panch-kailash"));
+  const charDhamItems = sortedTrips.filter(t => t.tags && t.tags.includes("char-dham"));
 
   if (isLoading) {
     return (
@@ -1443,6 +1868,7 @@ export default function Landing() {
 
   const completedTreksCount = completedTripsList.filter(t => t.type === "trek").length;
   const completedRoadTripsCount = completedTripsList.filter(t => t.type === "trip").length;
+  const completedYatrasCount = completedTripsList.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga"))).length;
 
   const parseBudgetRange = (str) => {
     if (!str) return { min: 0, max: 0 };
@@ -1468,9 +1894,17 @@ export default function Landing() {
   };
 
   const activeTrips = trips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id));
-  const activeTreksCount = activeTrips.filter(t => t.type === "trek").length;
-  const activeRoadTripsCount = activeTrips.filter(t => t.type === "trip").length;
-  const upcomingRange = activeTrips.reduce((acc, trip) => {
+  const activeTreksList = activeTrips.filter(t => t.type === "trek");
+  const activeRoadTripsList = activeTrips.filter(t => t.type === "trip");
+  const activeTreksCount = activeTreksList.length;
+  const activeRoadTripsCount = activeRoadTripsList.length;
+
+  const upcomingTreksRange = activeTreksList.reduce((acc, trip) => {
+    const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  const upcomingRoadTripsRange = activeRoadTripsList.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
@@ -1478,6 +1912,7 @@ export default function Landing() {
   const archivedTripsList = allTrips.filter(t => archivedTrips.includes(t.id));
   const archivedTreksCount = archivedTripsList.filter(t => t.type === "trek").length;
   const archivedRoadTripsCount = archivedTripsList.filter(t => t.type === "trip").length;
+  const archivedYatrasCount = archivedTripsList.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga"))).length;
   const archivedRange = archivedTripsList.reduce((acc, trip) => {
     let min = Infinity;
     let max = -Infinity;
@@ -1491,6 +1926,29 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
+  const jyotirlingaTripsList = allTrips.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga")));
+  const jyotirlingaCount = jyotirlingaTripsList.length;
+  const jyotirlingaRange = jyotirlingaTripsList.reduce((acc, trip) => {
+    const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  const kedarKailashTripsList = allTrips.filter(t => t.type === "panch-kedar" || t.type === "panch-kailash" || (t.tags && (t.tags.includes("panch-kedar") || t.tags.includes("panch-kailash"))));
+  const kedarCount = allTrips.filter(t => t.type === "panch-kedar" || t.tags?.includes("panch-kedar")).length;
+  const kailashCount = allTrips.filter(t => t.type === "panch-kailash" || t.tags?.includes("panch-kailash")).length;
+  const kedarKailashRange = kedarKailashTripsList.reduce((acc, trip) => {
+    const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  const charDhamTripsList = allTrips.filter(t => t.type === "char-dham" || (t.tags && t.tags.includes("char-dham")));
+  const dhamCount = charDhamTripsList.length;
+  const charDhamRange = charDhamTripsList.reduce((acc, trip) => {
+    const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  
   return (
     <div className="min-h-screen w-screen bg-[#f2efe9] text-black selection:bg-black/10 flex flex-col justify-between relative font-sans">
       
@@ -1511,8 +1969,8 @@ export default function Landing() {
       {/* Main Content Dashboard */}
       <main className="flex-grow flex flex-col justify-start pt-2 md:pt-4 pb-12 px-6 max-w-5xl mx-auto w-full z-10">
         
-        {/* Intro */}
-        <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        {/* Intro & Dashboard Stats */}
+        <div className="mb-8 space-y-6">
           <div>
             <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
             <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
@@ -1524,50 +1982,131 @@ export default function Landing() {
           </div>
 
           {/* Financial Summary Stat Badges */}
-          <div className="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
-            <div className="bg-white/80 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-3.5 min-w-[155px] shadow-sm">
-              <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Total Spent</span>
+          <div className="flex flex-col gap-3">
+            {/* Top Row: Financial & Expedition Summaries (4 cards) */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+              {/* Card 1: Total Spent */}
+              <div className="bg-white/80 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Total Spent</span>
+                </div>
+                <p className="text-xl font-black text-emerald-700 font-mono">₹{totalSpent.toLocaleString("en-IN")}</p>
+                <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono whitespace-nowrap">
+                  {completedTreksCount} Trek{completedTreksCount === 1 ? "" : "s"} • {completedRoadTripsCount} Road Trip{completedRoadTripsCount === 1 ? "" : "s"}
+                </p>
               </div>
-              <p className="text-xl font-black text-emerald-700 font-mono">₹{totalSpent.toLocaleString("en-IN")}</p>
-              <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
-                {completedTreksCount} Trek{completedTreksCount === 1 ? "" : "s"} • {completedRoadTripsCount} Road Trip{completedRoadTripsCount === 1 ? "" : "s"}
-              </p>
+
+              {/* Card 2: Upcoming Treks Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-emerald-700 uppercase tracking-wider">Upcoming Treks</span>
+                </div>
+                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                  {upcomingTreksRange.min === upcomingTreksRange.max ? (
+                    `₹${upcomingTreksRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${upcomingTreksRange.min.toLocaleString("en-IN")} – ₹${upcomingTreksRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-emerald-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {activeTreksCount} Alpine Trek{activeTreksCount === 1 ? "" : "s"}
+                </p>
+              </div>
+
+              {/* Card 3: Upcoming Road Trips Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-sky-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-sky-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-sky-700 uppercase tracking-wider">Upcoming Road Trips</span>
+                </div>
+                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                  {upcomingRoadTripsRange.min === upcomingRoadTripsRange.max ? (
+                    `₹${upcomingRoadTripsRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${upcomingRoadTripsRange.min.toLocaleString("en-IN")} – ₹${upcomingRoadTripsRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-sky-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {activeRoadTripsCount} Riding Expedition{activeRoadTripsCount === 1 ? "" : "s"}
+                </p>
+              </div>
+
+              {/* Card 4: Archived Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-slate-500" />
+                  <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Archived Est.</span>
+                </div>
+                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                  {archivedRange.min === archivedRange.max ? (
+                    `₹${archivedRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${archivedRange.min.toLocaleString("en-IN")} – ₹${archivedRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono whitespace-nowrap">
+                  {archivedTreksCount} Trek{archivedTreksCount === 1 ? "" : "s"} • {archivedRoadTripsCount} Road Trip{archivedRoadTripsCount === 1 ? "" : "s"}
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 min-w-[185px] shadow-sm">
-              <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-2 h-2 rounded-full bg-amber-500" />
-                <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Upcoming Est.</span>
+            {/* Bottom Row: Spiritual Yatras (3 cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+              {/* Card 5: Jyotirlinga Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-amber-700 uppercase tracking-wider">Jyotirlinga Est.</span>
+                </div>
+                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                  {jyotirlingaRange.min === jyotirlingaRange.max ? (
+                    `₹${jyotirlingaRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${jyotirlingaRange.min.toLocaleString("en-IN")} – ₹${jyotirlingaRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-amber-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {jyotirlingaCount} Sacred Shrines
+                </p>
               </div>
-              <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
-                {upcomingRange.min === upcomingRange.max ? (
-                  `₹${upcomingRange.min.toLocaleString("en-IN")}`
-                ) : (
-                  `₹${upcomingRange.min.toLocaleString("en-IN")} – ₹${upcomingRange.max.toLocaleString("en-IN")}`
-                )}
-              </p>
-              <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
-                {activeTreksCount} Trek{activeTreksCount === 1 ? "" : "s"} • {activeRoadTripsCount} Road Trip{activeRoadTripsCount === 1 ? "" : "s"}
-              </p>
-            </div>
 
-            <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 min-w-[185px] shadow-sm">
-              <div className="flex items-center gap-1.5 mb-1">
-                <div className="w-2 h-2 rounded-full bg-slate-500" />
-                <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Archived Est.</span>
+              {/* Card 6: Kedar & Kailash */}
+              <div className="bg-white/80 backdrop-blur-md border border-purple-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-purple-700 uppercase tracking-wider">Kedar & Kailash</span>
+                </div>
+                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                  {kedarKailashRange.min === kedarKailashRange.max ? (
+                    `₹${kedarKailashRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${kedarKailashRange.min.toLocaleString("en-IN")} – ₹${kedarKailashRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-purple-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {kedarCount} Kedar • {kailashCount} Kailash
+                </p>
               </div>
-              <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
-                {archivedRange.min === archivedRange.max ? (
-                  `₹${archivedRange.min.toLocaleString("en-IN")}`
-                ) : (
-                  `₹${archivedRange.min.toLocaleString("en-IN")} – ₹${archivedRange.max.toLocaleString("en-IN")}`
-                )}
-              </p>
-              <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono">
-                {archivedTreksCount} Trek{archivedTreksCount === 1 ? "" : "s"} • {archivedRoadTripsCount} Road Trip{archivedRoadTripsCount === 1 ? "" : "s"}
-              </p>
+
+              {/* Card 7: Char Dham Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-red-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-red-700 uppercase tracking-wider">Char Dham Est.</span>
+                </div>
+                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                  {charDhamRange.min === charDhamRange.max ? (
+                    `₹${charDhamRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${charDhamRange.min.toLocaleString("en-IN")} – ₹${charDhamRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-red-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {dhamCount} Holy Dham Shrines
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -1612,6 +2151,54 @@ export default function Landing() {
             >
               <Compass size={13} />
               Road Trips ({allTrips.filter(t => t.type === "trip" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("jyotirlinga")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "jyotirlinga"
+                  ? "bg-amber-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              Jyotirlingas ({allTrips.filter(t => (t.type === "jyotirlinga" || t.tags?.includes("jyotirlinga")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("panch-kedar")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "panch-kedar"
+                  ? "bg-orange-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              5 Kedar ({allTrips.filter(t => (t.type === "panch-kedar" || t.tags?.includes("panch-kedar")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("panch-kailash")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "panch-kailash"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              5 Kailash ({allTrips.filter(t => (t.type === "panch-kailash" || t.tags?.includes("panch-kailash")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("char-dham")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "char-dham"
+                  ? "bg-red-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              4 Dham ({allTrips.filter(t => (t.type === "char-dham" || t.tags?.includes("char-dham")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
             </button>
           </div>
 
@@ -1750,22 +2337,102 @@ export default function Landing() {
                 </div>
               </div>
             )}
+
+            {/* Section 3: Jyotirlinga Yatras */}
+            {jyotirlingaItems.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Jyotirlinga Yatras
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Sacred pilgrimages to the 12 Jyotirlinga shrines</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {jyotirlingaItems.map(renderTripCard)}
+                </div>
+              </div>
+            )}
+
+            {/* Section 4: Panch Kedar Shrines */}
+            {panchKedarItems.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Panch Kedar Shrines
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">The five sacred Shiva temples in Garhwal Himalayas</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {panchKedarItems.map(renderTripCard)}
+                </div>
+              </div>
+            )}
+
+            {/* Section 5: Panch Kailash Expeditions */}
+            {panchKailashItems.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Panch Kailash Expeditions
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Sacred high-altitude pilgrimages to the 5 Holy Kailash Peaks</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {panchKailashItems.map(renderTripCard)}
+                </div>
+              </div>
+            )}
+
+            {/* Section 6: Char Dham Pilgrimages */}
+            {charDhamItems.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Char Dham Pilgrimages
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Holy Char Dham shrines across Uttarakhand and India</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {charDhamItems.map(renderTripCard)}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           /* Filtered view for specific category */
           <div>
             <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                categoryTab === "trek" ? "bg-emerald-500/10 text-emerald-700" : "bg-sky-500/10 text-sky-700"
+                categoryTab === "trek" ? "bg-emerald-500/10 text-emerald-700" : categoryTab === "jyotirlinga" ? "bg-amber-500/10 text-amber-700" : "bg-sky-500/10 text-sky-700"
               }`}>
-                {categoryTab === "trek" ? <Footprints size={16} /> : <Compass size={16} />}
+                {categoryTab === "trek" ? <Footprints size={16} /> : categoryTab === "jyotirlinga" ? <Sparkles size={16} /> : <Compass size={16} />}
               </div>
               <div>
                 <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
-                  {categoryTab === "trek" ? "Himalayan Mountain Treks" : "Road Trips & Expeditions"}
+                  {categoryTab === "trek" ? "Himalayan Mountain Treks" : categoryTab === "jyotirlinga" ? "Jyotirlinga Yatras" : categoryTab === "panch-kedar" ? "Panch Kedar Shrines" : categoryTab === "panch-kailash" ? "Panch Kailash Expeditions" : categoryTab === "char-dham" ? "Char Dham Pilgrimages" : "Road Trips & Expeditions"}
                 </h2>
                 <p className="text-xs text-slate-500 font-medium">
-                  {categoryTab === "trek" ? "Foot trails, high passes, and sacred temple treks" : "Self-scooty circuits, bike rentals, and high-pass riding routes"}
+                  {categoryTab === "trek" ? "Foot trails, high passes, and sacred temple treks" : categoryTab === "jyotirlinga" ? "Sacred pilgrimages to the 12 Jyotirlinga shrines" : categoryTab === "panch-kedar" ? "The five sacred Shiva temples in Garhwal Himalayas" : categoryTab === "panch-kailash" ? "Sacred high-altitude pilgrimages to the 5 Holy Kailash Peaks" : categoryTab === "char-dham" ? "Holy Char Dham shrines across Uttarakhand and India" : "Self-scooty circuits, bike rentals, and high-pass riding routes"}
                 </p>
               </div>
             </div>
@@ -2602,6 +3269,7 @@ const TripExpenseBreakdown = ({ planId }) => {
 export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
+  const leafletInstanceRef = useRef(null);
   const markersRef = useRef([]);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [mapFilter, setMapFilter] = useState("visited");
@@ -2632,6 +3300,30 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
     { id: "nepal-budget", name: "Nepal Budget Tour", city: "Kathmandu & Pokhara, Nepal", coords: [27.7172, 85.3240], dates: "7 Days", budget: "₹7.2K", planIds: ["nepal-plan1", "nepal-plan2"], state: "Nepal" },
     { id: "shrikhand-mahadev", name: "Shrikhand Dev Trek", city: "Rampur, Himachal Pradesh", coords: [31.3916, 77.6433], dates: "6 Days", budget: "₹5.8K", planIds: ["shrikhand-mahadev-plan1", "shrikhand-mahadev-plan2"], state: "Himachal Pradesh" },
     { id: "hampta-pass", name: "Hampta Pass Trek", city: "Manali, Himachal Pradesh", coords: [32.2274, 77.3486], dates: "5 Days", budget: "₹5.5K", planIds: ["hampta-plan1", "hampta-plan2"], state: "Himachal Pradesh" },
+
+    // Sacred Yatras & Pilgrimages
+    { id: "somnath", name: "Somnath Jyotirlinga Yatra", city: "Prabhas Patan, Gujarat", coords: [20.8880, 70.4012], dates: "3 Days", budget: "₹3.8K", isYatra: true, state: "Gujarat" },
+    { id: "mallikarjuna", name: "Mallikarjuna Jyotirlinga Yatra", city: "Srisailam, Andhra Pradesh", coords: [16.0746, 78.8687], dates: "3 Days", budget: "₹4.1K", isYatra: true, state: "Andhra Pradesh" },
+    { id: "mahakaleshwar", name: "Mahakaleshwar Jyotirlinga Yatra", city: "Ujjain, Madhya Pradesh", coords: [23.1827, 75.7578], dates: "3 Days", budget: "₹3.9K", isYatra: true, state: "Madhya Pradesh" },
+    { id: "omkareshwar", name: "Omkareshwar Jyotirlinga Yatra", city: "Khandwa, Madhya Pradesh", coords: [22.2467, 76.1511], dates: "2 Days", budget: "₹3.5K", isYatra: true, state: "Madhya Pradesh" },
+    { id: "kedarnath", name: "Kedarnath Dham Yatra", city: "Rudraprayag, Uttarakhand", coords: [30.7352, 79.0669], dates: "5 Days", budget: "₹7.5K", isYatra: true, state: "Uttarakhand" },
+    { id: "bhimashankar", name: "Bhimashankar Jyotirlinga Yatra", city: "Pune, Maharashtra", coords: [19.0720, 73.5358], dates: "3 Days", budget: "₹4.2K", isYatra: true, state: "Maharashtra" },
+    { id: "trimbakeshwar", name: "Trimbakeshwar Jyotirlinga Yatra", city: "Nashik, Maharashtra", coords: [19.9320, 73.5306], dates: "3 Days", budget: "₹4.0K", isYatra: true, state: "Maharashtra" },
+    { id: "vaidyanath", name: "Baidyanath Jyotirlinga Yatra", city: "Deoghar, Jharkhand", coords: [24.4925, 86.6997], dates: "3 Days", budget: "₹4.5K", isYatra: true, state: "Jharkhand" },
+    { id: "nageshwar", name: "Nageshwar Jyotirlinga Yatra", city: "Dwarka, Gujarat", coords: [22.3364, 69.0850], dates: "2 Days", budget: "₹3.6K", isYatra: true, state: "Gujarat" },
+    { id: "ramanathaswamy", name: "Rameshwaram Jyotirlinga Yatra", city: "Rameswaram, Tamil Nadu", coords: [9.2881, 79.3174], dates: "4 Days", budget: "₹5.9K", isYatra: true, state: "Tamil Nadu" },
+    { id: "grishneshwar", name: "Grishneshwar Jyotirlinga Yatra", city: "Ellora, Maharashtra", coords: [20.0268, 75.1685], dates: "2 Days", budget: "₹3.7K", isYatra: true, state: "Maharashtra" },
+    { id: "varanasi", name: "Kashi Vishwanath Yatra", city: "Varanasi, Uttar Pradesh", coords: [25.3109, 83.0107], dates: "3 Days", budget: "₹3.87K", isYatra: true, state: "Uttar Pradesh" },
+    { id: "kalpeshwar", name: "Kalpeshwar Kalpganga Yatra", city: "Urgam Valley, Uttarakhand", coords: [30.5650, 79.4350], dates: "4 Days", budget: "₹4.2K", isYatra: true, state: "Uttarakhand" },
+    { id: "adi-kailash", name: "Adi Kailash & Om Parvat Yatra", city: "Pithoragarh, Uttarakhand", coords: [30.3200, 80.6000], dates: "8 Days", budget: "₹18.5K", isYatra: true, state: "Uttarakhand" },
+    { id: "kinnaur-kailash", name: "Kinnaur Kailash Parikrama Yatra", city: "Recong Peo, Himachal Pradesh", coords: [31.5300, 78.3800], dates: "7 Days", budget: "₹9.2K", isYatra: true, state: "Himachal Pradesh" },
+    { id: "manimahesh-kailash", name: "Manimahesh Kailash Yatra", city: "Bharmour, Himachal Pradesh", coords: [32.3900, 76.6400], dates: "6 Days", budget: "₹6.8K", isYatra: true, state: "Himachal Pradesh" },
+    { id: "kailash-mansarovar", name: "Holy Kailash Mansarovar Yatra", city: "Tibet, China", coords: [31.0667, 81.3125], dates: "14 Days", budget: "₹45.0K", isYatra: true, state: "Tibet" },
+    { id: "badrinath", name: "Badrinath Dham Yatra", city: "Chamoli, Uttarakhand", coords: [30.7433, 79.4938], dates: "4 Days", budget: "₹6.8K", isYatra: true, state: "Uttarakhand" },
+    { id: "gangotri", name: "Gangotri Dham Yatra", city: "Uttarkashi, Uttarakhand", coords: [30.9947, 78.9398], dates: "4 Days", budget: "₹5.5K", isYatra: true, state: "Uttarakhand" },
+    { id: "yamunotri", name: "Yamunotri Dham Yatra", city: "Uttarkashi, Uttarakhand", coords: [31.0140, 78.4599], dates: "4 Days", budget: "₹5.2K", isYatra: true, state: "Uttarakhand" },
+    { id: "puri", name: "Jagannath Puri Dham Yatra", city: "Puri, Odisha", coords: [19.8135, 85.8312], dates: "3 Days", budget: "₹6.0K", isYatra: true, state: "Odisha" },
+    { id: "dwarka", name: "Dwarkadhish Dham Yatra", city: "Dwarka, Gujarat", coords: [22.2442, 68.9685], dates: "3 Days", budget: "₹7.5K", isYatra: true, state: "Gujarat" },
 
     // Visited Spots / Checkpoints
     { id: "atal-tunnel", name: "Atal Tunnel", city: "Lahaul & Spiti, HP", coords: [32.3638, 77.0802], dates: "Visited Checkpoint", isSpot: true, state: "Himachal Pradesh" },
@@ -2700,6 +3392,8 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
 
     import("leaflet").then((L) => {
       const Leaflet = L.default || L;
+      window.L = Leaflet;
+      leafletInstanceRef.current = Leaflet;
 
       const map = Leaflet.map(mapRef.current, {
         center: [29.8, 77.0],
@@ -2727,7 +3421,8 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
 
-    const L = window.L;
+    const L = leafletInstanceRef.current || window.L;
+    if (!L) return;
 
     const filteredPlaces = places.filter(p => {
       const status = getPlaceStatus(p);
@@ -2744,7 +3439,12 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
       let pinBorderColor = "rgba(14, 165, 233, 0.4)";
       let pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 4.9-4.9 2-4.9-2 2-4.9"/></svg>';
 
-      if (status === "completed") {
+      if (status === "yatra") {
+        pingColor = "bg-amber-500/40";
+        pinBg = "bg-amber-600";
+        pinBorderColor = "rgba(217, 119, 6, 0.5)";
+        pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>';
+      } else if (status === "completed") {
         pingColor = "bg-emerald-500/35";
         pinBg = "bg-emerald-600";
         pinBorderColor = "rgba(16, 185, 129, 0.4)";
@@ -2754,6 +3454,8 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
         pinBg = "bg-slate-500";
         pinBorderColor = "rgba(100, 116, 139, 0.4)";
         pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>';
+      } else if (status === "yatra") {
+        badgeHtml = `<span style="display: inline-block; font-size: 9px; font-weight: 900; background: #fffbe6; border: 1px solid #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 8px; font-family: monospace;">Sacred Yatra (Est: ${p.budget})</span>`;
       } else if (status === "spot") {
         pingColor = "bg-amber-500/35";
         pinBg = "bg-amber-600";
@@ -2839,7 +3541,7 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
 
           {/* Status Filters */}
           <div className="flex items-center bg-black/5 p-1 rounded-xl">
-            {["visited", "all", "completed", "upcoming", "archived", "spot"].map((mode) => (
+            {["visited", "all", "completed", "upcoming", "archived", "spot", "yatra"].map((mode) => (
               <button
                 key={mode}
                 onClick={() => setMapFilter(mode)}
@@ -2849,7 +3551,7 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
                     : "text-slate-500 hover:text-slate-800"
                 }`}
               >
-                {mode === "spot" ? "spots" : mode}
+                {mode === "spot" ? "spots" : mode === "yatra" ? "yatras" : mode}
               </button>
             ))}
           </div>
@@ -2871,6 +3573,10 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
             <div className="flex items-center gap-1 border-l border-black/10 pl-3">
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500 border border-white" />
               <span className="text-slate-600">Spots ({places.filter(p => getPlaceStatus(p) === "spot").length})</span>
+            </div>
+            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-purple-600 border border-white" />
+              <span className="text-slate-600">Yatras ({places.filter(p => p.isYatra).length})</span>
             </div>
           </div>
         </div>
