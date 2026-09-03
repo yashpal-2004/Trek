@@ -54,6 +54,33 @@ import { budget as grishneshwarBudget } from "../data/grishneshwar/budget";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
+  const [sectionSubFilter, setSectionSubFilter] = useState({
+    global: "ready",
+    trek: "ready",
+    trip: "ready",
+    jyotirlinga: "ready",
+    "panch-kedar": "ready",
+    "panch-kailash": "ready",
+    "char-dham": "ready"
+  });
+
+  const getSubFilter = (key) => sectionSubFilter[key] || sectionSubFilter.global || "ready";
+
+  const setSubFilterKey = (key, val) => {
+    if (key === "global") {
+      setSectionSubFilter({
+        global: val,
+        trek: val,
+        trip: val,
+        jyotirlinga: val,
+        "panch-kedar": val,
+        "panch-kailash": val,
+        "char-dham": val
+      });
+    } else {
+      setSectionSubFilter(prev => ({ ...prev, [key]: val }));
+    }
+  };
   const [completedPlans, setCompletedPlans, isLoading] = useFirestore("trek_completed_plans", []);
   const [targetPlans, setTargetPlans] = useFirestore("trek_target_plans", []);
   const [actualCosts, setActualCosts] = useFirestore("trek_actual_costs", {});
@@ -222,6 +249,14 @@ export default function Landing() {
     if (trip.isCompleted) return true;
     return trip.plans.some(p => completedPlans.includes(p.id));
   };
+
+    const isNotReadyTrip = (trip) => Boolean(
+    trip.isComingSoon ||
+    trip.comingSoon ||
+    trip.stats?.duration === "TBD" ||
+    trip.stats?.distance === "TBD" ||
+    (trip.plans && trip.plans.length > 0 && trip.plans.every(p => p.duration === "TBD" || p.budget === "TBD"))
+  );
 
   const parseNumericBudget = (str) => {
     if (!str) return 0;
@@ -988,6 +1023,7 @@ export default function Landing() {
       subtitle: "Uttarakhand, India",
       tags: ["panch-kedar"],
       description: "Fifth Kedar shrine in Urgam Valley where Lord Shiva's matted hair (Jata) is worshipped.",
+      isComingSoon: true,
       stats: { duration: "4 Days", distance: "500 km", budget: "₹" + (kalpeshwarBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "kalpeshwar-plan", title: "Kalpeshwar Darshan Yatra", duration: "4 Days", route: "Rishikesh – Urgam – Kalpeshwar", details: "Serene pilgrimage trek in Urgam Valley.", budget: "₹" + kalpeshwarBudget.total.toLocaleString("en-IN") + " / person", path: "/kalpeshwar" }]
@@ -1000,6 +1036,7 @@ export default function Landing() {
       subtitle: "Uttarakhand, India",
       tags: ["panch-kailash"],
       description: "Sacred pilgrimage to the Chhota Kailash and the natural snow-formed Om Parvat.",
+      isComingSoon: true,
       stats: { duration: "7 Days", distance: "1100 km", budget: "₹" + (adiKailashBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "adi-kailash-plan", title: "Adi Kailash & Om Parvat Expedition", duration: "7 Days", route: "Kathgodam – Dharchula – Jolingkong – Adi Kailash", details: "Majestic Himalayan Kailash Yatra.", budget: "₹" + adiKailashBudget.total.toLocaleString("en-IN") + " / person", path: "/adi-kailash" }]
@@ -1012,6 +1049,7 @@ export default function Landing() {
       subtitle: "Himachal Pradesh, India",
       tags: ["panch-kailash"],
       description: "High altitude trek to the sacred 79-foot natural rock Shivlingam in Kinnaur.",
+      isComingSoon: true,
       stats: { duration: "6 Days", distance: "700 km", budget: "₹" + (kinnaurKailashBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "kinnaur-kailash-plan", title: "Kinnaur Kailash Parikrama Trek", duration: "6 Days", route: "Shimla – Reckong Peo – Tangling – Kinnaur Kailash", details: "Sacred high pass mountain trek.", budget: "₹" + kinnaurKailashBudget.total.toLocaleString("en-IN") + " / person", path: "/kinnaur-kailash" }]
@@ -1024,6 +1062,7 @@ export default function Landing() {
       subtitle: "Himachal Pradesh, India",
       tags: ["panch-kailash"],
       description: "Holy pilgrimage trek to Manimahesh Lake at the base of Chamba Kailash Peak.",
+      isComingSoon: true,
       stats: { duration: "5 Days", distance: "650 km", budget: "₹" + (manimaheshKailashBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "manimahesh-kailash-plan", title: "Manimahesh Lake Yatra", duration: "5 Days", route: "Pathankot – Chamba – Hadsar – Manimahesh Lake", details: "Holy bath in Manimahesh Lake.", budget: "₹" + manimaheshKailashBudget.total.toLocaleString("en-IN") + " / person", path: "/manimahesh-kailash" }]
@@ -1036,6 +1075,7 @@ export default function Landing() {
       subtitle: "Tibet, Himalayas",
       tags: ["panch-kailash"],
       description: "Ultimate spiritual Yatra to Mount Kailash (Abode of Lord Shiva) & Lake Mansarovar.",
+      isComingSoon: true,
       stats: { duration: "14 Days", distance: "2500 km", budget: "₹" + (kailashMansarovarBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "kailash-mansarovar-plan", title: "Kailash Mansarovar Parikrama", duration: "14 Days", route: "Kathmandu – Kyirong – Mansarovar – Mount Kailash Kora", details: "Sacred international high altitude expedition.", budget: "₹" + kailashMansarovarBudget.total.toLocaleString("en-IN") + " / person", path: "/kailash-mansarovar" }]
@@ -1048,6 +1088,7 @@ export default function Landing() {
       subtitle: "Uttarakhand, India",
       tags: ["char-dham"],
       description: "Sacred Vishnu temple in Chamoli, part of Char Dham & Chota Char Dham.",
+      isComingSoon: true,
       stats: { duration: "4 Days", distance: "530 km", budget: "₹" + (badrinathBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "badrinath-plan", title: "Badrinath & Mana Village Yatra", duration: "4 Days", route: "Haridwar – Joshimath – Badrinath", details: "Holy darshan of Lord Badri Vishal.", budget: "₹" + badrinathBudget.total.toLocaleString("en-IN") + " / person", path: "/badrinath" }]
@@ -1060,6 +1101,7 @@ export default function Landing() {
       subtitle: "Uttarakhand, India",
       tags: ["char-dham"],
       description: "Origin of river Ganga in Uttarkashi, holy shrine of Goddess Ganga.",
+      isComingSoon: true,
       stats: { duration: "4 Days", distance: "500 km", budget: "₹" + (gangotriBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "gangotri-plan", title: "Gangotri Dham Yatra", duration: "4 Days", route: "Haridwar – Uttarkashi – Gangotri", details: "Spiritual pilgrimage along Bhagirathi river.", budget: "₹" + gangotriBudget.total.toLocaleString("en-IN") + " / person", path: "/gangotri" }]
@@ -1072,6 +1114,7 @@ export default function Landing() {
       subtitle: "Uttarakhand, India",
       tags: ["char-dham"],
       description: "Source of river Yamuna, seat of Goddess Yamuna in the Garhwal Himalayas.",
+      isComingSoon: true,
       stats: { duration: "4 Days", distance: "450 km", budget: "₹" + (yamunotriBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "yamunotri-plan", title: "Yamunotri Dham Yatra", duration: "4 Days", route: "Haridwar – Barkot – Janki Chatti – Yamunotri", details: "Sacred trek to Yamunotri shrine.", budget: "₹" + yamunotriBudget.total.toLocaleString("en-IN") + " / person", path: "/yamunotri" }]
@@ -1084,6 +1127,7 @@ export default function Landing() {
       subtitle: "Odisha, India",
       tags: ["char-dham"],
       description: "Famous Eastern Char Dham temple of Lord Jagannath on the Bay of Bengal coast.",
+      isComingSoon: true,
       stats: { duration: "3 Days", distance: "1800 km", budget: "₹" + (puriBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "puri-plan", title: "Jagannath Puri & Konark Yatra", duration: "3 Days", route: "Bhubaneswar – Puri – Konark Sun Temple", details: "Sacred Darshan & Golden Beach stay.", budget: "₹" + puriBudget.total.toLocaleString("en-IN") + " / person", path: "/puri" }]
@@ -1096,6 +1140,7 @@ export default function Landing() {
       subtitle: "Gujarat, India",
       tags: ["char-dham"],
       description: "Western Char Dham shrine of Lord Krishna located at the mouth of the Gomti river.",
+      isComingSoon: true,
       stats: { duration: "3 Days", distance: "1300 km", budget: "₹" + (dwarkaBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
       plans: [{ id: "dwarka-plan", title: "Dwarkadhish & Somnath Circuit", duration: "3 Days", route: "Ahmedabad – Rajkot – Dwarka – Bet Dwarka", details: "Sacred Krishna Dham pilgrimage.", budget: "₹" + dwarkaBudget.total.toLocaleString("en-IN") + " / person", path: "/dwarka" }]
@@ -1158,6 +1203,7 @@ export default function Landing() {
       title: "Mallikarjuna Jyotirlinga",
       subtitle: "Andhra Pradesh, India",
       description: "Sacred pilgrimage to the Mallikarjuna Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1183,6 +1229,7 @@ export default function Landing() {
       title: "Omkareshwar Jyotirlinga",
       subtitle: "Madhya Pradesh, India",
       description: "Sacred pilgrimage to the Omkareshwar Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1208,6 +1255,7 @@ export default function Landing() {
       title: "Kedarnath Jyotirlinga",
       subtitle: "Uttarakhand, India",
       description: "Sacred pilgrimage to the Kedarnath Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1233,6 +1281,7 @@ export default function Landing() {
       title: "Bhimashankar Jyotirlinga",
       subtitle: "Maharashtra, India",
       description: "Sacred pilgrimage to the Bhimashankar Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1258,6 +1307,7 @@ export default function Landing() {
       title: "Trimbakeshwar Jyotirlinga",
       subtitle: "Maharashtra, India",
       description: "Sacred pilgrimage to the Trimbakeshwar Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1283,6 +1333,7 @@ export default function Landing() {
       title: "Vaidyanath Jyotirlinga",
       subtitle: "Jharkhand, India",
       description: "Sacred pilgrimage to the Vaidyanath Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1308,6 +1359,7 @@ export default function Landing() {
       title: "Nageshwar Jyotirlinga",
       subtitle: "Gujarat, India",
       description: "Sacred pilgrimage to the Nageshwar Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1333,6 +1385,7 @@ export default function Landing() {
       title: "Ramanathaswamy Jyotirlinga",
       subtitle: "Tamil Nadu, India",
       description: "Sacred pilgrimage to the Ramanathaswamy Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1358,6 +1411,7 @@ export default function Landing() {
       title: "Grishneshwar Jyotirlinga",
       subtitle: "Maharashtra, India",
       description: "Sacred pilgrimage to the Grishneshwar Jyotirlinga.",
+      isComingSoon: true,
       stats: {
         duration: "TBD",
         distance: "TBD",
@@ -1442,6 +1496,7 @@ export default function Landing() {
 
   const renderTripCard = (trip) => {
     const isCompleted = isTripCompleted(trip);
+    const isNotReady = isNotReadyTrip(trip);
     const isTrek = trip.type === "trek";
     const targetPlanForTrip = trip.plans ? (trip.plans.length === 1 ? (!archivedPlans.includes(trip.plans[0].id) ? trip.plans[0] : null) : trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id))) : null;
     const isInCompare = compareList.includes(trip.id);
@@ -1450,13 +1505,15 @@ export default function Landing() {
     return (
       <div
         key={trip.id}
-        onClick={() => setSelectedTrip(trip)}
-        className={`hover:bg-white border hover:border-black/25 rounded-[32px] p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between cursor-pointer group relative overflow-hidden ${
-          isCompleted ? "opacity-90 grayscale-[20%]" : ""
-        } ${
-          isInCompare
-            ? "bg-violet-50/60 border-violet-300 ring-2 ring-violet-200/60"
-            : "bg-white/60 border-black/10"
+        onClick={isNotReady ? (e) => e.stopPropagation() : () => setSelectedTrip(trip)}
+        className={`rounded-[32px] p-8 shadow-sm transition-all duration-300 flex flex-col justify-between group relative overflow-hidden border ${
+          isNotReady && !isCompleted
+            ? "bg-slate-200/60 border-slate-300/80 text-slate-500 opacity-75 backdrop-blur-xs hover:bg-slate-200/90 cursor-not-allowed"
+            : isCompleted
+            ? "bg-white/60 border-black/10 opacity-90 grayscale-[20%] hover:bg-white hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+            : isInCompare
+            ? "bg-violet-50/60 border-violet-300 ring-2 ring-violet-200/60 hover:bg-white hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+            : "bg-white/60 border-black/10 hover:bg-white hover:-translate-y-1 hover:shadow-lg cursor-pointer"
         }`}
       >
         {isInCompare && (
@@ -1480,6 +1537,12 @@ export default function Landing() {
 
               <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 flex-wrap" style={{ fontFamily: "'Anton', sans-serif" }}>
                 {trip.title}
+                {isNotReady && !isCompleted && (
+                  <span className="bg-slate-300/80 text-slate-700 text-[10px] font-mono font-bold tracking-wider px-2.5 py-0.5 rounded-full normal-case border border-slate-400/40 flex items-center gap-1">
+                    <Clock size={10} />
+                    Coming Soon
+                  </span>
+                )}
                 {isCompleted && (
                   <span className="bg-emerald-500/10 text-emerald-600 text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full normal-case font-sans">
                     Done ({getCompletedPlansText(trip)})
@@ -2114,10 +2177,10 @@ export default function Landing() {
         {/* Dynamic Map showing completed places */}
         <CompletedTripsMap completedPlans={completedPlans} archivedTrips={archivedTrips} />
 
-        {/* Filter Toolbar: Category Filters + Status Filters */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 border-b border-black/10 pb-6">
-          {/* Category Selector Tabs */}
-          <div className="flex flex-wrap gap-2">
+        {/* Filter Toolbar: Row 1 = Category Tabs, Row 2 = Status & Controls */}
+        <div className="space-y-4 mb-10 border-b border-black/10 pb-6">
+          {/* Row 1: Category Selector Tabs */}
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setCategoryTab("all")}
               className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
@@ -2202,93 +2265,134 @@ export default function Landing() {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Sort Controls */}
-            {viewMode === "grid" && (
-              <div className="flex bg-black/5 p-1 rounded-2xl">
+          {/* Row 2: Controls, Status & Readiness Sub-Filters */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-black/5">
+            {/* Left Control Groups: Status + Readiness */}
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Status Selector (Active vs Done vs Archived) */}
+              <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0">
                 <button
-                  onClick={() => setSortBy("money")}
-                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
-                    sortBy === "money"
+                  onClick={() => setActiveTab("active")}
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeTab === "active"
                       ? "bg-white text-black shadow-sm"
                       : "text-slate-500 hover:text-black"
                   }`}
-                  title="Sort by Money"
                 >
-                  <Wallet size={12} /> Money
+                  Active
                 </button>
                 <button
-                  onClick={() => setSortBy("days")}
-                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
-                    sortBy === "days"
+                  onClick={() => setActiveTab("done")}
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeTab === "done"
                       ? "bg-white text-black shadow-sm"
                       : "text-slate-500 hover:text-black"
                   }`}
-                  title="Sort by Duration"
                 >
-                  <Calendar size={12} /> Days
+                  Done
+                </button>
+                <button
+                  onClick={() => setActiveTab("archived")}
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeTab === "archived"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  Archived
                 </button>
               </div>
-            )}
 
-            {/* View Mode Switcher */}
-            <div className="flex gap-1 bg-black/5 p-1 rounded-2xl">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-1.5 rounded-xl transition-all ${
-                  viewMode === "grid"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-slate-400 hover:text-black"
-                }`}
-                title="Grid View"
-              >
-                <LayoutGrid size={15} />
-              </button>
-              <button
-                onClick={() => setViewMode("timeline")}
-                className={`p-1.5 rounded-xl transition-all ${
-                  viewMode === "timeline"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-slate-400 hover:text-black"
-                }`}
-                title="Timeline View"
-              >
-                <Clock size={15} />
-              </button>
+              {/* Sub-Filter Selector (All vs Ready vs Coming Soon) */}
+              <div className="flex gap-1 bg-black/5 p-1 rounded-2xl shrink-0">
+                <button
+                  onClick={() => setSubFilterKey("global", "all")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                    getSubFilter("global") === "all"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setSubFilterKey("global", "ready")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                    getSubFilter("global") === "ready"
+                      ? "bg-emerald-600 text-white shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  <CheckCircle2 size={11} /> Ready
+                </button>
+                <button
+                  onClick={() => setSubFilterKey("global", "coming-soon")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                    getSubFilter("global") === "coming-soon"
+                      ? "bg-slate-700 text-white shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  <Clock size={11} /> Coming Soon
+                </button>
+              </div>
             </div>
 
-            {/* Status Selector (Active vs Done) */}
-            <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0">
-              <button
-                onClick={() => setActiveTab("active")}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                  activeTab === "active"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-slate-500 hover:text-black"
-                }`}
-              >
-                Active
-              </button>
-              <button
-                onClick={() => setActiveTab("done")}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                  activeTab === "done"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-slate-500 hover:text-black"
-                }`}
-              >
-                Done
-              </button>
-              <button
-                onClick={() => setActiveTab("archived")}
-                className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                  activeTab === "archived"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-slate-500 hover:text-black"
-                }`}
-              >
-                Archived
-              </button>
+            {/* Right Control Groups: Sort + View Mode */}
+            <div className="flex items-center gap-3 shrink-0">
+              {/* Sort Controls */}
+              {viewMode === "grid" && (
+                <div className="flex bg-black/5 p-1 rounded-2xl">
+                  <button
+                    onClick={() => setSortBy("money")}
+                    className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                      sortBy === "money"
+                        ? "bg-white text-black shadow-sm"
+                        : "text-slate-500 hover:text-black"
+                    }`}
+                    title="Sort by Money"
+                  >
+                    <Wallet size={12} /> Money
+                  </button>
+                  <button
+                    onClick={() => setSortBy("days")}
+                    className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                      sortBy === "days"
+                        ? "bg-white text-black shadow-sm"
+                        : "text-slate-500 hover:text-black"
+                    }`}
+                    title="Sort by Duration"
+                  >
+                    <Calendar size={12} /> Days
+                  </button>
+                </div>
+              )}
+
+              {/* View Mode Switcher */}
+              <div className="flex gap-1 bg-black/5 p-1 rounded-2xl">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 rounded-xl transition-all ${
+                    viewMode === "grid"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-400 hover:text-black"
+                  }`}
+                  title="Grid View"
+                >
+                  <LayoutGrid size={15} />
+                </button>
+                <button
+                  onClick={() => setViewMode("timeline")}
+                  className={`p-1.5 rounded-xl transition-all ${
+                    viewMode === "timeline"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-400 hover:text-black"
+                  }`}
+                  title="Timeline View"
+                >
+                  <Clock size={15} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2301,8 +2405,9 @@ export default function Landing() {
             {/* Section 1: Mountain Treks */}
             {trekItems.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-700">
                     <Footprints size={16} />
                   </div>
                   <div>
@@ -2311,9 +2416,54 @@ export default function Landing() {
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">Foot trails, high passes, and sacred temple treks</p>
                   </div>
-                </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("trek", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("trek") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({trekItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trek", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trek") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({trekItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trek", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trek") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({trekItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {trekItems.map(renderTripCard)}
+                  {(() => {
+                    const filteredList = trekItems.filter(t => getSubFilter("trek") === "ready" ? !isNotReadyTrip(t) : getSubFilter("trek") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("trek") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("trek") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
                 </div>
               </div>
             )}
@@ -2321,8 +2471,9 @@ export default function Landing() {
             {/* Section 2: Road Trips & Expeditions */}
             {tripItems.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
-                  <div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-700">
                     <Compass size={16} />
                   </div>
                   <div>
@@ -2331,9 +2482,54 @@ export default function Landing() {
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">Self-scooty circuits, bike rentals, and high-pass riding routes</p>
                   </div>
-                </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("trip", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("trip") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({tripItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trip", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trip") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({tripItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trip", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trip") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({tripItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {tripItems.map(renderTripCard)}
+                  {(() => {
+                    const filteredList = tripItems.filter(t => getSubFilter("trip") === "ready" ? !isNotReadyTrip(t) : getSubFilter("trip") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("trip") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("trip") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
                 </div>
               </div>
             )}
@@ -2341,8 +2537,9 @@ export default function Landing() {
             {/* Section 3: Jyotirlinga Yatras */}
             {jyotirlingaItems.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-700">
                     <Sparkles size={16} />
                   </div>
                   <div>
@@ -2351,9 +2548,54 @@ export default function Landing() {
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">Sacred pilgrimages to the 12 Jyotirlinga shrines</p>
                   </div>
-                </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("jyotirlinga", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("jyotirlinga") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({jyotirlingaItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("jyotirlinga", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("jyotirlinga") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({jyotirlingaItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("jyotirlinga", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("jyotirlinga") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({jyotirlingaItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {jyotirlingaItems.map(renderTripCard)}
+                  {(() => {
+                    const filteredList = jyotirlingaItems.filter(t => getSubFilter("jyotirlinga") === "ready" ? !isNotReadyTrip(t) : getSubFilter("jyotirlinga") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("jyotirlinga") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("jyotirlinga") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
                 </div>
               </div>
             )}
@@ -2361,8 +2603,9 @@ export default function Landing() {
             {/* Section 4: Panch Kedar Shrines */}
             {panchKedarItems.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
-                  <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-700">
                     <Sparkles size={16} />
                   </div>
                   <div>
@@ -2371,9 +2614,54 @@ export default function Landing() {
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">The five sacred Shiva temples in Garhwal Himalayas</p>
                   </div>
-                </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("panch-kedar", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("panch-kedar") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({panchKedarItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kedar", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kedar") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({panchKedarItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kedar", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kedar") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({panchKedarItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {panchKedarItems.map(renderTripCard)}
+                  {(() => {
+                    const filteredList = panchKedarItems.filter(t => getSubFilter("panch-kedar") === "ready" ? !isNotReadyTrip(t) : getSubFilter("panch-kedar") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("panch-kedar") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("panch-kedar") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
                 </div>
               </div>
             )}
@@ -2381,8 +2669,9 @@ export default function Landing() {
             {/* Section 5: Panch Kailash Expeditions */}
             {panchKailashItems.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
-                  <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-700">
                     <Sparkles size={16} />
                   </div>
                   <div>
@@ -2391,9 +2680,54 @@ export default function Landing() {
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">Sacred high-altitude pilgrimages to the 5 Holy Kailash Peaks</p>
                   </div>
-                </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("panch-kailash", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("panch-kailash") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({panchKailashItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kailash", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kailash") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({panchKailashItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kailash", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kailash") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({panchKailashItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {panchKailashItems.map(renderTripCard)}
+                  {(() => {
+                    const filteredList = panchKailashItems.filter(t => getSubFilter("panch-kailash") === "ready" ? !isNotReadyTrip(t) : getSubFilter("panch-kailash") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("panch-kailash") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("panch-kailash") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
                 </div>
               </div>
             )}
@@ -2401,8 +2735,9 @@ export default function Landing() {
             {/* Section 6: Char Dham Pilgrimages */}
             {charDhamItems.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
-                  <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-700">
                     <Sparkles size={16} />
                   </div>
                   <div>
@@ -2411,9 +2746,54 @@ export default function Landing() {
                     </h2>
                     <p className="text-xs text-slate-500 font-medium">Holy Char Dham shrines across Uttarakhand and India</p>
                   </div>
-                </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("char-dham", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("char-dham") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({charDhamItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("char-dham", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("char-dham") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({charDhamItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("char-dham", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("char-dham") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({charDhamItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {charDhamItems.map(renderTripCard)}
+                  {(() => {
+                    const filteredList = charDhamItems.filter(t => getSubFilter("char-dham") === "ready" ? !isNotReadyTrip(t) : getSubFilter("char-dham") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("char-dham") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("char-dham") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
                 </div>
               </div>
             )}
