@@ -3356,6 +3356,7 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
 
   const getPlaceStatus = (p) => {
     if (p.isSpot) return "spot";
+    if (p.isYatra) return "yatra";
     if (archivedTrips.includes(p.id)) return "archived";
     if (p.staticCompleted) return "completed";
     if (p.planIds && p.planIds.some(id => completedPlans.includes(id))) return "completed";
@@ -3444,6 +3445,8 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
         pinBg = "bg-amber-600";
         pinBorderColor = "rgba(217, 119, 6, 0.5)";
         pinIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>';
+      } else if (status === "yatra") {
+        badgeHtml = `<span style="display: inline-block; font-size: 9px; font-weight: 900; background: #fffbe6; border: 1px solid #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 8px; font-family: monospace;">Sacred Yatra (Est: ${p.budget})</span>`;
       } else if (status === "completed") {
         pingColor = "bg-emerald-500/35";
         pinBg = "bg-emerald-600";
