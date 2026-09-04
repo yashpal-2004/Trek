@@ -1929,10 +1929,6 @@ export default function Landing() {
     return sum + (val !== undefined && val !== null && !isNaN(parseFloat(val)) ? parseFloat(val) : parseNumericBudget(donePlan.budget));
   }, 0);
 
-  const completedTreksCount = completedTripsList.filter(t => t.type === "trek").length;
-  const completedRoadTripsCount = completedTripsList.filter(t => t.type === "trip").length;
-  const completedYatrasCount = completedTripsList.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga"))).length;
-
   const parseBudgetRange = (str) => {
     if (!str) return { min: 0, max: 0 };
     const matches = String(str).match(/₹([0-9,]+)/g);
@@ -1956,6 +1952,48 @@ export default function Landing() {
     return { min, max };
   };
 
+  const parseDaysRange = (str) => {
+    if (!str) return { min: 0, max: 0 };
+    const cleanStr = String(str);
+    const daysMatch = cleanStr.match(/(\d+(?:\s*[-–—]\s*\d+)?)\s*days?/i);
+    if (daysMatch && daysMatch[1]) {
+      const nums = daysMatch[1].match(/\d+/g).map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+      if (nums.length > 0) return { min: Math.min(...nums), max: Math.max(...nums) };
+    }
+    const leadingMatch = cleanStr.match(/^(\d+(?:\s*[-–—]\s*\d+)?)/);
+    if (leadingMatch && leadingMatch[1]) {
+      const nums = leadingMatch[1].match(/\d+/g).map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+      if (nums.length > 0) return { min: Math.min(...nums), max: Math.max(...nums) };
+    }
+    return { min: 0, max: 0 };
+  };
+
+  const getTripDaysBounds = (trip) => {
+    let min = Infinity;
+    let max = -Infinity;
+    (trip.plans || []).filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
+      const bounds = parseDaysRange(plan.duration);
+      if (bounds.min > 0 && bounds.min < min) min = bounds.min;
+      if (bounds.max > max) max = bounds.max;
+    });
+    if (min === Infinity) {
+      const bounds = parseDaysRange(trip.stats?.duration);
+      min = bounds.min;
+      max = bounds.max;
+    }
+    if (min === Infinity) min = 0;
+    if (max === -Infinity) max = min;
+    return { min, max };
+  };
+
+  const completedTreksCount = completedTripsList.filter(t => t.type === "trek").length;
+  const completedRoadTripsCount = completedTripsList.filter(t => t.type === "trip").length;
+  const completedYatrasCount = completedTripsList.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga"))).length;
+  const completedDaysTotal = completedTripsList.reduce((sum, trip) => {
+    const { max } = getTripDaysBounds(trip);
+    return sum + max;
+  }, 0);
+
   const activeTrips = trips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id));
   const activeTreksList = activeTrips.filter(t => t.type === "trek");
   const activeRoadTripsList = activeTrips.filter(t => t.type === "trip");
@@ -1969,6 +2007,11 @@ export default function Landing() {
 
   const upcomingRoadTripsRange = activeRoadTripsList.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  const upcomingDaysRange = activeTrips.reduce((acc, trip) => {
+    const { min, max } = getTripDaysBounds(trip);
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
@@ -1989,10 +2032,33 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
+  const archivedDaysRange = archivedTripsList.reduce((acc, trip) => {
+    let min = Infinity;
+    let max = -Infinity;
+    (trip.plans || []).forEach(plan => {
+      const bounds = parseDaysRange(plan.duration);
+      if (bounds.min > 0 && bounds.min < min) min = bounds.min;
+      if (bounds.max > max) max = bounds.max;
+    });
+    if (min === Infinity) {
+      const bounds = parseDaysRange(trip.stats?.duration);
+      min = bounds.min;
+      max = bounds.max;
+    }
+    if (min === Infinity) min = 0;
+    if (max === -Infinity) max = min;
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
   const jyotirlingaTripsList = allTrips.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga")));
   const jyotirlingaCount = jyotirlingaTripsList.length;
   const jyotirlingaRange = jyotirlingaTripsList.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
+  const jyotirlingaDaysRange = jyotirlingaTripsList.reduce((acc, trip) => {
+    const { min, max } = getTripDaysBounds(trip);
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
@@ -2004,6 +2070,11 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
+  const kedarKailashDaysRange = kedarKailashTripsList.reduce((acc, trip) => {
+    const { min, max } = getTripDaysBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
   const charDhamTripsList = allTrips.filter(t => t.type === "char-dham" || (t.tags && t.tags.includes("char-dham")));
   const dhamCount = charDhamTripsList.length;
   const charDhamRange = charDhamTripsList.reduce((acc, trip) => {
@@ -2011,7 +2082,22 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
+  const charDhamDaysRange = charDhamTripsList.reduce((acc, trip) => {
+    const { min, max } = getTripDaysBounds(trip);
+    return { min: acc.min + min, max: acc.max + max };
+  }, { min: 0, max: 0 });
+
   
+  const grandTotalEst = {
+    min: totalSpent + upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min,
+    max: totalSpent + upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max
+  };
+
+  const grandTotalDaysEst = {
+    min: completedDaysTotal + upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min,
+    max: completedDaysTotal + upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max
+  };
+
   return (
     <div className="min-h-screen w-screen bg-[#f2efe9] text-black selection:bg-black/10 flex flex-col justify-between relative font-sans">
       
@@ -2030,73 +2116,80 @@ export default function Landing() {
       </header>
 
       {/* Main Content Dashboard */}
-      <main className="flex-grow flex flex-col justify-start pt-2 md:pt-4 pb-12 px-6 max-w-5xl mx-auto w-full z-10">
+      <main className="flex-grow flex flex-col justify-start pt-2 md:pt-4 pb-12 px-6 md:px-12 max-w-7xl mx-auto w-full z-10">
         
         {/* Intro & Dashboard Stats */}
         <div className="mb-8 space-y-6">
-          <div>
-            <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
-              Select Your Adventure
-            </h1>
-            <p className="text-slate-500 font-medium text-sm mt-1.5 max-w-md leading-relaxed">
-              Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-black/5 pb-4">
+            <div>
+              <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
+              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
+                Select Your Adventure
+              </h1>
+              <p className="text-slate-500 font-medium text-sm mt-1.5 max-w-lg leading-relaxed">
+                Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
+              </p>
+            </div>
+
+            {/* Total Financial Summary Pills (Separate Spent + Est Budget) */}
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0 self-start md:self-auto">
+              {/* Pill 1: Total Spent */}
+              <div className="bg-white/90 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3.5 shadow-sm flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-mono font-black text-base border border-emerald-500/20">
+                  ₹
+                </div>
+                <div>
+                  <span className="text-[9px] font-black font-mono uppercase tracking-wider text-slate-400 block">Total Spent (8 Completed)</span>
+                  <p className="text-lg md:text-xl font-black font-mono text-emerald-700 leading-none mt-0.5">
+                    ₹{Math.round(totalSpent).toLocaleString("en-IN")}
+                  </p>
+                  <span className="text-[9px] font-bold font-mono text-slate-400 mt-1 block">
+                    {completedDaysTotal} Days Completed
+                  </span>
+                </div>
+              </div>
+
+              {/* Pill 2: Total Planned Est Budget */}
+              <div className="bg-gradient-to-br from-black to-slate-900 text-white rounded-2xl p-3.5 shadow-md flex items-center gap-3 border border-white/10">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-black text-base border border-emerald-500/30">
+                  ₹
+                </div>
+                <div>
+                  <span className="text-[9px] font-black font-mono uppercase tracking-wider text-slate-400 block">Planned Est. (36 Routes)</span>
+                  <p className="text-lg md:text-xl font-black font-mono text-emerald-400 leading-none mt-0.5">
+                    ₹{Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")} – ₹{Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}
+                  </p>
+                  <span className="text-[9px] font-bold font-mono text-slate-300 mt-1 block">
+                    {upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min}–{upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max} Total Days
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Financial Summary Stat Badges */}
           <div className="flex flex-col gap-3">
-            {/* Top Row: Financial & Expedition Summaries (4 cards) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
-              {/* Card 1: Total Spent */}
-              <div className="bg-white/80 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Total Spent</span>
-                </div>
-                <p className="text-xl font-black text-emerald-700 font-mono">₹{totalSpent.toLocaleString("en-IN")}</p>
-                <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono whitespace-nowrap">
-                  {completedTreksCount} Trek{completedTreksCount === 1 ? "" : "s"} • {completedRoadTripsCount} Road Trip{completedRoadTripsCount === 1 ? "" : "s"}
-                </p>
-              </div>
-
-              {/* Card 2: Upcoming Treks Est. */}
+            {/* Top Row: General & Expedition Summaries (2 cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+              {/* Card 1: Combined Upcoming Treks & Road Trips Est. */}
               <div className="bg-white/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                  <span className="text-[9px] font-black font-mono text-emerald-700 uppercase tracking-wider">Upcoming Treks</span>
+                  <span className="text-[9px] font-black font-mono text-emerald-700 uppercase tracking-wider">Upcoming Treks & Road Trips</span>
                 </div>
                 <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
-                  {upcomingTreksRange.min === upcomingTreksRange.max ? (
-                    `₹${upcomingTreksRange.min.toLocaleString("en-IN")}`
+                  {upcomingTreksRange.min + upcomingRoadTripsRange.min === upcomingTreksRange.max + upcomingRoadTripsRange.max ? (
+                    `₹${(upcomingTreksRange.min + upcomingRoadTripsRange.min).toLocaleString("en-IN")}`
                   ) : (
-                    `₹${upcomingTreksRange.min.toLocaleString("en-IN")} – ₹${upcomingTreksRange.max.toLocaleString("en-IN")}`
+                    `₹${(upcomingTreksRange.min + upcomingRoadTripsRange.min).toLocaleString("en-IN")} – ₹${(upcomingTreksRange.max + upcomingRoadTripsRange.max).toLocaleString("en-IN")}`
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-emerald-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {activeTreksCount} Alpine Trek{activeTreksCount === 1 ? "" : "s"}
+                  {activeTreksCount} Alpine Trek{activeTreksCount === 1 ? "" : "s"} • {activeRoadTripsCount} Riding Expedition{activeRoadTripsCount === 1 ? "" : "s"} • {upcomingDaysRange.min === upcomingDaysRange.max ? `${upcomingDaysRange.min} Days` : `${upcomingDaysRange.min}–${upcomingDaysRange.max} Days`}
                 </p>
               </div>
 
-              {/* Card 3: Upcoming Road Trips Est. */}
-              <div className="bg-white/80 backdrop-blur-md border border-sky-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <div className="w-2 h-2 rounded-full bg-sky-600 animate-pulse" />
-                  <span className="text-[9px] font-black font-mono text-sky-700 uppercase tracking-wider">Upcoming Road Trips</span>
-                </div>
-                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
-                  {upcomingRoadTripsRange.min === upcomingRoadTripsRange.max ? (
-                    `₹${upcomingRoadTripsRange.min.toLocaleString("en-IN")}`
-                  ) : (
-                    `₹${upcomingRoadTripsRange.min.toLocaleString("en-IN")} – ₹${upcomingRoadTripsRange.max.toLocaleString("en-IN")}`
-                  )}
-                </p>
-                <p className="text-[9px] font-bold text-sky-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {activeRoadTripsCount} Riding Expedition{activeRoadTripsCount === 1 ? "" : "s"}
-                </p>
-              </div>
-
-              {/* Card 4: Archived Est. */}
+              {/* Card 2: Archived Est. */}
               <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-slate-500" />
@@ -2110,7 +2203,7 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono whitespace-nowrap">
-                  {archivedTreksCount} Trek{archivedTreksCount === 1 ? "" : "s"} • {archivedRoadTripsCount} Road Trip{archivedRoadTripsCount === 1 ? "" : "s"}
+                  {archivedTreksCount} Trek{archivedTreksCount === 1 ? "" : "s"} • {archivedRoadTripsCount} Road Trip{archivedRoadTripsCount === 1 ? "" : "s"} • {archivedDaysRange.min === archivedDaysRange.max ? `${archivedDaysRange.min} Days` : `${archivedDaysRange.min}–${archivedDaysRange.max} Days`}
                 </p>
               </div>
             </div>
@@ -2131,7 +2224,7 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-amber-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {jyotirlingaCount} Sacred Shrines
+                  {jyotirlingaCount} Sacred Shrines • {jyotirlingaDaysRange.min === jyotirlingaDaysRange.max ? `${jyotirlingaDaysRange.min} Days` : `${jyotirlingaDaysRange.min}–${jyotirlingaDaysRange.max} Days`}
                 </p>
               </div>
 
@@ -2149,7 +2242,7 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-purple-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {kedarCount} Kedar • {kailashCount} Kailash
+                  {kedarCount} Kedar • {kailashCount} Kailash • {kedarKailashDaysRange.min === kedarKailashDaysRange.max ? `${kedarKailashDaysRange.min} Days` : `${kedarKailashDaysRange.min}–${kedarKailashDaysRange.max} Days`}
                 </p>
               </div>
 
@@ -2167,7 +2260,7 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-red-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {dhamCount} Holy Dham Shrines
+                  {dhamCount} Holy Dham Shrines • {charDhamDaysRange.min === charDhamDaysRange.max ? `${charDhamDaysRange.min} Days` : `${charDhamDaysRange.min}–${charDhamDaysRange.max} Days`}
                 </p>
               </div>
             </div>
