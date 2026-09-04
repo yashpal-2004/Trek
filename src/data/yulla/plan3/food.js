@@ -24,7 +24,7 @@ export const foodGuide = {
       icon: "Moon",
       items: [
         { place: "Yulla Khas Homestay", dish: "Roti, local leafy vegetable (Koda), Dal & Rice", cost: 120, vegetarian: true, protein: "Moderate" },
-        { place: "Base Camp Tents", dish: "Freshly prepared Khichdi / Soup", cost: 100, vegetarian: true, protein: "Moderate" }
+        { place: "Highway Dhaba (Return)", dish: "Freshly prepared Dal Tadka, Roti & Sabzi", cost: 130, vegetarian: true, protein: "Moderate" }
       ]
     }
   ],

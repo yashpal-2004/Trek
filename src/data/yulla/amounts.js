@@ -59,5 +59,35 @@ export const yullaAmounts = {
       scootyRent: 1000,
       scootyFuel: 900
     }
+  },
+
+  plan3: {
+    budgetTotal: 5200,
+    transportCategory: 2400,
+    accommodationCategory: 1200,
+    foodCategory: 1400,
+    emergencyCategory: 200,
+
+    calcDefaults: {
+      transport: 2400,
+      stay: 1200,
+      food: 1400,
+      emergency: 0,
+      shopping: 0,
+      permits: 100
+    },
+
+    stays: {
+      yullaKhas: { budget: 400, mid: 800, premium: 1500, homestayPrice: 600, roomPrice: 800 }
+    },
+
+    transportFares: {
+      delhiToShimla: 600,
+      shimlaToTapri: 400,
+      tapriToYullaKhas: 100,
+      yullaKhasToTapri: 100,
+      tapriToShimla: 400,
+      shimlaToDelhi: 600
+    }
   }
 };

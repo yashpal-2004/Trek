@@ -266,7 +266,7 @@ export default function Landing() {
 
   const getParentTripId = (key) => {
     if (key === 'rudranath-plan1' || key === 'rudranath-plan2' || key === 'plan1' || key === 'plan2') return 'rudranath';
-    if (key === 'yulla-plan1' || key === 'yulla-plan2') return 'yulla';
+    if (key === 'yulla-plan1' || key === 'yulla-plan2' || key === 'yulla-plan3') return 'yulla';
     if (key === 'ladakh-plan1' || key === 'ladakh-plan2' || key === 'ladakh-plan3' || key === 'ladakh-plan4') return 'ladakh';
     if (key === 'spiti-plan1' || key === 'spiti-plan2' || key === 'spiti-plan3') return 'spiti';
     if (key === 'annapurna-plan1') return 'annapurna';
@@ -289,6 +289,7 @@ export default function Landing() {
 
   const getExpenseTrackerKey = (planId) => {
     const keysMap = {
+      "yulla-plan3": "expenses-yulla-p3",
       "yulla-plan2": "expenses-yulla",
       "yulla-plan1": "expenses-yulla-p2",
       "ujjain": "expenses-ujjain",
@@ -552,9 +553,9 @@ export default function Landing() {
       subtitle: "Himachal Pradesh, India",
       description: "Trek to the highest Krishna Temple in the world in Kinnaur, followed by a 2-day scooty sightseeing exploration in Shimla.",
       stats: {
-        duration: "5 Days",
+        duration: "4–5 Days",
         distance: "24 km Trek",
-        budget: `₹${(yullaAmounts.plan2.budgetTotal / 1000).toFixed(1)}K–${(yullaAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
+        budget: `₹${(yullaAmounts.plan3.budgetTotal / 1000).toFixed(1)}K–${(yullaAmounts.plan1.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -575,6 +576,15 @@ export default function Landing() {
           details: "Self-guided budget route using HRTC buses, village homestays, and a 2-day Shimla scooty exploration at the end.",
           budget: `₹${yullaAmounts.plan1.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/yulla-plan2",
+        },
+        {
+          id: "yulla-plan3",
+          title: "Plan 3 (Direct Bus / Budget Trek)",
+          duration: "4 Days",
+          route: "Delhi → Shimla → Tapri → Yulla Khas → Yulla Kanda Lake → Yulla Khas → Tapri → Shimla → Delhi",
+          details: "Pure budget trek using direct HRTC buses and local Bolero jeeps without scooty rental or extra Shimla hotel stays.",
+          budget: `₹${yullaAmounts.plan3.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/yulla-plan3",
         }
       ],
     },
@@ -3602,7 +3612,7 @@ const TripExpenseBreakdown = ({ planId }) => {
 
   const getParentTripId = (key) => {
     if (key === 'rudranath-plan1' || key === 'rudranath-plan2' || key === 'plan1' || key === 'plan2') return 'rudranath';
-    if (key === 'yulla-plan1' || key === 'yulla-plan2') return 'yulla';
+    if (key === 'yulla-plan1' || key === 'yulla-plan2' || key === 'yulla-plan3') return 'yulla';
     if (key === 'ladakh-plan1' || key === 'ladakh-plan2' || key === 'ladakh-plan3' || key === 'ladakh-plan4') return 'ladakh';
     if (key === 'spiti-plan1' || key === 'spiti-plan2' || key === 'spiti-plan3') return 'spiti';
     if (key === 'annapurna-plan1') return 'annapurna';
@@ -3625,6 +3635,7 @@ const TripExpenseBreakdown = ({ planId }) => {
 
   const getExpenseTrackerKey = (planId) => {
     const keysMap = {
+      "yulla-plan3": "expenses-yulla-p3",
       "yulla-plan2": "expenses-yulla",
       "yulla-plan1": "expenses-yulla-p2",
       "ujjain": "expenses-ujjain",
