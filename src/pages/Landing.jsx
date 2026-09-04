@@ -2131,37 +2131,41 @@ export default function Landing() {
               </p>
             </div>
 
-            {/* Total Financial Summary Pills (Separate Spent + Est Budget) */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 shrink-0 self-start md:self-auto">
-              {/* Pill 1: Total Spent */}
-              <div className="bg-white/90 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3.5 shadow-sm flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-700 flex items-center justify-center font-mono font-black text-base border border-emerald-500/20">
+            {/* Total Financial Summary Pills (Unified Website Capsule Bar Styling) */}
+            <div className="flex flex-wrap items-center gap-2 shrink-0 self-start md:self-auto bg-black/5 p-1.5 rounded-3xl border border-black/5">
+              {/* Capsule 1: Total Spent */}
+              <div className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-2xl shadow-xs">
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white text-[10px] font-black">
                   ₹
                 </div>
                 <div>
-                  <span className="text-[9px] font-black font-mono uppercase tracking-wider text-slate-400 block">Total Spent (8 Completed)</span>
-                  <p className="text-lg md:text-xl font-black font-mono text-emerald-700 leading-none mt-0.5">
-                    ₹{Math.round(totalSpent).toLocaleString("en-IN")}
-                  </p>
-                  <span className="text-[9px] font-bold font-mono text-slate-400 mt-1 block">
-                    {completedDaysTotal} Days Completed
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-emerald-100 font-mono">Total Spent</span>
+                    <span className="text-[9px] font-black bg-white/20 px-1.5 py-0.2 rounded-md font-mono">8 Done</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <span className="text-sm font-black font-mono tracking-tight">₹{Math.round(totalSpent).toLocaleString("en-IN")}</span>
+                    <span className="text-[10px] font-bold text-emerald-100 font-mono">({completedTreksCount} Trek • {completedRoadTripsCount} Trips • {completedDaysTotal} Days)</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Pill 2: Total Planned Est Budget */}
-              <div className="bg-gradient-to-br from-black to-slate-900 text-white rounded-2xl p-3.5 shadow-md flex items-center gap-3 border border-white/10">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-black text-base border border-emerald-500/30">
+              {/* Capsule 2: Planned Est. Budget */}
+              <div className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-2xl shadow-xs">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-black border border-emerald-500/30">
                   ₹
                 </div>
                 <div>
-                  <span className="text-[9px] font-black font-mono uppercase tracking-wider text-slate-400 block">Planned Est. (36 Routes)</span>
-                  <p className="text-lg md:text-xl font-black font-mono text-emerald-400 leading-none mt-0.5">
-                    ₹{Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")} – ₹{Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}
-                  </p>
-                  <span className="text-[9px] font-bold font-mono text-slate-300 mt-1 block">
-                    {upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min}–{upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max} Total Days
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 font-mono">Planned Est.</span>
+                    <span className="text-[9px] font-black bg-white/10 text-emerald-400 px-1.5 py-0.2 rounded-md font-mono">36 Routes</span>
+                  </div>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <span className="text-sm font-black font-mono text-emerald-400 tracking-tight">
+                      ₹{Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")} – ₹{Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-300 font-mono">({upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min}–{upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max} Days)</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4005,26 +4009,26 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
         </div>
 
         {/* Filters and Legend */}
-        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+        <div className="flex flex-wrap items-center gap-2.5 w-full xl:w-auto">
           {/* States counter badge */}
-          <div className="flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-[9px] font-mono font-black uppercase shadow-xs">
-            <Compass size={11} className="animate-spin-slow" />
+          <div className="flex items-center gap-1.5 bg-emerald-700 text-white px-3.5 py-1.5 rounded-full text-[10px] font-mono font-black uppercase tracking-wide shadow-xs hover:bg-emerald-800 transition-colors">
+            <Compass size={12} className="animate-spin-slow" />
             <span>
               {statesCount} States & UTs
               {countriesCount > 0 ? " & " + countriesCount + " Country" : ""} Visited
             </span>
           </div>
 
-          {/* Status Filters */}
-          <div className="flex items-center bg-black/5 p-1 rounded-xl">
+          {/* Status Filters Bar */}
+          <div className="flex items-center bg-black/5 p-1 rounded-full border border-black/5">
             {["visited", "all", "completed", "upcoming", "archived", "spot", "yatra"].map((mode) => (
               <button
                 key={mode}
                 onClick={() => setMapFilter(mode)}
-                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase font-mono tracking-wider transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-full text-[9px] font-black uppercase font-mono tracking-wider transition-all cursor-pointer ${
                   mapFilter === mode
-                    ? "bg-white text-black shadow-xs"
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-black/5"
                 }`}
               >
                 {mode === "spot" ? "spots" : mode === "yatra" ? "yatras" : mode}
@@ -4032,27 +4036,27 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
             ))}
           </div>
 
-          {/* Counts */}
-          <div className="flex flex-wrap items-center gap-3 bg-white/60 border border-black/5 px-3 py-1.5 rounded-xl text-[10px] font-mono font-black uppercase">
-            <div className="flex items-center gap-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 border border-white" />
-              <span className="text-slate-600">Completed ({places.filter(p => getPlaceStatus(p) === "completed").length})</span>
+          {/* Counts Legend Pill Bar */}
+          <div className="flex flex-wrap items-center gap-2.5 bg-black/5 p-1 rounded-full border border-black/5 text-[9px] font-mono font-black uppercase">
+            <div className="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-full shadow-2xs border border-emerald-500/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 ring-2 ring-emerald-600/20" />
+              <span className="text-slate-700">Completed <span className="text-emerald-700">({places.filter(p => getPlaceStatus(p) === "completed").length})</span></span>
             </div>
-            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-sky-600 border border-white" />
-              <span className="text-slate-600">Upcoming ({places.filter(p => getPlaceStatus(p) === "upcoming").length})</span>
+            <div className="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-full shadow-2xs border border-sky-500/20">
+              <span className="w-2 h-2 rounded-full bg-sky-600 ring-2 ring-sky-600/20" />
+              <span className="text-slate-700">Upcoming <span className="text-sky-700">({places.filter(p => getPlaceStatus(p) === "upcoming").length})</span></span>
             </div>
-            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-slate-500 border border-white" />
-              <span className="text-slate-600">Archived ({places.filter(p => getPlaceStatus(p) === "archived").length})</span>
+            <div className="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-full shadow-2xs border border-slate-500/20">
+              <span className="w-2 h-2 rounded-full bg-slate-500 ring-2 ring-slate-500/20" />
+              <span className="text-slate-700">Archived <span className="text-slate-700">({places.filter(p => getPlaceStatus(p) === "archived").length})</span></span>
             </div>
-            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 border border-white" />
-              <span className="text-slate-600">Spots ({places.filter(p => getPlaceStatus(p) === "spot").length})</span>
+            <div className="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-full shadow-2xs border border-amber-500/20">
+              <span className="w-2 h-2 rounded-full bg-amber-500 ring-2 ring-amber-500/20" />
+              <span className="text-slate-700">Spots <span className="text-amber-700">({places.filter(p => getPlaceStatus(p) === "spot").length})</span></span>
             </div>
-            <div className="flex items-center gap-1 border-l border-black/10 pl-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-600 border border-white" />
-              <span className="text-slate-600">Yatras ({places.filter(p => p.isYatra).length})</span>
+            <div className="flex items-center gap-1.5 bg-white/90 px-2.5 py-1 rounded-full shadow-2xs border border-purple-500/20">
+              <span className="w-2 h-2 rounded-full bg-purple-600 ring-2 ring-purple-600/20" />
+              <span className="text-slate-700">Yatras <span className="text-purple-700">({places.filter(p => p.isYatra).length})</span></span>
             </div>
           </div>
         </div>
