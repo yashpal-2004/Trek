@@ -192,31 +192,31 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
           {/* Main Cover Scrapbook Board */}
           <div className="relative flex-1 w-full bg-[#dfd6c6] rounded-3xl border-2 border-[#5c4431] shadow-2xl flex flex-col justify-between overflow-hidden">
             
-            {/* Wide 3:2 Landscape Vintage Artwork Background */}
+            {/* Rich Trip Collage Artwork with Spiti, Rudranath, Amritsar & Jaipur snippets */}
             <img 
-              src="/vintage_cover_horizontal.jpg" 
-              alt="Vintage Travel Journal Cover"
-              className="absolute inset-0 w-full h-full object-cover object-center filter contrast-[1.05] brightness-[0.97] transition-transform duration-700 group-hover:scale-102"
+              src="/trip_collage_cover.jpg" 
+              alt="Yashpal's Travel Expeditions Journal Cover"
+              className="absolute inset-0 w-full h-full object-cover object-center filter contrast-[1.05] brightness-[0.98] transition-transform duration-700 group-hover:scale-102"
             />
 
-            {/* Custom Typography overlay fitted precisely inside the center parchment frame */}
-            <div className="relative z-10 my-auto mx-auto w-[65%] md:w-[50%] max-w-md bg-[#f7f2e7]/95 backdrop-blur-xs p-5 md:p-7 rounded-2xl border-2 border-[#8c745c] shadow-2xl text-center">
+            {/* Custom Typography Overlay Plaque */}
+            <div className="relative z-10 my-auto mx-auto w-[65%] md:w-[42%] max-w-sm bg-[#f7f2e7]/95 backdrop-blur-xs p-5 md:p-6 rounded-2xl border-2 border-[#8c745c] shadow-2xl text-center">
               
-              {/* Vintage Postmark Stamp Accent */}
+              {/* Header Title */}
               <div className="border-b border-[#a8947d]/60 pb-2 mb-2">
                 <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#8c6b4f] font-bold block mb-1">
-                  VINTAGE EXPEDITION LOG
+                  EXPEDITION SCRAPBOOK
                 </span>
-                <h1 className="text-3xl md:text-4xl font-serif font-black tracking-tight text-[#3b2716] uppercase leading-tight">
+                <h1 className="text-2xl md:text-3xl font-serif font-black tracking-tight text-[#3b2716] uppercase leading-tight">
                   Yashpal's Travels
                 </h1>
               </div>
 
               <div className="space-y-1 my-2">
-                <p className="text-xs md:text-sm font-serif italic text-[#634832] font-semibold">
-                  Himalayan Mountain Treks & Road Trips
+                <p className="text-xs font-serif italic text-[#634832] font-semibold">
+                  Spiti • Rudranath • Amritsar • Mussoorie
                 </p>
-                <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-[#8c6b4f]">
+                <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-[#8c6b4f]">
                   <span>VOL. 01</span>
                   <span>•</span>
                   <span>EST. 2026</span>
@@ -224,7 +224,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
               </div>
 
               {/* Click to Open Button Badge */}
-              <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#3b2716] text-[#f7f2e7] text-xs font-mono font-bold tracking-wider group-hover:bg-[#5c4028] transition-all shadow-md animate-pulse">
+              <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#3b2716] text-[#f7f2e7] text-xs font-mono font-bold tracking-wider group-hover:bg-[#5c4028] transition-all shadow-md animate-pulse">
                 <span>OPEN TRAVEL DIARY</span>
                 <span>📖</span>
               </div>
@@ -242,13 +242,13 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   return (
     <div className="relative w-full h-[720px] md:h-[760px] bg-[#3d2f24] rounded-[40px] p-5 md:p-8 shadow-2xl font-serif text-slate-800 border-4 border-[#2b1f17] flex flex-col justify-between">
       
-      {/* Close Cover Button */}
+      {/* Close Cover Bookmark Tag Button */}
       <button
         onClick={() => setIsBookOpen(false)}
-        className="absolute top-2 left-6 z-30 px-3 py-1 bg-amber-950/80 hover:bg-amber-950 text-amber-200 text-xs font-mono rounded-b-lg border border-amber-600/40 shadow-md flex items-center gap-1 transition-all"
-        title="Close Journal Cover"
+        className="absolute -top-1 left-12 md:left-16 z-30 px-3.5 py-1.5 bg-[#4a331e] hover:bg-[#2b1f17] text-[#f7e4c8] text-xs font-mono font-bold rounded-b-xl border-x-2 border-b-2 border-amber-900/60 shadow-lg flex items-center gap-1.5 transition-all transform hover:translate-y-0.5 cursor-pointer"
+        title="Fold up and close journal cover"
       >
-        <span>📕 Close Journal</span>
+        <span>📕 Close Cover</span>
       </button>
       
       {/* Outer Journal Book Cover Frame & Metallic Corners */}
@@ -619,24 +619,25 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
         </div>
 
         {/* RIGHT SIDE BOOKMARK TABS (Interactive Book Page Divider Tabs) */}
-        <div className="flex flex-col justify-start bg-[#2b1f17] border-l border-black/30 py-2 select-none z-30">
+        <div className="flex flex-col justify-start pt-6 pb-2 pr-1 select-none z-30 space-y-3">
           {[
-            { id: "index", label: "INDEX", icon: "📑" },
-            { id: "gallery", label: "GALLERY", icon: "📷" },
+            { id: "index", label: "INDEX", color: "bg-amber-600" },
+            { id: "gallery", label: "GALLERY", color: "bg-emerald-600" },
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-3 px-1.5 my-1 rounded-r-md text-[10px] font-mono uppercase font-bold tracking-wider border-y border-r border-black/30 transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                className={`py-3 px-2 rounded-r-xl text-[10px] font-mono uppercase font-black tracking-widest border-y border-r transition-all duration-300 cursor-pointer flex items-center justify-center relative group shadow-md ${
                   isActive
-                    ? "bg-[#f5f1e8] text-amber-950 shadow-md font-black translate-x-1 border-l-2 border-l-amber-600"
-                    : "bg-[#231811] text-amber-200/60 hover:bg-[#34241a] hover:text-amber-100"
+                    ? "bg-[#f5f1e8] text-amber-950 border-amber-900/40 translate-x-1.5 shadow-lg ring-1 ring-black/10"
+                    : "bg-[#1c130d] text-amber-200/60 hover:text-amber-100 border-black/40 hover:bg-[#2a1d15]"
                 }`}
                 style={{ writingMode: "vertical-rl" }}
                 title={`Switch view to ${tab.label}`}
               >
+                <div className={`absolute top-0 bottom-0 left-0 w-1 ${tab.color} rounded-l-xs`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -1656,7 +1657,7 @@ export default function Landing() {
     }
   ];
 
-  const allTrips = [...trips, ...completedTrips,
+  const rawAllTrips = [...trips, ...completedTrips,
     {
       id: "kalpeshwar",
       type: "panch-kedar",
@@ -1729,11 +1730,24 @@ export default function Landing() {
       title: "Badrinath Temple Yatra",
       subtitle: "Uttarakhand, India",
       tags: ["char-dham"],
-      description: "Sacred Vishnu temple in Chamoli, part of Char Dham & Chota Char Dham.",
+      description: "Sacred shrine of Lord Vishnu in Garhwal Himalayas.",
       isComingSoon: true,
-      stats: { duration: "4 Days", distance: "530 km", budget: "₹" + (badrinathBudget.total / 1000).toFixed(1) + "K" },
+      stats: { duration: "4 Days", distance: "600 km", budget: "₹" + (badrinathBudget.total / 1000).toFixed(1) + "K" },
       image: "/mountain_clay_peak.png",
-      plans: [{ id: "badrinath-plan", title: "Badrinath & Mana Village Yatra", duration: "4 Days", route: "Haridwar – Joshimath – Badrinath", details: "Holy darshan of Lord Badri Vishal.", budget: "₹" + badrinathBudget.total.toLocaleString("en-IN") + " / person", path: "/badrinath" }]
+      plans: [{ id: "badrinath-plan", title: "Badrinath Darshan", duration: "4 Days", route: "Rishikesh – Joshimath – Badrinath – Mana", details: "Pilgrimage to Badrinath and India's last village Mana.", budget: "₹" + badrinathBudget.total.toLocaleString("en-IN") + " / person", path: "/badrinath" }]
+    },
+    {
+      id: "kedarnath",
+      type: "char-dham",
+      typeLabel: "Char Dham Yatra",
+      title: "Kedarnath Temple Trek",
+      subtitle: "Uttarakhand, India",
+      tags: ["char-dham"],
+      description: "Sacred Shiva shrine at 3584m altitude reached via 16km trek from Gaurikund.",
+      isComingSoon: true,
+      stats: { duration: "5 Days", distance: "550 km", budget: "₹" + (badrinathBudget.total / 1000).toFixed(1) + "K" },
+      image: "/mountain_clay_peak.png",
+      plans: [{ id: "kedarnath-plan", title: "Kedarnath Yatra Trek", duration: "5 Days", route: "Rishikesh – Sonprayag – Gaurikund – Kedarnath", details: "High altitude trek to holy Kedarnath shrine.", budget: "₹" + badrinathBudget.total.toLocaleString("en-IN") + " / person", path: "/kedarnath" }]
     },
     {
       id: "gangotri",
@@ -1878,10 +1892,30 @@ export default function Landing() {
       ],
     },
 
-
-
-
   ];
+
+  // Deduplicate allTrips by title/keyword so completed trip entries override active ones
+  const allTrips = useMemo(() => {
+    const map = new Map();
+    rawAllTrips.forEach(trip => {
+      if (!trip) return;
+      let key = (trip.id || "").toLowerCase().trim();
+      const rawTitle = (trip.title || "").toLowerCase();
+      if (rawTitle.includes("spiti")) key = "spiti";
+      else if (rawTitle.includes("rudranath")) key = "rudranath";
+      else if (rawTitle.includes("amritsar")) key = "amritsar";
+      else if (rawTitle.includes("hisar")) key = "hisar";
+      else if (rawTitle.includes("mussoorie")) key = "mussoorie";
+      else if (rawTitle.includes("manali")) key = "manali";
+      else if (rawTitle.includes("jaipur")) key = "jaipur";
+      else if (rawTitle.includes("vrindavan")) key = "vrindavan";
+
+      if (!map.has(key) || trip.isCompleted) {
+        map.set(key, trip);
+      }
+    });
+    return Array.from(map.values());
+  }, [rawAllTrips]);
 
   const getMinBudget = (trip) => {
     if (!trip.stats || !trip.stats.budget) return 0;
@@ -1919,12 +1953,14 @@ export default function Landing() {
     return 0;
   });
 
-  const trekItems = sortedTrips.filter(t => t.type === "trek");
-  const tripItems = sortedTrips.filter(t => t.type === "trip");
   const jyotirlingaItems = sortedTrips.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga")));
   const panchKedarItems = sortedTrips.filter(t => t.tags && t.tags.includes("panch-kedar"));
   const panchKailashItems = sortedTrips.filter(t => t.tags && t.tags.includes("panch-kailash"));
   const charDhamItems = sortedTrips.filter(t => t.tags && t.tags.includes("char-dham"));
+
+  const isSpecialized = (t) => (t.tags && (t.tags.includes("panch-kedar") || t.tags.includes("jyotirlinga") || t.tags.includes("panch-kailash") || t.tags.includes("char-dham"))) || t.type === "jyotirlinga";
+  const trekItems = sortedTrips.filter(t => t.type === "trek" && !isSpecialized(t));
+  const tripItems = sortedTrips.filter(t => t.type === "trip" && !isSpecialized(t));
 
   if (isLoading) {
     return (
@@ -2647,7 +2683,7 @@ export default function Landing() {
                 Select Your Adventure
               </h2>
               <p className="text-slate-500 font-medium text-sm mt-1.5 leading-relaxed">
-                Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
+                Explore Himalayan alpine treks, road trips, 12 Jyotirlingas, Panch Kedar, Panch Kailash, and Char Dham pilgrimages with full itineraries and budget breakdowns.
               </p>
             </div>
 

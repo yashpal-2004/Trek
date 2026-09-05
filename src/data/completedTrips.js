@@ -34,6 +34,7 @@ export const completedTrips = [
   },
   {
     id: "rudranath-tungnath",
+    tags: ["panch-kedar"],
     type: "trip",
     typeLabel: "High Altitude Trek",
     title: "Rudranath & Tungnath Trek",
