@@ -1498,12 +1498,15 @@ export default function Landing() {
               );
             }
 
+            const displayDuration = targetPlanForTrip ? targetPlanForTrip.duration : trip.stats.duration;
+            const displayBudget = targetPlanForTrip ? (targetPlanForTrip.budget.includes("/") ? `₹${(parseNumericBudget(targetPlanForTrip.budget) / 1000).toFixed(1)}K` : targetPlanForTrip.budget) : trip.stats.budget;
+
             return (
               <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-black/5">
                 <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
                   <Calendar size={14} className="mx-auto text-slate-400 mb-1" />
                   <p className="text-[10px] font-black uppercase text-slate-400">Days</p>
-                  <p className="text-xs font-black mt-0.5">{trip.stats.duration}</p>
+                  <p className="text-xs font-black mt-0.5">{displayDuration}</p>
                 </div>
                 <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
                   <Route size={14} className="mx-auto text-slate-400 mb-1" />
@@ -1513,7 +1516,7 @@ export default function Landing() {
                 <div className="bg-black/[0.02] rounded-2xl p-3 text-center">
                   <Wallet size={14} className="mx-auto text-slate-400 mb-1" />
                   <p className="text-[10px] font-black uppercase text-slate-400">Budget</p>
-                  <p className="text-xs font-black mt-0.5">{trip.stats.budget}</p>
+                  <p className="text-xs font-black mt-0.5">{displayBudget}</p>
                 </div>
               </div>
             );
@@ -1791,20 +1794,29 @@ export default function Landing() {
     if (!trip.plans || trip.plans.length === 0) {
       return parseBudgetRange(trip.stats?.budget);
     }
-    const targetPlan = trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id));
+    const activePlans = trip.plans.filter(plan => !archivedPlans.includes(plan.id));
+    if (activePlans.length === 0) return { min: 0, max: 0 };
+
+    // 1. If an explicit TARGET plan is selected for this trip, use its budget for both min and max
+    const targetPlan = activePlans.find(p => targetPlans.includes(p.id));
     if (targetPlan) {
       return parseBudgetRange(targetPlan.budget);
     }
-    let min = Infinity;
-    let max = -Infinity;
-    trip.plans.filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
+
+    // 2. If NO target plan is explicitly selected, calculate min and max across all available plans
+    let minBudget = Infinity;
+    let maxBudget = -Infinity;
+    activePlans.forEach(plan => {
       const bounds = parseBudgetRange(plan.budget);
-      if (bounds.min > 0 && bounds.min < min) min = bounds.min;
-      if (bounds.max > max) max = bounds.max;
+      if (bounds.min > 0 && bounds.min < minBudget) minBudget = bounds.min;
+      if (bounds.max > maxBudget) maxBudget = bounds.max;
     });
-    if (min === Infinity) min = 0;
-    if (max === -Infinity) max = min;
-    return { min, max };
+
+    if (minBudget === Infinity) {
+      return parseBudgetRange(trip.stats?.budget);
+    }
+
+    return { min: minBudget, max: maxBudget };
   };
 
   const parseDaysRange = (str) => {
@@ -1827,25 +1839,27 @@ export default function Landing() {
     if (!trip.plans || trip.plans.length === 0) {
       return parseDaysRange(trip.stats?.duration);
     }
-    const targetPlan = trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id));
+    const activePlans = trip.plans.filter(plan => !archivedPlans.includes(plan.id));
+    if (activePlans.length === 0) return { min: 0, max: 0 };
+
+    const targetPlan = activePlans.find(p => targetPlans.includes(p.id));
     if (targetPlan) {
       return parseDaysRange(targetPlan.duration);
     }
-    let min = Infinity;
-    let max = -Infinity;
-    trip.plans.filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
+
+    let minDays = Infinity;
+    let maxDays = -Infinity;
+    activePlans.forEach(plan => {
       const bounds = parseDaysRange(plan.duration);
-      if (bounds.min > 0 && bounds.min < min) min = bounds.min;
-      if (bounds.max > max) max = bounds.max;
+      if (bounds.min > 0 && bounds.min < minDays) minDays = bounds.min;
+      if (bounds.max > maxDays) maxDays = bounds.max;
     });
-    if (min === Infinity) {
-      const bounds = parseDaysRange(trip.stats?.duration);
-      min = bounds.min;
-      max = bounds.max;
+
+    if (minDays === Infinity) {
+      return parseDaysRange(trip.stats?.duration);
     }
-    if (min === Infinity) min = 0;
-    if (max === -Infinity) max = min;
-    return { min, max };
+
+    return { min: minDays, max: maxDays };
   };
 
   const completedTreksCount = completedTripsList.filter(t => t.type === "trek").length;
@@ -2024,9 +2038,15 @@ export default function Landing() {
                   </div>
                   <div className="flex items-baseline gap-2 mt-0.5">
                     <span className="text-sm font-black font-mono text-emerald-400 tracking-tight">
-                      ₹{Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")} – ₹{Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}
+                      {Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min) === Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max)
+                        ? `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}`
+                        : `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")} – ₹${Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}`}
                     </span>
-                    <span className="text-[10px] font-bold text-slate-300 font-mono">({upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min}–{upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max} Days)</span>
+                    <span className="text-[10px] font-bold text-slate-300 font-mono">
+                      ({upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min === upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max
+                        ? `${upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min} Days`
+                        : `${upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min}–${upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max} Days`})
+                    </span>
                   </div>
                 </div>
               </div>
