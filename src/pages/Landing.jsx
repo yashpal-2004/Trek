@@ -32,7 +32,6 @@ import { budget as budgetHampta2 } from "../data/hampta/plan2/budget";
 import { completedTrips } from "../data/completedTrips";
 import { budget as adiKailashBudget } from "../data/adi-kailash/budget";
 import { budget as badrinathBudget } from "../data/badrinath/budget";
-import { budget as dwarkaBudget } from "../data/dwarka/budget";
 import { budget as gangotriBudget } from "../data/gangotri/budget";
 import { budget as kailashMansarovarBudget } from "../data/kailash-mansarovar/budget";
 import { budget as kalpeshwarBudget } from "../data/kalpeshwar/budget";
@@ -41,16 +40,10 @@ import { budget as manimaheshKailashBudget } from "../data/manimahesh-kailash/bu
 import { budget as puriBudget } from "../data/puri/budget";
 import { budget as yamunotriBudget } from "../data/yamunotri/budget";
 import { budget as varanasiBudget } from "../data/varanasi/budget";
-import { budget as somnathBudget } from "../data/somnath/budget";
-import { budget as mallikarjunaBudget } from "../data/mallikarjuna/budget";
-import { budget as omkareshwarBudget } from "../data/omkareshwar/budget";
-import { budget as kedarnathBudget } from "../data/kedarnath/budget";
-import { budget as bhimashankarBudget } from "../data/bhimashankar/budget";
-import { budget as trimbakeshwarBudget } from "../data/trimbakeshwar/budget";
-import { budget as vaidyanathBudget } from "../data/vaidyanath/budget";
-import { budget as nageshwarBudget } from "../data/nageshwar/budget";
-import { budget as ramanathaswamyBudget } from "../data/ramanathaswamy/budget";
-import { budget as grishneshwarBudget } from "../data/grishneshwar/budget";
+import { somnathNageshwarAmounts } from "../data/somnath-nageshwar/amounts";
+import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/amounts";
+import { vaidyanathAmounts } from "../data/vaidyanath/amounts";
+import { maharashtraAmounts } from "../data/trimbakeshwar-bhimashankar-grishneshwar/amounts";
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -592,23 +585,32 @@ export default function Landing() {
       id: "hemkund",
       type: "trek",
       typeLabel: "Alpine Trek",
-      title: "Valley of Flowers & Hemkund Sahib",
+      title: "Valley of Flowers, Hemkund Sahib & Badrinath Circuit",
       subtitle: "Uttarakhand, India",
       description: "Trek through the UNESCO World Heritage alpine floral meadows and visit the sacred high-altitude Shree Hemkund Sahib Gurudwara.",
       stats: {
-        duration: "6 Days",
+        duration: "6–7 Days",
         distance: "38 km Trek",
-        budget: `₹${(hemkundAmounts.budgetTotal / 1000).toFixed(1)}K`,
+        budget: `₹${(hemkundAmounts.budgetTotal / 1000).toFixed(1)}K–₹${(hemkundAmounts.plan2BudgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
           id: "hemkund",
-          title: "Standard Plan (Delhi Round Trip)",
+          title: "Plan 1: Standard Trek Plan (Valley + Hemkund)",
           duration: "6 Days",
           route: "Delhi → Haridwar → Govindghat → Ghangaria → Valley of Flowers & Hemkund Sahib → Haridwar → Delhi",
           details: "Complete 6-day self-guided pilgrimage and alpine valley trek starting and ending in Delhi via Haridwar & Govindghat.",
           budget: `₹${hemkundAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/hemkund",
+        },
+        {
+          id: "hemkund-badrinath",
+          title: "Plan 2: Combined Circuit (Valley + Hemkund + Badrinath Dham)",
+          duration: "7 Days",
+          route: "Delhi → Govindghat → Ghangaria → Valley of Flowers & Hemkund Sahib → Badrinath Dham (25 km Extension) → Haridwar → Delhi",
+          details: "Extended 7-day circuit adding Badrinath Temple Darshan, Tapt Kund & Mana Village right after finishing the trek.",
+          budget: `₹${hemkundAmounts.plan2BudgetTotal.toLocaleString("en-IN")} / person`,
           path: "/hemkund",
         }
       ],
@@ -762,10 +764,10 @@ export default function Landing() {
       id: "madhyamaheshwar",
       tags: ["panch-kedar"],
       type: "trek",
-      typeLabel: "Mountain Trek",
-      title: "Madhyamaheshwar & Budha Madhyamaheshwar",
+      typeLabel: "Panch Kedar Trek",
+      title: "Madhyamaheshwar & Kedarnath Circuit",
       subtitle: "Uttarakhand, India",
-      description: "A spiritual and scenic yatra to the high alpine meadows and ancient Panch Kedar temple of Madhyamaheshwar, optionally combining it with the sacred Kedarnath shrine.",
+      description: "A spiritual and scenic yatra to the high alpine meadows of Madhyamaheshwar, Budha Madhyamaheshwar, and Kedarnath Dham.",
       stats: {
         duration: "5–8 Days",
         distance: "36–68 km Trek",
@@ -775,7 +777,7 @@ export default function Landing() {
       plans: [
         {
           id: "madhyamaheshwar-plan1",
-          title: "Plan 1 (Standard Delhi Round Trip)",
+          title: "Plan 1: Madhyamaheshwar & Budha Madhyamaheshwar",
           duration: "5 Days",
           route: "Delhi → Rishikesh → Ukhimath → Ransi → Bantoli → Madhyamaheshwar → Budha Madhyamaheshwar → Ransi → Rishikesh → Delhi",
           details: "Scenic 5-day route climbing to Madhyamaheshwar and Budha Madhyamaheshwar with Chaukhamba sunrise reflections.",
@@ -784,7 +786,7 @@ export default function Landing() {
         },
         {
           id: "madhyamaheshwar-plan2",
-          title: "Plan 2 (Kedarnath Combo Yatra)",
+          title: "Plan 2: Kedarnath + Madhyamaheshwar Combo Circuit",
           duration: "8 Days",
           route: "Delhi → Rishikesh → Gaurikund → Kedarnath Temple → Ukhimath → Ransi → Madhyamaheshwar → Budha Madmaheshwar → Ransi → Rishikesh → Delhi",
           details: "Extended 8-day dual pilgrimage route combining the holy Kedarnath yatra and serene Madhyamaheshwar trek.",
@@ -940,28 +942,55 @@ export default function Landing() {
     },
     {
       id: "ujjain",
-      type: "trip",
-      typeLabel: "Spiritual Road Trip",
-      title: "Ujjain Mahakal Darshan",
+      type: "jyotirlinga",
+      tags: ["jyotirlinga"],
+      typeLabel: "2-Jyotirlinga Circuit",
+      title: "MP Circuit: Mahakaleshwar & Omkareshwar",
       subtitle: "Madhya Pradesh, India",
-      description: "Experience the spiritual vibrations of Mahakaleshwar Jyotirlinga, witness the lighting of oil lamps at Harsiddhi Shaktipeeth, and explore the ancient holy city of Ujjain on a budget weekend trip.",
+      description: "Cover 2 sacred Jyotirlingas in a single 3-day spiritual circuit — Mahakaleshwar in Ujjain & Omkareshwar on the holy Narmada River island.",
       stats: {
         duration: "3 Days",
-        distance: "1,700 km Round-Trip",
+        distance: "1,970 km Circuit",
         budget: `₹${(ujjainAmounts.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
           id: "ujjain",
-          title: "Standard Bus Plan (AC Sleeper & E-Rickshaws)",
+          title: "MP Circuit: Mahakaleshwar & Omkareshwar",
           duration: "3 Days",
-          route: "Sonipat → Ujjain (AC Sleeper Bus) → Mahakal Mandir & Lok Corridor → Kal Bhairav & Mangalnath → Sonipat",
-          details: "Spiritual weekend escape utilizing direct overnight sleeper coach from Sonipat bypass, local e-rickshaws, and cozy hotel stay.",
+          route: "Delhi/Sonipat → Ujjain (Mahakaleshwar & Harsiddhi) → Omkareshwar & Mamleshwar (Narmada River) → Delhi/Sonipat",
+          details: "Budget spiritual circuit covering 2 Jyotirlingas with direct sleeper buses, local express transit, and river ghat visits.",
           budget: `₹${ujjainAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
-          path: "/ujjain",
+          path: "/ujjain-omkareshwar",
         }
       ],
+    },
+    {
+      id: "vaidyanath",
+      type: "jyotirlinga",
+      tags: ["jyotirlinga"],
+      typeLabel: "Jyotirlinga Yatra",
+      title: "Baidyanath Jyotirlinga Yatra",
+      subtitle: "Deoghar, Jharkhand",
+      description: "Sacred pilgrimage to Lord Baidyanath Dham Jyotirlinga & Trikut Pahar.",
+      stats: {
+        duration: "3 Days",
+        distance: "2500 km",
+        budget: "₹" + (vaidyanathAmounts.plan1.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "vaidyanath-plan1",
+          title: "Baidyanath Jyotirlinga Yatra",
+          duration: "3 Days / 2 Nights",
+          route: "Delhi → Jasidih → Deoghar (Baidyanath Dham) → Trikut Pahar → Delhi",
+          details: "Budget train weekend pilgrimage covering Baidyanath Jyotirlinga, Shivganga & Tapovan.",
+          budget: "₹" + vaidyanathAmounts.plan1.total.toLocaleString("en-IN") + " / person",
+          path: "/vaidyanath"
+        }
+      ]
     },
     {
       id: "auli",
@@ -1142,26 +1171,14 @@ export default function Landing() {
       image: "/mountain_clay_peak.png",
       plans: [{ id: "puri-plan", title: "Jagannath Puri & Konark Yatra", duration: "3 Days", route: "Bhubaneswar – Puri – Konark Sun Temple", details: "Sacred Darshan & Golden Beach stay.", budget: "₹" + puriBudget.total.toLocaleString("en-IN") + " / person", path: "/puri" }]
     },
-    {
-      id: "dwarka",
-      type: "char-dham",
-      typeLabel: "Char Dham Yatra",
-      title: "Dwarkadhish Temple Yatra",
-      subtitle: "Gujarat, India",
-      tags: ["char-dham"],
-      description: "Western Char Dham shrine of Lord Krishna located at the mouth of the Gomti river.",
-      isComingSoon: true,
-      stats: { duration: "3 Days", distance: "1300 km", budget: "₹" + (dwarkaBudget.total / 1000).toFixed(1) + "K" },
-      image: "/mountain_clay_peak.png",
-      plans: [{ id: "dwarka-plan", title: "Dwarkadhish & Somnath Circuit", duration: "3 Days", route: "Ahmedabad – Rajkot – Dwarka – Bet Dwarka", details: "Sacred Krishna Dham pilgrimage.", budget: "₹" + dwarkaBudget.total.toLocaleString("en-IN") + " / person", path: "/dwarka" }]
-    },
+
 
     {
       id: "varanasi",
       type: "jyotirlinga",
       typeLabel: "Jyotirlinga Yatra",
-      title: "Varanasi (Kashi Vishwanath)",
-      subtitle: "Uttar Pradesh, India",
+      title: "Kashi Vishwanath Jyotirlinga Yatra",
+      subtitle: "Varanasi, Uttar Pradesh",
       description: "Sacred pilgrimage to Kashi Vishwanath Jyotirlinga along the Ganges in Varanasi.",
       stats: {
         duration: "3 Days",
@@ -1172,7 +1189,7 @@ export default function Landing() {
       plans: [
         {
           id: "varanasi-plan",
-          title: "Kashi Vishwanath Darshan & Ghat Yatra",
+          title: "Kashi Vishwanath Jyotirlinga Yatra",
           duration: "3 Days",
           route: "Delhi – Varanasi – Sarnath – Delhi",
           details: "Spiritual weekend trip covering Kashi Vishwanath, Ganga Aarti, and Sarnath.",
@@ -1182,264 +1199,85 @@ export default function Landing() {
       ]
     },
     {
-      id: "somnath",
+      id: "somnath-nageshwar",
       type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Somnath Jyotirlinga",
+      typeLabel: "2-Jyotirlinga Circuit",
+      title: "Gujarat Circuit: Somnath & Nageshwar",
       subtitle: "Gujarat, India",
-      description: "Sacred pilgrimage to the Somnath Jyotirlinga.",
+      description: "Sacred pilgrimage covering Somnath, Nageshwar, Dwarkadhish & Beyt Dwarka.",
       stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (somnathBudget.total / 1000).toFixed(1) + "K"
+        duration: "4 Days",
+        distance: "950 km",
+        budget: "₹" + (somnathNageshwarAmounts.budgetTotal / 1000).toFixed(1) + "K"
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
-          id: "somnath-plan",
-          title: "Somnath Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + somnathBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
+          id: "somnath-nageshwar-plan1",
+          title: "Gujarat Circuit: Somnath & Nageshwar",
+          duration: "4 Days / 3 Nights",
+          route: "Ahmedabad – Somnath – Dwarka (Nageshwar & Beyt Dwarka) – Ahmedabad",
+          details: "Complete Gujarat Jyotirlinga circuit with Dwarka coastal drive & evening aarti.",
+          budget: "₹" + somnathNageshwarAmounts.budgetTotal.toLocaleString("en-IN") + " / person",
+          path: "/somnath-nageshwar"
         }
       ]
     },
     {
-      id: "mallikarjuna",
+      id: "south-jyotirlinga",
       type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Mallikarjuna Jyotirlinga",
-      subtitle: "Andhra Pradesh, India",
-      description: "Sacred pilgrimage to the Mallikarjuna Jyotirlinga.",
-      isComingSoon: true,
+      typeLabel: "2-Jyotirlinga Circuit",
+      title: "South Circuit: Mallikarjuna & Rameswaram",
+      subtitle: "Andhra Pradesh & Tamil Nadu, India",
+      description: "Sacred South India circuit covering Mallikarjuna (Srisailam) & Ramanathaswamy (Rameswaram).",
       stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (mallikarjunaBudget.total / 1000).toFixed(1) + "K"
+        duration: "7 Days",
+        distance: "4,200 km",
+        budget: "₹" + (mallikarjunaRameswaramAmounts.plan1.total / 1000).toFixed(1) + "K"
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
-          id: "mallikarjuna-plan",
-          title: "Mallikarjuna Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + mallikarjunaBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
+          id: "mallikarjuna-rameswaram-plan1",
+          title: "South Circuit: Mallikarjuna & Rameswaram",
+          duration: "7 Days / 6 Nights",
+          route: "Delhi → Srisailam (Mallikarjuna) → Madurai → Rameswaram (22 Wells & Dhanushkodi) → Delhi",
+          details: "Complete budget South circuit with Nallamala forest drive, Pamban sea bridge & 22 holy wells.",
+          budget: "₹" + mallikarjunaRameswaramAmounts.plan1.total.toLocaleString("en-IN") + " / person",
+          path: "/mallikarjuna-rameswaram"
         }
       ]
     },
     {
-      id: "omkareshwar",
+      id: "maharashtra-jyotirlinga",
       type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Omkareshwar Jyotirlinga",
-      subtitle: "Madhya Pradesh, India",
-      description: "Sacred pilgrimage to the Omkareshwar Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (omkareshwarBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "omkareshwar-plan",
-          title: "Omkareshwar Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + omkareshwarBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    },
-    {
-      id: "kedarnath",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Kedarnath Jyotirlinga",
-      subtitle: "Uttarakhand, India",
-      description: "Sacred pilgrimage to the Kedarnath Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (kedarnathBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "kedarnath-plan",
-          title: "Kedarnath Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + kedarnathBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    },
-    {
-      id: "bhimashankar",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Bhimashankar Jyotirlinga",
+      tags: ["jyotirlinga"],
+      typeLabel: "3-Jyotirlinga Circuit",
+      title: "Maharashtra Circuit: Trimbakeshwar, Grishneshwar & Bhimashankar",
       subtitle: "Maharashtra, India",
-      description: "Sacred pilgrimage to the Bhimashankar Jyotirlinga.",
-      isComingSoon: true,
+      description: "Cover 3 holy Jyotirlingas in a single 5-day spiritual circuit from Delhi — Trimbakeshwar (Nashik), Grishneshwar (Ellora Caves) & Bhimashankar Sanctuary.",
       stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (bhimashankarBudget.total / 1000).toFixed(1) + "K"
+        duration: "5 Days",
+        distance: "2,850 km Circuit",
+        budget: `₹${(maharashtraAmounts.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
-          id: "bhimashankar-plan",
-          title: "Bhimashankar Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + bhimashankarBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
+          id: "maharashtra-jyotirlinga",
+          title: "Maharashtra Circuit: Trimbakeshwar, Grishneshwar & Bhimashankar",
+          duration: "5 Days",
+          route: "Delhi/Sonipat → Nashik (Trimbakeshwar) → Sambhaji Nagar (Grishneshwar & Ellora) → Bhimashankar → Pune → Delhi/Sonipat",
+          details: "Budget spiritual circuit covering 3 Jyotirlingas from Delhi via direct express trains and MSRTC intercity transit.",
+          budget: `₹${maharashtraAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/trimbakeshwar-bhimashankar-grishneshwar",
         }
-      ]
+      ],
     },
-    {
-      id: "trimbakeshwar",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Trimbakeshwar Jyotirlinga",
-      subtitle: "Maharashtra, India",
-      description: "Sacred pilgrimage to the Trimbakeshwar Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (trimbakeshwarBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "trimbakeshwar-plan",
-          title: "Trimbakeshwar Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + trimbakeshwarBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    },
-    {
-      id: "vaidyanath",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Vaidyanath Jyotirlinga",
-      subtitle: "Jharkhand, India",
-      description: "Sacred pilgrimage to the Vaidyanath Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (vaidyanathBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "vaidyanath-plan",
-          title: "Vaidyanath Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + vaidyanathBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    },
-    {
-      id: "nageshwar",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Nageshwar Jyotirlinga",
-      subtitle: "Gujarat, India",
-      description: "Sacred pilgrimage to the Nageshwar Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (nageshwarBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "nageshwar-plan",
-          title: "Nageshwar Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + nageshwarBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    },
-    {
-      id: "ramanathaswamy",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Ramanathaswamy Jyotirlinga",
-      subtitle: "Tamil Nadu, India",
-      description: "Sacred pilgrimage to the Ramanathaswamy Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (ramanathaswamyBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "ramanathaswamy-plan",
-          title: "Ramanathaswamy Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + ramanathaswamyBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    },
-    {
-      id: "grishneshwar",
-      type: "jyotirlinga",
-      typeLabel: "Jyotirlinga Yatra",
-      title: "Grishneshwar Jyotirlinga",
-      subtitle: "Maharashtra, India",
-      description: "Sacred pilgrimage to the Grishneshwar Jyotirlinga.",
-      isComingSoon: true,
-      stats: {
-        duration: "TBD",
-        distance: "TBD",
-        budget: "₹" + (grishneshwarBudget.total / 1000).toFixed(1) + "K"
-      },
-      image: "/mountain_clay_peak.png",
-      plans: [
-        {
-          id: "grishneshwar-plan",
-          title: "Grishneshwar Jyotirlinga Darshan",
-          duration: "TBD",
-          route: "TBD",
-          details: "Details coming soon.",
-          budget: "₹" + grishneshwarBudget.total.toLocaleString("en-IN") + " / person",
-          path: "#"
-        }
-      ]
-    }
+
+
+
+
   ];
 
   const getMinBudget = (trip) => {
@@ -1950,9 +1788,16 @@ export default function Landing() {
   };
 
   const getTripBudgetBounds = (trip) => {
+    if (!trip.plans || trip.plans.length === 0) {
+      return parseBudgetRange(trip.stats?.budget);
+    }
+    const targetPlan = trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id));
+    if (targetPlan) {
+      return parseBudgetRange(targetPlan.budget);
+    }
     let min = Infinity;
     let max = -Infinity;
-    (trip.plans || []).filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
+    trip.plans.filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
       const bounds = parseBudgetRange(plan.budget);
       if (bounds.min > 0 && bounds.min < min) min = bounds.min;
       if (bounds.max > max) max = bounds.max;
@@ -1979,9 +1824,16 @@ export default function Landing() {
   };
 
   const getTripDaysBounds = (trip) => {
+    if (!trip.plans || trip.plans.length === 0) {
+      return parseDaysRange(trip.stats?.duration);
+    }
+    const targetPlan = trip.plans.find(p => targetPlans.includes(p.id) && !archivedPlans.includes(p.id));
+    if (targetPlan) {
+      return parseDaysRange(targetPlan.duration);
+    }
     let min = Infinity;
     let max = -Infinity;
-    (trip.plans || []).filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
+    trip.plans.filter(plan => !archivedPlans.includes(plan.id)).forEach(plan => {
       const bounds = parseDaysRange(plan.duration);
       if (bounds.min > 0 && bounds.min < min) min = bounds.min;
       if (bounds.max > max) max = bounds.max;
@@ -2060,7 +1912,7 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
-  const jyotirlingaTripsList = allTrips.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga")));
+  const jyotirlingaTripsList = allTrips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id) && (t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga"))));
   const jyotirlingaCount = jyotirlingaTripsList.length;
   const jyotirlingaRange = jyotirlingaTripsList.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
@@ -2072,9 +1924,9 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
-  const kedarKailashTripsList = allTrips.filter(t => t.type === "panch-kedar" || t.type === "panch-kailash" || (t.tags && (t.tags.includes("panch-kedar") || t.tags.includes("panch-kailash"))));
-  const kedarCount = allTrips.filter(t => t.type === "panch-kedar" || t.tags?.includes("panch-kedar")).length;
-  const kailashCount = allTrips.filter(t => t.type === "panch-kailash" || t.tags?.includes("panch-kailash")).length;
+  const kedarKailashTripsList = allTrips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id) && (t.type === "panch-kedar" || t.type === "panch-kailash" || (t.tags && (t.tags.includes("panch-kedar") || t.tags.includes("panch-kailash")))));
+  const kedarCount = jyotirlingaTripsList ? allTrips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id) && (t.type === "panch-kedar" || t.tags?.includes("panch-kedar"))).length : 0;
+  const kailashCount = allTrips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id) && (t.type === "panch-kailash" || t.tags?.includes("panch-kailash"))).length;
   const kedarKailashRange = kedarKailashTripsList.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);
     return { min: acc.min + min, max: acc.max + max };
@@ -2085,7 +1937,7 @@ export default function Landing() {
     return { min: acc.min + min, max: acc.max + max };
   }, { min: 0, max: 0 });
 
-  const charDhamTripsList = allTrips.filter(t => t.type === "char-dham" || (t.tags && t.tags.includes("char-dham")));
+  const charDhamTripsList = allTrips.filter(t => !isTripCompleted(t) && !archivedTrips.includes(t.id) && (t.type === "char-dham" || (t.tags && t.tags.includes("char-dham"))));
   const dhamCount = charDhamTripsList.length;
   const charDhamRange = charDhamTripsList.reduce((acc, trip) => {
     const { min, max } = getTripBudgetBounds(trip);

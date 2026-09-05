@@ -40,6 +40,7 @@ export default function App() {
         <Route path="/jibhi-plan1" element={<Home />} />
         <Route path="/jibhi-plan2" element={<Home />} />
         <Route path="/ujjain" element={<Home />} />
+        <Route path="/ujjain-omkareshwar" element={<Home />} />
         <Route path="/auli" element={<Home />} />
         <Route path="/kashmir" element={<Home />} />
         <Route path="/kashmir-plan1" element={<Home />} />
@@ -59,15 +60,20 @@ export default function App() {
         <Route path="/puri" element={<Home />} />
         <Route path="/dwarka" element={<Home />} />
         <Route path="/somnath" element={<Home />} />
+        <Route path="/somnath-nageshwar" element={<Home />} />
+        <Route path="/gujarat-jyotirlinga" element={<Home />} />
         <Route path="/mallikarjuna" element={<Home />} />
-        <Route path="/omkareshwar" element={<Home />} />
-        <Route path="/kedarnath" element={<Home />} />
-        <Route path="/bhimashankar" element={<Home />} />
+        <Route path="/mallikarjuna-rameswaram" element={<Home />} />
+        <Route path="/south-jyotirlinga" element={<Home />} />
+        <Route path="/maharashtra-jyotirlinga" element={<Home />} />
+        <Route path="/trimbakeshwar-bhimashankar-grishneshwar" element={<Home />} />
         <Route path="/trimbakeshwar" element={<Home />} />
+        <Route path="/bhimashankar" element={<Home />} />
+        <Route path="/grishneshwar" element={<Home />} />
+        <Route path="/kedarnath" element={<Home />} />
         <Route path="/vaidyanath" element={<Home />} />
         <Route path="/nageshwar" element={<Home />} />
         <Route path="/ramanathaswamy" element={<Home />} />
-        <Route path="/grishneshwar" element={<Home />} />
         <Route path="/wardrobe" element={<Wardrobe />} />
       </Routes>
     </BrowserRouter>

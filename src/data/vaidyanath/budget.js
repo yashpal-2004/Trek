@@ -1,72 +1,61 @@
-import { amounts } from "./amounts";
-
-const budgetTotal = amounts.transport.train + amounts.transport.localAuto + amounts.transport.boatRide + amounts.accommodation.hostel + amounts.food.meals + amounts.food.snacks + amounts.misc.templePrasad + amounts.misc.sarnathEntry + amounts.misc.shopping;
+import { vaidyanathAmounts } from "./amounts";
 
 export const budget = {
-  total: budgetTotal,
-  perPerson: true,
-  currency: "INR",
+  total: vaidyanathAmounts.plan1.total,
+  perPerson: vaidyanathAmounts.plan1.total,
   categories: [
     {
       id: "transport",
-      label: "Transportation",
-      amount: amounts.transport.train + amounts.transport.localAuto + amounts.transport.boatRide,
-      color: "#2563EB",
-      icon: "Bus",
-      description: "Sleeper train round trip + local transport",
+      label: "Transport & Intercity Transit",
+      amount: vaidyanathAmounts.plan1.transport,
+      icon: "Train",
+      color: "from-blue-500 to-cyan-600",
       subItems: [
-        { name: "Train Round Trip", price: amounts.transport.train },
-        { name: "Local Transport", price: amounts.transport.localAuto }
+        { name: "Delhi - Jasidih Sleeper Train (Round)", cost: 1200 },
+        { name: "Jasidih - Deoghar Auto / E-Rickshaw", cost: 300 },
+        { name: "Local Sightseeing (Trikut & Tapovan)", cost: 300 }
       ]
     },
     {
-      id: "accommodation",
-      label: "Accommodation",
-      amount: amounts.accommodation.hostel,
-      color: "#10B981",
-      icon: "Bed",
-      description: "Budget stays for 2 nights",
+      id: "stay",
+      label: "Accommodation & Dharamshala",
+      amount: vaidyanathAmounts.plan1.stay,
+      icon: "Home",
+      color: "from-purple-500 to-indigo-600",
       subItems: [
-        { name: "Hostel/Ashram Stay (2 Nights)", price: amounts.accommodation.hostel }
+        { name: "1 Night Dharamshala / Hotel near Temple", cost: 1200 }
       ]
     },
     {
       id: "food",
-      label: "Food & Meals",
-      amount: amounts.food.meals + amounts.food.snacks,
-      color: "#F59E0B",
+      label: "Food & Deoghar Peda Prasad",
+      amount: vaidyanathAmounts.plan1.food,
       icon: "Utensils",
-      description: "Meals and local food",
+      color: "from-amber-500 to-orange-600",
       subItems: [
-        { name: "Meals", price: amounts.food.meals },
-        { name: "Snacks", price: amounts.food.snacks }
+        { name: "Satvik Meals & Breakfast (3 Days)", cost: 700 },
+        { name: "Famous Deoghar Peda & Tea", cost: 300 }
       ]
     },
     {
-      id: "emergency",
-      label: "Prasad & Misc",
-      amount: amounts.misc.templePrasad + amounts.misc.sarnathEntry + amounts.misc.shopping,
-      color: "#8B5CF6",
-      icon: "MapPin",
-      description: "Temple prasad and local shopping",
+      id: "pooja",
+      label: "Pooja & Temple Offerings",
+      amount: vaidyanathAmounts.plan1.pooja,
+      icon: "Sparkles",
+      color: "from-emerald-500 to-teal-600",
       subItems: [
-        { name: "Temple Prasad", price: amounts.misc.templePrasad },
-        { name: "Local Shopping", price: amounts.misc.shopping }
+        { name: "Gangajal, Belpatra & Pooja Samagri", cost: 500 }
+      ]
+    },
+    {
+      id: "buffer",
+      label: "Emergency & Miscellaneous Buffer",
+      amount: vaidyanathAmounts.plan1.buffer,
+      icon: "ShieldAlert",
+      color: "from-rose-500 to-pink-600",
+      subItems: [
+        { name: "Unforeseen Expenses / Water / Auto", cost: 500 }
       ]
     }
-  ],
-  dailyEstimate: [
-    { day: 0, amount: 400, label: "Travel" },
-    { day: 1, amount: 1500, label: "Darshan & Local Sightseeing" },
-    { day: 2, amount: 1200, label: "Local Sightseeing & Return Travel" },
-  ],
-  calculatorDefaults: {
-    transport: amounts.transport.train + amounts.transport.localAuto + amounts.transport.boatRide,
-    accommodation: amounts.accommodation.hostel,
-    food: amounts.food.meals + amounts.food.snacks,
-    emergency: amounts.misc.templePrasad + amounts.misc.sarnathEntry + amounts.misc.shopping
-  },
+  ]
 };
-
-export const stayOptions = [];
-export const accommodationBreakdown = [];

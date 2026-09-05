@@ -13,6 +13,7 @@ export function useLocalStorage(key, initialValue) {
 
   // 1. Fetch initial value and listen to updates from Firestore
   useEffect(() => {
+    if (!key) return;
     const docRef = doc(db, "trek_app_data", key);
     
     const unsubscribe = onSnapshot(docRef, (docSnap) => {

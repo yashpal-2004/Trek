@@ -4,10 +4,10 @@ export const itinerary = [
     day: 0,
     date: "Friday Night",
     weekday: "Fri",
-    title: "Sonipat → Board Overnight Bus to Ujjain",
-    subtitle: "Board the direct AC sleeper coach from Sonipat bypass — overnight run to Ujjain",
-    overview: "Pack light and report at the Sonipat bypass boarding point by 06:30 PM. Board the direct AC sleeper bus departing at 07:00 PM. The bus travels via the Western Peripheral Expressway (KMP), Agra-Mumbai National Highway, heading straight towards Central India.",
-    travel: "Sonipat bypass → Gwalior → Indore → Ujjain (AC Sleeper Bus)",
+    title: "Sonipat / Delhi → Board Overnight Bus to Ujjain",
+    subtitle: "Board the direct AC sleeper coach from Sonipat bypass / Delhi — overnight run to Ujjain",
+    overview: "Pack light and report at the Sonipat bypass or Delhi ISBT boarding point by 06:30 PM. Board the direct AC sleeper bus departing at 07:00 PM. The bus travels via the Western Peripheral Expressway (KMP) and Agra-Mumbai National Highway towards Ujjain.",
+    travel: "Sonipat / Delhi → Gwalior → Indore → Ujjain (AC Sleeper Bus)",
     travelMode: "AC Sleeper Bus",
     distance: "850 km",
     travelTime: "15 Hours",
@@ -24,19 +24,19 @@ export const itinerary = [
     ],
     packing: ["Hand sanitizer", "Water bottle", "Berth sheet / light blanket", "Noise-cancelling earphones"],
     images: [],
-    mapLink: "https://maps.google.com/?q=Sonipat+Bypass",
+    mapLink: "https://maps.google.com/?q=Ujjain+Bus+Stand",
     tips: [
       "Choose a single/double sleeper window berth in the middle section of the bus for the best comfort."
     ],
     photography: ["Boarding the bus under the bypass highway lights"],
-    highlights: ["Boarding directly from Sonipat", "Highway run past historic KMP expressway"],
+    highlights: ["Boarding directly from Sonipat/Delhi", "Highway run past historic KMP expressway"],
     meals: ["Highway dhaba dinner"],
     activities: [
-      { time: "06:30 PM", title: "Report at Bypass", description: "Coordinate with the conductor, verify bus arrival time" },
-      { time: "07:00 PM", title: "Board Bus", description: "Board sleeper bus, settle luggage in the lower locker" }
+      { time: "06:30 PM", title: "Report at Boarding Point", description: "Coordinate with conductor, verify bus arrival" },
+      { time: "07:00 PM", title: "Board Bus", description: "Board sleeper bus, settle luggage in the lower berth" }
     ],
     schedule: [
-      { time: "06:30 PM", activity: "Arrive at Sonipat bypass boarding point" },
+      { time: "06:30 PM", activity: "Arrive at Sonipat/Delhi boarding point" },
       { time: "07:00 PM", activity: "Board direct sleeper coach to Ujjain" }
     ]
   },
@@ -45,47 +45,47 @@ export const itinerary = [
     day: 1,
     date: "Saturday",
     weekday: "Sat",
-    title: "Ujjain Arrival → Hotel Check-in → Mahakaleshwar Jyotirlinga & Harsiddhi Temple",
-    subtitle: "Arrive Ujjain by 10 AM, visit the holy Mahakal shrine & witness the evening Aarti at Harsiddhi Devi temple",
-    overview: "Arrive at the Ujjain bus terminal by 10:30 AM. Take an e-rickshaw to your hotel near the Mahakal temple complex. Check in, freshen up, and have a traditional Malwai lunch (Dal Bafla). In the afternoon, head to the Mahakaleshwar temple for Darshan. Explore the expansive Mahakal Lok Corridor. In the evening, visit Harsiddhi Devi Temple (one of the 51 Shaktipeeths) to witness the spectacular lighting of the double giant brass lamp towers (Deepasthambha) during evening prayers. End your day walking along the Shipra river at Ram Ghat.",
-    travel: "Ujjain Bus Terminal → Hotel near Temple → Mahakaleshwar Mandir → Harsiddhi → Ram Ghat",
+    title: "Ujjain Arrival → Mahakaleshwar Jyotirlinga & Harsiddhi Temple",
+    subtitle: "Arrive Ujjain by 10 AM, visit Mahakaleshwar Jyotirlinga, explore Mahakal Lok & evening Aarti at Harsiddhi Devi",
+    overview: "Arrive at the Ujjain bus terminal by 10:30 AM. Take an e-rickshaw to your hotel near the Mahakal temple complex. Check in, freshen up, and enjoy traditional Malwai Dal Bafla lunch. In the afternoon, head to Mahakaleshwar temple for Darshan of the first Jyotirlinga. Explore the grand Mahakal Lok Corridor. In the evening, visit Harsiddhi Devi Temple (one of the 51 Shaktipeeths) to witness the deep-lighting ceremony of the giant brass lamp towers. Spend the evening along Ram Ghat on the Shipra River.",
+    travel: "Ujjain Bus Terminal → Hotel → Mahakaleshwar Mandir → Harsiddhi → Ram Ghat",
     travelMode: "E-rickshaw & Walking",
     distance: "10 km Local",
     travelTime: "2 Hours",
     estimatedCost: 1250,
-    weather: "Warm and humid afternoon, pleasant evening, 26°C to 33°C",
+    weather: "Warm afternoon, pleasant evening, 26°C to 33°C",
     trekDistance: "0 km",
     highestAltitude: "511m",
-    stay: "AC Hotel near Mahakal Temple (₹600/person double-sharing)",
+    stay: "AC Hotel near Mahakal Temple (₹600/person sharing)",
     food: "Special Dal Bafla lunch (₹150), evening tea and snacks (₹50), dinner near Harsiddhi (₹150)",
-    notes: "Dress code for Mahakaleshwar Jyotirlinga: Simple traditional Indian attire (dhoti/saree is mandatory only if you enter the Garbhagriha for special abhishekam). Mobile phones and bags are not allowed inside the main shrine; use free lockers outside.",
+    notes: "Dress code for Mahakaleshwar: Simple traditional Indian attire (dhoti/saree mandatory for Garbhagriha entry). Mobile phones not allowed inside main shrine; use free lockers outside.",
     warnings: [
       "Beware of unregistered local guides promising quick entry inside the sanctum",
       "Ram Ghat steps can be slippery due to water algae; walk carefully"
     ],
-    packing: ["Traditional kurta-pyjama / Saree", "Socks (for walking on stone floors)", "Camera (permitted outside only)"],
+    packing: ["Traditional kurta-pyjama / Saree", "Socks (for stone floors)", "Camera"],
     images: [],
     mapLink: "https://maps.google.com/?q=Mahakaleshwar+Jyotirlinga+Ujjain",
     tips: [
-      "Visit the newly built Mahakal Lok Corridor in the late evening when the sculptures are illuminated.",
-      "Pre-book the special Darshan ticket online (₹250) on the official website to save 2 hours of queue time."
+      "Visit the newly built Mahakal Lok Corridor in the late evening when sculptures are lit up.",
+      "Pre-book the special Darshan ticket online (₹250) on the official website to save queue time."
     ],
     photography: [
       "Double giant lamp towers of Harsiddhi Temple lit up at sunset",
       "Stunning carved columns of the Mahakal Lok corridor",
       "Boats floating on the Shipra River at Ram Ghat"
     ],
-    highlights: ["Mahakaleshwar Jyotirlinga Darshan", "Stunning Mahakal Lok corridor illumination", "Harsiddhi deep-lighting ceremony", "Ram Ghat Shipra evening walking"],
+    highlights: ["Mahakaleshwar Jyotirlinga Darshan", "Mahakal Lok corridor illumination", "Harsiddhi deep-lighting ceremony", "Ram Ghat Shipra evening walking"],
     meals: ["Traditional Malwai Dal Bafla", "Shipra Ghat snacks", "Pure veg thali dinner"],
     activities: [
-      { time: "10:30 AM", title: "Reach Ujjain", description: "Arrive at Nanakheda bus stand, ride e-rickshaw to hotel" },
-      { time: "12:30 PM", title: "Malwai Lunch", description: "Savor ghee-soaked Dal Bafla, laddu, and spicy chutneys" },
-      { time: "02:30 PM", title: "Mahakal Darshan", description: "Enter temple complex, walk through the sacred halls to view the swayambhu lingam" },
-      { time: "06:30 PM", title: "Harsiddhi Deepam", description: "Witness temple priests climbing the huge brass towers to light 1,000 oil lamps" }
+      { time: "10:30 AM", title: "Reach Ujjain", description: "Arrive at bus stand, ride e-rickshaw to hotel" },
+      { time: "12:30 PM", title: "Malwai Lunch", description: "Savor ghee-soaked Dal Bafla, laddu, and chutneys" },
+      { time: "02:30 PM", title: "Mahakal Darshan", description: "Enter temple complex, view the swayambhu lingam" },
+      { time: "06:30 PM", title: "Harsiddhi Deepam", description: "Witness priests lighting 1,000 oil lamps on brass towers" }
     ],
     schedule: [
       { time: "10:30 AM", activity: "Arrive Ujjain, transfer to hotel via e-rickshaw" },
-      { time: "12:30 PM", activity: "Traditional Malwai Dal Bafla lunch at local outlet" },
+      { time: "12:30 PM", activity: "Traditional Malwai Dal Bafla lunch" },
       { time: "02:30 PM", activity: "Mahakaleshwar Temple Darshan & tour Mahakal Lok" },
       { time: "06:30 PM", activity: "Witness Harsiddhi Temple oil lamp lighting ceremony" },
       { time: "08:00 PM", activity: "Relax at Ram Ghat on the banks of Shipra, return to hotel" }
@@ -96,49 +96,51 @@ export const itinerary = [
     day: 2,
     date: "Sunday",
     weekday: "Sun",
-    title: "Kal Bhairav Temple → Mangalnath → Shopping → Board Return Bus",
-    subtitle: "Visit the liquor-offering Kal Bhairav temple, center of the Tropic of Cancer at Mangalnath, shop Bhairavgarh prints, and depart",
-    overview: "Wake up early. Rent a local auto-rickshaw to visit the famous Kal Bhairav Temple where liquor is offered as prasad. Next, visit the Mangalnath Temple, revered as the birthplace of Mars (Mangal Graha) and historically situated exactly on the Tropic of Cancer. Have a light breakfast and visit Sandipani Ashram, where Lord Krishna studied. In the afternoon, return to the hotel, check out by 12:00 PM, and spend the afternoon shopping for authentic Bhairavgarh block print sheets and sarees. Board the return sleeper bus by 07:00 PM.",
-    travel: "Hotel → Kal Bhairav → Mangalnath → Sandipani Ashram → Bhairavgarh → Ujjain Bus Stand → Sonipat",
-    travelMode: "Auto-rickshaw & Sleeper Bus",
-    distance: "30 km local + 850 km highway",
-    travelTime: "3 Hours local + 15 Hours Bus",
-    estimatedCost: 1550,
-    weather: "Sunny and clear, 25°C to 34°C",
+    title: "Ujjain → Omkareshwar Jyotirlinga & Mamleshwar → Board Return Bus",
+    subtitle: "Travel 135 km south to Omkareshwar Island on the Narmada River, visit the 2nd Jyotirlinga, and depart for home",
+    overview: "Check out early by 06:00 AM. Board an early morning express bus or shared cab from Ujjain to Omkareshwar (135 km via Indore, ~3.5 hours). Upon arrival at Omkareshwar, take a holy dip at Narmada Ghat or take a boat ride across the Narmada river to the Om-shaped island. Visit Omkareshwar Jyotirlinga and the adjacent ancient Mamleshwar Jyotirlinga temple on the south bank. Have lunch, take afternoon return bus back to Ujjain/Indore terminal, and board your return AC sleeper bus by 07:30 PM.",
+    travel: "Ujjain Hotel → Omkareshwar (135 km) → Omkareshwar Temple → Mamleshwar → Return Ujjain Bus Stand → Sonipat/Delhi",
+    travelMode: "Express Bus / Shared Cab & Sleeper Bus",
+    distance: "270 km local + 850 km highway",
+    travelTime: "7 Hours local + 15 Hours Bus",
+    estimatedCost: 1650,
+    weather: "Warm and sunny along Narmada river, 25°C to 34°C",
     trekDistance: "0 km",
     highestAltitude: "511m",
     stay: "Overnight Sleeper Bus",
-    food: "Poha-Jalebi breakfast (₹50), lunch at local restaurant (₹150), highway dinner (₹150)",
-    notes: "Get your liquor prasad inside the government-authorized outlets outside the Kal Bhairav temple gate to avoid inflated prices.",
+    food: "Poha-Jalebi breakfast (₹50), Narmada river thali lunch (₹150), highway dinner (₹150)",
+    notes: "Omkareshwar and Mamleshwar are considered two halves of the same Jyotirlinga — be sure to visit both for complete Darshan.",
     warnings: [
-      "Do not buy expensive pooja baskets from vendors who push you to buy large items",
-      "Ensure you return to the hotel and collect your bags in time for bus departure"
+      "Wear life jackets during the Narmada boat ride crossing",
+      "Keep sufficient travel time margin for the return bus from Omkareshwar back to Ujjain"
     ],
-    packing: ["Shopping bag", "Sunglasses / Hat", "Sufficient cash for buying prints"],
+    packing: ["Towel & change of clothes for Narmada dip", "Sunglasses / Hat", "Sufficient cash"],
     images: [],
-    mapLink: "https://maps.google.com/?q=Kal+Bhairav+Temple+Ujjain",
+    mapLink: "https://maps.google.com/?q=Omkareshwar+Jyotirlinga",
     tips: [
-      "Bhairavgarh print markets are the cheapest spots to buy handmade bedsheets, suit sets, and cotton sarees.",
-      "Try Ujjain's famous hot milk with saffron and rabdi at the local sweet stores."
+      "Take the suspension bridge (Jhula Pul) across the Narmada River for panoramic views of the Omkareshwar temple island.",
+      "Try fresh local poha and rabdi near the Omkareshwar bus stand."
     ],
     photography: [
-      "Priests performing traditional arati at Kal Bhairav",
-      "Sandipani Ashram ancient stone pond",
-      "Colorful hand block printed fabrics at Bhairavgarh"
+      "Panoramic view of Omkareshwar temple perched above the Narmada River",
+      "Narmada Ghat boats and suspension bridge",
+      "Ancient stone carvings at Mamleshwar Temple"
     ],
-    highlights: ["Kal Bhairav alcohol prasad ritual", "Mangalnath temple", "Lord Krishna's Sandipani Ashram", "Bhairavgarh block prints shopping", "Evening departure"],
-    meals: ["Poha Jalebi breakfast", "North Indian thali lunch", "Highway dhaba dinner"],
+    highlights: ["Omkareshwar Jyotirlinga Darshan", "Mamleshwar Jyotirlinga Darshan", "Narmada River Jhula Pul crossing", "Completing 2 MP Jyotirlingas in 1 circuit"],
+    meals: ["Poha Jalebi breakfast", "Narmada Malwai thali lunch", "Highway dhaba dinner"],
     activities: [
-      { time: "08:30 AM", title: "Kal Bhairav Visit", description: "Visit the temple and witness the unique liquor offering ritual" },
-      { time: "10:30 AM", title: "Mangalnath & Sandipani", description: "Visit Mars birthplace temple and the ancient ashram school" },
-      { time: "01:00 PM", title: "Shopping & Checkout", description: "Checkout hotel, head to Bhairavgarh local markets for block prints" },
-      { time: "07:00 PM", title: "Board Return Bus", description: "Arrive at bus terminal, board direct Volvo sleeper back to Sonipat" }
+      { time: "06:00 AM", title: "Depart Ujjain", description: "Board early morning express bus to Omkareshwar (135 km)" },
+      { time: "09:30 AM", title: "Arrive Omkareshwar", description: "Reach Narmada Ghat, walk across Jhula Pul bridge to temple" },
+      { time: "10:30 AM", title: "Omkareshwar & Mamleshwar", description: "Complete Darshan at both sacred shrines" },
+      { time: "03:30 PM", title: "Return to Ujjain", description: "Board return bus/cab to Ujjain bus terminal" },
+      { time: "07:30 PM", title: "Board Return Bus", description: "Board direct AC sleeper bus back to Sonipat/Delhi" }
     ],
     schedule: [
-      { time: "08:30 AM", activity: "Auto ride to Kal Bhairav Temple for morning darshan" },
-      { time: "10:30 AM", activity: "Visit Mangalnath Temple & Sandipani Ashram" },
-      { time: "01:00 PM", activity: "Check out hotel, lunch and local prints shopping at Bhairavgarh" },
-      { time: "07:00 PM", activity: "Board overnight AC sleeper bus back to Sonipat" }
+      { time: "06:00 AM", activity: "Check out hotel, board bus/cab to Omkareshwar" },
+      { time: "09:30 AM", activity: "Arrive Omkareshwar, Narmada Ghat dip & Jhula Pul walk" },
+      { time: "10:30 AM", activity: "Darshan at Omkareshwar & Mamleshwar Jyotirlingas" },
+      { time: "02:00 PM", activity: "Lunch near temple, return bus ride to Ujjain" },
+      { time: "07:30 PM", activity: "Board overnight AC sleeper bus back to Sonipat/Delhi" }
     ]
   },
   {
@@ -146,10 +148,10 @@ export const itinerary = [
     day: 3,
     date: "Monday Morning",
     weekday: "Mon",
-    title: "Arrive in Sonipat",
-    subtitle: "Morning arrival at Sonipat bypass — end of the Mahakal Darshan weekend tour",
-    overview: "Arrive back at Sonipat bypass around 10:00 AM. Take a local auto back to your home. End of the spiritual Malwa weekend tour.",
-    travel: "Sonipat bypass → Home",
+    title: "Arrive in Sonipat / Delhi",
+    subtitle: "Morning arrival at Sonipat bypass / Delhi — end of the 2-Jyotirlinga MP Circuit tour",
+    overview: "Arrive back at Sonipat bypass / Delhi around 10:00 AM. Take a local auto back home. End of the spiritual 2-Jyotirlinga MP Circuit tour!",
+    travel: "Sonipat / Delhi bypass → Home",
     travelMode: "Local Auto-rickshaw",
     distance: "5 km",
     travelTime: "20 Mins",
@@ -167,16 +169,16 @@ export const itinerary = [
     images: [],
     mapLink: "https://maps.google.com/?q=Sonipat",
     tips: [
-      "The bus usually drops passengers near the flyover bypass; call local autos in advance."
+      "Call local autos in advance for pickup from the bypass flyover."
     ],
     photography: ["Final group photo with your bags at Sonipat"],
-    highlights: ["Safe return home", "Successful Mahakal Darshan tour"],
+    highlights: ["Safe return home", "Completed Mahakaleshwar & Omkareshwar Jyotirlingas"],
     meals: ["Highway breakfast"],
     activities: [
-      { time: "10:00 AM", title: "Arrive Sonipat", description: "De-board the bus at Sonipat bypass, head home" }
+      { time: "10:00 AM", title: "Arrive Home", description: "De-board bus, head home — 2 Jyotirlingas circuit complete!" }
     ],
     schedule: [
-      { time: "10:00 AM", activity: "Arrive Sonipat bypass, end of trip" }
+      { time: "10:00 AM", activity: "Arrive Sonipat/Delhi bypass, end of trip" }
     ]
   }
 ];

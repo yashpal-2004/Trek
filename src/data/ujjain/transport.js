@@ -3,7 +3,7 @@ import { ujjainAmounts } from "./amounts";
 export const transport = [
   {
     id: 1,
-    from: "Sonipat Bypass",
+    from: "Sonipat / Delhi",
     to: "Ujjain Bus Stand",
     mode: "AC Sleeper Bus",
     distance: "850 km",
@@ -12,7 +12,7 @@ export const transport = [
     cheapest: 1200,
     alternative: "Train (via Delhi or Indore)",
     frequency: "Daily Evening (07:00 PM)",
-    notes: "Direct interstate bus runs bypassing Delhi. Book in advance via private portals.",
+    notes: "Direct interstate AC sleeper bus. Book 2-3 weeks in advance.",
     busType: "AC Sleeper"
   },
   {
@@ -26,37 +26,51 @@ export const transport = [
     cheapest: 20,
     alternative: "Auto-rickshaw",
     frequency: "Available 24/7 at Bus Stand",
-    notes: "E-rickshaws are the most economical option. Direct entry of autos can be limited near the temple corridors.",
+    notes: "E-rickshaws are the most economical option around Mahakal temple.",
     busType: "Auto"
   },
   {
     id: 3,
-    from: "Hotel Base",
-    to: "Kal Bhairav & Mangalnath Loop",
-    mode: "Auto Rickshaw",
-    distance: "15 km Loop",
-    duration: "2 hours",
-    fare: 150,
-    cheapest: 120,
-    alternative: "Shared Magic Auto",
-    frequency: "Frequent",
-    notes: "Negotiate a round-trip package with a local auto-rickshaw driver to visit Kal Bhairav, Mangalnath, and Sandipani Ashram.",
-    busType: "Auto"
+    from: "Ujjain Terminal",
+    to: "Omkareshwar Jyotirlinga",
+    mode: "Express Bus / Shared Cab",
+    distance: "135 km",
+    duration: "3.5 hrs",
+    fare: ujjainAmounts.transportFares.ujjainToOmkareshwar,
+    cheapest: 200,
+    alternative: "Private Cab (₹2,500 round trip)",
+    frequency: "Buses every 30 mins via Indore",
+    notes: "Direct state bus or shared cab to Omkareshwar Narmada Ghat.",
+    busType: "Express Bus"
   },
   {
     id: 4,
-    from: "Ujjain Bus Stand",
-    to: "Sonipat Bypass",
+    from: "Omkareshwar Ghat",
+    to: "Omkareshwar Island & Mamleshwar",
+    mode: "Narmada Boat / Jhula Pul Walk",
+    distance: "2 km",
+    duration: "30 mins",
+    fare: 50,
+    cheapest: 0,
+    alternative: "Walking Jhula Pul bridge (Free)",
+    frequency: "Continuous",
+    notes: "Walk the Jhula Pul suspension bridge or take a motorboat across Narmada.",
+    busType: "Boat / Walking"
+  },
+  {
+    id: 5,
+    from: "Omkareshwar",
+    to: "Ujjain / Delhi Bus Terminal",
     mode: "AC Sleeper Bus",
-    distance: "850 km",
-    duration: "15 hrs",
-    fare: ujjainAmounts.transportFares.busRoundTrip / 2,
-    cheapest: 1200,
-    alternative: "Indore/Delhi train options",
+    distance: "985 km",
+    duration: "18 hrs total",
+    fare: ujjainAmounts.transportFares.busRoundTrip / 2 + ujjainAmounts.transportFares.omkareshwarToUjjain,
+    cheapest: 1450,
+    alternative: "Train via Indore",
     frequency: "Daily Evening (07:30 PM)",
-    notes: "Board return sleeper coach to Sonipat bypass. Rest and sleep through the overnight journey.",
+    notes: "Board return bus back to Ujjain/Indore and onward sleeper to Delhi/Sonipat.",
     busType: "AC Sleeper"
   }
 ];
 
-export const transportModes = ["All", "AC Sleeper Bus", "Auto Rickshaw", "Local E-Rickshaw"];
+export const transportModes = ["All", "AC Sleeper Bus", "Express Bus / Shared Cab", "Auto Rickshaw", "Narmada Boat / Jhula Pul Walk"];

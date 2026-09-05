@@ -305,5 +305,55 @@ export const itinerary = [
       { time: "02:00 PM", activity: "Board train/bus back to Delhi" },
       { time: "07:30 PM", activity: "Arrive Delhi with unforgettable Himalayan memories" }
     ]
+  },
+  {
+    id: 7,
+    day: 7,
+    date: "Day 7 (Plan 2 Badrinath Extension)",
+    weekday: "Day 7",
+    title: "Govindghat → Badrinath Dham → Mana Village → Haridwar",
+    subtitle: "25 km drive extension to Badrinath Temple, Tapt Kund dip, Mana Village (Last Indian Village) & return",
+    overview: "In Plan 2 (Combined Circuit), after finishing the Valley of Flowers & Hemkund trek, take a 1-hour drive (25 km) up the highway to Badrinath Dham (3,133m). Take a holy dip at Tapt Kund thermal springs, perform Badrinath Temple Sparsh Darshan, and visit Mana Village (Vyas Gufa, Saraswati River origin, and India's Last Tea Stall) before driving down to Haridwar.",
+    travel: "Govindghat → Badrinath Dham → Mana Village → Joshimath → Haridwar",
+    travelMode: "Shared Taxi / Bus",
+    distance: "310 km",
+    travelTime: "10-11 Hours",
+    estimatedCost: 1400,
+    weather: "Cool at Badrinath (10°C to 18°C)",
+    trekDistance: "0 km",
+    highestAltitude: "3133m",
+    stay: "Haridwar Hotel / Return Bus",
+    food: "Breakfast at Badrinath (₹150), lunch at Joshimath (₹200), dinner en route (₹150)",
+    notes: "Plan 2 Extension: Badrinath temple morning aarti is highly recommended.",
+    warnings: [
+      "Keep temple dress code ready for Badrinath Darshan",
+      "Thermal water at Tapt Kund is hot; take care while dipping"
+    ],
+    packing: ["Puja essentials", "Thermal jacket", "Waterproof shoes"],
+    images: [],
+    mapLink: "https://maps.google.com/?q=Badrinath+Temple",
+    tips: [
+      "Visit Vyas Gufa and Ganesh Gufa in Mana Village where Mahabharata was dictated",
+      "Have tea at 'India's Last Tea Shop' near Saraswati River"
+    ],
+    photography: [
+      "Badrinath colorful temple facade with Neelkanth Peak background",
+      "Saraswati River gushing through Bhim Pul natural stone bridge"
+    ],
+    highlights: ["Badrinath Temple Darshan", "Tapt Kund Hot Springs", "Mana Village & Vyas Gufa", "Bhim Pul"],
+    meals: ["Breakfast at Badrinath", "Lunch at Joshimath", "Dinner en route"],
+    activities: [
+      { time: "06:00 AM", title: "Govindghat to Badrinath Drive", description: "Drive 25 km from Govindghat to Badrinath Dham along Alaknanda river" },
+      { time: "07:30 AM", title: "Tapt Kund Dip & Badrinath Darshan", description: "Take holy dip in natural hot springs and attend Badrinath Temple Darshan" },
+      { time: "10:00 AM", title: "Mana Village Exploration", description: "Visit Vyas Gufa, Ganesh Gufa, Saraswati River origin, and Bhim Pul stone bridge" },
+      { time: "01:00 PM", title: "Lunch at Joshimath", description: "Enjoy hot meal at Joshimath before descending to Haridwar" },
+      { time: "08:30 PM", title: "Arrive Haridwar / Delhi Return", description: "Arrive at Haridwar to board overnight train/bus back to Delhi" }
+    ],
+    schedule: [
+      { time: "06:00 AM", activity: "Drive from Govindghat to Badrinath Dham" },
+      { time: "07:30 AM", activity: "Tapt Kund bath & Badrinath Temple Darshan" },
+      { time: "10:00 AM", activity: "Explore Mana Village & Saraswati River" },
+      { time: "08:30 PM", activity: "Arrive Haridwar for return journey" }
+    ]
   }
 ];

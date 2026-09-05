@@ -1,91 +1,109 @@
 import { ujjainAmounts } from "./amounts";
+const data = ujjainAmounts;
 
 export const budget = {
-  total: ujjainAmounts.budgetTotal,
+  total: data.budgetTotal,
   perPerson: true,
   currency: "INR",
   categories: [
     {
       id: "transport",
-      label: "Transportation & Buses",
-      amount: ujjainAmounts.transportCategory,
+      label: "Transportation",
+      amount: data.transportCategory,
       color: "#2563EB",
       icon: "Bus",
-      description: "Direct Sonipat-Ujjain AC Sleeper bus round trip + local auto-rickshaw fares",
+      description: "Delhi/Sonipat round trip AC sleeper bus + Ujjain-Omkareshwar bus & local autos",
       subItems: [
-        { name: "Sonipat-Ujjain AC Sleeper Bus Round Trip (₹1,200 each way)", price: ujjainAmounts.transportFares.busRoundTrip },
-        { name: "Local E-Rickshaws & Autos in Ujjain", price: ujjainAmounts.transportFares.localTransit }
+        { name: "Delhi/Sonipat → Ujjain Round Trip AC Sleeper", price: 2400 },
+        { name: "Ujjain → Omkareshwar Express Bus/Cab (Round Trip)", price: 500 },
+        { name: "Local E-Rickshaw & Boat Transfer", price: 100 }
       ]
     },
     {
       id: "accommodation",
       label: "Accommodation",
-      amount: ujjainAmounts.accommodationCategory,
+      amount: data.accommodationCategory,
       color: "#10B981",
       icon: "Bed",
-      description: "Comfortable hotel room near Mahakal Mandir (1 Night)",
+      description: "AC Hotel room near Mahakaleshwar Temple, Ujjain (1 Night)",
       subItems: [
-        { name: "Ujjain Hotel Stay (1 Night @ ₹600/person double-sharing)", price: ujjainAmounts.accommodationCategory }
+        { name: "Ujjain Hotel (1 Night double-sharing)", price: 600 }
       ]
     },
     {
       id: "food",
       label: "Food & Meals",
-      amount: ujjainAmounts.foodCategory,
+      amount: data.foodCategory,
       color: "#F59E0B",
       icon: "Utensils",
-      description: "Local Malwai street food, dhaba thalis & snacks",
+      description: "Malwai Dal Bafla, Poha-Jalebi, Narmada Ghat thali, and highway dhabas",
       subItems: [
-        { name: "3 Days Meals & Prasad (₹300/day per person)", price: ujjainAmounts.foodCategory }
+        { name: "Meals & snacks across 3 days", price: 1000 }
       ]
     },
     {
       id: "emergency",
-      label: "Pooja & Prasad Buffer",
-      amount: ujjainAmounts.emergencyCategory,
+      label: "Pooja & Misc Buffer",
+      amount: data.emergencyCategory,
       color: "#EF4444",
-      icon: "ShieldAlert",
-      description: "Mahakal VIP ticket, Prasad boxes & emergency funds",
+      icon: "Shield",
+      description: "Temple prasad, locker charges, Narmada boat ticket & emergency fund",
       subItems: [
-        { name: "Mahakal VIP Darshan Ticket & Prasad", price: 250 },
-        { name: "Emergency Buffer cash", price: 50 }
+        { name: "Pooja, Prasad & Emergency Buffer", price: 300 }
       ]
     }
   ],
   dailyEstimate: [
-    { day: 0, amount: 1200, label: "Friday Night — Board overnight bus from Sonipat" },
-    { day: 1, amount: 1250, label: "Saturday — Arrive Ujjain, check in, Mahakal temple darshan & Aarti" },
-    { day: 2, amount: 850,  label: "Sunday — Kal Bhairav, Mangalnath, local shopping & board return bus" },
-    { day: 3, amount: 1200, label: "Monday Morning — Arrive back in Sonipat" }
+    { day: 0, amount: 1350, label: "Sonipat/Delhi → Ujjain (Bus & dinner)" },
+    { day: 1, amount: 1450, label: "Ujjain Mahakal Darshan (Hotel, Dal Bafla, Harsiddhi)" },
+    { day: 2, amount: 1900, label: "Ujjain → Omkareshwar & Mamleshwar (Bus, boat, return bus)" },
+    { day: 3, amount: 100, label: "Arrive Home (Local auto)" }
   ],
-  calculatorDefaults: ujjainAmounts.calcDefaults,
+  calculatorDefaults: data.calcDefaults,
 };
 
 export const stayOptions = [
   {
     id: 1,
-    destination: "Mahakal Temple Area",
-    name: "Hotel Mahakal Palace",
-    image: "/mountain_clay_peak.png",
-    budget: 600,
-    mid: 1000,
-    premium: 1800,
+    destination: "Ujjain (Near Mahakal Temple)",
+    image: "https://images.unsplash.com/photo-1600100397608-f010e423b971?w=800&q=80",
+    budget: data.stays.ujjain.budget,
+    mid: data.stays.ujjain.mid,
+    premium: data.stays.ujjain.premium,
+    gmvnn: false,
+    camping: false,
+    hostel: true,
+    facilities: ["Air Conditioning", "Hot Water", "Walkable to Mahakal Lok", "24hr Check-in"],
+    pros: ["Walking distance to Mahakaleshwar Temple", "Easy access to Bhasma Aarti queue"],
+    cons: ["Heavy traffic on weekend evenings near temple gates"],
+    tips: "Book guest houses inside the Mahakal Marg area so you can easily walk for 3:00 AM Bhasma Aarti.",
+    rating: 4.6,
+    mapLink: "https://maps.google.com/?q=Mahakaleshwar+Ujjain",
+    hotels: [
+      { name: "Hotel Mahakal Inn", price: data.stays.ujjain.hotelPrice, offline: true },
+      { name: "MPSTC Hotel Shipra Ujjain", price: 1200, offline: true }
+    ]
+  },
+  {
+    id: 2,
+    destination: "Omkareshwar Narmada Ghat",
+    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
+    budget: data.stays.omkareshwar.budget,
+    mid: data.stays.omkareshwar.mid,
+    premium: data.stays.omkareshwar.premium,
     gmvnn: false,
     camping: false,
     hostel: false,
-    facilities: ["Air Conditioning", "Hot water supply", "5 mins walk to temple entrance"],
-    pros: ["Very close to the main temple complex", "Acclimatized clean rooms"],
-    cons: ["Heavy traffic area; autos stop slightly away during peak hours"],
-    tips: "Walk to the temple for early morning Bhasma Aarti to avoid transport delays",
+    facilities: ["Narmada River View", "Pure Veg Canteen", "Clean Rooms"],
+    pros: ["Peaceful ghat atmosphere", "Close to Omkareshwar temple island"],
+    cons: ["Limited high-end luxury hotels"],
+    tips: "Dharamshalas near the Narmada Jhula Pul offer clean rooms at very nominal rates.",
     rating: 4.5,
-    mapLink: "https://maps.google.com/?q=Mahakaleshwar+Temple+Ujjain",
-    type: "Hotel",
-    pricePerNight: 600,
-    location: "Ujjain",
-    nights: 1,
+    mapLink: "https://maps.google.com/?q=Omkareshwar+Narmada+Ghat",
     hotels: [
-      { name: "Standard AC Double Room (per person)", price: 600 },
-      { name: "Deluxe Family Suite", price: 1000 }
+      { name: "Narmada Resort Omkareshwar", price: data.stays.omkareshwar.hotelPrice, offline: true }
     ]
   }
 ];
+
+export const accommodationBreakdown = [];

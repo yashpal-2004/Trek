@@ -104,7 +104,7 @@ export default function BudgetSection() {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie 
-                      data={chartData.length ? chartData : budget.categories.map(c => ({ name: c.label, value: c.amount }))} 
+                      data={(chartData && chartData.length) ? chartData : (budget && budget.categories) ? budget.categories.map(c => ({ name: c.label, value: c.amount })) : []} 
                       cx="50%" 
                       cy="50%" 
                       innerRadius={50} 
@@ -112,7 +112,7 @@ export default function BudgetSection() {
                       dataKey="value" 
                       paddingAngle={3}
                     >
-                      {(chartData.length ? chartData : budget.categories).map((_, i) => (
+                      {((chartData && chartData.length) ? chartData : (budget && budget.categories) || []).map((_, i) => (
                         <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                       ))}
                     </Pie>
