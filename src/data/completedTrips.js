@@ -1,5 +1,71 @@
 export const completedTrips = [
   {
+    id: "spiti",
+    type: "trip",
+    typeLabel: "High Altitude Expedition",
+    title: "Spiti Valley Expedition",
+    subtitle: "Himachal Pradesh, India",
+    description: "6-day high altitude overland circuit in Spiti Valley.",
+    isCompleted: true,
+    spentTotal: 9964.00,
+    stats: {
+      duration: "6 Days (20 Aug – 25 Aug 2026)",
+      distance: "Overland Circuit",
+      budget: "₹9,964.00",
+    },
+    image: "/Spiti.jpg",
+    expenses: [
+      { category: "Food", description: "Food & Drinks", amount: 1750.00 },
+      { category: "Transport", description: "Volvo / Transit Share", amount: 5670.00 },
+      { category: "Accommodation", description: "Homestay / Hotel Stay", amount: 2550.00 },
+      { category: "Activities", description: "Local Sightseeing & Permits", amount: 0.00 }
+    ],
+    plans: [
+      {
+        id: "spiti-done",
+        title: "Completed High Altitude Expedition",
+        duration: "6 Days (20 Aug – 25 Aug 2026)",
+        route: "Sonipat → Manali directly → Kaza (3 Nights Base) → Key Monastery → Hikkim → Komic → Langza → Chandratal Lake → Manali → Sonipat",
+        details: "6-day high altitude overland circuit in Spiti Valley.",
+        budget: "₹9,964.00",
+        path: "#"
+      }
+    ]
+  },
+  {
+    id: "rudranath-tungnath",
+    type: "trip",
+    typeLabel: "High Altitude Trek",
+    title: "Rudranath & Tungnath Trek",
+    subtitle: "Uttarakhand, India",
+    description: "Alpine valley trek visiting two sacred Panch Kedar temples (Rudranath & Tungnath) and Chandrashila Peak.",
+    isCompleted: true,
+    spentTotal: 6850.00,
+    stats: {
+      duration: "9 Days (2 Jul – 10 Jul 2026)",
+      distance: "Foot Trail Trekking",
+      budget: "₹6,850.00"
+    },
+    image: "/rudranth.png",
+    expenses: [
+      { category: "Food", description: "Valley Meals & Tea Stalls", amount: 2150.00 },
+      { category: "Transport", description: "Sonipat → Gopeshwar / Chopta Transit", amount: 2400.00 },
+      { category: "Accommodation", description: "Ashram & Lodge Stays", amount: 1800.00 },
+      { category: "Activities", description: "Pony / Guide / Permits", amount: 500.00 }
+    ],
+    plans: [
+      {
+        id: "rudranath-done",
+        title: "Completed Panch Kedar Trek",
+        duration: "9 Days (2 Jul – 10 Jul 2026)",
+        route: "Sonipat → Rishikesh → Gopeshwar → Sagar Village → Liti Bugyal → Panar Bugyal → Rudranath Temple → Mandal → Chopta → Tungnath → Chandrashila → Sonipat",
+        details: "Trek through dense forests and bugyals to Rudranath and highest Shiva temple Tungnath.",
+        budget: "₹6,850.00",
+        path: "#"
+      }
+    ]
+  },
+  {
     id: "amritsar",
     type: "trip",
     typeLabel: "Quick Trip",
@@ -13,7 +79,7 @@ export const completedTrips = [
       distance: "Local Transit",
       budget: "₹1,570.05",
     },
-    image: "/mountain_clay_peak.png",
+    image: "/Amritsar.jpeg",
     expenses: [
       { category: "Food", description: "Meals & Street Food", amount: 200.00 },
       { category: "Transport (Bus)", description: "Sonipat → Amritsar Bus (7 Nov 2025, 8:00 PM)", amount: 429.05 },
@@ -47,7 +113,7 @@ export const completedTrips = [
       distance: "Friend's Scooty",
       budget: "₹5,164.00",
     },
-    image: "/mountain_clay_peak.png",
+    image: "/Hisar.jpeg",
     expenses: [
       { category: "Intercity Transit", description: "Sonipat ↔ Hisar Cab (Round Trip)", amount: 700.00 },
       { category: "Fuel", description: "Petrol for Friend's Scooty", amount: 225.00 },
@@ -83,7 +149,7 @@ export const completedTrips = [
       distance: "Rented Car Circuit",
       budget: "₹8,637.00",
     },
-    image: "/mountain_clay_peak.png",
+    image: "/Mussorie.jpeg",
     expenses: [
       { category: "Rented Car", description: "Car (Rent + Fuel + Toll + Parking)", amount: 2692.50 },
       { category: "Car Damage", description: "Car Damage Fine / Repair Share", amount: 3000.00 },
@@ -117,7 +183,7 @@ export const completedTrips = [
       distance: "3 Days Scooty",
       budget: "₹4,192.50",
     },
-    image: "/mountain_clay_peak.png",
+    image: "/Manali.jpeg",
     expenses: [
       { category: "Intercity Transit", description: "Bus to Manali (26 Nov) [Shared]", amount: 424.00 },
       { category: "Food & Snacks", description: "Blinkit (26 Nov) [Shared]", amount: 191.00 },
@@ -166,7 +232,7 @@ export const completedTrips = [
       distance: "Scooty & Public Transit",
       budget: "₹5,631.50",
     },
-    image: "/mountain_clay_peak.png",
+    image: "/Jaipur.jpeg",
     expenses: [
       { category: "Shopping", description: "Perfume (₹750), Shoes (₹1,650) & Zombie Ride (₹200)", amount: 2600.00 },
       { category: "Stay", description: "Hotel / Guesthouse Accommodation", amount: 759.50 },
@@ -203,7 +269,7 @@ export const completedTrips = [
       distance: "Family Transit",
       budget: "₹0.00",
     },
-    image: "/mountain_clay_peak.png",
+    image: "/Vrindavan.png",
     expenses: [
       { category: "Family Covered", description: "Transits, Accommodation & Meals (Paid by Family)", amount: 0.00 },
     ],

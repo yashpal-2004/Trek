@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock } from "lucide-react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../utils/firebase";
@@ -44,6 +44,609 @@ import { somnathNageshwarAmounts } from "../data/somnath-nageshwar/amounts";
 import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/amounts";
 import { vaidyanathAmounts } from "../data/vaidyanath/amounts";
 import { maharashtraAmounts } from "../data/trimbakeshwar-bhimashankar-grishneshwar/amounts";
+
+function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = {}, completedPlans = [], archivedPlans = [] }) {
+  const [isBookOpen, setIsBookOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState("index");
+  const [pageSubTab, setPageSubTab] = useState("photo"); // 'photo' for 1st page, 'details' for turned page
+
+  const colorPalette = [
+    "bg-sky-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500",
+    "bg-indigo-500", "bg-purple-500", "bg-teal-500", "bg-orange-500"
+  ];
+
+  const getTripAmountsData = (trip) => {
+    if (trip.id === "spiti") return spitiAmounts?.plan1;
+    if (trip.id === "rudranath") return rudranathAmounts?.plan1;
+    if (trip.id === "auli") return auliAmounts;
+    if (trip.id === "ujjain") return ujjainAmounts;
+    if (trip.id === "kashmir") return kashmirAmounts;
+    if (trip.id === "nepal-budget") return nepalAmounts1;
+    return null;
+  };
+
+  const extractDateInfo = (trip) => {
+    if (!trip) return { dates: "N/A", monthYear: "COMPLETED", dayDisplay: "LOG", monthDisplay: "JUL", yearDisplay: "2026" };
+    
+    // Check if dates are defined directly or inside completed map places or plans
+    let rawStr = trip.dates || "";
+    if (!rawStr && trip.plans?.length) {
+      for (const p of trip.plans) {
+        if (p.duration && p.duration.includes("(")) {
+          rawStr = p.duration;
+          break;
+        }
+      }
+      if (!rawStr) rawStr = trip.plans[0]?.duration || trip.stats?.duration || "";
+    }
+    if (!rawStr) rawStr = trip.stats?.duration || "";
+
+    const parenthesizedMatch = rawStr.match(/\(([^)]+)\)/);
+    const dateRangeStr = parenthesizedMatch ? parenthesizedMatch[1] : rawStr;
+
+    const monthsMap = {
+      JAN: "JAN", FEB: "FEB", MAR: "MAR", APR: "APR", MAY: "MAY", JUN: "JUN",
+      JUL: "JUL", AUG: "AUG", SEP: "SEP", OCT: "OCT", NOV: "NOV", DEC: "DEC"
+    };
+
+    const tokens = dateRangeStr.trim().split(/\s+/);
+    let foundYear = tokens.find(t => /^\d{4}$/.test(t));
+    if (!foundYear) foundYear = "2026";
+
+    let foundMonth = "JUL";
+    for (const t of tokens) {
+      const clean = t.toUpperCase().replace(/[^A-Z]/g, "");
+      if (monthsMap[clean]) {
+        foundMonth = monthsMap[clean];
+        break;
+      }
+    }
+
+    const dashParts = dateRangeStr.split(/–|-/).map(s => s.trim());
+    let startDay = "";
+    let endDay = "";
+
+    if (dashParts.length >= 1) {
+      const match1 = dashParts[0].match(/\d+/);
+      if (match1) startDay = match1[0];
+    }
+    if (dashParts.length >= 2) {
+      const match2 = dashParts[1].match(/\d+/);
+      if (match2) endDay = match2[0];
+    }
+
+    let dayDisplay = startDay || "1";
+    let datesText = "";
+
+    if (startDay && endDay && startDay !== endDay) {
+      datesText = `${startDay}–${endDay} ${foundMonth} ${foundYear}`;
+      dayDisplay = `${startDay}–${endDay}`;
+    } else if (startDay) {
+      datesText = `${startDay} ${foundMonth} ${foundYear}`;
+      dayDisplay = startDay;
+    } else {
+      datesText = `${foundMonth} ${foundYear}`;
+      dayDisplay = "LOG";
+    }
+
+    const monthNumbers = { JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6, JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12 };
+    const yVal = parseInt(foundYear, 10) || 2026;
+    const mVal = monthNumbers[foundMonth] || 7;
+    const dVal = parseInt(startDay, 10) || 1;
+
+    return {
+      dates: datesText,
+      monthYear: `${foundMonth} ${foundYear}`,
+      dayDisplay: dayDisplay,
+      monthDisplay: foundMonth,
+      yearDisplay: foundYear,
+      timestamp: new Date(yVal, mVal - 1, dVal).getTime()
+    };
+  };
+
+  // Sort and deduplicate completed trips in reverse chronological order (newest date first)
+  const sortedTrips = useMemo(() => {
+    const uniqueMap = new Map();
+    (completedTrips || []).forEach(trip => {
+      if (!trip) return;
+      // Deduplicate by ID or main location keyword (spiti, rudranath, amritsar, hisar, mussoorie, manali, jaipur, vrindavan)
+      let key = (trip.id || "").toLowerCase().trim();
+      const rawTitle = (trip.title || "").toLowerCase();
+      if (rawTitle.includes("spiti")) key = "spiti";
+      else if (rawTitle.includes("rudranath")) key = "rudranath";
+      else if (rawTitle.includes("amritsar")) key = "amritsar";
+      else if (rawTitle.includes("hisar")) key = "hisar";
+      else if (rawTitle.includes("mussoorie")) key = "mussoorie";
+      else if (rawTitle.includes("manali")) key = "manali";
+      else if (rawTitle.includes("jaipur")) key = "jaipur";
+      else if (rawTitle.includes("vrindavan")) key = "vrindavan";
+      else if (!key) key = rawTitle.replace(/[^a-z0-9]/g, "");
+
+      if (key && !uniqueMap.has(key)) {
+        uniqueMap.set(key, trip);
+      } else if (key && uniqueMap.has(key)) {
+        // If the new one has a non-default photo image, prefer it
+        const existing = uniqueMap.get(key);
+        if ((!existing.image || existing.image === "/mountain_clay_peak.png") && (trip.image && trip.image !== "/mountain_clay_peak.png")) {
+          uniqueMap.set(key, trip);
+        }
+      }
+    });
+    return Array.from(uniqueMap.values()).sort((a, b) => {
+      const timeA = extractDateInfo(a).timestamp;
+      const timeB = extractDateInfo(b).timestamp;
+      return timeB - timeA; // Descending
+    });
+  }, [completedTrips]);
+
+  const selectedTrip = sortedTrips[selectedIndex] || sortedTrips[0];
+
+  // If Book is Closed, Render Vintage Scrapbook Travel Journal Cover
+  if (!isBookOpen) {
+    return (
+      <div className="relative w-full h-[720px] md:h-[760px] cursor-pointer group perspective-1000" onClick={() => setIsBookOpen(true)}>
+        {/* Outer Frame Container */}
+        <div className="w-full h-full bg-[#2a1d15] rounded-[40px] p-3 md:p-5 shadow-2xl font-serif text-slate-800 border-4 border-[#1c130d] flex flex-col justify-between relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.005]">
+          
+          {/* Main Cover Scrapbook Board */}
+          <div className="relative flex-1 w-full bg-[#dfd6c6] rounded-3xl border-2 border-[#5c4431] shadow-2xl flex flex-col justify-between overflow-hidden">
+            
+            {/* Wide 3:2 Landscape Vintage Artwork Background */}
+            <img 
+              src="/vintage_cover_horizontal.jpg" 
+              alt="Vintage Travel Journal Cover"
+              className="absolute inset-0 w-full h-full object-cover object-center filter contrast-[1.05] brightness-[0.97] transition-transform duration-700 group-hover:scale-102"
+            />
+
+            {/* Custom Typography overlay fitted precisely inside the center parchment frame */}
+            <div className="relative z-10 my-auto mx-auto w-[65%] md:w-[50%] max-w-md bg-[#f7f2e7]/95 backdrop-blur-xs p-5 md:p-7 rounded-2xl border-2 border-[#8c745c] shadow-2xl text-center">
+              
+              {/* Vintage Postmark Stamp Accent */}
+              <div className="border-b border-[#a8947d]/60 pb-2 mb-2">
+                <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#8c6b4f] font-bold block mb-1">
+                  VINTAGE EXPEDITION LOG
+                </span>
+                <h1 className="text-3xl md:text-4xl font-serif font-black tracking-tight text-[#3b2716] uppercase leading-tight">
+                  Yashpal's Travels
+                </h1>
+              </div>
+
+              <div className="space-y-1 my-2">
+                <p className="text-xs md:text-sm font-serif italic text-[#634832] font-semibold">
+                  Himalayan Mountain Treks & Road Trips
+                </p>
+                <div className="flex items-center justify-center gap-2 text-[11px] font-mono text-[#8c6b4f]">
+                  <span>VOL. 01</span>
+                  <span>•</span>
+                  <span>EST. 2026</span>
+                </div>
+              </div>
+
+              {/* Click to Open Button Badge */}
+              <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#3b2716] text-[#f7f2e7] text-xs font-mono font-bold tracking-wider group-hover:bg-[#5c4028] transition-all shadow-md animate-pulse">
+                <span>OPEN TRAVEL DIARY</span>
+                <span>📖</span>
+              </div>
+            </div>
+
+            {/* Left Spine Crease Shadow overlay */}
+            <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none z-20" />
+            <div className="absolute top-0 bottom-0 left-8 border-l border-[#5c4431]/60 pointer-events-none z-20" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-[720px] md:h-[760px] bg-[#3d2f24] rounded-[40px] p-5 md:p-8 shadow-2xl font-serif text-slate-800 border-4 border-[#2b1f17] flex flex-col justify-between">
+      
+      {/* Close Cover Button */}
+      <button
+        onClick={() => setIsBookOpen(false)}
+        className="absolute top-2 left-6 z-30 px-3 py-1 bg-amber-950/80 hover:bg-amber-950 text-amber-200 text-xs font-mono rounded-b-lg border border-amber-600/40 shadow-md flex items-center gap-1 transition-all"
+        title="Close Journal Cover"
+      >
+        <span>📕 Close Journal</span>
+      </button>
+      
+      {/* Outer Journal Book Cover Frame & Metallic Corners */}
+      <div className="absolute top-3.5 left-3.5 w-6 h-6 border-t-3 border-l-3 border-amber-600/60 rounded-tl-sm pointer-events-none" />
+      <div className="absolute top-3.5 right-3.5 w-6 h-6 border-t-3 border-r-3 border-amber-600/60 rounded-tr-sm pointer-events-none" />
+      <div className="absolute bottom-3.5 left-3.5 w-6 h-6 border-b-3 border-l-3 border-amber-600/60 rounded-bl-sm pointer-events-none" />
+      <div className="absolute bottom-3.5 right-3.5 w-6 h-6 border-b-3 border-r-3 border-amber-600/60 rounded-br-sm pointer-events-none" />
+
+      {/* Book Container with Right Bookmark Page Tabs */}
+      <div className="relative flex-1 flex bg-[#f5f1e8] rounded-3xl border border-black/20 shadow-inner overflow-hidden">
+        
+        {/* Main 2-Page Paper Content */}
+        <div className="flex-1 p-5 md:p-7 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 relative">
+          
+          {/* Page Center Binding Stitch Shadow */}
+          <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-12 bg-gradient-to-r from-black/5 via-black/15 to-black/5 hidden md:block z-20 pointer-events-none border-x border-black/5" />
+
+          {/* PAGE 1: JOURNAL INDEX (LEFT PAGE) */}
+          <div className="flex flex-col justify-between border-r-0 md:border-r border-black/10 pr-0 md:pr-5 h-full">
+            <div>
+              <div className="border-b-2 border-black/15 pb-2 mb-2 flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-slate-900 font-serif">
+                    Journal Index
+                  </h3>
+                  <p className="text-xs italic text-slate-500 font-mono">Completed Expeditions Log</p>
+                </div>
+                <div className="w-9 h-9 rounded-full bg-amber-800/10 flex items-center justify-center text-amber-900 font-mono font-bold text-sm">
+                  {sortedTrips.length}
+                </div>
+              </div>
+
+              <div className="space-y-2.5 max-h-[520px] overflow-y-auto pr-2 custom-scrollbar">
+                {sortedTrips.map((trip, idx) => {
+                  const isSelected = idx === selectedIndex;
+                  const { dates } = extractDateInfo(trip);
+                  const accentColor = colorPalette[idx % colorPalette.length];
+                  return (
+                    <button
+                      key={trip.id}
+                      onClick={() => {
+                        setSelectedIndex(idx);
+                        setActiveTab("index");
+                        setPageSubTab("photo");
+                      }}
+                      className={`w-full text-left p-2.5 md:p-3 rounded-2xl border transition-all flex items-center justify-between relative overflow-hidden group shadow-xs ${
+                        isSelected
+                          ? "bg-[#fff9ed] border-amber-600/60 text-slate-900 ring-2 ring-amber-500/30"
+                          : "bg-white/80 border-slate-300/70 hover:bg-white text-slate-700"
+                      }`}
+                    >
+                      {/* Left Number Tag & Image Thumbnail */}
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="text-sm font-bold font-serif w-5 text-center text-slate-600 shrink-0">
+                          {idx + 1}
+                        </span>
+
+                        <img
+                          src={trip.image || "/mountain_clay_peak.png"}
+                          alt={trip.title}
+                          className="w-10 h-10 md:w-11 md:h-11 rounded-lg border border-black/15 object-cover shrink-0 shadow-xs group-hover:scale-105 transition-transform"
+                        />
+
+                        <div className="truncate border-l border-slate-200 pl-2">
+                          <p className="text-xs md:text-sm font-bold font-sans truncate text-slate-900 group-hover:text-amber-900 leading-tight">
+                            {trip.title}
+                          </p>
+                          <p className="text-[10px] md:text-xs font-mono text-slate-500 mt-0.5">
+                            {dates}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Right Tab Bookmark Pill */}
+                      <div className="flex items-center gap-1.5 shrink-0 ml-1">
+                        <span className="text-xs font-mono font-bold text-slate-700">
+                          P.0{idx + 1}
+                        </span>
+                        <div className={`w-3 h-7 rounded-xs ${accentColor}`} />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="pt-2 mt-1 border-t border-black/10 flex items-center justify-between text-xs font-mono text-slate-500">
+              <span>Vol. 1 • Log Book</span>
+              <span>Select entry to view</span>
+            </div>
+          </div>
+
+          {/* PAGE 2: JOURNAL ENTRY PAGE / PHOTO GALLERY VIEW (RIGHT PAGE) */}
+          {selectedTrip && (
+            <div className="flex flex-col justify-between pl-0 md:pl-5 relative h-full min-h-0">
+              <div className="flex-1 flex flex-col justify-between overflow-y-auto pr-1 custom-scrollbar min-h-0">
+                {activeTab === "photos" || activeTab === "gallery" ? (
+                  /* Photo Gallery Tab Content */
+                  <div className="space-y-3">
+                    <div className="border-b-2 border-black/15 pb-2 mb-3 flex items-center justify-between">
+                      <div>
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-800">
+                          VISUAL GALLERY
+                        </span>
+                        <h4 className="text-xl md:text-2xl font-bold font-serif text-slate-900 leading-tight uppercase">
+                          Expedition Photos
+                        </h4>
+                      </div>
+                      <span className="text-xs font-mono bg-amber-900/10 text-amber-950 px-2.5 py-1 rounded-full font-bold">
+                        {sortedTrips.length} Photos
+                      </span>
+                    </div>
+
+                    {/* Grid of all Expedition Photos */}
+                    <div className="grid grid-cols-2 gap-3 pb-2">
+                      {sortedTrips.map((trip, idx) => (
+                        <div
+                          key={trip.id}
+                          onClick={() => {
+                            setSelectedIndex(idx);
+                            setActiveTab("index");
+                          }}
+                          className={`group relative bg-white p-2 rounded-xl border transition-all cursor-pointer shadow-xs hover:shadow-md ${
+                            selectedIndex === idx
+                              ? "border-amber-600 ring-2 ring-amber-500/40"
+                              : "border-black/15 hover:border-amber-500/50"
+                          }`}
+                        >
+                          <div className="relative h-28 md:h-32 w-full rounded-lg overflow-hidden bg-slate-900 border border-black/10">
+                            <img
+                              src={trip.image || "/mountain_clay_peak.png"}
+                              alt={trip.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                            <span className="absolute top-1.5 left-1.5 bg-black/60 text-white text-[9px] font-mono px-1.5 py-0.5 rounded font-bold">
+                              #{idx + 1}
+                            </span>
+                          </div>
+                          <div className="mt-1.5">
+                            <p className="text-xs font-bold font-sans text-slate-900 truncate group-hover:text-amber-900">
+                              {trip.title}
+                            </p>
+                            <p className="text-[10px] font-mono text-slate-500 truncate">
+                              📍 {trip.subtitle}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  /* Standard Index Entry View with Page Turnover (Page 1: Photo, Page 2: Details & Expenses) */
+                  <div className="h-full flex flex-col justify-between">
+                    <div className="flex-1 flex flex-col min-h-0">
+                      {/* Entry Header Title & Date Stamp */}
+                      <div className="flex items-center justify-between gap-3 border-b-2 border-black/15 pb-2 mb-3">
+                        <div className="truncate min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-amber-800">
+                              ENTRY #{selectedIndex + 1}
+                            </span>
+                            <span className="text-[10px] font-mono bg-amber-200/60 text-amber-950 px-2 py-0.5 rounded-md font-bold">
+                              {pageSubTab === "photo" ? "Page 1/2 • Photo Cover" : "Page 2/2 • Log & Expenses"}
+                            </span>
+                          </div>
+                          <h4 className="text-lg md:text-2xl font-bold font-serif text-slate-900 leading-tight uppercase truncate mt-0.5">
+                            {selectedTrip.title}
+                          </h4>
+                          <p className="text-xs font-mono text-slate-500 truncate mt-0.5">
+                            📍 {selectedTrip.subtitle}
+                          </p>
+                        </div>
+
+                        {/* Calendar Date Stamp Box */}
+                        {(() => {
+                          const { dayDisplay, monthDisplay, yearDisplay } = extractDateInfo(selectedTrip);
+                          return (
+                            <div className="bg-[#e9e3d5] border border-amber-900/30 rounded-2xl p-2 md:p-2.5 text-center shrink-0 shadow-xs min-w-[76px]">
+                              <p className="text-[11px] font-mono font-bold uppercase text-amber-900 leading-none">{monthDisplay}</p>
+                              <p className="text-base md:text-xl font-bold font-mono text-slate-900 leading-tight my-0.5">{dayDisplay}</p>
+                              <p className="text-[10px] font-mono text-slate-500 leading-none">{yearDisplay}</p>
+                            </div>
+                          );
+                        })()}
+                      </div>
+
+                      {/* PAGE 1 CONTENT: FEATURED PHOTO ONLY */}
+                      {pageSubTab === "photo" ? (
+                        <div className="flex-1 flex flex-col my-1 min-h-0">
+                          <div className="relative group bg-white p-2.5 md:p-3 rounded-2xl border border-black/15 shadow-lg transform -rotate-1 hover:rotate-0 transition-all duration-300 flex-1 flex flex-col min-h-0">
+                            {/* Polaroid Corner Tape Accents */}
+                            <div className="absolute -top-3 left-10 w-16 h-5 bg-amber-200/90 backdrop-blur-xs shadow-xs rotate-[-5deg] z-10 border border-amber-300/60 pointer-events-none" />
+                            <div className="absolute -top-3 right-10 w-16 h-5 bg-amber-200/90 backdrop-blur-xs shadow-xs rotate-[4deg] z-10 border border-amber-300/60 pointer-events-none" />
+
+                            <div className="relative flex-1 w-full rounded-xl overflow-hidden border border-black/10 bg-slate-900 shadow-inner min-h-0">
+                              <img
+                                src={selectedTrip.image || "/mountain_clay_peak.png"}
+                                alt={selectedTrip.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                              <div className="absolute bottom-3 left-3 right-3 text-white font-mono">
+                                <span className="text-[10px] uppercase tracking-widest text-amber-300 font-bold block mb-0.5">
+                                  Expedition Snapshot
+                                </span>
+                                <h5 className="text-base md:text-lg font-serif font-bold text-white drop-shadow-md truncate">
+                                  {selectedTrip.title}
+                                </h5>
+                                <p className="text-xs text-amber-100/90 truncate mt-0.5">
+                                  📍 {selectedTrip.subtitle} • {selectedTrip.stats?.duration || "Completed"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        /* PAGE 2 CONTENT: ROUTE TIMELINE & EXPENSE BREAKDOWN ONLY */
+                        <div className="space-y-3 my-2 animate-fadeIn">
+                          {/* Route Timeline Card */}
+                          <div className="bg-[#f0ece1] p-3 md:p-4 rounded-2xl border border-black/10 font-sans shadow-xs">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs font-mono font-bold uppercase text-amber-900">Route Timeline</span>
+                              <span className="text-[10px] font-mono text-slate-500">📍 {selectedTrip.subtitle}</span>
+                            </div>
+                            <p className="text-xs md:text-sm font-medium text-slate-800 leading-relaxed mt-1">
+                              {selectedTrip.plans?.[0]?.route || selectedTrip.description}
+                            </p>
+                          </div>
+
+                          {/* Expense Breakdown Table */}
+                          <div className="bg-[#fcfaf5] p-4 md:p-5 rounded-2xl border border-black/10 font-sans shadow-xs my-2">
+                            <div className="flex items-center justify-between border-b border-black/10 pb-2 mb-3">
+                              <span className="text-sm font-bold font-serif uppercase tracking-wider text-slate-900">
+                                Itemized Expense Breakdown
+                              </span>
+                              <span className="text-xs font-mono text-amber-800 font-bold">
+                                Vol. 1 Log
+                              </span>
+                            </div>
+                            
+                            <div className="space-y-2 text-xs md:text-sm font-mono">
+                              {(() => {
+                                const standardCategories = {
+                                  "Food": 0,
+                                  "Transport": 0,
+                                  "Accommodation": 0,
+                                  "Activities / Misc": 0
+                                };
+
+                                if (selectedTrip.expenses && selectedTrip.expenses.length > 0) {
+                                  selectedTrip.expenses.forEach(item => {
+                                    const cat = (item.category || "").toLowerCase();
+                                    const amt = item.amount || 0;
+                                    if (cat.includes("food") || cat.includes("snack") || cat.includes("meal") || cat.includes("drink")) {
+                                      standardCategories["Food"] += amt;
+                                    } else if (cat.includes("transit") || cat.includes("transport") || cat.includes("bus") || cat.includes("car") || cat.includes("cab") || cat.includes("fuel") || cat.includes("scooty") || cat.includes("public")) {
+                                      standardCategories["Transport"] += amt;
+                                    } else if (cat.includes("stay") || cat.includes("hotel") || cat.includes("accommodation") || cat.includes("hostel")) {
+                                      standardCategories["Accommodation"] += amt;
+                                    } else {
+                                      standardCategories["Activities / Misc"] += amt;
+                                    }
+                                  });
+                                } else {
+                                  const amountsData = getTripAmountsData(selectedTrip);
+                                  if (amountsData) {
+                                    standardCategories["Food"] = amountsData.foodCategory || amountsData.calcDefaults?.food || 0;
+                                    standardCategories["Transport"] = amountsData.transportCategory || amountsData.calcDefaults?.transport || 0;
+                                    standardCategories["Accommodation"] = amountsData.accommodationCategory || amountsData.calcDefaults?.stay || 0;
+                                    standardCategories["Activities / Misc"] = (amountsData.emergencyCategory || amountsData.calcDefaults?.emergency || 0) + (amountsData.calcDefaults?.permits || 0) + (amountsData.calcDefaults?.shopping || 0);
+                                  }
+                                }
+
+                                return Object.entries(standardCategories).map(([catName, val]) => (
+                                  <div key={catName} className="flex justify-between items-center text-slate-700 py-1 border-b border-dashed border-slate-200">
+                                    <span className="truncate pr-2 font-serif text-slate-800 text-xs md:text-sm">{catName}</span>
+                                    <span className="font-bold text-slate-900 shrink-0 text-xs md:text-sm">₹{val.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+                                  </div>
+                                ));
+                              })()}
+                            </div>
+
+                            <div className="pt-2 mt-2 border-t-2 border-black/15 flex justify-between items-center font-mono text-base md:text-lg font-black text-slate-900">
+                              <span>Total Spent</span>
+                              {(() => {
+                                let finalTotal = selectedTrip.spentTotal;
+                                if (finalTotal === undefined || finalTotal === null) {
+                                  const donePlan = selectedTrip.plans?.find(p => completedPlans.includes(p.id) && !archivedPlans.includes(p.id));
+                                  if (donePlan && actualCosts[donePlan.id]) {
+                                    finalTotal = parseFloat(actualCosts[donePlan.id]);
+                                  } else {
+                                    const amountsData = getTripAmountsData(selectedTrip);
+                                    finalTotal = amountsData?.budgetTotal || 0;
+                                  }
+                                }
+                                return (
+                                  <span className="text-emerald-800 text-lg md:text-xl font-bold">
+                                    ₹{(finalTotal || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+                                  </span>
+                                );
+                              })()}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Page Controls with Page Flip Switcher (Always Fixed at Bottom) */}
+              <div className="pt-2 border-t border-black/10 flex items-center justify-between mt-2 font-mono shrink-0">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      setSelectedIndex(prev => Math.max(0, prev - 1));
+                      setPageSubTab("photo");
+                    }}
+                    disabled={selectedIndex === 0}
+                    className="w-8 h-8 rounded-lg border border-slate-400 flex items-center justify-center hover:bg-black/5 disabled:opacity-30"
+                    title="Previous Trip Entry"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSelectedIndex(prev => Math.min(sortedTrips.length - 1, prev + 1));
+                      setPageSubTab("photo");
+                    }}
+                    disabled={selectedIndex === sortedTrips.length - 1}
+                    className="w-8 h-8 rounded-lg border border-slate-400 flex items-center justify-center hover:bg-black/5 disabled:opacity-30"
+                    title="Next Trip Entry"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
+
+                {activeTab === "index" && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setPageSubTab(prev => prev === "photo" ? "details" : "photo")}
+                      className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase border-2 border-amber-900/40 text-amber-950 hover:bg-amber-900/10 transition-all flex items-center gap-1 shadow-xs bg-[#fdfaf3]"
+                    >
+                      {pageSubTab === "photo" ? (
+                        <>
+                          <span>Turn Page (Expenses) 📖</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Front Cover (Photo) 🖼️</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => setSelectedTrip(selectedTrip)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase bg-amber-900 text-amber-50 hover:bg-amber-950 transition-all flex items-center gap-1 shadow-sm"
+                    >
+                      <span>Full Log</span>
+                      <ArrowUpRight size={9} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT SIDE BOOKMARK TABS (Interactive Book Page Divider Tabs) */}
+        <div className="flex flex-col justify-start bg-[#2b1f17] border-l border-black/30 py-2 select-none z-30">
+          {[
+            { id: "index", label: "INDEX", icon: "📑" },
+            { id: "gallery", label: "GALLERY", icon: "📷" },
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`py-3 px-1.5 my-1 rounded-r-md text-[10px] font-mono uppercase font-bold tracking-wider border-y border-r border-black/30 transition-all cursor-pointer flex items-center justify-center gap-1 ${
+                  isActive
+                    ? "bg-[#f5f1e8] text-amber-950 shadow-md font-black translate-x-1 border-l-2 border-l-amber-600"
+                    : "bg-[#231811] text-amber-200/60 hover:bg-[#34241a] hover:text-amber-100"
+                }`}
+                style={{ writingMode: "vertical-rl" }}
+                title={`Switch view to ${tab.label}`}
+              >
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+      </div>
+    </div>
+  );
+}
 
 export default function Landing() {
   const [selectedTrip, setSelectedTrip] = useState(null);
@@ -1991,61 +2594,96 @@ export default function Landing() {
         </a>
       </header>
 
-      {/* Main Content Dashboard */}
-      <main className="flex-grow flex flex-col justify-start pt-2 md:pt-4 pb-12 px-6 md:px-12 max-w-7xl mx-auto w-full z-10">
+      {/* Hero Showcase Section: Expedition Journal Book */}
+      <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center pt-2 pb-8 px-2 md:px-8 bg-gradient-to-b from-[#f2efe9] via-[#e8e4dc] to-[#f2efe9] border-b border-black/10">
+        <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-6">
+          <div className="text-center space-y-1 max-w-2xl">
+            <span className="text-xs font-black font-mono tracking-widest text-amber-900 uppercase bg-amber-900/10 px-3 py-1 rounded-full border border-amber-900/20">
+              Expedition Journal • Vol. 1
+            </span>
+            <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-slate-900 mt-2" style={{ fontFamily: "'Anton', sans-serif" }}>
+              Treks & Expeditions Journal
+            </h1>
+            <p className="text-sm md:text-base font-serif italic text-slate-600">
+              Flip through completed journey logs, date stamps, route timelines & itemized expense breakdowns.
+            </p>
+          </div>
+
+          {/* Full-width Centered Journal Book (Grand Scale) */}
+          <div className="w-full max-w-6xl shadow-2xl rounded-[40px] overflow-hidden">
+            <ExpeditionJournalBook
+              completedTrips={completedTripsList}
+              setSelectedTrip={setSelectedTrip}
+              actualCosts={actualCosts}
+              completedPlans={completedPlans}
+              archivedPlans={archivedPlans}
+            />
+          </div>
+
+          {/* Scroll Down Prompt Button */}
+          <a
+            href="#dashboard-section"
+            className="group flex flex-col items-center gap-1 mt-2 text-slate-500 hover:text-black transition-all cursor-pointer"
+          >
+            <span className="text-[10px] font-black font-mono uppercase tracking-widest group-hover:translate-y-0.5 transition-transform">
+              Explore All Adventures Below
+            </span>
+            <div className="w-8 h-8 rounded-full border border-black/15 bg-white flex items-center justify-center shadow-xs group-hover:border-black group-hover:bg-black group-hover:text-white transition-all animate-bounce">
+              <ChevronDown size={16} />
+            </div>
+          </a>
+        </div>
+      </section>
+
+      {/* Main Content Dashboard - Full Width Layout */}
+      <main id="dashboard-section" className="flex-grow flex flex-col justify-start pt-8 pb-12 px-6 md:px-12 lg:px-16 w-full z-10">
         
-        {/* Intro & Dashboard Stats */}
+        {/* Title & Category Financial Summary Cards */}
         <div className="mb-8 space-y-6">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-black/5 pb-4">
             <div>
               <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
-              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
+              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
                 Select Your Adventure
-              </h1>
-              <p className="text-slate-500 font-medium text-sm mt-1.5 max-w-lg leading-relaxed">
+              </h2>
+              <p className="text-slate-500 font-medium text-sm mt-1.5 leading-relaxed">
                 Explore Himalayan alpine treks or multi-day road riding expeditions with full itineraries and budget breakdowns.
               </p>
             </div>
 
-            {/* Total Financial Summary Pills (Unified Website Capsule Bar Styling) */}
+            {/* Total Financial Summary Pills */}
             <div className="flex flex-wrap items-center gap-2 shrink-0 self-start md:self-auto bg-black/5 p-1.5 rounded-3xl border border-black/5">
               {/* Capsule 1: Total Spent */}
-              <div className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-2xl shadow-xs">
-                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white text-[10px] font-black">
+              <div className="flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded-2xl shadow-xs">
+                <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-white text-[9px] font-black">
                   ₹
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase tracking-wider text-emerald-100 font-mono">Total Spent</span>
-                    <span className="text-[9px] font-black bg-white/20 px-1.5 py-0.2 rounded-md font-mono">8 Done</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[8px] font-black uppercase tracking-wider text-emerald-100 font-mono">Total Spent</span>
+                    <span className="text-[8px] font-black bg-white/20 px-1 py-0.2 rounded-md font-mono">8 Done</span>
                   </div>
-                  <div className="flex items-baseline gap-2 mt-0.5">
-                    <span className="text-sm font-black font-mono tracking-tight">₹{Math.round(totalSpent).toLocaleString("en-IN")}</span>
-                    <span className="text-[10px] font-bold text-emerald-100 font-mono">({completedTreksCount} Trek • {completedRoadTripsCount} Trips • {completedDaysTotal} Days)</span>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-xs font-black font-mono tracking-tight">₹{Math.round(totalSpent).toLocaleString("en-IN")}</span>
                   </div>
                 </div>
               </div>
 
               {/* Capsule 2: Planned Est. Budget */}
-              <div className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-2xl shadow-xs">
-                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-black border border-emerald-500/30">
+              <div className="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-2xl shadow-xs">
+                <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[9px] font-black border border-emerald-500/30">
                   ₹
                 </div>
                 <div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 font-mono">Planned Est.</span>
-                    <span className="text-[9px] font-black bg-white/10 text-emerald-400 px-1.5 py-0.2 rounded-md font-mono">36 Routes</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[8px] font-black uppercase tracking-wider text-slate-400 font-mono">Planned Est.</span>
+                    <span className="text-[8px] font-black bg-white/10 text-emerald-400 px-1 py-0.2 rounded-md font-mono">36 Routes</span>
                   </div>
-                  <div className="flex items-baseline gap-2 mt-0.5">
-                    <span className="text-sm font-black font-mono text-emerald-400 tracking-tight">
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-xs font-black font-mono text-emerald-400 tracking-tight">
                       {Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min) === Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max)
                         ? `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}`
-                        : `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")} – ₹${Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}`}
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-300 font-mono">
-                      ({upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min === upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max
-                        ? `${upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min} Days`
-                        : `${upcomingDaysRange.min + jyotirlingaDaysRange.min + kedarKailashDaysRange.min + charDhamDaysRange.min}–${upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max} Days`})
+                        : `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}–${Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}`}
                     </span>
                   </div>
                 </div>
@@ -2058,12 +2696,12 @@ export default function Landing() {
             {/* Top Row: General & Expedition Summaries (2 cards) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
               {/* Card 1: Combined Upcoming Treks & Road Trips Est. */}
-              <div className="bg-white/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+              <div className="bg-white/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
                   <span className="text-[9px] font-black font-mono text-emerald-700 uppercase tracking-wider">Upcoming Treks & Road Trips</span>
                 </div>
-                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                <p className="text-base font-black text-black font-mono leading-snug">
                   {upcomingTreksRange.min + upcomingRoadTripsRange.min === upcomingTreksRange.max + upcomingRoadTripsRange.max ? (
                     `₹${(upcomingTreksRange.min + upcomingRoadTripsRange.min).toLocaleString("en-IN")}`
                   ) : (
@@ -2071,17 +2709,17 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-emerald-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {activeTreksCount} Alpine Trek{activeTreksCount === 1 ? "" : "s"} • {activeRoadTripsCount} Riding Expedition{activeRoadTripsCount === 1 ? "" : "s"} • {upcomingDaysRange.min === upcomingDaysRange.max ? `${upcomingDaysRange.min} Days` : `${upcomingDaysRange.min}–${upcomingDaysRange.max} Days`}
+                  {activeTreksCount} Treks • {activeRoadTripsCount} Trips • {upcomingDaysRange.min === upcomingDaysRange.max ? `${upcomingDaysRange.min} Days` : `${upcomingDaysRange.min}–${upcomingDaysRange.max} Days`}
                 </p>
               </div>
 
               {/* Card 2: Archived Est. */}
-              <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+              <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-slate-500" />
                   <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Archived Est.</span>
                 </div>
-                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                <p className="text-base font-black text-black font-mono leading-snug">
                   {archivedRange.min === archivedRange.max ? (
                     `₹${archivedRange.min.toLocaleString("en-IN")}`
                   ) : (
@@ -2089,7 +2727,7 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono whitespace-nowrap">
-                  {archivedTreksCount} Trek{archivedTreksCount === 1 ? "" : "s"} • {archivedRoadTripsCount} Road Trip{archivedRoadTripsCount === 1 ? "" : "s"} • {archivedDaysRange.min === archivedDaysRange.max ? `${archivedDaysRange.min} Days` : `${archivedDaysRange.min}–${archivedDaysRange.max} Days`}
+                  {archivedTreksCount} Treks • {archivedRoadTripsCount} Trips • {archivedDaysRange.min === archivedDaysRange.max ? `${archivedDaysRange.min} Days` : `${archivedDaysRange.min}–${archivedDaysRange.max} Days`}
                 </p>
               </div>
             </div>
@@ -2097,12 +2735,12 @@ export default function Landing() {
             {/* Bottom Row: Spiritual Yatras (3 cards) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
               {/* Card 5: Jyotirlinga Est. */}
-              <div className="bg-white/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+              <div className="bg-white/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
                   <span className="text-[9px] font-black font-mono text-amber-700 uppercase tracking-wider">Jyotirlinga Est.</span>
                 </div>
-                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                <p className="text-sm font-black text-black font-mono leading-snug">
                   {jyotirlingaRange.min === jyotirlingaRange.max ? (
                     `₹${jyotirlingaRange.min.toLocaleString("en-IN")}`
                   ) : (
@@ -2110,17 +2748,17 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-amber-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {jyotirlingaCount} Sacred Shrines • {jyotirlingaDaysRange.min === jyotirlingaDaysRange.max ? `${jyotirlingaDaysRange.min} Days` : `${jyotirlingaDaysRange.min}–${jyotirlingaDaysRange.max} Days`}
+                  {jyotirlingaCount} Shrines • {jyotirlingaDaysRange.min === jyotirlingaDaysRange.max ? `${jyotirlingaDaysRange.min} Days` : `${jyotirlingaDaysRange.min}–${jyotirlingaDaysRange.max} Days`}
                 </p>
               </div>
 
               {/* Card 6: Kedar & Kailash */}
-              <div className="bg-white/80 backdrop-blur-md border border-purple-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+              <div className="bg-white/80 backdrop-blur-md border border-purple-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
                   <span className="text-[9px] font-black font-mono text-purple-700 uppercase tracking-wider">Kedar & Kailash</span>
                 </div>
-                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                <p className="text-sm font-black text-black font-mono leading-snug">
                   {kedarKailashRange.min === kedarKailashRange.max ? (
                     `₹${kedarKailashRange.min.toLocaleString("en-IN")}`
                   ) : (
@@ -2133,12 +2771,12 @@ export default function Landing() {
               </div>
 
               {/* Card 7: Char Dham Est. */}
-              <div className="bg-white/80 backdrop-blur-md border border-red-500/30 rounded-2xl p-3.5 shadow-sm flex flex-col justify-between">
+              <div className="bg-white/80 backdrop-blur-md border border-red-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
                 <div className="flex items-center gap-1.5 mb-1">
                   <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
                   <span className="text-[9px] font-black font-mono text-red-700 uppercase tracking-wider">Char Dham Est.</span>
                 </div>
-                <p className="text-base sm:text-lg font-black text-black font-mono leading-snug">
+                <p className="text-sm font-black text-black font-mono leading-snug">
                   {charDhamRange.min === charDhamRange.max ? (
                     `₹${charDhamRange.min.toLocaleString("en-IN")}`
                   ) : (
@@ -2146,7 +2784,7 @@ export default function Landing() {
                   )}
                 </p>
                 <p className="text-[9px] font-bold text-red-700/80 mt-0.5 font-mono whitespace-nowrap">
-                  {dhamCount} Holy Dham Shrines • {charDhamDaysRange.min === charDhamDaysRange.max ? `${charDhamDaysRange.min} Days` : `${charDhamDaysRange.min}–${charDhamDaysRange.max} Days`}
+                  {dhamCount} Shrines • {charDhamDaysRange.min === charDhamDaysRange.max ? `${charDhamDaysRange.min} Days` : `${charDhamDaysRange.min}–${charDhamDaysRange.max} Days`}
                 </p>
               </div>
             </div>
@@ -2157,7 +2795,7 @@ export default function Landing() {
         <CompletedTripsMap completedPlans={completedPlans} archivedTrips={archivedTrips} />
 
         {/* Filter Toolbar: Row 1 = Category Tabs, Row 2 = Status & Controls */}
-        <div className="space-y-4 mb-10 border-b border-black/10 pb-6">
+        <div id="adventures-section" className="space-y-4 mb-10 border-b border-black/10 pb-6">
           {/* Row 1: Category Selector Tabs */}
           <div className="flex flex-wrap items-center gap-2">
             <button
