@@ -1749,61 +1749,72 @@ export default function Expenses({ isSection = false }) {
     </div>
   );
 
-  if (isSection) {
-    if (isCurrentPlanCompleted && !isUnlocked) {
+  if (!isUnlocked) {
+    const lockContent = (
+      <Container className="max-w-sm text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[32px] p-8 shadow-xl"
+        >
+          <div className="w-14 h-14 rounded-[22px] bg-black/5 flex items-center justify-center mx-auto mb-5 text-black">
+            <Lock size={22} />
+          </div>
+          
+          <h2 className="text-xl font-black uppercase tracking-tight mb-1.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+            Ledger Locked
+          </h2>
+          <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
+            Enter the security code to view the active expenses ledger, settle up sheets, and cash advances.
+          </p>
+
+          <form onSubmit={handleVerifyPassword} className="space-y-4">
+            <div className="space-y-1.5">
+              <input
+                type="password"
+                required
+                placeholder="Enter Passcode"
+                value={passwordInput}
+                onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                className={`w-full px-4 py-3 rounded-xl border text-center font-mono font-black text-lg focus:outline-none transition-colors ${
+                  passwordError 
+                    ? "border-red-300 focus:border-red-500 bg-red-50/50" 
+                    : "border-black/10 focus:border-black bg-white"
+                }`}
+              />
+              {passwordError && (
+                <p className="text-[10px] text-red-600 font-bold mt-1">
+                  ❌ Incorrect security passcode
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-colors shadow-md cursor-pointer"
+            >
+              Access Ledger
+            </button>
+          </form>
+        </motion.div>
+      </Container>
+    );
+
+    if (isSection) {
       return (
         <section id="expenses" className="pt-20 pb-20 md:pt-24 md:pb-28 bg-[#f2efe9] scroll-mt-20 border-t border-black/5">
-          <Container className="max-w-sm text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white/70 backdrop-blur-md border border-black/10 rounded-[32px] p-8 shadow-xl"
-            >
-              <div className="w-14 h-14 rounded-[22px] bg-black/5 flex items-center justify-center mx-auto mb-5 text-black">
-                <Lock size={22} />
-              </div>
-              
-              <h2 className="text-xl font-black uppercase tracking-tight mb-1.5" style={{ fontFamily: "'Anton', sans-serif" }}>
-                Ledger Locked
-              </h2>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed mb-6">
-                Enter the security code to view the active expenses ledger, settle up sheets, and cash advances.
-              </p>
-
-              <form onSubmit={handleVerifyPassword} className="space-y-4">
-                <div className="space-y-1.5">
-                  <input
-                    type="password"
-                    required
-                    placeholder="Enter Passcode"
-                    value={passwordInput}
-                    onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
-                    className={`w-full px-4 py-3 rounded-xl border text-center font-mono font-black text-lg focus:outline-none transition-colors ${
-                      passwordError 
-                        ? "border-red-300 focus:border-red-500 bg-red-50/50" 
-                        : "border-black/10 focus:border-black bg-white"
-                    }`}
-                  />
-                  {passwordError && (
-                    <p className="text-[10px] text-red-600 font-bold mt-1">
-                      ❌ Incorrect security passcode
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3 rounded-xl text-xs font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-colors shadow-md cursor-pointer"
-                >
-                  Access Ledger
-                </button>
-              </form>
-            </motion.div>
-          </Container>
+          {lockContent}
         </section>
       );
     }
+    return (
+      <div className="min-h-screen bg-[#f2efe9] flex items-center justify-center p-4">
+        {lockContent}
+      </div>
+    );
+  }
 
+  if (isSection) {
     return (
       <section id="expenses" className="pt-20 pb-20 md:pt-24 md:pb-28 bg-[#f2efe9] scroll-mt-20 border-t border-black/5">
         <Container>

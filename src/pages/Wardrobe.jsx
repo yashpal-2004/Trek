@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle, FileText, Image as ImageIcon, Shirt, X, Footprints, Flame, CloudRain, Backpack, Cpu, Shield, HardHat, Compass, Archive, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore } from "../hooks/useFirestore";
+import { uploadToCloudinary } from "../utils/cloudinary";
 
 const PantsIcon = (props) => (
   <svg
@@ -31,10 +32,13 @@ const ShortsIcon = (props) => (
   </svg>
 );
 
-const DEFAULT_CATEGORIES = ["Footwear", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Rainwear", "Luggage & Packs", "Essentials"];
+const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Rainwear", "Luggage & Packs", "Essentials"];
 
 const CATEGORY_ICONS = {
   "Footwear": { icon: Footprints, bg: "from-amber-500/20 to-orange-500/10", text: "text-amber-600" },
+  "Jacket": { icon: Shield, bg: "from-orange-500/20 to-amber-500/10", text: "text-orange-600" },
+  "Sweater & Hoodie": { icon: Flame, bg: "from-rose-500/20 to-orange-500/10", text: "text-rose-600" },
+  "Tracksuit": { icon: PantsIcon, bg: "from-blue-500/20 to-teal-500/10", text: "text-blue-600" },
   "T-Shirt": { icon: Shirt, bg: "from-sky-500/20 to-blue-500/10", text: "text-sky-600" },
   "Shirt": { icon: Shirt, bg: "from-blue-500/20 to-indigo-500/10", text: "text-blue-600" },
   "Lower": { icon: PantsIcon, bg: "from-indigo-500/20 to-purple-500/10", text: "text-indigo-600" },
@@ -87,7 +91,7 @@ export default function Wardrobe() {
 
   const handleUnlock = (e) => {
     e.preventDefault();
-    if (inputPassword === "1612") {
+    if (inputPassword === "2659") {
       sessionStorage.setItem("wardrobe_unlocked", "true");
       setIsAuthenticated(true);
       setAuthError("");
@@ -148,15 +152,61 @@ export default function Wardrobe() {
     setIsFormOpen(true);
   };
 
-  const handleImageChange = (e) => {
+  const compressImage = (src, callback) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const MAX_WIDTH = 220;
+      const MAX_HEIGHT = 220;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = Math.round(width);
+      canvas.height = Math.round(height);
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressedBase64 = canvas.toDataURL("image/jpeg", 0.4);
+      callback(compressedBase64);
+    };
+    img.onerror = () => {
+      // Fallback if crossOrigin load fails for external URL
+      callback(src);
+    };
+    img.src = src;
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Try Cloudinary upload
+    const cloudUrl = await uploadToCloudinary(file);
+    if (cloudUrl) {
+      setFormData(prev => ({ ...prev, image: cloudUrl }));
+      return;
     }
+
+    // Canvas Compression Fallback
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      compressImage(event.target.result, (compressed) => {
+        setFormData(prev => ({ ...prev, image: compressed }));
+      });
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = (e) => {
@@ -271,7 +321,7 @@ export default function Wardrobe() {
 
         <button
           onClick={handleOpenAdd}
-          className="bg-black hover:bg-black/85 text-white px-4 py-2 rounded-xl text-xs font-mono font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-sm"
+          className="bg-black hover:bg-black/85 text-white px-4 py-2 rounded-xl text-xs font-mono font-black uppercase tracking-wider transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
         >
           <Plus size={14} /> Add Item
         </button>
@@ -598,7 +648,17 @@ export default function Wardrobe() {
                     <input
                       type="text"
                       value={formData.image && !formData.image.startsWith("data:") ? formData.image : ""}
-                      onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (!val) {
+                          setFormData(prev => ({ ...prev, image: "" }));
+                          return;
+                        }
+                        setFormData(prev => ({ ...prev, image: val }));
+                        compressImage(val, (compressed) => {
+                          setFormData(prev => ({ ...prev, image: compressed }));
+                        });
+                      }}
                       placeholder="Paste image URL here..."
                       className="w-full bg-white border border-black/10 focus:border-black rounded-xl px-4 py-2.5 text-xs font-semibold outline-hidden focus:ring-1 focus:ring-black"
                     />

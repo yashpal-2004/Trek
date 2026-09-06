@@ -2346,9 +2346,9 @@ export default function Landing() {
 
                             <div className="flex items-center gap-2">
                               {/* Quick Expense Drawer Toggle for Completed Trips */}
-                              {isCompleted && (
+                              {(isCompleted || trip.plans?.some(p => completedPlans.includes(p.id))) && (
                                 (() => {
-                                  const donePlanForTrip = trip.plans.find(p => completedPlans.includes(p.id));
+                                  const donePlanForTrip = trip.plans?.find(p => completedPlans.includes(p.id)) || trip.plans?.[0];
                                   if (!donePlanForTrip) return null;
                                   return (
                                     <button
