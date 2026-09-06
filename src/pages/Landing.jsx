@@ -240,30 +240,54 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   }
 
   return (
-    <div className="relative w-full h-[720px] md:h-[760px] bg-[#3d2f24] rounded-[40px] p-5 md:p-8 shadow-2xl font-serif text-slate-800 border-4 border-[#2b1f17] flex flex-col justify-between">
+    <div className="relative w-full h-auto min-h-[580px] md:h-[760px] bg-[#3d2f24] rounded-[24px] sm:rounded-[40px] p-2.5 sm:p-5 md:p-8 shadow-2xl font-serif text-slate-800 border-2 sm:border-4 border-[#2b1f17] flex flex-col justify-between overflow-hidden">
       
       {/* Close Cover Bookmark Tag Button */}
       <button
         onClick={() => setIsBookOpen(false)}
-        className="absolute -top-1 left-12 md:left-16 z-30 px-3.5 py-1.5 bg-[#4a331e] hover:bg-[#2b1f17] text-[#f7e4c8] text-xs font-mono font-bold rounded-b-xl border-x-2 border-b-2 border-amber-900/60 shadow-lg flex items-center gap-1.5 transition-all transform hover:translate-y-0.5 cursor-pointer"
+        className="absolute -top-1 left-4 sm:left-12 md:left-16 z-30 px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-[#4a331e] hover:bg-[#2b1f17] text-[#f7e4c8] text-[10px] sm:text-xs font-mono font-bold rounded-b-xl border-x-2 border-b-2 border-amber-900/60 shadow-lg flex items-center gap-1.5 transition-all transform hover:translate-y-0.5 cursor-pointer"
         title="Fold up and close journal cover"
       >
         <span>📕 Close Cover</span>
       </button>
       
       {/* Outer Journal Book Cover Frame & Metallic Corners */}
-      <div className="absolute top-3.5 left-3.5 w-6 h-6 border-t-3 border-l-3 border-amber-600/60 rounded-tl-sm pointer-events-none" />
-      <div className="absolute top-3.5 right-3.5 w-6 h-6 border-t-3 border-r-3 border-amber-600/60 rounded-tr-sm pointer-events-none" />
-      <div className="absolute bottom-3.5 left-3.5 w-6 h-6 border-b-3 border-l-3 border-amber-600/60 rounded-bl-sm pointer-events-none" />
-      <div className="absolute bottom-3.5 right-3.5 w-6 h-6 border-b-3 border-r-3 border-amber-600/60 rounded-br-sm pointer-events-none" />
+      <div className="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 w-4 h-4 sm:w-6 sm:h-6 border-t-2 sm:border-t-3 border-l-2 sm:border-l-3 border-amber-600/60 rounded-tl-sm pointer-events-none" />
+      <div className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 w-4 h-4 sm:w-6 sm:h-6 border-t-2 sm:border-t-3 border-r-2 sm:border-r-3 border-amber-600/60 rounded-tr-sm pointer-events-none" />
+      <div className="absolute bottom-2.5 left-2.5 sm:bottom-3.5 sm:left-3.5 w-4 h-4 sm:w-6 sm:h-6 border-b-2 sm:border-b-3 border-l-2 sm:border-l-3 border-amber-600/60 rounded-bl-sm pointer-events-none" />
+      <div className="absolute bottom-2.5 right-2.5 sm:bottom-3.5 sm:right-3.5 w-4 h-4 sm:w-6 sm:h-6 border-b-2 sm:border-b-3 border-r-2 sm:border-r-3 border-amber-600/60 rounded-br-sm pointer-events-none" />
 
-      {/* Book Container with Right Bookmark Page Tabs */}
-      <div className="relative flex-1 flex bg-[#f5f1e8] rounded-3xl border border-black/20 shadow-inner overflow-hidden">
+      {/* Book Container with Bookmark Page Tabs */}
+      <div className="relative flex-1 flex flex-col md:flex-row bg-[#f5f1e8] rounded-2xl sm:rounded-3xl border border-black/20 shadow-inner overflow-hidden">
         
+        {/* TOP MOBILE BOOKMARK TABS (horizontal on mobile, hidden on desktop) */}
+        <div className="flex md:hidden items-center justify-end gap-1.5 px-3 pt-3 pb-1 border-b border-black/10 select-none z-30">
+          {[
+            { id: "index", label: "INDEX", color: "bg-amber-600" },
+            { id: "gallery", label: "GALLERY", color: "bg-emerald-600" },
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3 py-1 rounded-lg text-[9px] font-mono uppercase font-black tracking-wider border transition-all duration-300 cursor-pointer flex items-center gap-1.5 shadow-2xs ${
+                  isActive
+                    ? "bg-amber-900 text-amber-50 border-amber-950 shadow-xs"
+                    : "bg-black/10 text-slate-700 border-black/10 hover:bg-black/20"
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${tab.color}`} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {/* Main 2-Page Paper Content */}
-        <div className="flex-1 p-5 md:p-7 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 relative">
+        <div className="flex-1 p-3.5 sm:p-5 md:p-7 grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 relative overflow-hidden">
           
-          {/* Page Center Binding Stitch Shadow */}
+          {/* Page Center Binding Stitch Shadow (Desktop Only) */}
           <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-12 bg-gradient-to-r from-black/5 via-black/15 to-black/5 hidden md:block z-20 pointer-events-none border-x border-black/5" />
 
           {/* PAGE 1: JOURNAL INDEX (LEFT PAGE) */}
@@ -271,17 +295,17 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
             <div>
               <div className="border-b-2 border-black/15 pb-2 mb-2 flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-slate-900 font-serif">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold uppercase tracking-tight text-slate-900 font-serif">
                     Journal Index
                   </h3>
-                  <p className="text-xs italic text-slate-500 font-mono">Completed Expeditions Log</p>
+                  <p className="text-[10px] sm:text-xs italic text-slate-500 font-mono">Completed Expeditions Log</p>
                 </div>
-                <div className="w-9 h-9 rounded-full bg-amber-800/10 flex items-center justify-center text-amber-900 font-mono font-bold text-sm">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-amber-800/10 flex items-center justify-center text-amber-900 font-mono font-bold text-xs sm:text-sm">
                   {sortedTrips.length}
                 </div>
               </div>
 
-              <div className="space-y-2.5 max-h-[520px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-2 max-h-[380px] sm:max-h-[480px] md:max-h-[520px] overflow-y-auto pr-1 sm:pr-2 custom-scrollbar">
                 {sortedTrips.map((trip, idx) => {
                   const isSelected = idx === selectedIndex;
                   const { dates } = extractDateInfo(trip);
@@ -294,40 +318,40 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
                         setActiveTab("index");
                         setPageSubTab("photo");
                       }}
-                      className={`w-full text-left p-2.5 md:p-3 rounded-2xl border transition-all flex items-center justify-between relative overflow-hidden group shadow-xs ${
+                      className={`w-full text-left p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl border transition-all flex items-center justify-between relative overflow-hidden group shadow-xs ${
                         isSelected
                           ? "bg-[#fff9ed] border-amber-600/60 text-slate-900 ring-2 ring-amber-500/30"
                           : "bg-white/80 border-slate-300/70 hover:bg-white text-slate-700"
                       }`}
                     >
                       {/* Left Number Tag & Image Thumbnail */}
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="text-sm font-bold font-serif w-5 text-center text-slate-600 shrink-0">
+                      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 flex-1">
+                        <span className="text-xs sm:text-sm font-bold font-serif w-4 sm:w-5 text-center text-slate-600 shrink-0">
                           {idx + 1}
                         </span>
 
                         <img
                           src={trip.image || "/mountain_clay_peak.png"}
                           alt={trip.title}
-                          className="w-10 h-10 md:w-11 md:h-11 rounded-lg border border-black/15 object-cover shrink-0 shadow-xs group-hover:scale-105 transition-transform"
+                          className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-lg border border-black/15 object-cover shrink-0 shadow-xs group-hover:scale-105 transition-transform"
                         />
 
-                        <div className="truncate border-l border-slate-200 pl-2">
+                        <div className="truncate border-l border-slate-200 pl-2 flex-1 min-w-0">
                           <p className="text-xs md:text-sm font-bold font-sans truncate text-slate-900 group-hover:text-amber-900 leading-tight">
                             {trip.title}
                           </p>
-                          <p className="text-[10px] md:text-xs font-mono text-slate-500 mt-0.5">
+                          <p className="text-[9px] sm:text-[10px] md:text-xs font-mono text-slate-500 mt-0.5 truncate">
                             {dates}
                           </p>
                         </div>
                       </div>
 
                       {/* Right Tab Bookmark Pill */}
-                      <div className="flex items-center gap-1.5 shrink-0 ml-1">
-                        <span className="text-xs font-mono font-bold text-slate-700">
+                      <div className="flex items-center gap-1 shrink-0 ml-1">
+                        <span className="text-[10px] sm:text-xs font-mono font-bold text-slate-700">
                           P.0{idx + 1}
                         </span>
-                        <div className={`w-3 h-7 rounded-xs ${accentColor}`} />
+                        <div className={`w-2.5 h-6 sm:w-3 sm:h-7 rounded-xs ${accentColor}`} />
                       </div>
                     </button>
                   );
@@ -335,7 +359,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
               </div>
             </div>
 
-            <div className="pt-2 mt-1 border-t border-black/10 flex items-center justify-between text-xs font-mono text-slate-500">
+            <div className="pt-2 mt-1 border-t border-black/10 flex items-center justify-between text-[10px] sm:text-xs font-mono text-slate-500">
               <span>Vol. 1 • Log Book</span>
               <span>Select entry to view</span>
             </div>
@@ -618,8 +642,8 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
           )}
         </div>
 
-        {/* RIGHT SIDE BOOKMARK TABS (Interactive Book Page Divider Tabs) */}
-        <div className="flex flex-col justify-start pt-6 pb-2 pr-1 select-none z-30 space-y-3">
+        {/* RIGHT SIDE BOOKMARK TABS (Desktop Only - Vertical Tabs) */}
+        <div className="hidden md:flex flex-col justify-start pt-6 pb-2 pr-1 select-none z-30 space-y-3">
           {[
             { id: "index", label: "INDEX", color: "bg-amber-600" },
             { id: "gallery", label: "GALLERY", color: "bg-emerald-600" },
@@ -1993,7 +2017,7 @@ export default function Landing() {
       <div
         key={trip.id}
         onClick={isNotReady ? (e) => e.stopPropagation() : () => setSelectedTrip(trip)}
-        className={`rounded-[32px] p-8 shadow-sm transition-all duration-300 flex flex-col justify-between group relative overflow-hidden border ${
+        className={`rounded-[32px] p-5 md:p-8 shadow-sm transition-all duration-300 flex flex-col justify-between group relative overflow-hidden border ${
           isNotReady && !isCompleted
             ? "bg-slate-200/60 border-slate-300/80 text-slate-500 opacity-75 backdrop-blur-xs hover:bg-slate-200/90 cursor-not-allowed"
             : isCompleted
@@ -2007,9 +2031,9 @@ export default function Landing() {
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-violet-500 to-purple-400 rounded-t-[32px]" />
         )}
         <div>
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                 <span className={`inline-flex items-center gap-1 text-[9px] font-extrabold uppercase font-mono px-2 py-0.5 rounded-full ${
                   isTrek ? "bg-emerald-500/10 text-emerald-700" : "bg-sky-500/10 text-sky-700"
                 }`}>
@@ -2022,7 +2046,7 @@ export default function Landing() {
                 </span>
               </div>
 
-              <h3 className="text-2xl font-black uppercase tracking-tight flex items-center gap-2 flex-wrap" style={{ fontFamily: "'Anton', sans-serif" }}>
+              <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight flex items-center gap-2 flex-wrap" style={{ fontFamily: "'Anton', sans-serif" }}>
                 {trip.title}
                 {isNotReady && !isCompleted && (
                   <span className="bg-slate-300/80 text-slate-700 text-[10px] font-mono font-bold tracking-wider px-2.5 py-0.5 rounded-full normal-case border border-slate-400/40 flex items-center gap-1">
@@ -2044,12 +2068,12 @@ export default function Landing() {
               </h3>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap shrink-0 self-end sm:self-start">
               {/* Compare Toggle Button */}
               <button
                 onClick={(e) => toggleCompare(trip, e)}
                 disabled={compareDisabled}
-                className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
                   isInCompare
                     ? "bg-violet-600 border-violet-700 text-white shadow-md"
                     : compareDisabled
@@ -2064,7 +2088,7 @@ export default function Landing() {
               {!trip.isCompleted && (
                 <button
                   onClick={(e) => toggleTripCompleted(trip, e)}
-                  className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
                     isCompleted
                       ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
                       : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
@@ -2077,7 +2101,7 @@ export default function Landing() {
               {!isCompleted && (
                 <button
                   onClick={(e) => handleToggleArchiveTrip(trip, e)}
-                  className={`w-10 h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border flex items-center justify-center transition-all shrink-0 ${
                     archivedTrips.includes(trip.id)
                       ? "bg-slate-700 border-slate-800 text-white shadow-md"
                       : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
@@ -2087,7 +2111,7 @@ export default function Landing() {
                   <Archive size={15} />
                 </button>
               )}
-              <div className="w-10 h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border border-black/10 flex items-center justify-center bg-white group-hover:bg-black group-hover:text-white transition-colors duration-300 shrink-0">
                 <ArrowUpRight size={18} />
               </div>
             </div>
@@ -2688,35 +2712,37 @@ export default function Landing() {
             </div>
 
             {/* Total Financial Summary Pills */}
-            <div className="flex flex-wrap items-center gap-2 shrink-0 self-start md:self-auto bg-black/5 p-1.5 rounded-3xl border border-black/5">
+            <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 bg-black/5 p-1.5 rounded-3xl border border-black/5">
               {/* Capsule 1: Total Spent */}
-              <div className="flex items-center gap-2 bg-emerald-600 text-white px-3 py-1.5 rounded-2xl shadow-xs">
-                <div className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-white text-[9px] font-black">
+              <div className="flex items-center gap-2.5 bg-emerald-600 text-white px-3.5 py-2 sm:py-1.5 rounded-2xl shadow-xs flex-1 sm:flex-initial">
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white text-[10px] font-black shrink-0">
                   ₹
                 </div>
-                <div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[8px] font-black uppercase tracking-wider text-emerald-100 font-mono">Total Spent</span>
-                    <span className="text-[8px] font-black bg-white/20 px-1 py-0.2 rounded-md font-mono">8 Done</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 flex-wrap">
+                    <span className="text-[9px] sm:text-[8px] font-black uppercase tracking-wider text-emerald-100 font-mono">Total Spent</span>
+                    <span className="text-[9px] sm:text-[8px] font-black bg-white/20 px-1.5 py-0.5 sm:py-0.2 rounded-md font-mono shrink-0">8 Done • {completedDaysTotal} Days</span>
                   </div>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-xs font-black font-mono tracking-tight">₹{Math.round(totalSpent).toLocaleString("en-IN")}</span>
+                    <span className="text-sm sm:text-xs font-black font-mono tracking-tight">₹{Math.round(totalSpent).toLocaleString("en-IN")}</span>
                   </div>
                 </div>
               </div>
 
               {/* Capsule 2: Planned Est. Budget */}
-              <div className="flex items-center gap-2 bg-slate-900 text-white px-3 py-1.5 rounded-2xl shadow-xs">
-                <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[9px] font-black border border-emerald-500/30">
+              <div className="flex items-center gap-2.5 bg-slate-900 text-white px-3.5 py-2 sm:py-1.5 rounded-2xl shadow-xs flex-1 sm:flex-initial">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-black border border-emerald-500/30 shrink-0">
                   ₹
                 </div>
-                <div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-[8px] font-black uppercase tracking-wider text-slate-400 font-mono">Planned Est.</span>
-                    <span className="text-[8px] font-black bg-white/10 text-emerald-400 px-1 py-0.2 rounded-md font-mono">36 Routes</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 flex-wrap">
+                    <span className="text-[9px] sm:text-[8px] font-black uppercase tracking-wider text-slate-400 font-mono">Planned Est.</span>
+                    <span className="text-[9px] sm:text-[8px] font-black bg-white/10 text-emerald-400 px-1.5 py-0.5 sm:py-0.2 rounded-md font-mono shrink-0">
+                      36 Routes • {grandTotalDaysEst.min === grandTotalDaysEst.max ? `${grandTotalDaysEst.min} Days` : `${grandTotalDaysEst.min}–${grandTotalDaysEst.max} Days`}
+                    </span>
                   </div>
                   <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-xs font-black font-mono text-emerald-400 tracking-tight">
+                    <span className="text-sm sm:text-xs font-black font-mono text-emerald-400 tracking-tight">
                       {Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min) === Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max)
                         ? `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}`
                         : `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}–${Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}`}
