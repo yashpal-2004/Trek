@@ -32,13 +32,14 @@ const ShortsIcon = (props) => (
   </svg>
 );
 
-const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "Formals", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Rainwear", "Luggage & Packs", "Essentials"];
+const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "Kurta Pajama", "Formals", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Rainwear", "Luggage & Packs", "Essentials"];
 
 const CATEGORY_ICONS = {
   "Footwear": { icon: Footprints, bg: "from-amber-500/20 to-orange-500/10", text: "text-amber-600" },
   "Jacket": { icon: Shield, bg: "from-orange-500/20 to-amber-500/10", text: "text-orange-600" },
   "Sweater & Hoodie": { icon: Flame, bg: "from-rose-500/20 to-orange-500/10", text: "text-rose-600" },
   "Tracksuit": { icon: PantsIcon, bg: "from-blue-500/20 to-teal-500/10", text: "text-blue-600" },
+  "Kurta Pajama": { icon: Shirt, bg: "from-amber-600/20 to-yellow-500/10", text: "text-amber-700" },
   "Formals": { icon: Briefcase, bg: "from-slate-700/20 to-slate-900/10", text: "text-slate-800" },
   "T-Shirt": { icon: Shirt, bg: "from-sky-500/20 to-blue-500/10", text: "text-sky-600" },
   "Shirt": { icon: Shirt, bg: "from-blue-500/20 to-indigo-500/10", text: "text-blue-600" },
