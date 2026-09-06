@@ -24,7 +24,6 @@ export default function Resources({ isSection = false }) {
   const tabs = [
     { id: "treks",     label: "Treks",     icon: Mountain,   component: <TrekSection /> },
     { id: "food",      label: "Food",      icon: Coffee,     component: <FoodSection /> },
-    { id: "packing",   label: "Packing",   icon: Backpack,   component: <PackingSection /> },
     { id: "safety",    label: "Safety",    icon: ShieldCheck,component: <SafetySection /> },
     { id: "emergency", label: "Emergency", icon: Flame,      component: <EmergencySection /> },
     { id: "faq",       label: "FAQ",       icon: HelpCircle, component: <FAQSection /> },

@@ -63,6 +63,7 @@ export const navLinks = [
   { id: "stay", label: "Stay" },
   { id: "budget", label: "Budget" },
   { id: "expenses", label: "Expenses" },
+  { id: "packing", label: "Packing" },
   { id: "resources", label: "Guides" },
 ];
 

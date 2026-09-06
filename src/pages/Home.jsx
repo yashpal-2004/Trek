@@ -11,6 +11,7 @@ import StaySection from "../components/stay/StaySection";
 import BudgetSection from "../components/budget/BudgetSection";
 import ExpensesSection from "./Expenses";
 import ResourcesSection from "./Resources";
+import PackingSection from "../components/packing/PackingSection";
 import SpitiPlan1Map from "../components/map/SpitiPlan1Map";
 import HemkundRouteMap from "../components/map/HemkundRouteMap";
 import HamptaRouteMap from "../components/map/HamptaRouteMap";
@@ -34,7 +35,7 @@ export default function Home() {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "") || "overview";
       
-      if (["stay", "budget", "expenses", "resources"].includes(hash)) {
+      if (["stay", "budget", "expenses", "packing", "resources"].includes(hash)) {
         setActiveTab(hash);
         window.scrollTo({ top: 0, behavior: "instant" });
       } else {
@@ -96,6 +97,11 @@ export default function Home() {
         {activeTab === "stay" && <StaySection />}
         {activeTab === "budget" && <BudgetSection />}
         {activeTab === "expenses" && <ExpensesSection isSection={true} />}
+        {activeTab === "packing" && (
+          <div className="pt-8">
+            <PackingSection />
+          </div>
+        )}
         {activeTab === "resources" && <ResourcesSection isSection={true} />}
       </main>
       <Footer />
