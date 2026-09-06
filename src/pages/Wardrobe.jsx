@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle, FileText, Image as ImageIcon, Shirt, X, Footprints, Flame, CloudRain, Backpack, Cpu, Shield, HardHat, Compass, Archive, Lock, Briefcase } from "lucide-react";
+import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle, FileText, Image as ImageIcon, Shirt, X, Footprints, Flame, CloudRain, Backpack, Cpu, Shield, HardHat, Compass, Archive, Lock, Briefcase, Sparkles, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore } from "../hooks/useFirestore";
 import { uploadToCloudinary } from "../utils/cloudinary";
@@ -83,7 +83,15 @@ export default function Wardrobe() {
   ]);
 
   const [archivedItems, setArchivedItems] = useFirestore("trek_archived_wardrobe_items", []);
-  const [wardrobeTab, setWardrobeTab] = useState("active");
+  const [outfits, setOutfits] = useFirestore("trek_wardrobe_outfits", [
+    { id: "outfit-1", name: "Alpine Summit Layering", items: ["w-1", "w-2", "w-3"], notes: "Tested for sub-zero summit pushes" }
+  ]);
+  const [wardrobeTab, setWardrobeTab] = useState("active"); // "active" | "outfits" | "archived"
+
+  // Outfit builder modal state
+  const [isOutfitModalOpen, setIsOutfitModalOpen] = useState(false);
+  const [editingOutfit, setEditingOutfit] = useState(null);
+  const [outfitForm, setOutfitForm] = useState({ name: "", notes: "", items: [] });
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem("wardrobe_unlocked") === "true";
@@ -356,7 +364,7 @@ export default function Wardrobe() {
               />
             </div>
 
-            {/* Status Selector (Active vs Archived) */}
+            {/* Status Selector (Active vs Outfits vs Archived) */}
             <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0 self-start sm:self-auto">
               <button
                 onClick={() => setWardrobeTab("active")}
@@ -366,7 +374,18 @@ export default function Wardrobe() {
                     : "text-slate-500 hover:text-black"
                 }`}
               >
-                Active
+                Active ({items.length - archivedItems.length})
+              </button>
+              <button
+                onClick={() => setWardrobeTab("outfits")}
+                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                  wardrobeTab === "outfits"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-slate-500 hover:text-black"
+                }`}
+              >
+                <Sparkles size={11} className="text-amber-500" />
+                Outfit Combos ({outfits.length})
               </button>
               <button
                 onClick={() => setWardrobeTab("archived")}
@@ -376,7 +395,7 @@ export default function Wardrobe() {
                     : "text-slate-500 hover:text-black"
                 }`}
               >
-                Archived
+                Archived ({archivedItems.length})
               </button>
             </div>
           </div>
@@ -412,121 +431,224 @@ export default function Wardrobe() {
           </div>
         </div>
 
-        {/* Grid List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {isLoading ? (
-            <div className="col-span-full border-2 border-dashed border-black/5 rounded-[32px] p-12 text-center py-16 bg-white/30 backdrop-blur-md">
-              <div className="w-8 h-8 border-2 border-t-transparent border-black rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-xs text-slate-400 font-mono uppercase tracking-wider">Loading Closet...</p>
+        {/* Tab content conditional rendering */}
+        {wardrobeTab === "outfits" ? (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center bg-white/40 p-5 rounded-3xl border border-black/5">
+              <div>
+                <h3 className="font-black text-lg uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  Outfit Combos ({outfits.length})
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">Group jackets, boots & base layers into full expedition outfits.</p>
+              </div>
+              <button
+                onClick={() => {
+                  setEditingOutfit(null);
+                  setOutfitForm({ name: "", notes: "", items: [] });
+                  setIsOutfitModalOpen(true);
+                }}
+                className="bg-black text-white px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-black/85 transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+              >
+                <Plus size={14} /> Create Outfit Combo
+              </button>
             </div>
-          ) : (
-            <>
-              <AnimatePresence>
-                {filteredItems.map(item => (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="h-64 rounded-3xl overflow-hidden border border-black/10 relative group bg-white hover:shadow-xl transition-all duration-300"
-                  >
-                    {/* Base View: Product Image or Fallback banner occupying the full card */}
-                    <div className="w-full h-full flex items-center justify-center bg-white">
-                      {item.image ? (
-                        <img src={item.image} alt={item.name} className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105" />
-                      ) : (
-                        renderFallbackImage(item.category)
-                      )}
-                    </div>
 
-                    {/* Hover View: Translucent dark details overlay */}
-                    <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex flex-col justify-between p-5 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 text-white select-none">
-                      {/* Top Row: Category Label + Floating Actions */}
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[8px] font-black font-mono tracking-wide text-slate-300 bg-white/10 px-2 py-0.5 rounded uppercase">
-                          {item.category}
-                        </span>
-
-                        <div className="flex gap-1.5">
-                          <button
-                            onClick={(e) => handleOpenEdit(item, e)}
-                            className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white text-white hover:text-black flex items-center justify-center shadow-xs transition-colors"
-                            title="Edit Item"
-                          >
-                            <Edit2 size={11} />
-                          </button>
-                          <button
-                            onClick={(e) => handleToggleArchiveItem(item.id, e)}
-                            className={`w-7 h-7 rounded-lg border flex items-center justify-center transition-all shadow-xs ${
-                              archivedItems.includes(item.id)
-                                ? "bg-amber-500 border-amber-600 text-white hover:bg-amber-600"
-                                : "bg-white/20 border-white/10 text-white hover:bg-white hover:text-black"
-                            }`}
-                            title={archivedItems.includes(item.id) ? "Unarchive Item" : "Archive Item"}
-                          >
-                            <Archive size={11} />
-                          </button>
-                          <button
-                            onClick={(e) => handleDelete(item.id, e)}
-                            className="w-7 h-7 rounded-lg bg-white/20 hover:bg-rose-600 border-transparent hover:text-white flex items-center justify-center shadow-xs transition-colors"
-                            title="Delete Item"
-                          >
-                            <Trash2 size={11} />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Bottom Section: Title, Climate and Description details */}
-                      <div className="space-y-2 mt-auto text-left">
-                        <h3 className="font-extrabold text-sm leading-snug text-white">
-                          {item.name}
-                        </h3>
-
-                        {/* Weather Tag */}
-                        {item.weather && (
-                          <div className="flex">
-                            <span className="text-[9px] font-bold font-mono text-slate-300 bg-white/10 px-2 py-0.5 rounded">
-                              {getWeatherEmoji(item.weather)} {item.weather}
-                            </span>
+            {outfits.length === 0 ? (
+              <div className="border-2 border-dashed border-black/10 rounded-[32px] p-12 text-center py-16 bg-white/40">
+                <Sparkles size={32} className="mx-auto text-amber-500 mb-3" />
+                <h4 className="font-extrabold text-base text-slate-800">No Outfit Combos Created</h4>
+                <p className="text-xs text-slate-500 max-w-xs mx-auto mt-1 mb-4 leading-relaxed">
+                  Combine tops, bottoms, shoes & outer layers into reusable outfit sets for your treks.
+                </p>
+                <button
+                  onClick={() => {
+                    setEditingOutfit(null);
+                    setOutfitForm({ name: "", notes: "", items: [] });
+                    setIsOutfitModalOpen(true);
+                  }}
+                  className="px-4 py-2 bg-black text-white text-xs font-black uppercase rounded-xl hover:bg-black/85 transition-all"
+                >
+                  Build First Outfit Combo
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {outfits.map((outfit) => {
+                  const outfitItemsList = items.filter((i) => outfit.items.includes(i.id));
+                  return (
+                    <div key={outfit.id} className="bg-white rounded-3xl border border-black/10 p-6 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-2">
+                          <h4 className="font-black text-base uppercase tracking-tight text-slate-900">{outfit.name}</h4>
+                          <div className="flex gap-1">
+                            <button
+                              onClick={() => {
+                                setEditingOutfit(outfit);
+                                setOutfitForm({ name: outfit.name, notes: outfit.notes || "", items: outfit.items });
+                                setIsOutfitModalOpen(true);
+                              }}
+                              className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"
+                              title="Edit Outfit"
+                            >
+                              <Edit2 size={12} />
+                            </button>
+                            <button
+                              onClick={() => {
+                                if (confirm("Delete this outfit combo?")) {
+                                  setOutfits((prev) => prev.filter((o) => o.id !== outfit.id));
+                                }
+                              }}
+                              className="p-1.5 hover:bg-rose-50 text-slate-500 hover:text-rose-600 rounded-lg transition-colors"
+                              title="Delete Outfit"
+                            >
+                              <Trash2 size={12} />
+                            </button>
                           </div>
+                        </div>
+
+                        {outfit.notes && (
+                          <p className="text-xs text-slate-500 italic mb-3">"{outfit.notes}"</p>
                         )}
 
-                        {item.notes && (
-                          <p className="text-[10px] text-slate-300 leading-relaxed font-medium line-clamp-2 italic pt-1.5 border-t border-white/10">
-                            "{item.notes}"
-                          </p>
-                        )}
-
-                        {/* Custom Tags */}
-                        {item.tags && item.tags.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {item.tags.map((tag, idx) => (
-                              <span key={idx} className="text-[8px] font-bold text-violet-300 bg-violet-500/20 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                                <Tag size={7} /> {tag}
-                              </span>
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black font-mono text-slate-400 uppercase tracking-widest">Outfit Layering Pieces ({outfitItemsList.length})</p>
+                          <div className="flex flex-wrap gap-2">
+                            {outfitItemsList.map((item) => (
+                              <div key={item.id} className="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-black/5 text-xs font-bold text-slate-700">
+                                {item.image ? (
+                                  <img src={item.image} alt={item.name} className="w-6 h-6 rounded-md object-cover border border-black/5" />
+                                ) : (
+                                  <Shirt size={14} className="text-slate-400 shrink-0" />
+                                )}
+                                <span className="truncate max-w-[120px]">{item.name}</span>
+                              </div>
                             ))}
                           </div>
-                        )}
+                        </div>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Grid List */
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {isLoading ? (
+              <div className="col-span-full border-2 border-dashed border-black/5 rounded-[32px] p-12 text-center py-16 bg-white/30 backdrop-blur-md">
+                <div className="w-8 h-8 border-2 border-t-transparent border-black rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-xs text-slate-400 font-mono uppercase tracking-wider">Loading Closet...</p>
+              </div>
+            ) : (
+              <>
+                <AnimatePresence>
+                  {filteredItems.map(item => (
+                    <motion.div
+                      key={item.id}
+                      layout
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="h-64 rounded-3xl overflow-hidden border border-black/10 relative group bg-white hover:shadow-xl transition-all duration-300"
+                    >
+                      {/* Base View: Product Image or Fallback banner occupying the full card */}
+                      <div className="w-full h-full flex items-center justify-center bg-white">
+                        {item.image ? (
+                          <img src={item.image} alt={item.name} className="w-full h-full object-contain p-4 transition-transform duration-300 group-hover:scale-105" />
+                        ) : (
+                          renderFallbackImage(item.category)
+                        )}
+                      </div>
 
-              {filteredItems.length === 0 && (
-                <div className="col-span-full border-2 border-dashed border-black/10 rounded-[32px] p-12 text-center py-16">
-                  <Shirt size={32} className="mx-auto text-slate-300 mb-3" />
-                  <h4 className="font-extrabold text-base text-slate-700">No Wardrobe Items Found</h4>
-                  <p className="text-xs text-slate-400 max-w-xs mx-auto mt-1 leading-relaxed">
-                    Add your gear items using the "Add Item" button or refine your search keywords.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+                      {/* Hover View: Translucent dark details overlay */}
+                      <div className="absolute inset-0 bg-black/80 backdrop-blur-xs flex flex-col justify-between p-5 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 text-white select-none">
+                        {/* Top Row: Category Label + Floating Actions */}
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[8px] font-black font-mono tracking-wide text-slate-300 bg-white/10 px-2 py-0.5 rounded uppercase">
+                            {item.category}
+                          </span>
+
+                          <div className="flex gap-1.5">
+                            <button
+                              onClick={(e) => handleOpenEdit(item, e)}
+                              className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white text-white hover:text-black flex items-center justify-center shadow-xs transition-colors"
+                              title="Edit Item"
+                            >
+                              <Edit2 size={11} />
+                            </button>
+                            <button
+                              onClick={(e) => handleToggleArchiveItem(item.id, e)}
+                              className={`w-7 h-7 rounded-lg border flex items-center justify-center transition-all shadow-xs ${
+                                archivedItems.includes(item.id)
+                                  ? "bg-amber-500 border-amber-600 text-white hover:bg-amber-600"
+                                  : "bg-white/20 border-white/10 text-white hover:bg-white hover:text-black"
+                              }`}
+                              title={archivedItems.includes(item.id) ? "Unarchive Item" : "Archive Item"}
+                            >
+                              <Archive size={11} />
+                            </button>
+                            <button
+                              onClick={(e) => handleDelete(item.id, e)}
+                              className="w-7 h-7 rounded-lg bg-white/20 hover:bg-rose-600 border-transparent hover:text-white flex items-center justify-center shadow-xs transition-colors"
+                              title="Delete Item"
+                            >
+                              <Trash2 size={11} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Bottom Section: Title, Climate and Description details */}
+                        <div className="space-y-2 mt-auto text-left">
+                          <h3 className="font-extrabold text-sm leading-snug text-white">
+                            {item.name}
+                          </h3>
+
+                          {/* Weather Tag */}
+                          {item.weather && (
+                            <div className="flex">
+                              <span className="text-[9px] font-bold font-mono text-slate-300 bg-white/10 px-2 py-0.5 rounded">
+                                {getWeatherEmoji(item.weather)} {item.weather}
+                              </span>
+                            </div>
+                          )}
+
+                          {item.notes && (
+                            <p className="text-[10px] text-slate-300 leading-relaxed font-medium line-clamp-2 italic pt-1.5 border-t border-white/10">
+                              "{item.notes}"
+                            </p>
+                          )}
+
+                          {/* Custom Tags */}
+                          {item.tags && item.tags.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {item.tags.map((tag, idx) => (
+                                <span key={idx} className="text-[8px] font-bold text-violet-300 bg-violet-500/20 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                                  <Tag size={7} /> {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+
+                {filteredItems.length === 0 && (
+                  <div className="col-span-full border-2 border-dashed border-black/10 rounded-[32px] p-12 text-center py-16">
+                    <Shirt size={32} className="mx-auto text-slate-300 mb-3" />
+                    <h4 className="font-extrabold text-base text-slate-700">No Wardrobe Items Found</h4>
+                    <p className="text-xs text-slate-400 max-w-xs mx-auto mt-1 leading-relaxed">
+                      Add your gear items using the "Add Item" button or refine your search keywords.
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </main>
 
       {/* Footer */}
@@ -699,6 +821,139 @@ export default function Wardrobe() {
                   className="w-full bg-black hover:bg-black/85 text-white py-3 rounded-xl text-xs font-mono font-black uppercase tracking-wider transition-all shadow-sm mt-4"
                 >
                   {editingItem ? "Save Changes" : "Add to Closet"}
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Outfit Combo Builder Modal */}
+      <AnimatePresence>
+        {isOutfitModalOpen && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0" onClick={() => setIsOutfitModalOpen(false)} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-[#f2efe9] rounded-[36px] border border-black/10 p-6 md:p-8 max-w-lg w-full shadow-2xl relative z-10 max-h-[85vh] overflow-y-auto"
+            >
+              <button
+                onClick={() => setIsOutfitModalOpen(false)}
+                className="absolute top-6 right-6 w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-slate-500 hover:text-black transition-colors"
+              >
+                <X size={16} />
+              </button>
+
+              <div className="mb-6 pr-8">
+                <span className="text-[10px] font-black font-mono tracking-widest text-amber-600 uppercase flex items-center gap-1">
+                  <Sparkles size={11} /> Mix & Match Builder
+                </span>
+                <h3 className="text-xl font-black uppercase tracking-tight mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  {editingOutfit ? "Edit Outfit Combo" : "Build Outfit Combo"}
+                </h3>
+              </div>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!outfitForm.name.trim()) return;
+                  if (editingOutfit) {
+                    setOutfits((prev) =>
+                      prev.map((o) => (o.id === editingOutfit.id ? { ...o, ...outfitForm } : o))
+                    );
+                  } else {
+                    const newOutfit = {
+                      id: `outfit-${Date.now()}`,
+                      name: outfitForm.name,
+                      notes: outfitForm.notes,
+                      items: outfitForm.items
+                    };
+                    setOutfits((prev) => [...prev, newOutfit]);
+                  }
+                  setIsOutfitModalOpen(false);
+                }}
+                className="space-y-4"
+              >
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Outfit Combo Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={outfitForm.name}
+                    onChange={(e) => setOutfitForm((prev) => ({ ...prev, name: e.target.value }))}
+                    placeholder="e.g. Sub-Zero Summit Layering, Casual Ghat Outfit"
+                    className="w-full bg-white border border-black/10 focus:border-black rounded-xl px-4 py-2.5 text-xs font-semibold outline-hidden focus:ring-1 focus:ring-black"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Notes / Expedition Conditions
+                  </label>
+                  <input
+                    type="text"
+                    value={outfitForm.notes}
+                    onChange={(e) => setOutfitForm((prev) => ({ ...prev, notes: e.target.value }))}
+                    placeholder="e.g. Down jacket + thermal + boots for cold evening"
+                    className="w-full bg-white border border-black/10 focus:border-black rounded-xl px-4 py-2.5 text-xs font-semibold outline-hidden focus:ring-1 focus:ring-black"
+                  />
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Select Wardrobe Pieces ({outfitForm.items.length} selected)
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto p-1 border border-black/5 rounded-2xl bg-white/40">
+                    {items.map((item) => {
+                      const isSelected = outfitForm.items.includes(item.id);
+                      return (
+                        <div
+                          key={item.id}
+                          onClick={() => {
+                            setOutfitForm((prev) => ({
+                              ...prev,
+                              items: isSelected
+                                ? prev.items.filter((x) => x !== item.id)
+                                : [...prev.items, item.id]
+                            }));
+                          }}
+                          className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-2.5 ${
+                            isSelected
+                              ? "bg-amber-500/10 border-amber-500/40 text-amber-950 font-bold"
+                              : "bg-white border-black/5 text-slate-700 hover:border-black/15"
+                          }`}
+                        >
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-8 h-8 rounded-lg object-cover shrink-0 border border-black/5" />
+                          ) : (
+                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 border border-black/5">
+                              <Shirt size={14} className="text-slate-400" />
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs truncate">{item.name}</p>
+                            <p className="text-[9px] text-slate-400 font-mono">{item.category}</p>
+                          </div>
+                          <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${
+                            isSelected ? "bg-amber-600 text-white" : "border border-slate-300"
+                          }`}>
+                            {isSelected && <Check size={12} />}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-black hover:bg-black/85 text-white py-3 rounded-xl text-xs font-mono font-black uppercase tracking-wider transition-all shadow-sm mt-4"
+                >
+                  {editingOutfit ? "Save Outfit Combo" : "Save New Combo"}
                 </button>
               </form>
             </motion.div>
