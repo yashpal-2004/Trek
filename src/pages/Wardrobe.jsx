@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle, FileText, Image as ImageIcon, Shirt, X, Footprints, Flame, CloudRain, Backpack, Cpu, Shield, HardHat, Compass, Archive, Lock } from "lucide-react";
+import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle, FileText, Image as ImageIcon, Shirt, X, Footprints, Flame, CloudRain, Backpack, Cpu, Shield, HardHat, Compass, Archive, Lock, Briefcase } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore } from "../hooks/useFirestore";
 import { uploadToCloudinary } from "../utils/cloudinary";
@@ -32,13 +32,14 @@ const ShortsIcon = (props) => (
   </svg>
 );
 
-const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Rainwear", "Luggage & Packs", "Essentials"];
+const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "Formals", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Rainwear", "Luggage & Packs", "Essentials"];
 
 const CATEGORY_ICONS = {
   "Footwear": { icon: Footprints, bg: "from-amber-500/20 to-orange-500/10", text: "text-amber-600" },
   "Jacket": { icon: Shield, bg: "from-orange-500/20 to-amber-500/10", text: "text-orange-600" },
   "Sweater & Hoodie": { icon: Flame, bg: "from-rose-500/20 to-orange-500/10", text: "text-rose-600" },
   "Tracksuit": { icon: PantsIcon, bg: "from-blue-500/20 to-teal-500/10", text: "text-blue-600" },
+  "Formals": { icon: Briefcase, bg: "from-slate-700/20 to-slate-900/10", text: "text-slate-800" },
   "T-Shirt": { icon: Shirt, bg: "from-sky-500/20 to-blue-500/10", text: "text-sky-600" },
   "Shirt": { icon: Shirt, bg: "from-blue-500/20 to-indigo-500/10", text: "text-blue-600" },
   "Lower": { icon: PantsIcon, bg: "from-indigo-500/20 to-purple-500/10", text: "text-indigo-600" },
