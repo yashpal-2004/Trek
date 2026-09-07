@@ -123,84 +123,108 @@ export default function PackingSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {/* Selected Digital Wardrobe Clothes Card */}
-          <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 rounded-[24px] p-5 shadow-xs">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center">
-                  <Shirt size={15} className="text-amber-700" />
+          {/* Selected Digital Wardrobe Clothes Cards (Grouped Category Wise) */}
+          {(() => {
+            if (selectedWardrobeItems.length === 0) {
+              return (
+                <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 rounded-[24px] p-5 shadow-xs">
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center">
+                      <Shirt size={15} className="text-amber-700" />
+                    </div>
+                    <div>
+                      <h3 className="font-extrabold text-xs uppercase tracking-tight text-amber-950">Wardrobe Clothes</h3>
+                      <p className="text-[10px] text-amber-700 font-medium">0 packed</p>
+                    </div>
+                  </div>
+                  <div className="text-center py-6 border border-dashed border-amber-900/15 rounded-2xl bg-white/40">
+                    <Shirt size={24} className="mx-auto text-amber-600/40 mb-2" />
+                    <p className="text-xs font-extrabold text-amber-900">No Wardrobe Clothes Added</p>
+                    <p className="text-[10px] text-amber-700/80 max-w-[180px] mx-auto mt-0.5 mb-3">Pick your jackets, shoes & outfits from your personal closet.</p>
+                    <button
+                      onClick={() => setShowWardrobeModal(true)}
+                      className="px-3 py-1.5 bg-amber-900 text-amber-50 text-[10px] font-extrabold uppercase rounded-xl hover:bg-amber-950 transition-colors cursor-pointer"
+                    >
+                      Browse Wardrobe
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-extrabold text-xs uppercase tracking-tight text-amber-950">Wardrobe Clothes</h3>
-                  <p className="text-[10px] text-amber-700 font-medium">{checkedWardrobeCount}/{selectedWardrobeItems.length} packed</p>
+              );
+            }
+
+            // Group selected items by category
+            const grouped = selectedWardrobeItems.reduce((acc, item) => {
+              const cat = item.category || "Other";
+              if (!acc[cat]) acc[cat] = [];
+              acc[cat].push(item);
+              return acc;
+            }, {});
+
+            return Object.entries(grouped).map(([catName, catItems]) => {
+              const catCheckedCount = catItems.filter(i => checked[i.id]).length;
+              const catPct = Math.round((catCheckedCount / catItems.length) * 100);
+
+              return (
+                <div key={catName} className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/20 rounded-[24px] p-5 shadow-xs">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center">
+                        <Shirt size={15} className="text-amber-700" />
+                      </div>
+                      <div>
+                        <h3 className="font-extrabold text-xs uppercase tracking-tight text-amber-950">{catName} (Wardrobe)</h3>
+                        <p className="text-[10px] text-amber-700 font-medium">{catCheckedCount}/{catItems.length} packed</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mini progress bar */}
+                  <div className="h-1 bg-amber-950/10 rounded-full mb-4 overflow-hidden">
+                    <div
+                      className="h-full bg-amber-600 rounded-full transition-all duration-500"
+                      style={{ width: `${catPct}%` }}
+                    />
+                  </div>
+
+                  <ul className="space-y-2">
+                    {catItems.map((item) => {
+                      const done = !!checked[item.id];
+                      return (
+                        <li key={item.id}>
+                          <label className="flex items-center gap-2.5 cursor-pointer group bg-white/60 p-2 rounded-xl border border-amber-900/5 hover:border-amber-900/15 transition-all">
+                            <span className="shrink-0">
+                              {done
+                                ? <CheckCircle2 size={16} className="text-emerald-600" />
+                                : <Circle size={16} className="text-amber-800/30 group-hover:text-amber-800/50 transition-colors" />
+                              }
+                            </span>
+                            <input type="checkbox" checked={done} onChange={() => toggle(item.id)} className="sr-only" />
+                            {item.image && (
+                              <img src={item.image} alt={item.name} className="w-7 h-7 rounded-lg object-cover shrink-0 border border-black/5" />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-xs font-bold truncate ${done ? "line-through text-slate-400" : "text-slate-800"}`}>
+                                {item.name}
+                              </p>
+                              <p className="text-[9px] text-slate-400 font-mono">{item.category} {item.weight ? `· ${item.weight}` : ""}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={(e) => handleRemoveWardrobeClick(item, e)}
+                              className="p-1 text-slate-300 hover:text-red-500 rounded-lg transition-colors shrink-0"
+                              title="Remove from packing list"
+                            >
+                              <X size={12} />
+                            </button>
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
-              </div>
-              <button
-                onClick={() => setShowWardrobeModal(true)}
-                className="text-[9px] font-black font-mono uppercase bg-amber-200/60 hover:bg-amber-200 text-amber-900 px-2 py-1 rounded-lg transition-colors cursor-pointer"
-              >
-                + Add / Manage
-              </button>
-            </div>
-
-            {/* Mini progress bar */}
-            <div className="h-1 bg-amber-950/10 rounded-full mb-4 overflow-hidden">
-              <div
-                className="h-full bg-amber-600 rounded-full transition-all duration-500"
-                style={{ width: `${selectedWardrobeItems.length > 0 ? Math.round((checkedWardrobeCount / selectedWardrobeItems.length) * 100) : 0}%` }}
-              />
-            </div>
-
-            {selectedWardrobeItems.length === 0 ? (
-              <div className="text-center py-6 border border-dashed border-amber-900/15 rounded-2xl bg-white/40">
-                <Shirt size={24} className="mx-auto text-amber-600/40 mb-2" />
-                <p className="text-xs font-extrabold text-amber-900">No Wardrobe Clothes Added</p>
-                <p className="text-[10px] text-amber-700/80 max-w-[180px] mx-auto mt-0.5 mb-3">Pick your jackets, shoes & outfits from your personal closet.</p>
-                <button
-                  onClick={() => setShowWardrobeModal(true)}
-                  className="px-3 py-1.5 bg-amber-900 text-amber-50 text-[10px] font-extrabold uppercase rounded-xl hover:bg-amber-950 transition-colors"
-                >
-                  Browse Wardrobe
-                </button>
-              </div>
-            ) : (
-              <ul className="space-y-2">
-                {selectedWardrobeItems.map((item) => {
-                  const done = !!checked[item.id];
-                  return (
-                    <li key={item.id}>
-                      <label className="flex items-center gap-2.5 cursor-pointer group bg-white/60 p-2 rounded-xl border border-amber-900/5 hover:border-amber-900/15 transition-all">
-                        <span className="shrink-0">
-                          {done
-                            ? <CheckCircle2 size={16} className="text-emerald-600" />
-                            : <Circle size={16} className="text-amber-800/30 group-hover:text-amber-800/50 transition-colors" />
-                          }
-                        </span>
-                        <input type="checkbox" checked={done} onChange={() => toggle(item.id)} className="sr-only" />
-                        {item.image && (
-                          <img src={item.image} alt={item.name} className="w-7 h-7 rounded-lg object-cover shrink-0 border border-black/5" />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-xs font-bold truncate ${done ? "line-through text-slate-400" : "text-slate-800"}`}>
-                            {item.name}
-                          </p>
-                          <p className="text-[9px] text-slate-400 font-mono">{item.category} {item.weight ? `· ${item.weight}` : ""}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={(e) => handleRemoveWardrobeClick(item, e)}
-                          className="p-1 text-slate-300 hover:text-red-500 rounded-lg transition-colors shrink-0"
-                          title="Remove from packing list"
-                        >
-                          <X size={12} />
-                        </button>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
+              );
+            });
+          })()}
 
           {/* Standard Packing Categories */}
           {packing.map((category) => {
