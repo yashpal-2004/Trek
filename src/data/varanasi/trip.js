@@ -28,14 +28,14 @@ export const quickStats = [
 ];
 
 export const routeTimeline = [
-  { id: 1, location: "Delhi (DLI / NDLS)", altitude: "214m", distance: "0 km", day: 0, date: "Sun Night", arrTime: "11:30 PM", depTime: "00:05 AM", transport: "Amrit Bharat Express", icon: "Train" },
-  { id: 2, location: "Varanasi Station → Hotel", altitude: "81m", distance: "780 km", day: 1, date: "Monday", arrTime: "12:00 PM", depTime: "01:00 PM", transport: "E-Rickshaw", icon: "Home" },
-  { id: 3, location: "Kal Bhairav → Kashi Vishwanath → Lalita Ghat", altitude: "81m", distance: "785 km", day: 1, date: "Monday", arrTime: "01:30 PM", depTime: "05:00 PM", transport: "Walking / Corridor", icon: "MapPin" },
-  { id: 4, location: "Manikarnika → Dashashwamedh Aarti → Lalita Light Show", altitude: "81m", distance: "788 km", day: 1, date: "Monday", arrTime: "05:15 PM", depTime: "08:30 PM", transport: "Ghat Walk / Boat", icon: "MapPin" },
-  { id: 5, location: "Assi Ghat Sunrise → Morning Boat Ride", altitude: "81m", distance: "792 km", day: 2, date: "Tuesday", arrTime: "05:30 AM", depTime: "08:30 AM", transport: "Boat", icon: "Compass" },
-  { id: 6, location: "Shree Durga Mandir → BHU Vishwanath Temple (VT)", altitude: "81m", distance: "798 km", day: 2, date: "Tuesday", arrTime: "09:30 AM", depTime: "01:00 PM", transport: "Auto Rickshaw", icon: "MapPin" },
-  { id: 7, location: "Namo Ghat Sunset & Promenade", altitude: "81m", distance: "808 km", day: 2, date: "Tuesday", arrTime: "05:00 PM", depTime: "07:30 PM", transport: "Auto Rickshaw", icon: "MapPin" },
-  { id: 8, location: "Local Market Explore → Banaras Station (BNRS)", altitude: "81m", distance: "815 km", day: 3, date: "Wednesday", arrTime: "09:00 AM", depTime: "01:30 PM", transport: "Kashi V Nath Exp Return", icon: "Train" },
+  { id: 1, location: "Delhi (NDLS / DLI)", altitude: "214m", distance: "0 km", day: 0, date: "Sun Night", arrTime: "11:30 PM", depTime: "00:05 AM", transport: "Amrit Bharat Express", icon: "Train" },
+  { id: 2, location: "BSB Station → Ramaya Homestay", altitude: "81m", distance: "780 km", day: 1, date: "Monday", arrTime: "12:00 PM", depTime: "01:00 PM", transport: "Auto / E-Rickshaw", icon: "Home" },
+  { id: 3, location: "Kal Bhairav → Kashi Vishwanath → Lalita Ghat", altitude: "81m", distance: "785 km", day: 1, date: "Monday", arrTime: "01:30 PM", depTime: "05:00 PM", transport: "Walking / Alley Lane", icon: "MapPin" },
+  { id: 4, location: "Manikarnika → Dashashwamedh Aarti → 7:30 PM Lalita Light Show", altitude: "81m", distance: "788 km", day: 1, date: "Monday", arrTime: "05:15 PM", depTime: "08:30 PM", transport: "Ghat Walk / Boat", icon: "MapPin" },
+  { id: 5, location: "Assi Ghat Sunrise → Morning Boat & Poori-Jalebi", altitude: "81m", distance: "792 km", day: 2, date: "Tuesday", arrTime: "05:30 AM", depTime: "08:30 AM", transport: "E-Rickshaw / Boat", icon: "Compass" },
+  { id: 6, location: "Durga Mandir → BHU VT (Cold Coffee & Samosa)", altitude: "81m", distance: "798 km", day: 2, date: "Tuesday", arrTime: "09:30 AM", depTime: "01:00 PM", transport: "Shared Auto", icon: "MapPin" },
+  { id: 7, location: "Namo Ghat Sunset & Promenade", altitude: "81m", distance: "808 km", day: 2, date: "Tuesday", arrTime: "05:00 PM", depTime: "07:30 PM", transport: "Auto / E-Rickshaw", icon: "MapPin" },
+  { id: 8, location: "Godowlia Food Walk → Banaras Station (BNRS)", altitude: "81m", distance: "815 km", day: 3, date: "Wednesday", arrTime: "09:00 AM", depTime: "01:30 PM", transport: "E-Rickshaw / Train", icon: "Train" },
   { id: 9, location: "New Delhi (NDLS)", altitude: "214m", distance: "1600 km", day: 4, date: "Thursday", arrTime: "05:45 AM", depTime: "—", transport: "Arrive Home", icon: "Home" },
 ];
 

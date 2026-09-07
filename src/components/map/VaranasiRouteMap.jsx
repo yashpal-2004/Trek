@@ -53,6 +53,7 @@ export default function VaranasiRouteMap() {
     document.head.appendChild(link);
 
     import("leaflet").then((L) => {
+      if (!mapRef.current || leafletMapRef.current) return;
       const Leaflet = L.default || L;
 
       // Center map around Varanasi City & Ghats
