@@ -34,7 +34,7 @@ const ShortsIcon = (props) => (
   </svg>
 );
 
-const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "Kurta Pajama", "Formals", "Garments", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Towel", "Rainwear", "Luggage & Packs", "Essentials"];
+const DEFAULT_CATEGORIES = ["Footwear", "Jacket", "Sweater & Hoodie", "Tracksuit", "Kurta Pajama", "Formals", "Garments", "T-Shirt", "Shirt", "Lower", "Pant", "Shorts", "Headgear & Gloves", "Thermal & Inner", "Towel", "Documents", "Essentials"];
 
 const CATEGORY_ICONS = {
   "Footwear": { icon: Footprints, bg: "from-amber-500/20 to-orange-500/10", text: "text-amber-600" },
@@ -52,8 +52,7 @@ const CATEGORY_ICONS = {
   "Headgear & Gloves": { icon: HardHat, bg: "from-teal-500/20 to-emerald-500/10", text: "text-teal-600" },
   "Thermal & Inner": { icon: Flame, bg: "from-rose-500/20 to-red-500/10", text: "text-rose-600" },
   "Towel": { icon: Layers, bg: "from-cyan-500/20 to-blue-500/10", text: "text-cyan-600" },
-  "Rainwear": { icon: CloudRain, bg: "from-cyan-500/20 to-sky-500/10", text: "text-cyan-600" },
-  "Luggage & Packs": { icon: Backpack, bg: "from-emerald-500/20 to-green-500/10", text: "text-emerald-600" },
+  "Documents": { icon: FileText, bg: "from-blue-600/20 to-indigo-600/10", text: "text-blue-700" },
   "Essentials": { icon: Shield, bg: "from-pink-500/20 to-rose-500/10", text: "text-pink-600" }
 };
 

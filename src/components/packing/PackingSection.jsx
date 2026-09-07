@@ -188,6 +188,31 @@ export default function PackingSection() {
                         <p className="text-[10px] text-amber-700 font-medium">{catCheckedCount}/{catItems.length} packed</p>
                       </div>
                     </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const allChecked = catItems.every(i => checked[i.id]);
+                          const updates = {};
+                          catItems.forEach(i => { updates[i.id] = !allChecked; });
+                          setChecked(prev => ({ ...prev, ...updates }));
+                        }}
+                        className="text-[9px] font-black font-mono uppercase text-amber-900/60 hover:text-amber-950 transition-colors"
+                      >
+                        {catCheckedCount === catItems.length ? "Uncheck All" : "Check All"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setWardrobeCategory(catName);
+                          setShowWardrobeModal(true);
+                        }}
+                        className="w-7 h-7 rounded-xl bg-amber-500/20 hover:bg-amber-500 text-amber-900 hover:text-white flex items-center justify-center font-black text-xs transition-colors cursor-pointer shadow-xs"
+                        title={`Add more ${catName} from Wardrobe`}
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Mini progress bar */}
