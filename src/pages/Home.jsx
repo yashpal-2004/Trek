@@ -26,6 +26,7 @@ import BirBillingRouteMap from "../components/map/BirBillingRouteMap";
 import UjjainRouteMap from "../components/map/UjjainRouteMap";
 import AuliRouteMap from "../components/map/AuliRouteMap";
 import KashmirRouteMap from "../components/map/KashmirRouteMap";
+import VaranasiRouteMap from "../components/map/VaranasiRouteMap";
 import { getParentTripId } from "../data/proxyHelper";
 
 export default function Home() {
@@ -90,6 +91,7 @@ export default function Home() {
             {getParentTripId() === "ujjain" && <UjjainRouteMap />}
             {getParentTripId() === "auli" && <AuliRouteMap />}
             {getParentTripId() === "kashmir" && <KashmirRouteMap />}
+            {getParentTripId() === "varanasi" && <VaranasiRouteMap />}
             <ItinerarySection />
             <TransportSection />
           </>
