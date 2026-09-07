@@ -3,6 +3,7 @@ import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle,
 import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore } from "../hooks/useFirestore";
 import { uploadToCloudinary } from "../utils/cloudinary";
+import { removeBackgroundPhotoroom } from "../utils/photoroom";
 
 const PantsIcon = (props) => (
   <svg
@@ -198,25 +199,48 @@ export default function Wardrobe() {
     img.src = src;
   };
 
+  const [isProcessingAiImage, setIsProcessingAiImage] = useState(false);
+
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Try Cloudinary upload
-    const cloudUrl = await uploadToCloudinary(file);
-    if (cloudUrl) {
-      setFormData(prev => ({ ...prev, image: cloudUrl }));
-      return;
-    }
+    setIsProcessingAiImage(true);
 
-    // Canvas Compression Fallback
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      compressImage(event.target.result, (compressed) => {
-        setFormData(prev => ({ ...prev, image: compressed }));
-      });
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Step 1: Run Photoroom AI background removal to isolate clothes from person/background
+      const cutoutBase64 = await removeBackgroundPhotoroom(file);
+      const sourceToUpload = cutoutBase64 || file;
+
+      // Step 2: Upload isolated cutout to Cloudinary
+      const cloudUrl = await uploadToCloudinary(sourceToUpload);
+      if (cloudUrl) {
+        setFormData((prev) => ({ ...prev, image: cloudUrl }));
+        setIsProcessingAiImage(false);
+        return;
+      }
+
+      // Step 3: Local compression fallback if Cloudinary unavailable
+      if (cutoutBase64) {
+        compressImage(cutoutBase64, (compressed) => {
+          setFormData((prev) => ({ ...prev, image: compressed }));
+          setIsProcessingAiImage(false);
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        compressImage(event.target.result, (compressed) => {
+          setFormData((prev) => ({ ...prev, image: compressed }));
+          setIsProcessingAiImage(false);
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.warn("AI extraction error:", err);
+      setIsProcessingAiImage(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -570,7 +594,32 @@ export default function Wardrobe() {
                             {item.category}
                           </span>
 
-                          <div className="flex gap-1.5">
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (!item.image) {
+                                  alert("No image available to extract. Please add an image first.");
+                                  return;
+                                }
+                                const btn = e.currentTarget;
+                                btn.disabled = true;
+                                btn.innerText = "...";
+                                const cutoutBase64 = await removeBackgroundPhotoroom(item.image);
+                                if (cutoutBase64) {
+                                  const cloudUrl = await uploadToCloudinary(cutoutBase64);
+                                  const finalImg = cloudUrl || cutoutBase64;
+                                  setItems(prev => prev.map(i => i.id === item.id ? { ...i, image: finalImg } : i));
+                                } else {
+                                  alert("Could not extract garment background for this image.");
+                                }
+                                btn.disabled = false;
+                              }}
+                              className="px-2 h-7 rounded-lg bg-amber-500/80 hover:bg-amber-500 text-white font-mono text-[9px] font-black uppercase flex items-center gap-1 shadow-xs transition-colors"
+                              title="Isolate Clothes with AI"
+                            >
+                              <Sparkles size={10} /> Extract AI
+                            </button>
                             <button
                               onClick={(e) => handleOpenEdit(item, e)}
                               className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white text-white hover:text-black flex items-center justify-center shadow-xs transition-colors"
@@ -801,14 +850,29 @@ export default function Wardrobe() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 pt-1">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase">Or upload local file:</span>
-                    <label className="bg-white hover:bg-slate-50 border border-black/10 hover:border-black/25 text-slate-600 hover:text-black font-semibold text-[10px] py-1.5 px-3 rounded-lg cursor-pointer shadow-xs transition-all flex items-center gap-1">
-                      <ImageIcon size={12} />
-                      Choose File
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase flex items-center gap-1">
+                      <Sparkles size={10} className="text-amber-500" />
+                      Auto AI Clothes Isolator
+                    </span>
+                    <label className={`bg-white hover:bg-slate-50 border border-black/10 hover:border-black/25 text-slate-600 hover:text-black font-semibold text-[10px] py-1.5 px-3 rounded-lg cursor-pointer shadow-xs transition-all flex items-center gap-1.5 ${
+                      isProcessingAiImage ? "opacity-50 pointer-events-none" : ""
+                    }`}>
+                      {isProcessingAiImage ? (
+                        <>
+                          <div className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                          <span>Extracting Clothes AI...</span>
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon size={12} />
+                          Choose File (Auto-Cutout)
+                        </>
+                      )}
                       <input
                         type="file"
                         accept="image/*"
+                        disabled={isProcessingAiImage}
                         onChange={handleImageChange}
                         className="hidden"
                       />
