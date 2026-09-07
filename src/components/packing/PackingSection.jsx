@@ -13,6 +13,16 @@ export default function PackingSection() {
   const [checked, setChecked] = useLocalStorage(`packing_checklist_${parentTripId}`, {});
   const [wardrobeItems] = useFirestore("trek_wardrobe_items", []);
   const [selectedWardrobeIds, setSelectedWardrobeIds] = useFirestore(`trek_packing_wardrobe_${parentTripId}`, []);
+  const [wardrobeQuantities, setWardrobeQuantities] = useFirestore(`trek_packing_wardrobe_qty_${parentTripId}`, {});
+
+  const getItemQty = (itemId) => wardrobeQuantities[itemId] || 1;
+  const updateQty = (itemId, delta) => {
+    setWardrobeQuantities(prev => {
+      const current = prev[itemId] || 1;
+      const next = Math.max(1, current + delta);
+      return { ...prev, [itemId]: next };
+    });
+  };
   const [showWardrobeModal, setShowWardrobeModal] = useState(false);
   const [wardrobeSearch, setWardrobeSearch] = useState("");
   const [wardrobeCategory, setWardrobeCategory] = useState("All");
@@ -23,10 +33,12 @@ export default function PackingSection() {
   const defaultItems = packing.flatMap((cat) => cat.items);
   const selectedWardrobeItems = wardrobeItems.filter(i => selectedWardrobeIds.includes(i.id));
 
-  const totalCount = defaultItems.length + selectedWardrobeItems.length;
+  const totalWardrobeUnits = selectedWardrobeItems.reduce((acc, item) => acc + getItemQty(item.id), 0);
+  const totalCount = defaultItems.length + totalWardrobeUnits;
+
   const checkedDefaultCount = defaultItems.filter((item) => checked[getItemId(item)]).length;
-  const checkedWardrobeCount = selectedWardrobeItems.filter((item) => checked[item.id]).length;
-  const checkedCount = checkedDefaultCount + checkedWardrobeCount;
+  const checkedWardrobeUnits = selectedWardrobeItems.filter((item) => checked[item.id]).reduce((acc, item) => acc + getItemQty(item.id), 0);
+  const checkedCount = checkedDefaultCount + checkedWardrobeUnits;
 
   const pct = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
   const isComplete = totalCount > 0 && checkedCount === totalCount;
@@ -189,6 +201,7 @@ export default function PackingSection() {
                   <ul className="space-y-2">
                     {catItems.map((item) => {
                       const done = !!checked[item.id];
+                      const qty = getItemQty(item.id);
                       return (
                         <li key={item.id}>
                           <label className="flex items-center gap-2.5 cursor-pointer group bg-white/60 p-2 rounded-xl border border-amber-900/5 hover:border-amber-900/15 transition-all">
@@ -204,14 +217,40 @@ export default function PackingSection() {
                             )}
                             <div className="flex-1 min-w-0">
                               <p className={`text-xs font-bold truncate ${done ? "line-through text-slate-400" : "text-slate-800"}`}>
-                                {item.name}
+                                {item.name} {qty > 1 && item.category === "Garments" && <span className="text-[10px] font-black text-amber-700 bg-amber-500/15 px-1.5 py-0.5 rounded-full ml-1 font-mono">x{qty}</span>}
                               </p>
                               <p className="text-[9px] text-slate-400 font-mono">{item.category} {item.weight ? `· ${item.weight}` : ""}</p>
                             </div>
+
+                            {/* Quantity Adjuster (+ / -) exclusively for Garments category */}
+                            {item.category === "Garments" && (
+                              <div className="flex items-center gap-1 bg-amber-900/5 p-0.5 rounded-lg shrink-0" onClick={(e) => e.stopPropagation()}>
+                                <button
+                                  type="button"
+                                  onClick={() => updateQty(item.id, -1)}
+                                  className="w-5 h-5 rounded-md bg-white border border-amber-900/10 hover:bg-amber-100 flex items-center justify-center text-amber-900 font-black text-xs transition-colors"
+                                  title="Decrease Quantity"
+                                >
+                                  -
+                                </button>
+                                <span className="text-[10px] font-black font-mono text-amber-950 px-1 min-w-[14px] text-center">
+                                  {qty}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => updateQty(item.id, 1)}
+                                  className="w-5 h-5 rounded-md bg-white border border-amber-900/10 hover:bg-amber-100 flex items-center justify-center text-amber-900 font-black text-xs transition-colors"
+                                  title="Increase Quantity"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            )}
+
                             <button
                               type="button"
                               onClick={(e) => handleRemoveWardrobeClick(item, e)}
-                              className="p-1 text-slate-300 hover:text-red-500 rounded-lg transition-colors shrink-0"
+                              className="p-1 text-slate-300 hover:text-red-500 rounded-lg transition-colors shrink-0 ml-1"
                               title="Remove from packing list"
                             >
                               <X size={12} />
