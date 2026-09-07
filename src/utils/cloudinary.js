@@ -24,3 +24,20 @@ export const uploadToCloudinary = async (fileOrBase64) => {
   }
   return null;
 };
+
+// Cloudinary AI Background Removal Transformation URL generator
+export const removeBackgroundCloudinary = async (fileOrBase64) => {
+  try {
+    // 1. Upload original image to Cloudinary
+    const uploadedUrl = await uploadToCloudinary(fileOrBase64);
+    if (!uploadedUrl) return null;
+
+    // 2. Inject Cloudinary background removal transformation (e_background_removal)
+    // Example: https://res.cloudinary.com/hboe34p5/image/upload/e_background_removal/v12345/garment.png
+    const transparentUrl = uploadedUrl.replace("/upload/", "/upload/e_background_removal/");
+    return transparentUrl;
+  } catch (err) {
+    console.warn("Cloudinary AI background removal failed:", err);
+    return null;
+  }
+};

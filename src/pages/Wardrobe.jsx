@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { ArrowLeft, Plus, Search, Tag, Trash2, Edit2, Check, Scale, AlertCircle, FileText, Image as ImageIcon, Shirt, X, Footprints, Flame, CloudRain, Backpack, Cpu, Shield, HardHat, Compass, Archive, Lock, Briefcase, Sparkles, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFirestore } from "../hooks/useFirestore";
-import { uploadToCloudinary } from "../utils/cloudinary";
+import { uploadToCloudinary, removeBackgroundCloudinary } from "../utils/cloudinary";
 import { removeBackgroundPhotoroom } from "../utils/photoroom";
+import { removeBackgroundClientSide } from "../utils/clientAi";
 
 const PantsIcon = (props) => (
   <svg
@@ -594,42 +595,92 @@ export default function Wardrobe() {
                             {item.category}
                           </span>
 
-                          <div className="flex items-center gap-1.5">
-                            <button
-                              onClick={async (e) => {
-                                e.stopPropagation();
-                                if (!item.image) {
-                                  alert("No image available to extract. Please add an image first.");
-                                  return;
-                                }
-                                const btn = e.currentTarget;
-                                btn.disabled = true;
-                                btn.innerText = "...";
-                                const cutoutBase64 = await removeBackgroundPhotoroom(item.image);
-                                if (cutoutBase64) {
-                                  const cloudUrl = await uploadToCloudinary(cutoutBase64);
-                                  const finalImg = cloudUrl || cutoutBase64;
-                                  setItems(prev => prev.map(i => i.id === item.id ? { ...i, image: finalImg } : i));
-                                } else {
-                                  alert("Could not extract garment background for this image.");
-                                }
-                                btn.disabled = false;
-                              }}
-                              className="px-2 h-7 rounded-lg bg-amber-500/80 hover:bg-amber-500 text-white font-mono text-[9px] font-black uppercase flex items-center gap-1 shadow-xs transition-colors"
-                              title="Isolate Clothes with AI"
-                            >
-                              <Sparkles size={10} /> Extract AI
-                            </button>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {/* AI Extraction Dropdown Button */}
+                            <div className="relative group/ai">
+                              <button
+                                type="button"
+                                className="px-2 h-7 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-mono text-[9px] font-black uppercase flex items-center gap-1 shadow-xs transition-colors"
+                              >
+                                <Sparkles size={10} /> Extract AI
+                              </button>
+
+                              {/* Dropdown Options */}
+                              <div className="absolute right-0 top-full mt-1 w-44 bg-slate-900 border border-white/10 rounded-xl shadow-2xl p-1.5 hidden group-hover/ai:flex flex-col gap-1 z-30 backdrop-blur-md">
+                                <button
+                                  type="button"
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (!item.image) {
+                                      alert("No image available to extract.");
+                                      return;
+                                    }
+                                    const cutoutBase64 = await removeBackgroundPhotoroom(item.image);
+                                    if (cutoutBase64) {
+                                      const cloudUrl = await uploadToCloudinary(cutoutBase64);
+                                      setItems(prev => prev.map(i => i.id === item.id ? { ...i, image: cloudUrl || cutoutBase64 } : i));
+                                    } else {
+                                      alert("Photoroom extraction failed.");
+                                    }
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 text-left flex items-center gap-2 transition-colors text-amber-400 font-mono text-[9px] font-bold"
+                                >
+                                  <Sparkles size={10} /> Photoroom AI (10 Clean)
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (!item.image) {
+                                      alert("No image available to extract.");
+                                      return;
+                                    }
+                                    const cutoutBase64 = await removeBackgroundClientSide(item.image);
+                                    if (cutoutBase64) {
+                                      const cloudUrl = await uploadToCloudinary(cutoutBase64);
+                                      setItems(prev => prev.map(i => i.id === item.id ? { ...i, image: cloudUrl || cutoutBase64 } : i));
+                                    } else {
+                                      alert("Free Browser AI extraction failed.");
+                                    }
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 text-left flex items-center gap-2 transition-colors text-emerald-400 font-mono text-[9px] font-bold"
+                                >
+                                  <Sparkles size={10} /> Free AI (Unlimited)
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={async (e) => {
+                                    e.stopPropagation();
+                                    if (!item.image) {
+                                      alert("No image available to extract.");
+                                      return;
+                                    }
+                                    const transparentUrl = await removeBackgroundCloudinary(item.image);
+                                    if (transparentUrl) {
+                                      setItems(prev => prev.map(i => i.id === item.id ? { ...i, image: transparentUrl } : i));
+                                    } else {
+                                      alert("Enable free 'Cloudinary AI Background Removal' add-on in Cloudinary Console.");
+                                    }
+                                  }}
+                                  className="w-full px-2.5 py-1.5 rounded-lg hover:bg-sky-500/20 text-left flex items-center gap-2 transition-colors text-sky-400 font-mono text-[9px] font-bold"
+                                >
+                                  <Sparkles size={10} /> Cloudinary AI (25 Free)
+                                </button>
+                              </div>
+                            </div>
+
                             <button
                               onClick={(e) => handleOpenEdit(item, e)}
-                              className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white text-white hover:text-black flex items-center justify-center shadow-xs transition-colors"
+                              className="w-7 h-7 rounded-lg bg-white/20 hover:bg-white text-white hover:text-black flex items-center justify-center shadow-xs transition-colors shrink-0"
                               title="Edit Item"
                             >
                               <Edit2 size={11} />
                             </button>
                             <button
                               onClick={(e) => handleToggleArchiveItem(item.id, e)}
-                              className={`w-7 h-7 rounded-lg border flex items-center justify-center transition-all shadow-xs ${
+                              className={`w-7 h-7 rounded-lg border flex items-center justify-center transition-all shadow-xs shrink-0 ${
                                 archivedItems.includes(item.id)
                                   ? "bg-amber-500 border-amber-600 text-white hover:bg-amber-600"
                                   : "bg-white/20 border-white/10 text-white hover:bg-white hover:text-black"
@@ -640,7 +691,7 @@ export default function Wardrobe() {
                             </button>
                             <button
                               onClick={(e) => handleDelete(item.id, e)}
-                              className="w-7 h-7 rounded-lg bg-white/20 hover:bg-rose-600 border-transparent hover:text-white flex items-center justify-center shadow-xs transition-colors"
+                              className="w-7 h-7 rounded-lg bg-white/20 hover:bg-rose-600 border-transparent hover:text-white flex items-center justify-center shadow-xs transition-colors shrink-0"
                               title="Delete Item"
                             >
                               <Trash2 size={11} />
