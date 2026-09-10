@@ -45,6 +45,7 @@ import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/a
 import { vaidyanathAmounts } from "../data/vaidyanath/amounts";
 import { maharashtraAmounts } from "../data/trimbakeshwar-bhimashankar-grishneshwar/amounts";
 import { binsarAmounts } from "../data/binsar/amounts";
+import { moonPeakAmounts } from "../data/moon-peak/amounts";
 
 function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = {}, completedPlans = [], archivedPlans = [] }) {
   const [isBookOpen, setIsBookOpen] = useState(false);
@@ -65,6 +66,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
     if (trip.id === "kashmir") return kashmirAmounts;
     if (trip.id === "nepal-budget") return nepalAmounts1;
     if (trip.id === "binsar") return binsarAmounts;
+    if (trip.id === "moon-peak") return moonPeakAmounts;
     return null;
   };
 
@@ -1703,6 +1705,31 @@ export default function Landing() {
           details: "Budget solo expedition utilizing ordinary roadways buses, shared Kumaon jeeps, local homestays & Zero Point mountain view trek.",
           budget: `₹${binsarAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/binsar",
+        }
+      ],
+    },
+    {
+      id: "moon-peak",
+      type: "trek",
+      typeLabel: "Alpine Summit Trek",
+      title: "Moon Peak Expedition — Ultra Budget Solo",
+      subtitle: "Himachal Pradesh, India",
+      description: "A high-altitude 4-day alpine summit climb in Dhauladhar Range starting from Dharamkot/McLeod Ganj, crossing Triund, Laka Glacier & Lahesh Cave to Moon Peak summit at 15,250 ft.",
+      stats: {
+        duration: "4 Days",
+        distance: "36 km Summit Trek",
+        budget: `₹${(moonPeakAmounts.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "moon-peak",
+          title: "Moon Peak Dhauladhar Summit Expedition",
+          duration: "4 Days",
+          route: "Delhi → Pathankot (General Train) → Dharamshala (HRTC Bus) → Dharamkot → Triund → Laka Glacier → Lahesh Cave → Moon Peak (4,650m) → Return",
+          details: "Ultra-budget solo summit expedition utilizing unreserved general trains, state transport HRTC buses & alpine tent camps.",
+          budget: `₹${moonPeakAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/moon-peak",
         }
       ],
     }
