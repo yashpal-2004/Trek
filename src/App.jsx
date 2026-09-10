@@ -49,6 +49,7 @@ export default function App() {
         <Route path="/nepal-plan1" element={<Home />} />
         <Route path="/nepal-plan2" element={<Home />} />
         <Route path="/varanasi" element={<Home />} />
+        <Route path="/binsar" element={<Home />} />
         <Route path="/kalpeshwar" element={<Home />} />
         <Route path="/adi-kailash" element={<Home />} />
         <Route path="/kinnaur-kailash" element={<Home />} />

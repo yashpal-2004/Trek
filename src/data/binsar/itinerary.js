@@ -1,0 +1,160 @@
+export const itinerary = [
+  {
+    id: 0,
+    day: 0,
+    date: "Day 0 (Night)",
+    weekday: "Fri",
+    title: "Delhi / Sonipat → Unreserved General Express Train to Kathgodam",
+    subtitle: "Overnight budget train journey towards Kumaon foothills",
+    overview: "Board the unreserved general class coach of Ranikhet Express / Sampark Kranti train (Ticket ₹110) from Old Delhi / Ghaziabad to Kathgodam. Settle in early for an economical night transit.",
+    travel: "Old Delhi / Sonipat → Moradabad → Rampur → Haldwani → Kathgodam",
+    travelMode: "Unreserved General Train (₹110)",
+    distance: "280 km",
+    travelTime: "7 Hours",
+    estimatedCost: 110,
+    weather: "Pleasant night, 20°C",
+    trekDistance: "0 km",
+    highestAltitude: "534m",
+    stay: "Overnight General Train",
+    food: "Carry home-packed parathas or station tea (₹20)",
+    notes: "Train arrives at Kathgodam railway station around 05:00 AM.",
+    warnings: ["Keep your luggage secured near seat in general coach"],
+    packing: ["Water bottle", "Power bank", "Light shawl / hoodie"],
+    images: [],
+    mapLink: "https://maps.google.com/?q=Kathgodam+Railway+Station",
+    tips: ["Arrive 45 mins early at platform for general coach seat."],
+    photography: ["Night railway station platform"],
+    highlights: ["Ultra-budget overnight rail journey to Kumaon gate"],
+    meals: ["Platform tea & biscuits"],
+    activities: [
+      { time: "09:45 PM", title: "Boarding", description: "Board general unreserved coach to Kathgodam" }
+    ],
+    schedule: [
+      { time: "09:30 PM", activity: "Report at railway station platform" },
+      { time: "10:05 PM", activity: "Depart towards Kathgodam" }
+    ]
+  },
+  {
+    id: 1,
+    day: 1,
+    date: "Day 1",
+    weekday: "Sat",
+    title: "Kathgodam → Local Shared Jeep to Almora & Binsar Homestay",
+    subtitle: "Ascend Kumaon hills on shared taxis, village homestay check-in & temple hike",
+    overview: "Arrive at Kathgodam railway station by 05:00 AM. Walk 2 minutes to the shared taxi stand and board a shared Sumo/Maxx to Almora (₹100/seat). Enjoy winding views past Bhowali. From Almora bus station, take a local share cab to Binsar Sanctuary gate / Ayarpani (₹60). Check into your ultra-budget village homestay / dorm (₹250/night). After a warm dal-chawal lunch and rest, take a gentle 2km evening walk through pine woods to Bineshwar Mahadev Temple. Enjoy sunset over the valleys.",
+    travel: "Kathgodam → Bhowali → Almora → Binsar (Ayarpani)",
+    travelMode: "Local Shared Jeep / Shared Taxi (₹160 total)",
+    distance: "95 km",
+    travelTime: "4.5 Hours",
+    estimatedCost: 650,
+    weather: "Cool mountain climate, 12°C to 22°C",
+    trekDistance: "2 km Walk",
+    highestAltitude: "1,850m",
+    stay: "Budget Village Homestay / Dorm Bed (₹250/night)",
+    food: "Tea & pakora at Bhowali dhaba (₹40), Dhaba Kumaoni thali (₹90), Homestay simple dinner (₹100)",
+    notes: "Get your Sanctuary permit token at the main gate if visiting early next morning.",
+    warnings: ["Wildlife Sanctuary entries close by 5:00 PM; stay on main tracks"],
+    packing: ["Comfortable walking shoes", "Sun cap", "Camera"],
+    images: [],
+    mapLink: "https://maps.google.com/?q=Binsar+Wildlife+Sanctuary",
+    tips: ["Try local Kumaoni dishes like Bhatt ki Churkani & Aloo ke Gutke at local dhabas."],
+    photography: [
+      "Valley view near Bhowali",
+      "Ancient stone architecture of Bineshwar Mahadev Temple",
+      "Pine forest sunset glow"
+    ],
+    highlights: ["Scenic Kumaon hill drive", "Ancient Bineshwar Mahadev temple", "Peaceful homestay ambience"],
+    meals: ["Bhowali hot Parathas", "Pahadi Thali lunch", "Home-cooked dinner"],
+    activities: [
+      { time: "05:30 AM", title: "Kathgodam Arrival", description: "Board shared jeep to Almora" },
+      { time: "11:30 AM", title: "Reach Binsar Homestay", description: "Check in, relax and enjoy Kumaoni lunch" },
+      { time: "04:00 PM", title: "Bineshwar Temple Walk", description: "Stroll to 16th-century Shiva temple in pine forest" }
+    ],
+    schedule: [
+      { time: "05:30 AM", activity: "Arrive Kathgodam, board shared taxi to Almora" },
+      { time: "11:30 AM", activity: "Arrive Binsar gate, check in homestay" },
+      { time: "04:00 PM", activity: "Evening nature walk to Bineshwar Mahadev Temple" }
+    ]
+  },
+  {
+    id: 2,
+    day: 2,
+    date: "Day 2",
+    weekday: "Sun",
+    title: "Binsar Sanctuary Trail → Zero Point 360° Peak View",
+    subtitle: "Trek to the highest point of Binsar for unmatched Himalayan snow peak views",
+    overview: "Wake up early to golden sunlight on pine trees. Enter Binsar Wildlife Sanctuary gate (Permit ₹200). Walk up the scenic 6km oak forest trail towards Zero Point (2,420m). The trail is shaded by ancient oak, rhododendron and cedar trees with chirping Himalayan birds. Reach Zero Point observation tower to witness a spectacular 360-degree panorama of 300 km snow peaks including Nanda Devi, Trishul, Panchachuli, Chaukhamba, and Shivling. Enjoy packed snacks at the peak. Walk down via Khali Estate trail and return to homestay by afternoon for a hot dinner.",
+    travel: "Binsar Gate → Grand Oak Trail → Zero Point Peak → Homestay",
+    travelMode: "Nature Trekking",
+    distance: "6 km Trek Round-Trip",
+    travelTime: "4 Hours Trek",
+    estimatedCost: 950,
+    weather: "Crisp mountain air, 8°C to 18°C",
+    trekDistance: "6 km Trek",
+    highestAltitude: "2,420m (Zero Point)",
+    stay: "Budget Village Homestay / Dorm Bed (₹250/night)",
+    food: "Early tea (₹20), Forest rest house Maggi & tea (₹80), Homestay simple dinner (₹100)",
+    notes: "Binsar Zero Point offers one of the widest Himalayan views anywhere in Uttarakhand.",
+    warnings: ["Do not litter in the protected sanctuary area", "Keep distance from wild animals"],
+    packing: ["Binoculars", "Camera with zoom lens", "Water bottle & energy bars"],
+    images: [],
+    mapLink: "https://maps.google.com/?q=Zero+Point+Binsar",
+    tips: ["Reach Zero Point before 9:30 AM for clear, fog-free Himalayan peak views."],
+    photography: [
+      "Panoramic shot of Nanda Devi & Trishul peaks from Zero Point tower",
+      "Dense green canopy of oak & cedar trees",
+      "Birdwatching shots (Barbet, Monal, Babblers)"
+    ],
+    highlights: ["Unmatched 360° Himalayan peak views", "Dense oak & rhododendron forest hike", "Birdwatching haven"],
+    meals: ["Forest rest house hot tea & Maggi", "Kumaoni homestay dinner"],
+    activities: [
+      { time: "07:00 AM", title: "Forest Trail Start", description: "Enter Sanctuary gate, begin hike to Zero Point" },
+      { time: "09:00 AM", title: "Zero Point Observation", description: "Watch Nanda Devi & Himalayan peaks from observation tower" },
+      { time: "02:00 PM", title: "Descend Homestay", description: "Return hike via estate trails, relax evening" }
+    ],
+    schedule: [
+      { time: "07:00 AM", activity: "Start morning hike from Sanctuary gate" },
+      { time: "09:00 AM", activity: "Reach Zero Point tower, enjoy peak views & photography" },
+      { time: "01:00 PM", activity: "Return to homestay, lunch & evening relaxation" }
+    ]
+  },
+  {
+    id: 3,
+    day: 3,
+    date: "Day 3",
+    weekday: "Mon",
+    title: "Binsar → Almora Market → Kathgodam → Unreserved General Train Return",
+    subtitle: "Shop Kumaoni Baal Mithai in Almora & return back home by general train",
+    overview: "After morning tea & breakfast, check out from homestay. Take a local shared cab to Almora town (₹60). Visit the historic Lala Bazaar in Almora to taste authentic Kumaoni 'Baal Mithai' and 'Singori'. Take a shared jeep down to Kathgodam Railway Station (₹100). Board the unreserved general coach of Ranikhet Express / Sampark Kranti (₹110 ticket) back to Old Delhi / Sonipat. Reach home by night after a complete ₹1,850 solo Himalayan getaway.",
+    travel: "Binsar → Almora → Kathgodam → Delhi / Sonipat",
+    travelMode: "Shared Taxi & Unreserved General Train (₹110)",
+    distance: "375 km",
+    travelTime: "9 Hours",
+    estimatedCost: 500,
+    weather: "Warm in plains, 22°C to 30°C",
+    trekDistance: "0 km",
+    highestAltitude: "1,650m",
+    stay: "Home Sweet Home",
+    food: "Almora breakfast & sweets (₹70), Dhaba lunch (₹90), Station dinner (₹60)",
+    notes: "Ensure you buy Baal Mithai from old authentic sweet shops in Almora's Lala Bazaar.",
+    warnings: ["Reach Kathgodam station 40 mins early for general coach seats"],
+    packing: ["Souvenir boxes (Baal Mithai)", "Luggage"],
+    images: [],
+    mapLink: "https://maps.google.com/?q=Kathgodam+Railway+Station",
+    tips: ["Buy Baal Mithai & Singori sweets from Khem Singh Mohan Singh in Almora."],
+    photography: ["Historic Almora cobblestone market streets"],
+    highlights: ["Almora heritage market walk", "Kumaoni sweet shopping", "Smooth budget return journey"],
+    meals: ["Almora special Baal Mithai", "Dhaba thali lunch"],
+    activities: [
+      { time: "08:30 AM", title: "Almora Visit", description: "Take shared cab to Almora, explore Lala Bazaar" },
+      { time: "02:30 PM", title: "Kathgodam Train Station", description: "Board unreserved general train returning home" },
+      { time: "10:00 PM", title: "Delhi / Sonipat Arrival", description: "Reach home safely" }
+    ],
+    schedule: [
+      { time: "08:30 AM", activity: "Check out homestay, shared cab to Almora" },
+      { time: "10:00 AM", activity: "Explore Almora market, buy sweets" },
+      { time: "02:30 PM", activity: "Board general train at Kathgodam" },
+      { time: "10:00 PM", activity: "Arrive station, reach home" }
+    ]
+  }
+];

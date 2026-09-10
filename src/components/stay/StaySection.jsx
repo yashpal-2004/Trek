@@ -179,7 +179,7 @@ export default function StaySection() {
                               </span>
                             ) : (
                               <a
-                                href={hotel.link}
+                                href={hotel.link || stay.mapLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1 text-[9px] font-bold font-mono uppercase bg-black hover:bg-black/80 text-white px-2.5 py-1 rounded transition-colors"

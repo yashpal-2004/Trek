@@ -44,6 +44,7 @@ import { somnathNageshwarAmounts } from "../data/somnath-nageshwar/amounts";
 import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/amounts";
 import { vaidyanathAmounts } from "../data/vaidyanath/amounts";
 import { maharashtraAmounts } from "../data/trimbakeshwar-bhimashankar-grishneshwar/amounts";
+import { binsarAmounts } from "../data/binsar/amounts";
 
 function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = {}, completedPlans = [], archivedPlans = [] }) {
   const [isBookOpen, setIsBookOpen] = useState(false);
@@ -63,6 +64,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
     if (trip.id === "ujjain") return ujjainAmounts;
     if (trip.id === "kashmir") return kashmirAmounts;
     if (trip.id === "nepal-budget") return nepalAmounts1;
+    if (trip.id === "binsar") return binsarAmounts;
     return null;
   };
 
@@ -1676,6 +1678,31 @@ export default function Landing() {
           details: "Self-ride exploration. Rent a Royal Enfield Himalayan in Srinagar to explore local gardens, Gulmarg, and Pahalgam loops freely.",
           budget: `₹${kashmirPlan2Amounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/kashmir-plan2",
+        }
+      ],
+    },
+    {
+      id: "binsar",
+      type: "trip",
+      typeLabel: "Solo Nature Trek",
+      title: "Binsar - Solo Budget Plan",
+      subtitle: "Uttarakhand, India",
+      description: "An peaceful solo nature escape into Binsar Wildlife Sanctuary featuring panoramic Himalayan views from Zero Point, ancient Bineshwar Mahadev temple, pine forest homestays, and pristine bird watching trails.",
+      stats: {
+        duration: "3 Days",
+        distance: "285 km Bus + 95 km Hill Transit",
+        budget: `₹${(binsarAmounts.budgetTotal / 1000).toFixed(1)}K`,
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "binsar",
+          title: "Binsar Solo Sanctuary & Zero Point Hike",
+          duration: "3 Days",
+          route: "Sonipat → Kathgodam (UTC Bus) → Almora (Shared Jeep) → Binsar Homestay → Zero Point Trek → Bineshwar Temple → Return",
+          details: "Budget solo expedition utilizing ordinary roadways buses, shared Kumaon jeeps, local homestays & Zero Point mountain view trek.",
+          budget: `₹${binsarAmounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/binsar",
         }
       ],
     }
