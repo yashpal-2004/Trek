@@ -136,9 +136,9 @@ export default function TrekSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((trek) => (
+          {filtered.map((trek, idx) => (
             <TrekCard
-              key={trek.id}
+              key={trek.id || trek.name || idx}
               trek={trek}
               isCompleted={completedTreks.includes(trek.id)}
               onToggleComplete={toggleComplete}

@@ -5,6 +5,21 @@ import Container from "../layout/Container";
 import { Phone, Copy, AlertOctagon } from "lucide-react";
 
 export default function EmergencySection() {
+  const getEmergencyList = () => {
+    try {
+      if (Array.isArray(emergency)) return emergency;
+      if (emergency && typeof emergency === "object") {
+        const vals = Object.values(emergency);
+        if (vals.length > 0 && typeof vals[0] === "object") return vals;
+      }
+    } catch (e) {
+      console.warn("Emergency list resolution failed:", e);
+    }
+    return [];
+  };
+
+  const emergencyList = getEmergencyList();
+
   return (
     <section id="emergency" className="py-10 scroll-mt-20">
       <Container>
@@ -19,7 +34,7 @@ export default function EmergencySection() {
 
         {/* Contact Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          {(emergency || []).map((contact, idx) => {
+          {(Array.isArray(emergencyList) ? emergencyList : []).map((contact, idx) => {
             const Icon = getIcon(contact.icon, Phone);
             const num = contact.number || contact.phone;
             const title = contact.type ? (contact.name ? `${contact.type}: ${contact.name}` : contact.type) : (contact.name || "Contact");

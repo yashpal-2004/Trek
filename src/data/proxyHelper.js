@@ -79,32 +79,40 @@ export const createDynamicProxy = (...args) => {
     if (key === "nepal" || key === "nepal-plan1") return typeof getters[31] === "function" ? getters[31]() : getters[0]();
     if (key === "nepal-plan2") return typeof getters[32] === "function" ? getters[32]() : getters[1]();
     if (key === "varanasi") return typeof getters[33] === "function" ? getters[33]() : getters[0]();
-    if (key === "binsar") return typeof getters[39] === "function" ? getters[39]() : getters[0]();
-    if (key === "moon-peak") return typeof getters[40] === "function" ? getters[40]() : getters[0]();
     if (key === "maharashtra-jyotirlinga" || key === "trimbakeshwar-bhimashankar-grishneshwar" || key === "trimbakeshwar" || key === "bhimashankar" || key === "grishneshwar") return typeof getters[35] === "function" ? getters[35]() : getters[0]();
     if (key === "somnath-nageshwar" || key === "somnath" || key === "nageshwar" || key === "gujarat-jyotirlinga") return typeof getters[36] === "function" ? getters[36]() : getters[0]();
     if (key === "vaidyanath") return typeof getters[37] === "function" ? getters[37]() : getters[0]();
     if (key === "mallikarjuna-rameswaram" || key === "mallikarjuna" || key === "ramanathaswamy" || key === "south-jyotirlinga") return typeof getters[38] === "function" ? getters[38]() : getters[0]();
+    if (key === "binsar") return typeof getters[39] === "function" ? getters[39]() : getters[0]();
+    if (key === "moon-peak") return typeof getters[40] === "function" ? getters[40]() : getters[0]();
     return typeof getters[0] === "function" ? getters[0]() : {};
   };
 
   return new Proxy(target, {
     get(t, prop) {
       const activeData = getActiveData();
-      if (activeData === undefined || activeData === null) {
-        return undefined;
+      const actualData = activeData !== undefined && activeData !== null ? activeData : (isArray ? [] : {});
+      if (Symbol.iterator === prop) {
+        const arr = Array.isArray(actualData) ? actualData : [];
+        return arr[Symbol.iterator].bind(arr);
       }
-      const value = activeData[prop];
+      if (isArray && typeof Array.prototype[prop] === "function") {
+        const arr = Array.isArray(actualData) ? actualData : [];
+        return Array.prototype[prop].bind(arr);
+      }
+      const value = actualData[prop];
       if (typeof value === "function") {
-        return value.bind(activeData);
+        return value.bind(actualData);
       }
       return value;
     },
     ownKeys(t) {
-      return Reflect.ownKeys(getActiveData() || {});
+      const activeData = getActiveData();
+      return Reflect.ownKeys(activeData || (isArray ? [] : {}));
     },
     getOwnPropertyDescriptor(t, prop) {
-      return Reflect.getOwnPropertyDescriptor(getActiveData() || {}, prop);
+      const activeData = getActiveData();
+      return Reflect.getOwnPropertyDescriptor(activeData || (isArray ? [] : {}), prop);
     }
   });
 };
