@@ -24,7 +24,7 @@ export default function SafetySection() {
           </div>
           <div>
             <h3 className="font-extrabold text-sm uppercase tracking-tight text-amber-800 mb-1">
-              Monsoon Alert — {weather.month}
+              {(weather.month && weather.month.toLowerCase().includes("october")) ? "Autumn Season Alert" : "Monsoon Alert"} — {weather.month}
             </h3>
             <p className="text-xs text-amber-700 leading-relaxed">{weather.monsoonWarning}</p>
           </div>

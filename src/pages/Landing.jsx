@@ -25,6 +25,7 @@ import { nepalAmounts as nepalAmounts2 } from "../data/nepal/plan2/amounts";
 import { auliAmounts } from "../data/auli/amounts";
 import { kashmirAmounts } from "../data/kashmir/amounts";
 import { kashmirPlan2Amounts } from "../data/kashmir/plan2/amounts";
+import { kashmirPlan3Amounts } from "../data/kashmir/plan3/amounts";
 import { budget as budgetShrikhand1 } from "../data/shrikhand/plan1/budget";
 import { budget as budgetShrikhand2 } from "../data/shrikhand/plan2/budget";
 import { budget as budgetHampta1 } from "../data/hampta/plan1/budget";
@@ -1659,7 +1660,7 @@ export default function Landing() {
       stats: {
         duration: "6 Days",
         distance: "1,700 km Round-Trip",
-        budget: `₹${(kashmirAmounts.budgetTotal / 1000).toFixed(1)}K - ₹${(kashmirPlan2Amounts.budgetTotal / 1000).toFixed(1)}K`,
+        budget: `₹${(kashmirPlan3Amounts.budgetTotal / 1000).toFixed(1)}K - ₹${(kashmirPlan2Amounts.budgetTotal / 1000).toFixed(1)}K`,
       },
       image: "/mountain_clay_peak.png",
       plans: [
@@ -1680,6 +1681,15 @@ export default function Landing() {
           details: "Self-ride exploration. Rent a Royal Enfield Himalayan in Srinagar to explore local gardens, Gulmarg, and Pahalgam loops freely.",
           budget: `₹${kashmirPlan2Amounts.budgetTotal.toLocaleString("en-IN")} / person`,
           path: "/kashmir-plan2",
+        },
+        {
+          id: "kashmir-plan3",
+          title: "Plan 3: Ultra Budget General Train Plan",
+          duration: "6 Days",
+          route: "Delhi → Jammu (General Unreserved Train) → Banihal (Ordinary Bus) → Srinagar (Valley DEMU Train) → Local Shared Mini-Buses & Hostels",
+          details: "Ultra-budget backpacking. Travel via unreserved general coach, local government buses, DEMU valley train, and stay in backpacker hostel dorms.",
+          budget: `₹${kashmirPlan3Amounts.budgetTotal.toLocaleString("en-IN")} / person`,
+          path: "/kashmir-plan3",
         }
       ],
     },
