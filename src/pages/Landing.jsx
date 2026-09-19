@@ -41,7 +41,8 @@ import { budget as manimaheshKailashBudget } from "../data/manimahesh-kailash/bu
 import { budget as puriBudget } from "../data/puri/budget";
 import { budget as yamunotriBudget } from "../data/yamunotri/budget";
 import { budget as varanasiBudget } from "../data/varanasi/budget";
-import { somnathNageshwarAmounts } from "../data/somnath-nageshwar/amounts";
+import { somnathNageshwarAmounts as somnathNageshwarAmountsPlan1 } from "../data/somnath-nageshwar/plan1/amounts";
+import { somnathNageshwarAmounts as somnathNageshwarAmountsPlan2 } from "../data/somnath-nageshwar/plan2/amounts";
 import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/amounts";
 import { vaidyanathAmounts } from "../data/vaidyanath/amounts";
 import { maharashtraAmounts } from "../data/trimbakeshwar-bhimashankar-grishneshwar/amounts";
@@ -1913,18 +1914,27 @@ export default function Landing() {
       stats: {
         duration: "4 Days",
         distance: "950 km",
-        budget: "₹" + (somnathNageshwarAmounts.budgetTotal / 1000).toFixed(1) + "K"
+        budget: "₹" + (somnathNageshwarAmountsPlan2.budgetTotal / 1000).toFixed(1) + "K"
       },
       image: "/mountain_clay_peak.png",
       plans: [
         {
           id: "somnath-nageshwar-plan1",
-          title: "Gujarat Circuit: Somnath & Nageshwar",
+          title: "Plan 1: Express Sleeper Train Plan",
           duration: "4 Days / 3 Nights",
-          route: "Ahmedabad – Somnath – Dwarka (Nageshwar & Beyt Dwarka) – Ahmedabad",
-          details: "Complete Gujarat Jyotirlinga circuit with Dwarka coastal drive & evening aarti.",
-          budget: "₹" + somnathNageshwarAmounts.budgetTotal.toLocaleString("en-IN") + " / person",
+          route: "Delhi – Veraval (Somnath) – Dwarka (Nageshwar & Beyt Dwarka) – Delhi",
+          details: "Standard sleeper train pilgrimage with dharamshala/hotel stays & local sightseeing.",
+          budget: "₹" + somnathNageshwarAmountsPlan1.budgetTotal.toLocaleString("en-IN") + " / person",
           path: "/somnath-nageshwar"
+        },
+        {
+          id: "somnath-nageshwar-plan2",
+          title: "Plan 2: Solo General Unreserved Train Plan",
+          duration: "4 Days / 3 Nights",
+          route: "Delhi – Veraval (Unreserved GS Coach) – Somnath – Dwarka – Delhi",
+          details: "Ultra-budget solo journey using General Unreserved Train tickets (₹320) & Somnath Trust dorms.",
+          budget: "₹" + somnathNageshwarAmountsPlan2.budgetTotal.toLocaleString("en-IN") + " solo",
+          path: "/somnath-nageshwar-plan2"
         }
       ]
     },

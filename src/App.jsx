@@ -64,6 +64,8 @@ export default function App() {
         <Route path="/dwarka" element={<Home />} />
         <Route path="/somnath" element={<Home />} />
         <Route path="/somnath-nageshwar" element={<Home />} />
+        <Route path="/somnath-nageshwar-plan1" element={<Home />} />
+        <Route path="/somnath-nageshwar-plan2" element={<Home />} />
         <Route path="/gujarat-jyotirlinga" element={<Home />} />
         <Route path="/mallikarjuna" element={<Home />} />
         <Route path="/mallikarjuna-rameswaram" element={<Home />} />
