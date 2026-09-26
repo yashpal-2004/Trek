@@ -28,7 +28,7 @@ export const completedTrips = [
         route: "Sonipat → Manali directly → Kaza (3 Nights Base) → Key Monastery → Hikkim → Komic → Langza → Chandratal Lake → Manali → Sonipat",
         details: "6-day high altitude overland circuit in Spiti Valley.",
         budget: "₹9,964.00",
-        path: "#"
+        path: "/spiti-plan1"
       }
     ]
   },
@@ -62,7 +62,7 @@ export const completedTrips = [
         route: "Sonipat → Rishikesh → Gopeshwar → Sagar Village → Liti Bugyal → Panar Bugyal → Rudranath Temple → Mandal → Chopta → Tungnath → Chandrashila → Sonipat",
         details: "Trek through dense forests and bugyals to Rudranath and highest Shiva temple Tungnath.",
         budget: "₹6,850.00",
-        path: "#"
+        path: "/rudranath-plan1"
       }
     ]
   },
@@ -283,6 +283,40 @@ export const completedTrips = [
         details: "Departed Hisar 10:00 PM on 10 Jul 2026 with family, visited Bankey Bihari Temple, Prem Mandir & local ashrams, returning 9:00 PM on 11 Jul 2026. Personal expense: ₹0.",
         budget: "₹0.00",
         path: "#",
+      }
+    ]
+  },
+  {
+    id: "varanasi",
+    type: "jyotirlinga",
+    typeLabel: "Jyotirlinga Yatra",
+    title: "Kashi Vishwanath Jyotirlinga Yatra",
+    subtitle: "Varanasi, Uttar Pradesh",
+    description: "Sacred pilgrimage to Kashi Vishwanath Jyotirlinga along the Ganges in Varanasi.",
+    isCompleted: true,
+    spentTotal: 3124.00,
+    stats: {
+      duration: "5 Days (20 Sep – 24 Sep 2026)",
+      distance: "1600 km",
+      budget: "₹3,124.00",
+    },
+    image: "/varanasi.jpeg",
+    expenses: [
+      { category: "Transportation", description: "Sleeper train round trip, local autos & e-rickshaws", amount: 1280.00 },
+      { category: "Food & Meals", description: "Meals, Banarasi kachori, tea & street food", amount: 1113.00 },
+      { category: "Accommodation", description: "Hostel / Guesthouse stay in Varanasi (2 Nights)", amount: 476.00 },
+      { category: "Shopping", description: "Local Banarasi shopping & souvenirs", amount: 185.00 },
+      { category: "Other", description: "Miscellaneous local expenses", amount: 70.00 }
+    ],
+    plans: [
+      {
+        id: "varanasi-done",
+        title: "Completed Jyotirlinga Yatra",
+        duration: "5 Days (20 Sep – 24 Sep 2026)",
+        route: "Delhi → Varanasi (Sleeper Train) → Kashi Vishwanath → Sarnath → Delhi",
+        details: "5-day spiritual pilgrimage from Delhi to Kashi Vishwanath, Dashashwamedh Aarti, Sarnath, and Ganga Ghats.",
+        budget: "₹3,124.00",
+        path: "/varanasi"
       }
     ]
   }

@@ -1,17 +1,18 @@
 export const galleryData = [
   {
-    url: "/mountain_clay_peak.png", // Generic placeholder
+    url: "/varanasi.jpeg",
     caption: "Ganga Aarti at Dashashwamedh Ghat",
     type: "image"
   },
   {
-    url: "/mountain_clay_peak.png", // Generic placeholder
+    url: "/varanasi.jpeg",
     caption: "Kashi Vishwanath Corridor",
     type: "image"
   },
   {
-    url: "/mountain_clay_peak.png", // Generic placeholder
+    url: "/varanasi.jpeg",
     caption: "Dhamek Stupa, Sarnath",
     type: "image"
   }
 ];
+

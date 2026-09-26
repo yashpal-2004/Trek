@@ -167,6 +167,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
       else if (rawTitle.includes("manali")) key = "manali";
       else if (rawTitle.includes("jaipur")) key = "jaipur";
       else if (rawTitle.includes("vrindavan")) key = "vrindavan";
+      else if (rawTitle.includes("varanasi") || rawTitle.includes("kashi")) key = "varanasi";
       else if (!key) key = rawTitle.replace(/[^a-z0-9]/g, "");
 
       if (key && !uniqueMap.has(key)) {
@@ -904,7 +905,8 @@ export default function Landing() {
     if (key === 'kedarkantha') return 'kedarkantha';
     if (key === 'bir-billing' || key === 'bir-billing-plan1' || key === 'bir-billing-plan2' || key === 'bir-billing-plan3' || key === 'bir-billing-plan4') return 'bir-billing';
     if (key === 'jibhi-plan1' || key === 'jibhi-plan2') return 'jibhi';
-    if (key === 'kashmir' || key === 'kashmir-plan1' || key === 'kashmir-plan2') return 'kashmir';
+    if (key === 'kashmir' || key === 'kashmir-plan1' || key === 'kashmir-plan2' || key === 'kashmir-plan3') return 'kashmir';
+    if (key === 'varanasi-plan' || key === 'varanasi') return 'varanasi';
     return key;
   };
 
@@ -945,6 +947,8 @@ export default function Landing() {
       "annapurna-plan1": "expenses-annapurna-p1",
       "nepal-plan1": "expenses-nepal-p1",
       "nepal-plan2": "expenses-nepal-p2",
+      "kashmir-plan3": "expenses-kashmir-plan3",
+      "varanasi-plan": "expenses-varanasi",
     };
     return keysMap[planId] || `expenses-${planId}`;
   };
@@ -980,7 +984,7 @@ export default function Landing() {
     const existing = actualCosts[plan.id];
     const ledgerCost = getLedgerCostPerPerson(plan.id);
     const defaultVal = existing !== undefined ? existing : (ledgerCost !== null ? ledgerCost : parseNumericBudget(plan.budget));
-    setInputActualCost(defaultVal ? String(defaultVal) : "");
+    setInputActualCost(defaultVal != null && defaultVal !== "" ? String(defaultVal) : "");
     setCostPromptModal(plan);
   };
 
@@ -1887,7 +1891,7 @@ export default function Landing() {
       subtitle: "Varanasi, Uttar Pradesh",
       description: "Sacred pilgrimage to Kashi Vishwanath Jyotirlinga along the Ganges in Varanasi.",
       stats: {
-        duration: "3 Days",
+        duration: "5 Days (20 Sep – 24 Sep 2026)",
         distance: "1600 km",
         budget: "₹" + (varanasiBudget.total / 1000).toFixed(1) + "K"
       },
@@ -1896,7 +1900,7 @@ export default function Landing() {
         {
           id: "varanasi-plan",
           title: "Kashi Vishwanath Jyotirlinga Yatra",
-          duration: "3 Days",
+          duration: "5 Days (20 Sep – 24 Sep 2026)",
           route: "Delhi – Varanasi – Sarnath – Delhi",
           details: "Spiritual weekend trip covering Kashi Vishwanath, Ganga Aarti, and Sarnath.",
           budget: "₹" + varanasiBudget.total.toLocaleString("en-IN") + " / person",
@@ -2007,6 +2011,7 @@ export default function Landing() {
       else if (rawTitle.includes("manali")) key = "manali";
       else if (rawTitle.includes("jaipur")) key = "jaipur";
       else if (rawTitle.includes("vrindavan")) key = "vrindavan";
+      else if (rawTitle.includes("varanasi") || rawTitle.includes("kashi")) key = "varanasi";
 
       if (!map.has(key) || trip.isCompleted) {
         map.set(key, trip);
@@ -2159,15 +2164,11 @@ export default function Landing() {
                 {isInCompare ? <Check size={15} /> : <GitCompareArrows size={15} />}
               </button>
 
-              {!trip.isCompleted && (
+              {!isCompleted && (
                 <button
                   onClick={(e) => toggleTripCompleted(trip, e)}
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 ${
-                    isCompleted
-                      ? "bg-emerald-500 border-emerald-600 text-white hover:bg-emerald-600"
-                      : "border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
-                  }`}
-                  title={isCompleted ? "Mark Active" : "Mark Done"}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl border flex items-center justify-center transition-colors shrink-0 border-black/10 bg-white hover:bg-slate-50 text-slate-400 hover:text-slate-600"
+                  title="Mark Done"
                 >
                   <CheckCircle2 size={18} />
                 </button>
@@ -3652,7 +3653,14 @@ export default function Landing() {
                     return (
                       <div
                         key={plan.id}
+                        onClick={() => {
+                          if (plan.path && plan.path !== "#") {
+                            window.location.href = plan.path;
+                          }
+                        }}
                         className={`relative bg-white hover:bg-white/80 border rounded-2xl p-5 transition-all shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group ${
+                          plan.path && plan.path !== "#" ? "cursor-pointer" : ""
+                        } ${
                           isPlanArchived
                             ? "opacity-50 saturate-50 border-dashed border-black/20"
                             : isPlanCompleted
@@ -3770,6 +3778,11 @@ export default function Landing() {
                             )}
                             <a
                               href={plan.path}
+                              onClick={(e) => {
+                                if (plan.path && plan.path !== "#") {
+                                  window.location.href = plan.path;
+                                }
+                              }}
                               className="w-8 h-8 rounded-xl border border-black/10 flex items-center justify-center bg-slate-50 group-hover:bg-black group-hover:text-white transition-colors shrink-0"
                             >
                               <ArrowUpRight size={14} />
@@ -4418,6 +4431,7 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
     { id: "vrindavan-family", name: "Vrindavan Pilgrimage", city: "Vrindavan, Uttar Pradesh", coords: [27.5650, 77.7008], dates: "10 Jul – 11 Jul 2026", spent: "₹0", staticCompleted: true, state: "Uttar Pradesh" },
     { id: "rudranath", name: "Rudranath & Tungnath Trek", city: "Rudranath, Uttarakhand", coords: [30.5284, 79.3175], dates: "3 Jul – 8 Jul 2026", spent: "₹6,352", planIds: ["rudranath-plan1", "rudranath-plan2"], state: "Uttarakhand" },
     { id: "spiti", name: "Spiti Valley Expedition", city: "Kaza, Himachal Pradesh", coords: [32.2276, 78.0710], dates: "20 Aug – 25 Aug 2026", spent: "₹9,964", planIds: ["spiti-plan1", "spiti-plan2", "spiti-plan3"], state: "Himachal Pradesh" },
+    { id: "varanasi", name: "Kashi Vishwanath Jyotirlinga Yatra", city: "Varanasi, Uttar Pradesh", coords: [25.3109, 83.0107], dates: "20 Sep – 24 Sep 2026", spent: "₹3,124", staticCompleted: true, planIds: ["varanasi-plan"], state: "Uttar Pradesh" },
 
     // Upcoming / Potential Archived
     { id: "hemkund", name: "Valley of Flowers & Hemkund Sahib", city: "Hemkund, Uttarakhand", coords: [30.6925, 79.5897], dates: "6 Days", budget: "₹6.5K", planIds: ["hemkund"], state: "Uttarakhand" },
@@ -4447,7 +4461,6 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
     { id: "nageshwar", name: "Nageshwar Jyotirlinga Yatra", city: "Dwarka, Gujarat", coords: [22.3364, 69.0850], dates: "2 Days", budget: "₹3.6K", isYatra: true, state: "Gujarat" },
     { id: "ramanathaswamy", name: "Rameshwaram Jyotirlinga Yatra", city: "Rameswaram, Tamil Nadu", coords: [9.2881, 79.3174], dates: "4 Days", budget: "₹5.9K", isYatra: true, state: "Tamil Nadu" },
     { id: "grishneshwar", name: "Grishneshwar Jyotirlinga Yatra", city: "Ellora, Maharashtra", coords: [20.0268, 75.1685], dates: "2 Days", budget: "₹3.7K", isYatra: true, state: "Maharashtra" },
-    { id: "varanasi", name: "Kashi Vishwanath Yatra", city: "Varanasi, Uttar Pradesh", coords: [25.3109, 83.0107], dates: "3 Days", budget: "₹3.87K", isYatra: true, state: "Uttar Pradesh" },
     { id: "kalpeshwar", name: "Kalpeshwar Kalpganga Yatra", city: "Urgam Valley, Uttarakhand", coords: [30.5650, 79.4350], dates: "4 Days", budget: "₹4.2K", isYatra: true, state: "Uttarakhand" },
     { id: "adi-kailash", name: "Adi Kailash & Om Parvat Yatra", city: "Pithoragarh, Uttarakhand", coords: [30.3200, 80.6000], dates: "8 Days", budget: "₹18.5K", isYatra: true, state: "Uttarakhand" },
     { id: "kinnaur-kailash", name: "Kinnaur Kailash Parikrama Yatra", city: "Recong Peo, Himachal Pradesh", coords: [31.5300, 78.3800], dates: "7 Days", budget: "₹9.2K", isYatra: true, state: "Himachal Pradesh" },
@@ -4490,10 +4503,10 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
 
   const getPlaceStatus = (p) => {
     if (p.isSpot) return "spot";
-    if (p.isYatra) return "yatra";
     if (archivedTrips.includes(p.id)) return "archived";
     if (p.staticCompleted) return "completed";
     if (p.planIds && p.planIds.some(id => completedPlans.includes(id))) return "completed";
+    if (p.isYatra) return "yatra";
     return "upcoming";
   };
 

@@ -76,7 +76,7 @@ export const stayOptions = [
     id: 1,
     destination: "Assi Ghat / Godowlia",
     name: "Zostel / Backpacker Hostel",
-    image: "/mountain_clay_peak.png",
+    image: "/varanasi.jpeg",
     budget: 300,
     mid: 800,
     premium: 1500,

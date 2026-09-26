@@ -1,8 +1,8 @@
 export const trip = {
   title: "Varanasi Spiritual & Heritage Weekend",
-  subtitle: "A 3-day spiritual escape from Delhi to Kashi by budget sleeper train",
-  duration: "3 Days",
-  durationDays: 3,
+  subtitle: "A 5-day spiritual journey from Delhi to Kashi by budget sleeper train (20–24 Sep 2026)",
+  duration: "5 Days (20 Sep – 24 Sep 2026)",
+  durationDays: 5,
   people: 1,
   budgetMin: 3500,
   budgetMax: 5000,
