@@ -14,6 +14,10 @@ export const completedTrips = [
     maxElevationMeters: 4520,
     maxElevationLabel: "4,520 m (14,830 ft)",
     majorSpots: ["Kaza", "Key Monastery", "Hikkim", "Komic", "Langza", "Dhankar", "Tabo", "Lepcha La Pass"],
+    records: [
+      { landmark: "Hikkim Post Office", record: "World's Highest Post Office", detail: "4,440 m (14,567 ft)", badge: "World Record", scope: "World" },
+      { landmark: "Komic Village", record: "World's Highest Motorable Village", detail: "4,587 m (15,049 ft)", badge: "World Record", scope: "World" }
+    ],
     stats: {
       duration: "6 Days (20 Aug – 25 Aug 2026)",
       distance: "1,700 km",
@@ -54,6 +58,10 @@ export const completedTrips = [
     maxElevationMeters: 4000,
     maxElevationLabel: "4,000 m (13,123 ft)",
     majorSpots: ["Rudranath Temple", "Tungnath Temple", "Chandrashila Peak", "Chopta"],
+    records: [
+      { landmark: "Tungnath Temple", record: "World's Highest Shiva Temple", detail: "3,680 m (12,073 ft)", badge: "World Record", scope: "World" },
+      { landmark: "Rudranath Temple", record: "Only Worshipped Face of Lord Shiva (Panch Kedar)", detail: "2,286 m (7,500 ft)", badge: "Sacred Distinction", scope: "India" },
+    ],
     stats: {
       duration: "9 Days (2 Jul – 10 Jul 2026)",
       distance: "1,115 km",
@@ -93,6 +101,9 @@ export const completedTrips = [
     maxElevationMeters: 230,
     maxElevationLabel: "230 m (754 ft)",
     majorSpots: ["Golden Temple", "Local Street Food", "Heritage Street"],
+    records: [
+      { landmark: "Golden Temple (Harmandir Sahib)", record: "World's Most Visited Sacred Shrine", detail: "100,000+ daily visitors & World's Largest Free Kitchen (Langar)", badge: "World Distinction", scope: "World" },
+    ],
     stats: {
       duration: "3 Days (7 Nov – 9 Nov 2025)",
       distance: "915 km",
@@ -175,6 +186,9 @@ export const completedTrips = [
     maxElevationMeters: 2250,
     maxElevationLabel: "2,250 m (7,380 ft)",
     majorSpots: ["Dehradun", "Mussoorie Mall Road", "Landour Bakehouse", "Tehri Dam & Lake"],
+    records: [
+      { landmark: "Tehri Dam", record: "India's Highest Dam (12th Highest in the World)", detail: "Height: 260.5 m (855 ft)", badge: "India Record", scope: "India" },
+    ],
     stats: {
       duration: "4 Days (23 Jan – 26 Jan 2026)",
       distance: "650 km",
@@ -215,6 +229,10 @@ export const completedTrips = [
     maxElevationMeters: 3200,
     maxElevationLabel: "3,200 m (10,500 ft)",
     majorSpots: ["Kasol", "Sethan (Igloo Village)", "Sajla Waterfall", "Atal Tunnel", "Sissu (Lahaul)"],
+    records: [
+      { landmark: "Atal Tunnel (Rohtang)", record: "World's Longest Highway Tunnel Above 10,000 ft", detail: "9.02 km long at 3,048 m elevation", badge: "World Record", scope: "World" },
+      { landmark: "Sethan Village", record: "India's First & Only Igloo Village", detail: "2,700 m elevation", badge: "India Record", scope: "India" },
+    ],
     stats: {
       duration: "5 Days (26 Nov – 1 Dec 2025)",
       distance: "1,340 km",
@@ -270,6 +288,9 @@ export const completedTrips = [
     maxElevationMeters: 430,
     maxElevationLabel: "430 m (1,410 ft)",
     majorSpots: ["Nahargarh Fort", "Hawa Mahal & Bazaars", "Scooty & Metro Circuit"],
+    records: [
+      { landmark: "Hawa Mahal", record: "World's Tallest Building Without a Foundation", detail: "5-storey honeycomb lattice with 953 jharokhas", badge: "World Distinction", scope: "World" },
+    ],
     stats: {
       duration: "4 Days (9 Jan – 12 Jan 2026)",
       distance: "550 km",
@@ -313,6 +334,8 @@ export const completedTrips = [
     maxElevationMeters: 170,
     maxElevationLabel: "170 m (557 ft)",
     majorSpots: ["Bankey Bihari Temple", "Prem Mandir", "Nandgaon", "Mathura"],
+    records: [
+    ],
     stats: {
       duration: "2 Days (10 Jul – 11 Jul 2026)",
       distance: "490 km",
@@ -349,6 +372,9 @@ export const completedTrips = [
     maxElevationMeters: 80,
     maxElevationLabel: "80 m (262 ft)",
     majorSpots: ["Kashi Vishwanath Jyotirlinga", "Ganga Ghat Aarti"],
+    records: [
+      { landmark: "Kashi Vishwanath & Varanasi Ghats", record: "World's Oldest Living Sacred City", detail: "Ancient Jyotirlinga & 84 Ganges Ghats", badge: "Global Heritage", scope: "World" },
+    ],
     stats: {
       duration: "5 Days (20 Sep – 24 Sep 2026)",
       distance: "1,600 km",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft, TrendingUp, BarChart2, Mountain, PieChart, Layers } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft, TrendingUp, BarChart2, Mountain, PieChart, Layers, Award, Trophy, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../utils/firebase";
@@ -2879,6 +2879,15 @@ export default function Landing() {
           .map(([name, distance]) => ({ name, distance, pct: Math.round((distance / (totalKm || 1)) * 100) }))
           .sort((a, b) => b.distance - a.distance);
 
+        const allRecords = doneTrips.flatMap(trip =>
+          (trip.records || []).map(r => ({
+            ...r,
+            tripTitle: trip.title,
+            tripYear: trip.completedYear,
+            tripId: trip.id
+          }))
+        );
+
         // 2025 = violet, 2026 = emerald — matching site's existing color system
         const yearPalette = {
           "2025": { dot: "bg-violet-500", bar: "bg-violet-400", pill: "bg-violet-500/10 text-violet-700 border-violet-500/20", card: "bg-violet-50/60 border-violet-200/80", label: "text-violet-700", subLabel: "text-violet-600/70" },
@@ -2980,6 +2989,7 @@ export default function Landing() {
                             <p className={`text-[9px] font-black font-mono uppercase tracking-widest ${pal.subLabel}`}>Trips & Major Spots Covered</p>
                             {yTrips.map(t => {
                               const spots = t.majorSpots || [];
+                              const recs = t.records || [];
                               return (
                                 <div key={t.id} className="bg-white/70 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors">
                                   <div className="flex items-center justify-between gap-2">
@@ -3008,6 +3018,16 @@ export default function Landing() {
                                         <span key={sIdx} className="text-[9px] font-semibold bg-black/4 text-slate-700 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-1">
                                           <MapPin size={9} className="text-slate-400 shrink-0" />
                                           {spot}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                  {recs.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 pt-0.5">
+                                      {recs.map((rec, rIdx) => (
+                                        <span key={rIdx} className="text-[8.5px] font-black bg-amber-500/10 text-amber-800 px-1.5 py-0.5 rounded-md border border-amber-500/20 flex items-center gap-1">
+                                          <Award size={8.5} className="text-amber-600 shrink-0" />
+                                          <span className="font-bold text-amber-900">{rec.landmark}:</span> {rec.record}
                                         </span>
                                       ))}
                                     </div>
@@ -3194,6 +3214,75 @@ export default function Landing() {
                 </div>
 
               </div>
+
+              {/* ── WORLD & NATIONAL RECORD LANDMARKS VISITED ── */}
+              {allRecords.length > 0 && (
+                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-5">
+                  <div className="border-b border-black/8 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <span className="text-[9px] font-black font-mono uppercase tracking-widest text-amber-600 flex items-center gap-1.5">
+                        <Award size={11} className="text-amber-500" />
+                        Checklist Distinction Records
+                      </span>
+                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+                        World & National Record Landmarks Visited
+                      </h3>
+                      <p className="text-xs text-slate-500 font-medium">World highest, Asia highest, India highest & sacred landmark records covered.</p>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-amber-800 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-xl self-start sm:self-auto">
+                      <Trophy size={11} className="text-amber-600" />
+                      {allRecords.length} Distinction Records
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                    {allRecords.map((rec, idx) => {
+                      const scopeBadgeStyles = {
+                        World: "bg-amber-500/15 text-amber-900 border-amber-500/30",
+                        Asia: "bg-purple-500/15 text-purple-900 border-purple-500/30",
+                        India: "bg-emerald-500/15 text-emerald-900 border-emerald-500/30"
+                      };
+                      const badgeStyle = scopeBadgeStyles[rec.scope] || "bg-slate-500/15 text-slate-900 border-slate-500/30";
+
+                      return (
+                        <div key={idx} className="bg-white/80 border border-black/10 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:bg-white hover:border-black/20 hover:shadow-sm transition-all group">
+                          <div className="space-y-1.5">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className={`text-[8.5px] font-black font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border ${badgeStyle} flex items-center gap-1`}>
+                                <Award size={9} />
+                                {rec.badge}
+                              </span>
+                              <span className="text-[9px] font-black font-mono text-slate-400">
+                                {rec.tripYear}
+                              </span>
+                            </div>
+                            <h4 className="text-sm font-black text-slate-900 tracking-tight leading-tight group-hover:text-amber-900 transition-colors">
+                              {rec.landmark}
+                            </h4>
+                            <p className="text-xs font-bold text-amber-700 font-mono">
+                              {rec.record}
+                            </p>
+                            {rec.detail && (
+                              <p className="text-[11px] text-slate-500 font-medium leading-normal">
+                                {rec.detail}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="pt-2 border-t border-black/5 flex items-center justify-between">
+                            <span className="text-[9.5px] font-mono text-slate-400 truncate">
+                              {rec.tripTitle}
+                            </span>
+                            <span className="text-[9px] font-black font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 shrink-0 flex items-center gap-0.5">
+                              <CheckCircle2 size={9} /> Visited
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </section>
         );
