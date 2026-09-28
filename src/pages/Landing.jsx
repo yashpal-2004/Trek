@@ -2894,10 +2894,12 @@ export default function Landing() {
           "2026": { dot: "bg-emerald-500", bar: "bg-emerald-500", pill: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20", card: "bg-emerald-50/60 border-emerald-200/80", label: "text-emerald-700", subLabel: "text-emerald-600/70" },
         };
 
+        const maxElevFt = maxElevTrip?.maxElevationLabel?.match(/\(([^)]+)\)/)?.[1] || "15,049 ft";
+
         const statCards = [
           { label: "Total Distance", value: `${totalKm.toLocaleString("en-IN")} km`, sub: "across all trips", Icon: Route, accent: "text-indigo-600", bg: "bg-indigo-500/8 border-indigo-500/15", bar: "bg-indigo-500" },
           { label: "Total Spent", value: `₹${Math.round(totalSpentVal).toLocaleString("en-IN")}`, sub: "personal expenditure", Icon: Wallet, accent: "text-emerald-600", bg: "bg-emerald-500/8 border-emerald-500/15", bar: "bg-emerald-500" },
-          { label: "Max Elevation", value: maxElevationVal.split(" (")[0], sub: maxElevTrip ? maxElevTrip.title.split(" ")[0] : "Spiti", Icon: Mountain, accent: "text-cyan-600", bg: "bg-cyan-500/8 border-cyan-500/15", bar: "bg-cyan-500" },
+          { label: "Max Elevation", value: `${maxElevTrip ? (maxElevTrip.maxElevationMeters || 4587).toLocaleString("en-IN") : "4,587"} m`, sub: `${maxElevFt} • ${maxElevTrip ? maxElevTrip.title.split(" ")[0] : "Spiti"}`, Icon: Mountain, accent: "text-cyan-600", bg: "bg-cyan-500/8 border-cyan-500/15", bar: "bg-cyan-500" },
           { label: "Days on Road", value: `${totalDays} days`, sub: "away from home", Icon: Calendar, accent: "text-amber-600", bg: "bg-amber-500/8 border-amber-500/15", bar: "bg-amber-500" },
           { label: "States Visited", value: `${statesCount} states`, sub: statesVisited.slice(0, 2).join(", ") + (statesCount > 2 ? " +" + (statesCount - 2) : ""), Icon: MapPin, accent: "text-rose-600", bg: "bg-rose-500/8 border-rose-500/15", bar: "bg-rose-500" },
           { label: "Trips Done", value: `${tripsCount} trips`, sub: `${completedTreksCount} ${completedTreksCount === 1 ? 'trek' : 'treks'} • ${completedRoadTripsCount} road`, Icon: CheckCircle2, accent: "text-slate-700", bg: "bg-black/4 border-black/10", bar: "bg-slate-700" },

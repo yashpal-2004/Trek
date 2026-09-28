@@ -11,12 +11,13 @@ export const completedTrips = [
     completedYear: 2026,
     spentTotal: 9964.00,
     transportMode: "Volvo Bus & Scooty",
-    maxElevationMeters: 4520,
-    maxElevationLabel: "4,520 m (14,830 ft)",
-    majorSpots: ["Kaza", "Key Monastery", "Hikkim", "Komic", "Langza", "Dhankar", "Tabo", "Lepcha La Pass"],
+    maxElevationMeters: 4587,
+    maxElevationLabel: "4,587 m (15,049 ft)",
+    majorSpots: ["Kaza", "Key Monastery", "Hikkim", "Komic", "Langza", "Dhankar", "Tabo", "Kunzum Pass", "Lepcha La Pass"],
     records: [
       { landmark: "Hikkim Post Office", record: "World's Highest Post Office", detail: "4,440 m (14,567 ft)", badge: "World Record", scope: "World" },
-      { landmark: "Komic Village", record: "World's Highest Motorable Village", detail: "4,587 m (15,049 ft)", badge: "World Record", scope: "World" }
+      { landmark: "Komic Village", record: "World's Highest Motorable Village", detail: "4,587 m (15,049 ft)", badge: "World Record", scope: "World" },
+      { landmark: "Kunzum Pass", record: "High Mountain Gateway Pass to Spiti", detail: "4,551 m (14,931 ft)", badge: "High Pass", scope: "India" }
     ],
     stats: {
       duration: "6 Days (20 Aug – 25 Aug 2026)",
