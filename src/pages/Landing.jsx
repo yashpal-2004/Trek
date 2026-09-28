@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft, TrendingUp, BarChart2 } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft, TrendingUp, BarChart2, Mountain, PieChart, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../utils/firebase";
@@ -2795,6 +2795,9 @@ export default function Landing() {
         const statesCount = statesVisited.length;
         const tripsCount = doneTrips.length;
 
+        const maxElevTrip = doneTrips.reduce((max, t) => (!max || (t.maxElevationMeters || 0) > (max.maxElevationMeters || 0) ? t : max), null);
+        const maxElevationVal = maxElevTrip ? (maxElevTrip.maxElevationLabel || `${maxElevTrip.maxElevationMeters} m`) : "4,520 m";
+
         const byYear = doneTrips.reduce((acc, t) => {
           const y = String(t.completedYear || 2026);
           if (!acc[y]) acc[y] = [];
@@ -2811,6 +2814,71 @@ export default function Landing() {
           return m[t.id] || t.title.split(" ")[0];
         };
 
+        // Category Expense Calculation
+        const categoryMap = doneTrips.reduce((acc, trip) => {
+          (trip.expenses || []).forEach(exp => {
+            const cat = (exp.category || "Other").toLowerCase();
+            let label = "Sightseeing & Shopping";
+            if (cat.includes("transport") || cat.includes("volvo") || cat.includes("bus") || cat.includes("car") || cat.includes("fuel") || cat.includes("scooty") || cat.includes("transit") || cat.includes("intercity")) {
+              label = "Transportation";
+            } else if (cat.includes("food") || cat.includes("snack") || cat.includes("meal")) {
+              label = "Food & Meals";
+            } else if (cat.includes("accommodation") || cat.includes("stay") || cat.includes("hotel") || cat.includes("lodge") || cat.includes("ashram")) {
+              label = "Accommodation";
+            }
+            acc[label] = (acc[label] || 0) + (exp.amount || 0);
+          });
+          return acc;
+        }, {});
+
+        const categoryList = Object.entries(categoryMap)
+          .map(([name, val]) => ({ name, val, pct: Math.round((val / (totalSpentVal || 1)) * 100) }))
+          .sort((a, b) => b.val - a.val);
+
+        // Transport Mode Distribution Calculation (Categorized Modes)
+        const modeBreakdown = {
+          "Bus (Volvo & Intercity)": 0,
+          "Train & Metro": 0,
+          "Scooty & Local Cab": 0,
+          "Rented Car": 0,
+          "Family Car": 0,
+          "Trekking & Foot Trails": 0,
+        };
+
+        doneTrips.forEach(trip => {
+          const km = trip.distanceKm || 0;
+          if (trip.id === "spiti") {
+            modeBreakdown["Bus (Volvo & Intercity)"] += 1400;
+            modeBreakdown["Scooty & Local Cab"] += 300;
+          } else if (trip.id === "rudranath-tungnath") {
+            modeBreakdown["Bus (Volvo & Intercity)"] += 1055;
+            modeBreakdown["Trekking & Foot Trails"] += 60;
+          } else if (trip.id === "amritsar") {
+            modeBreakdown["Bus (Volvo & Intercity)"] += 915;
+          } else if (trip.id === "hisar") {
+            modeBreakdown["Scooty & Local Cab"] += 310;
+          } else if (trip.id === "mussoorie-dehradun") {
+            modeBreakdown["Rented Car"] += 650;
+          } else if (trip.id === "manali-sissu-circuit") {
+            modeBreakdown["Bus (Volvo & Intercity)"] += 1020;
+            modeBreakdown["Scooty & Local Cab"] += 320;
+          } else if (trip.id === "jaipur-heritage") {
+            modeBreakdown["Train & Metro"] += 420;
+            modeBreakdown["Scooty & Local Cab"] += 130;
+          } else if (trip.id === "vrindavan-family") {
+            modeBreakdown["Family Car"] += 490;
+          } else if (trip.id === "varanasi") {
+            modeBreakdown["Train & Metro"] += 1600;
+          } else {
+            modeBreakdown["Bus (Volvo & Intercity)"] += km;
+          }
+        });
+
+        const transportList = Object.entries(modeBreakdown)
+          .filter(([, distance]) => distance > 0)
+          .map(([name, distance]) => ({ name, distance, pct: Math.round((distance / (totalKm || 1)) * 100) }))
+          .sort((a, b) => b.distance - a.distance);
+
         // 2025 = violet, 2026 = emerald — matching site's existing color system
         const yearPalette = {
           "2025": { dot: "bg-violet-500", bar: "bg-violet-400", pill: "bg-violet-500/10 text-violet-700 border-violet-500/20", card: "bg-violet-50/60 border-violet-200/80", label: "text-violet-700", subLabel: "text-violet-600/70" },
@@ -2820,6 +2888,7 @@ export default function Landing() {
         const statCards = [
           { label: "Total Distance", value: `${totalKm.toLocaleString("en-IN")} km`, sub: "across all trips", Icon: Route, accent: "text-indigo-600", bg: "bg-indigo-500/8 border-indigo-500/15", bar: "bg-indigo-500" },
           { label: "Total Spent", value: `₹${Math.round(totalSpentVal).toLocaleString("en-IN")}`, sub: "personal expenditure", Icon: Wallet, accent: "text-emerald-600", bg: "bg-emerald-500/8 border-emerald-500/15", bar: "bg-emerald-500" },
+          { label: "Max Elevation", value: maxElevationVal.split(" (")[0], sub: maxElevTrip ? maxElevTrip.title.split(" ")[0] : "Spiti", Icon: Mountain, accent: "text-cyan-600", bg: "bg-cyan-500/8 border-cyan-500/15", bar: "bg-cyan-500" },
           { label: "Days on Road", value: `${totalDays} days`, sub: "away from home", Icon: Calendar, accent: "text-amber-600", bg: "bg-amber-500/8 border-amber-500/15", bar: "bg-amber-500" },
           { label: "States Visited", value: `${statesCount} states`, sub: statesVisited.slice(0, 2).join(", ") + (statesCount > 2 ? " +" + (statesCount - 2) : ""), Icon: MapPin, accent: "text-rose-600", bg: "bg-rose-500/8 border-rose-500/15", bar: "bg-rose-500" },
           { label: "Trips Done", value: `${tripsCount} trips`, sub: `${completedTreksCount} ${completedTreksCount === 1 ? 'trek' : 'treks'} • ${completedRoadTripsCount} road`, Icon: CheckCircle2, accent: "text-slate-700", bg: "bg-black/4 border-black/10", bar: "bg-slate-700" },
@@ -2848,7 +2917,7 @@ export default function Landing() {
               </div>
 
               {/* ── STAT CARDS ROW ── */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 {statCards.map((card, i) => (
                   <div key={i} className={`relative bg-white/70 border border-black/10 rounded-3xl p-5 hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden group`}>
                     <div className={`w-8 h-8 rounded-2xl ${card.bg} border flex items-center justify-center mb-3`}>
@@ -2916,6 +2985,12 @@ export default function Landing() {
                                   <div className="flex items-center justify-between gap-2">
                                     <span className={`text-[11px] font-black ${pal.label}`}>{t.title}</span>
                                     <div className="flex items-center gap-1.5 shrink-0">
+                                      {t.maxElevationMeters ? (
+                                        <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200/80 flex items-center gap-0.5">
+                                          <Mountain size={8} className="text-cyan-500" />
+                                          {t.maxElevationMeters}m
+                                        </span>
+                                      ) : null}
                                       {t.distanceKm ? (
                                         <span className="text-[8px] font-black font-mono text-slate-600 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
                                           <Route size={8} className="text-slate-400" />
@@ -2970,6 +3045,12 @@ export default function Landing() {
                               <span className="text-[11px] font-black text-slate-800 truncate">{trip.title}</span>
                             </div>
                             <div className="flex items-center gap-1.5 shrink-0">
+                              {trip.maxElevationMeters ? (
+                                <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200/80 flex items-center gap-0.5">
+                                  <Mountain size={8} className="text-cyan-500" />
+                                  {trip.maxElevationMeters}m
+                                </span>
+                              ) : null}
                               {trip.distanceKm ? (
                                 <span className="text-[8px] font-black font-mono text-slate-500 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
                                   <Route size={8} className="text-slate-400" />
@@ -2998,6 +3079,117 @@ export default function Landing() {
                       Total Expenditure
                     </span>
                     <span className="text-base font-black text-emerald-600 font-mono">₹{Math.round(totalSpentVal).toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* ── CATEGORY EXPENSE SPLIT & TRANSPORT MODE DISTRIBUTION ── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+
+                {/* Category Expense Split */}
+                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
+                  <div className="border-b border-black/8 pb-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Budget Analytics</p>
+                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Category Expense Split</h3>
+                    </div>
+                    <PieChart size={16} className="text-slate-300" />
+                  </div>
+
+                  {/* Stacked Progress Bar */}
+                  <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5">
+                    {categoryList.map((cat, idx) => {
+                      const bgColors = ["bg-indigo-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500"];
+                      return (
+                        <div
+                          key={cat.name}
+                          className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
+                          style={{ width: `${cat.pct}%` }}
+                          title={`${cat.name}: ₹${Math.round(cat.val).toLocaleString("en-IN")} (${cat.pct}%)`}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {/* Category Breakdown Cards */}
+                  <div className="grid grid-cols-2 gap-2.5 pt-1">
+                    {categoryList.map((cat, idx) => {
+                      const styles = [
+                        { border: "border-indigo-200/80 bg-indigo-50/50", label: "text-indigo-700", dot: "bg-indigo-500" },
+                        { border: "border-emerald-200/80 bg-emerald-50/50", label: "text-emerald-700", dot: "bg-emerald-500" },
+                        { border: "border-amber-200/80 bg-amber-50/50", label: "text-amber-700", dot: "bg-amber-500" },
+                        { border: "border-rose-200/80 bg-rose-50/50", label: "text-rose-700", dot: "bg-rose-500" }
+                      ][idx % 4];
+
+                      return (
+                        <div key={cat.name} className={`rounded-xl border p-3 ${styles.border}`}>
+                          <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
+                              <span className={`text-[10px] font-black truncate ${styles.label}`}>{cat.name}</span>
+                            </div>
+                            <span className={`text-[9px] font-black font-mono shrink-0 ${styles.label}`}>{cat.pct}%</span>
+                          </div>
+                          <p className={`text-sm font-black font-mono ${styles.label}`}>₹{Math.round(cat.val).toLocaleString("en-IN")}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Transport Mode Distribution */}
+                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
+                  <div className="border-b border-black/8 pb-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Transit Analytics</p>
+                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Transport Mode Distribution</h3>
+                    </div>
+                    <Layers size={16} className="text-slate-300" />
+                  </div>
+
+                  {/* Stacked Distance Bar */}
+                  <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5">
+                    {transportList.map((item, idx) => {
+                      const bgColors = ["bg-sky-500", "bg-indigo-500", "bg-amber-500", "bg-rose-500", "bg-emerald-500", "bg-teal-500"];
+                      return (
+                        <div
+                          key={item.name}
+                          className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
+                          style={{ width: `${item.pct}%` }}
+                          title={`${item.name}: ${item.distance.toLocaleString("en-IN")} km (${item.pct}%)`}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  {/* Transport Mode List */}
+                  <div className="space-y-2 pt-1">
+                    {transportList.map((item, idx) => {
+                      const styles = [
+                        { dot: "bg-sky-500", text: "text-sky-700" },
+                        { dot: "bg-indigo-500", text: "text-indigo-700" },
+                        { dot: "bg-amber-500", text: "text-amber-700" },
+                        { dot: "bg-rose-500", text: "text-rose-700" },
+                        { dot: "bg-emerald-500", text: "text-emerald-700" },
+                        { dot: "bg-teal-500", text: "text-teal-700" }
+                      ][idx % 6];
+
+                      return (
+                        <div key={item.name} className="bg-white/60 border border-black/8 rounded-xl p-2.5 flex items-center justify-between gap-3 hover:bg-white transition-colors">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
+                            <span className="text-[11px] font-black text-slate-800 truncate">{item.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-[10px] font-black font-mono text-slate-600 bg-black/5 px-2 py-0.5 rounded-md border border-black/5">
+                              {item.distance.toLocaleString("en-IN")} km
+                            </span>
+                            <span className="text-[9px] font-black font-mono text-slate-400 w-8 text-right">{item.pct}%</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 

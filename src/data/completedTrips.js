@@ -10,6 +10,9 @@ export const completedTrips = [
     distanceKm: 1700,
     completedYear: 2026,
     spentTotal: 9964.00,
+    transportMode: "Volvo Bus & Scooty",
+    maxElevationMeters: 4520,
+    maxElevationLabel: "4,520 m (14,830 ft)",
     majorSpots: ["Kaza", "Key Monastery", "Hikkim", "Komic", "Langza", "Dhankar", "Tabo", "Lepcha La Pass"],
     stats: {
       duration: "6 Days (20 Aug – 25 Aug 2026)",
@@ -47,6 +50,9 @@ export const completedTrips = [
     distanceKm: 1115,
     completedYear: 2026,
     spentTotal: 6850.00,
+    transportMode: "Trekking & Bus",
+    maxElevationMeters: 4000,
+    maxElevationLabel: "4,000 m (13,123 ft)",
     majorSpots: ["Rudranath Temple", "Tungnath Temple", "Chandrashila Peak", "Chopta"],
     stats: {
       duration: "9 Days (2 Jul – 10 Jul 2026)",
@@ -83,6 +89,9 @@ export const completedTrips = [
     distanceKm: 915,
     completedYear: 2025,
     spentTotal: 1570.05,
+    transportMode: "Overnight Bus",
+    maxElevationMeters: 230,
+    maxElevationLabel: "230 m (754 ft)",
     majorSpots: ["Golden Temple", "Local Street Food", "Heritage Street"],
     stats: {
       duration: "3 Days (7 Nov – 9 Nov 2025)",
@@ -120,6 +129,9 @@ export const completedTrips = [
     distanceKm: 310,
     completedYear: 2025,
     spentTotal: 5164.00,
+    transportMode: "Cab & Scooty",
+    maxElevationMeters: 215,
+    maxElevationLabel: "215 m (705 ft)",
     majorSpots: ["Hisar", "Local Bazaars", "Scooty Exploration"],
     stats: {
       duration: "3 Days (31 Oct – 3 Nov 2025)",
@@ -159,6 +171,9 @@ export const completedTrips = [
     distanceKm: 650,
     completedYear: 2026,
     spentTotal: 8637.00,
+    transportMode: "Rented Car",
+    maxElevationMeters: 2250,
+    maxElevationLabel: "2,250 m (7,380 ft)",
     majorSpots: ["Dehradun", "Mussoorie Mall Road", "Landour Bakehouse", "Tehri Dam & Lake"],
     stats: {
       duration: "4 Days (23 Jan – 26 Jan 2026)",
@@ -196,6 +211,9 @@ export const completedTrips = [
     distanceKm: 1340,
     completedYear: 2025,
     spentTotal: 4192.50,
+    transportMode: "Volvo Bus & Scooty",
+    maxElevationMeters: 3200,
+    maxElevationLabel: "3,200 m (10,500 ft)",
     majorSpots: ["Kasol", "Sethan (Igloo Village)", "Sajla Waterfall", "Atal Tunnel", "Sissu (Lahaul)"],
     stats: {
       duration: "5 Days (26 Nov – 1 Dec 2025)",
@@ -248,6 +266,9 @@ export const completedTrips = [
     distanceKm: 550,
     completedYear: 2026,
     spentTotal: 5631.50,
+    transportMode: "Train, Metro & Scooty",
+    maxElevationMeters: 430,
+    maxElevationLabel: "430 m (1,410 ft)",
     majorSpots: ["Nahargarh Fort", "Hawa Mahal & Bazaars", "Scooty & Metro Circuit"],
     stats: {
       duration: "4 Days (9 Jan – 12 Jan 2026)",
@@ -288,6 +309,9 @@ export const completedTrips = [
     distanceKm: 490,
     completedYear: 2026,
     spentTotal: 0.00,
+    transportMode: "Family Car",
+    maxElevationMeters: 170,
+    maxElevationLabel: "170 m (557 ft)",
     majorSpots: ["Bankey Bihari Temple", "Prem Mandir", "Nandgaon", "Mathura"],
     stats: {
       duration: "2 Days (10 Jul – 11 Jul 2026)",
@@ -321,6 +345,9 @@ export const completedTrips = [
     distanceKm: 1600,
     completedYear: 2026,
     spentTotal: 3124.00,
+    transportMode: "Sleeper Train",
+    maxElevationMeters: 80,
+    maxElevationLabel: "80 m (262 ft)",
     majorSpots: ["Kashi Vishwanath Jyotirlinga", "Ganga Ghat Aarti"],
     stats: {
       duration: "5 Days (20 Sep – 24 Sep 2026)",
