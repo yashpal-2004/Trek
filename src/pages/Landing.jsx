@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
+import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft, TrendingUp, BarChart2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../utils/firebase";
@@ -2615,8 +2615,8 @@ export default function Landing() {
     return { min: minDays, max: maxDays };
   };
 
-  const completedTreksCount = completedTripsList.filter(t => t.type === "trek").length;
-  const completedRoadTripsCount = completedTripsList.filter(t => t.type === "trip").length;
+  const completedTreksCount = completedTripsList.filter(t => t.type === "trek" || t.typeLabel?.toLowerCase().includes("trek") || t.title?.toLowerCase().includes("trek")).length;
+  const completedRoadTripsCount = completedTripsList.length - completedTreksCount;
   const completedYatrasCount = completedTripsList.filter(t => t.type === "jyotirlinga" || (t.tags && t.tags.includes("jyotirlinga"))).length;
   const completedDaysTotal = completedTripsList.reduce((sum, trip) => {
     const { max } = getTripDaysBounds(trip);
@@ -2785,7 +2785,230 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ─── TRAVEL STATS DASHBOARD ─── */}
+      {(() => {
+        const doneTrips = completedTripsList;
+        const totalKm = doneTrips.reduce((s, t) => s + (t.distanceKm || 0), 0);
+        const totalDays = completedDaysTotal;
+        const totalSpentVal = totalSpent;
+        const statesVisited = [...new Set(doneTrips.map(t => (t.subtitle || "").split(",")[0].trim()).filter(Boolean))];
+        const statesCount = statesVisited.length;
+        const tripsCount = doneTrips.length;
+
+        const byYear = doneTrips.reduce((acc, t) => {
+          const y = String(t.completedYear || 2026);
+          if (!acc[y]) acc[y] = [];
+          acc[y].push(t);
+          return acc;
+        }, {});
+        const years = Object.keys(byYear).sort();
+
+        const chartTrips = [...doneTrips].sort((a, b) => (b.spentTotal || 0) - (a.spentTotal || 0));
+        const maxSpend = Math.max(...chartTrips.map(t => t.spentTotal || 0), 1);
+
+        const shortLabel = (t) => {
+          const m = { "spiti": "Spiti", "rudranath-tungnath": "Rudranath", "amritsar": "Amritsar", "hisar": "Hisar", "mussoorie-dehradun": "Mussoorie", "manali-sissu-circuit": "Manali", "jaipur-heritage": "Jaipur", "vrindavan-family": "Vrindavan", "varanasi": "Varanasi" };
+          return m[t.id] || t.title.split(" ")[0];
+        };
+
+        // 2025 = violet, 2026 = emerald — matching site's existing color system
+        const yearPalette = {
+          "2025": { dot: "bg-violet-500", bar: "bg-violet-400", pill: "bg-violet-500/10 text-violet-700 border-violet-500/20", card: "bg-violet-50/60 border-violet-200/80", label: "text-violet-700", subLabel: "text-violet-600/70" },
+          "2026": { dot: "bg-emerald-500", bar: "bg-emerald-500", pill: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20", card: "bg-emerald-50/60 border-emerald-200/80", label: "text-emerald-700", subLabel: "text-emerald-600/70" },
+        };
+
+        const statCards = [
+          { label: "Total Distance", value: `${totalKm.toLocaleString("en-IN")} km`, sub: "across all trips", Icon: Route, accent: "text-indigo-600", bg: "bg-indigo-500/8 border-indigo-500/15", bar: "bg-indigo-500" },
+          { label: "Total Spent", value: `₹${Math.round(totalSpentVal).toLocaleString("en-IN")}`, sub: "personal expenditure", Icon: Wallet, accent: "text-emerald-600", bg: "bg-emerald-500/8 border-emerald-500/15", bar: "bg-emerald-500" },
+          { label: "Days on Road", value: `${totalDays} days`, sub: "away from home", Icon: Calendar, accent: "text-amber-600", bg: "bg-amber-500/8 border-amber-500/15", bar: "bg-amber-500" },
+          { label: "States Visited", value: `${statesCount} states`, sub: statesVisited.slice(0, 2).join(", ") + (statesCount > 2 ? " +" + (statesCount - 2) : ""), Icon: MapPin, accent: "text-rose-600", bg: "bg-rose-500/8 border-rose-500/15", bar: "bg-rose-500" },
+          { label: "Trips Done", value: `${tripsCount} trips`, sub: `${completedTreksCount} ${completedTreksCount === 1 ? 'trek' : 'treks'} • ${completedRoadTripsCount} road`, Icon: CheckCircle2, accent: "text-slate-700", bg: "bg-black/4 border-black/10", bar: "bg-slate-700" },
+        ];
+
+        return (
+          <section className="w-full bg-[#e8e4dc] border-y border-black/8 py-14 px-6 md:px-12 lg:px-16">
+            <div className="max-w-7xl mx-auto space-y-10">
+
+              {/* Section Header */}
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-black/8 pb-6">
+                <div>
+                  <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase flex items-center gap-1.5">
+                    <TrendingUp size={11} className="text-emerald-600" />
+                    Personal Analytics
+                  </span>
+                  <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mt-1 text-slate-900" style={{ fontFamily: "'Anton', sans-serif" }}>
+                    Travel Stats
+                  </h2>
+                  <p className="text-xs text-slate-400 font-medium mt-1">Computed from completed trips only.</p>
+                </div>
+                <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 bg-white/80 border border-black/10 px-3 py-1.5 rounded-xl shadow-xs">
+                  <BarChart2 size={11} />
+                  {tripsCount} Expeditions Logged
+                </div>
+              </div>
+
+              {/* ── STAT CARDS ROW ── */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                {statCards.map((card, i) => (
+                  <div key={i} className={`relative bg-white/70 border border-black/10 rounded-3xl p-5 hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden group`}>
+                    <div className={`w-8 h-8 rounded-2xl ${card.bg} border flex items-center justify-center mb-3`}>
+                      <card.Icon size={15} className={card.accent} />
+                    </div>
+                    <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400 mb-1">{card.label}</p>
+                    <p className="text-xl md:text-2xl font-black tracking-tight text-slate-900" style={{ fontFamily: "'Anton', sans-serif" }}>{card.value}</p>
+                    <p className="text-[10px] text-slate-400 font-medium mt-1 truncate">{card.sub}</p>
+                    <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${card.bar} opacity-30 group-hover:opacity-60 transition-opacity`} />
+                  </div>
+                ))}
+              </div>
+
+              {/* ── YEAR-IN-REVIEW + BAR CHART ── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+
+                {/* Year-in-Review */}
+                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
+                  <div className="border-b border-black/8 pb-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Year in Review</p>
+                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>By Year</h3>
+                    </div>
+                    <Calendar size={16} className="text-slate-300" />
+                  </div>
+                  <div className="space-y-3">
+                    {years.map(year => {
+                      const yTrips = byYear[year];
+                      const ySpent = yTrips.reduce((s, t) => s + (t.spentTotal || 0), 0);
+                      const yDays = yTrips.reduce((s, t) => { const { max } = getTripDaysBounds(t); return s + max; }, 0);
+                      const yKm = yTrips.reduce((s, t) => s + (t.distanceKm || 0), 0);
+                      const pal = yearPalette[year] || yearPalette["2026"];
+                      const pct = Math.round((ySpent / (totalSpentVal || 1)) * 100);
+                      return (
+                        <div key={year} className={`rounded-2xl border p-4 ${pal.card}`}>
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-2 h-2 rounded-full ${pal.dot}`} />
+                              <span className={`text-sm font-black font-mono ${pal.label}`}>{year}</span>
+                            </div>
+                            <span className={`text-[9px] font-black font-mono px-2 py-0.5 rounded-lg border ${pal.pill}`}>{yTrips.length} trip{yTrips.length > 1 ? "s" : ""}</span>
+                          </div>
+                          <div className="grid grid-cols-3 gap-2 mb-3">
+                            {[
+                              { l: "Spent", v: `₹${Math.round(ySpent).toLocaleString("en-IN")}` },
+                              { l: "Days", v: `${yDays}d` },
+                              { l: "Distance", v: `${yKm.toLocaleString("en-IN")} km` },
+                            ].map(({ l, v }) => (
+                              <div key={l}>
+                                <p className={`text-[9px] font-black font-mono uppercase ${pal.subLabel}`}>{l}</p>
+                                <p className={`text-sm font-black ${pal.label}`}>{v}</p>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="h-1 bg-black/8 rounded-full overflow-hidden mb-1">
+                            <div className={`h-full ${pal.dot} rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
+                          </div>
+                          <p className={`text-[9px] font-mono font-black ${pal.subLabel}`}>{pct}% of total spend</p>
+                          <div className="mt-3.5 space-y-2 pt-3 border-t border-black/10">
+                            <p className={`text-[9px] font-black font-mono uppercase tracking-widest ${pal.subLabel}`}>Trips & Major Spots Covered</p>
+                            {yTrips.map(t => {
+                              const spots = t.majorSpots || [];
+                              return (
+                                <div key={t.id} className="bg-white/70 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <span className={`text-[11px] font-black ${pal.label}`}>{t.title}</span>
+                                    <div className="flex items-center gap-1.5 shrink-0">
+                                      {t.distanceKm ? (
+                                        <span className="text-[8px] font-black font-mono text-slate-600 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
+                                          <Route size={8} className="text-slate-400" />
+                                          {t.distanceKm.toLocaleString("en-IN")} km
+                                        </span>
+                                      ) : null}
+                                      <span className={`text-[8px] font-black font-mono px-1.5 py-0.5 rounded-md border ${pal.pill}`}>
+                                        {t.stats?.duration ? t.stats.duration.split(" (")[0] : shortLabel(t)}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  {spots.length > 0 && (
+                                    <div className="flex flex-wrap gap-1">
+                                      {spots.map((spot, sIdx) => (
+                                        <span key={sIdx} className="text-[9px] font-semibold bg-black/4 text-slate-700 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-1">
+                                          <MapPin size={9} className="text-slate-400 shrink-0" />
+                                          {spot}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Spend Bar Chart */}
+                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs">
+                  <div className="border-b border-black/8 pb-3 mb-5 flex items-center justify-between">
+                    <div>
+                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Expense Breakdown</p>
+                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Spend per Trip</h3>
+                    </div>
+                    <BarChart2 size={16} className="text-slate-300" />
+                  </div>
+                  <div className="space-y-2.5">
+                    {chartTrips.map((trip, i) => {
+                      const spent = trip.spentTotal || 0;
+                      const pct = Math.round((spent / maxSpend) * 100);
+                      const yr = String(trip.completedYear || 2026);
+                      const pal = yearPalette[yr] || yearPalette["2026"];
+                      return (
+                        <div key={trip.id} className="bg-white/60 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors group">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="text-[10px] font-black font-mono text-slate-300 w-3.5 shrink-0 text-right">{i + 1}</span>
+                              <span className="text-[11px] font-black text-slate-800 truncate">{trip.title}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {trip.distanceKm ? (
+                                <span className="text-[8px] font-black font-mono text-slate-500 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
+                                  <Route size={8} className="text-slate-400" />
+                                  {trip.distanceKm.toLocaleString("en-IN")} km
+                                </span>
+                              ) : null}
+                              <span className={`text-[8.5px] font-black font-mono px-1.5 py-0.5 rounded-md border ${pal.pill}`}>{yr}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1 h-2 bg-black/6 rounded-full overflow-hidden">
+                              <div
+                                className={`h-full rounded-full ${pal.bar} opacity-75 group-hover:opacity-100 transition-all duration-300`}
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                            <span className="text-[11px] font-black font-mono text-slate-900 shrink-0">₹{Math.round(spent).toLocaleString("en-IN")}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-black/8 flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-black text-slate-400 uppercase flex items-center gap-1.5">
+                      <Wallet size={11} />
+                      Total Expenditure
+                    </span>
+                    <span className="text-base font-black text-emerald-600 font-mono">₹{Math.round(totalSpentVal).toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+        );
+      })()}
+
       {/* Main Content Dashboard - Full Width Layout */}
+
       <main id="dashboard-section" className="flex-grow flex flex-col justify-start pt-8 pb-12 px-6 md:px-12 lg:px-16 w-full z-10">
         
         {/* Title & Category Financial Summary Cards */}
