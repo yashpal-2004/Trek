@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { ArrowUpRight, Calendar, Wallet, Route, MapPin, X, CheckCircle2, Footprints, Compass, Plus, LayoutGrid, Clock, ChevronDown, ChevronUp, Sparkles, Receipt, Star, GitCompareArrows, Check, Archive, Lock, BookOpen, Bookmark, ChevronRight, ChevronLeft, TrendingUp, BarChart2, Mountain, PieChart, Layers, Award, Trophy, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -696,7 +695,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   );
 }
 
-export default function Landing() {
+export default function Adventures() {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [sectionSubFilter, setSectionSubFilter] = useState({
     global: "ready",
@@ -2728,842 +2727,848 @@ export default function Landing() {
     max: completedDaysTotal + upcomingDaysRange.max + jyotirlingaDaysRange.max + kedarKailashDaysRange.max + charDhamDaysRange.max
   };
 
+
   return (
     <div className="min-h-screen w-screen bg-[#f2efe9] text-black selection:bg-black/10 flex flex-col justify-between relative font-sans">
-      
+
       {/* Header */}
-      <header className="w-full py-4 px-6 md:px-12 flex justify-between items-center z-30">
+      <header className="w-full py-4 px-6 md:px-12 flex justify-between items-center z-30 border-b border-black/5">
         <a href="/" className="font-extrabold text-xl tracking-tight uppercase hover:opacity-75 transition-opacity flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-black"></span>
-          Treks & Expeditions
+          Treks &amp; Expeditions
         </a>
-        <a
-          href="/wardrobe"
-          className="px-4 py-2 rounded-xl text-xs font-mono font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-all shadow-sm"
-        >
-          My Wardrobe
-        </a>
-      </header>
-
-      {/* Hero Showcase Section: Expedition Journal Book */}
-      <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center pt-2 pb-8 px-2 md:px-8 bg-gradient-to-b from-[#f2efe9] via-[#e8e4dc] to-[#f2efe9] border-b border-black/10">
-        <div className="w-full max-w-7xl mx-auto flex flex-col items-center gap-6">
-          <div className="text-center space-y-1 max-w-2xl">
-            <span className="text-xs font-black font-mono tracking-widest text-amber-900 uppercase bg-amber-900/10 px-3 py-1 rounded-full border border-amber-900/20">
-              Expedition Journal • Vol. 1
-            </span>
-            <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-slate-900 mt-2" style={{ fontFamily: "'Anton', sans-serif" }}>
-              Treks & Expeditions Journal
-            </h1>
-            <p className="text-sm md:text-base font-serif italic text-slate-600">
-              Flip through completed journey logs, date stamps, route timelines & itemized expense breakdowns.
-            </p>
-          </div>
-
-          {/* Full-width Centered Journal Book (Grand Scale) */}
-          <div className="w-full max-w-6xl shadow-2xl rounded-[40px] overflow-hidden">
-            <ExpeditionJournalBook
-              completedTrips={completedTripsList}
-              setSelectedTrip={setSelectedTrip}
-              actualCosts={actualCosts}
-              completedPlans={completedPlans}
-              archivedPlans={archivedPlans}
-            />
-          </div>
-
-          {/* Scroll Down Prompt Button */}
+        <div className="flex items-center gap-3">
           <a
-            href="#travel-stats"
-            className="group flex flex-col items-center gap-1 mt-2 text-slate-500 hover:text-black transition-all cursor-pointer"
+            href="/"
+            className="px-4 py-2 rounded-xl text-xs font-mono font-black uppercase tracking-wider bg-black/5 hover:bg-black/10 border border-black/10 text-slate-700 transition-all"
           >
-            <span className="text-[10px] font-black font-mono uppercase tracking-widest group-hover:translate-y-0.5 transition-transform">
-              Explore All Analytics Below
-            </span>
-            <div className="w-8 h-8 rounded-full border border-black/15 bg-white flex items-center justify-center shadow-xs group-hover:border-black group-hover:bg-black group-hover:text-white transition-all animate-bounce">
-              <ChevronDown size={16} />
-            </div>
+            ← Home
+          </a>
+          <a
+            href="/wardrobe"
+            className="px-4 py-2 rounded-xl text-xs font-mono font-black uppercase tracking-wider bg-black text-white hover:bg-black/85 transition-all shadow-sm"
+          >
+            My Wardrobe
           </a>
         </div>
-      </section>
+      </header>
 
-      {/* ─── TRAVEL STATS DASHBOARD ─── */}
-      {(() => {
-        const doneTrips = completedTripsList;
-        const totalKm = doneTrips.reduce((s, t) => s + (t.distanceKm || 0), 0);
-        const totalDays = completedDaysTotal;
-        const totalSpentVal = totalSpent;
-        const statesVisited = [...new Set(doneTrips.map(t => (t.subtitle || "").split(",")[0].trim()).filter(Boolean))];
-        const statesCount = statesVisited.length;
-        const tripsCount = doneTrips.length;
+      <main id="dashboard-section" className="flex-grow flex flex-col justify-start pt-8 pb-12 px-6 md:px-12 lg:px-16 w-full z-10">
+        
+        {/* Title & Category Financial Summary Cards */}
+        <div className="mb-8 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-black/5 pb-4">
+            <div>
+              <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase">Adventure Portal</span>
+              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mt-1" style={{ fontFamily: "'Anton', sans-serif" }}>
+                Select Your Adventure
+              </h2>
+              <p className="text-slate-500 font-medium text-sm mt-1.5 leading-relaxed">
+                Explore Himalayan alpine treks, road trips, 12 Jyotirlingas, Panch Kedar, Panch Kailash, and Char Dham pilgrimages with full itineraries and budget breakdowns.
+              </p>
+            </div>
 
-        const maxElevTrip = doneTrips.reduce((max, t) => (!max || (t.maxElevationMeters || 0) > (max.maxElevationMeters || 0) ? t : max), null);
-        const maxElevationVal = maxElevTrip ? (maxElevTrip.maxElevationLabel || `${maxElevTrip.maxElevationMeters} m`) : "4,520 m";
-
-        const byYear = doneTrips.reduce((acc, t) => {
-          const y = String(t.completedYear || 2026);
-          if (!acc[y]) acc[y] = [];
-          acc[y].push(t);
-          return acc;
-        }, {});
-        const years = Object.keys(byYear).sort();
-
-        const chartTrips = [...doneTrips].sort((a, b) => (b.spentTotal || 0) - (a.spentTotal || 0));
-        const maxSpend = Math.max(...chartTrips.map(t => t.spentTotal || 0), 1);
-
-        const shortLabel = (t) => {
-          const m = { "spiti": "Spiti", "rudranath-tungnath": "Rudranath", "amritsar": "Amritsar", "hisar": "Hisar", "mussoorie-dehradun": "Mussoorie", "manali-sissu-circuit": "Manali", "jaipur-heritage": "Jaipur", "vrindavan-family": "Vrindavan", "varanasi": "Varanasi" };
-          return m[t.id] || t.title.split(" ")[0];
-        };
-
-        // Category Expense Calculation
-        const categoryMap = doneTrips.reduce((acc, trip) => {
-          (trip.expenses || []).forEach(exp => {
-            const cat = (exp.category || "Other").toLowerCase();
-            let label = "Sightseeing & Shopping";
-            if (cat.includes("transport") || cat.includes("volvo") || cat.includes("bus") || cat.includes("car") || cat.includes("fuel") || cat.includes("scooty") || cat.includes("transit") || cat.includes("intercity")) {
-              label = "Transportation";
-            } else if (cat.includes("food") || cat.includes("snack") || cat.includes("meal")) {
-              label = "Food & Meals";
-            } else if (cat.includes("accommodation") || cat.includes("stay") || cat.includes("hotel") || cat.includes("lodge") || cat.includes("ashram")) {
-              label = "Accommodation";
-            }
-            acc[label] = (acc[label] || 0) + (exp.amount || 0);
-          });
-          return acc;
-        }, {});
-
-        const categoryList = Object.entries(categoryMap)
-          .map(([name, val]) => ({ name, val, pct: Math.round((val / (totalSpentVal || 1)) * 100) }))
-          .sort((a, b) => b.val - a.val);
-
-        // Transport Mode Distribution Calculation (Categorized Modes)
-        const modeBreakdown = {
-          "Bus (Volvo & Intercity)": 0,
-          "Train & Metro": 0,
-          "Scooty & Local Cab": 0,
-          "Rented Car": 0,
-          "Family Car": 0,
-          "Trekking & Foot Trails": 0,
-        };
-
-        doneTrips.forEach(trip => {
-          const km = trip.distanceKm || 0;
-          if (trip.id === "spiti") {
-            modeBreakdown["Bus (Volvo & Intercity)"] += 1400;
-            modeBreakdown["Scooty & Local Cab"] += 300;
-          } else if (trip.id === "rudranath-tungnath") {
-            modeBreakdown["Bus (Volvo & Intercity)"] += 1055;
-            modeBreakdown["Trekking & Foot Trails"] += 60;
-          } else if (trip.id === "amritsar") {
-            modeBreakdown["Bus (Volvo & Intercity)"] += 915;
-          } else if (trip.id === "hisar") {
-            modeBreakdown["Scooty & Local Cab"] += 310;
-          } else if (trip.id === "mussoorie-dehradun") {
-            modeBreakdown["Rented Car"] += 650;
-          } else if (trip.id === "manali-sissu-circuit") {
-            modeBreakdown["Bus (Volvo & Intercity)"] += 1020;
-            modeBreakdown["Scooty & Local Cab"] += 320;
-          } else if (trip.id === "jaipur-heritage") {
-            modeBreakdown["Train & Metro"] += 420;
-            modeBreakdown["Scooty & Local Cab"] += 130;
-          } else if (trip.id === "vrindavan-family") {
-            modeBreakdown["Family Car"] += 490;
-          } else if (trip.id === "varanasi") {
-            modeBreakdown["Train & Metro"] += 1600;
-          } else {
-            modeBreakdown["Bus (Volvo & Intercity)"] += km;
-          }
-        });
-
-        const transportList = Object.entries(modeBreakdown)
-          .filter(([, distance]) => distance > 0)
-          .map(([name, distance]) => ({ name, distance, pct: Math.round((distance / (totalKm || 1)) * 100) }))
-          .sort((a, b) => b.distance - a.distance);
-
-        const allRecords = doneTrips.flatMap(trip =>
-          (trip.records || []).map(r => ({
-            ...r,
-            tripTitle: trip.title,
-            tripYear: trip.completedYear,
-            tripId: trip.id
-          }))
-        );
-
-        // 2025 = violet, 2026 = emerald — matching site's existing color system
-        const yearPalette = {
-          "2025": { dot: "bg-violet-500", bar: "bg-violet-400", pill: "bg-violet-500/10 text-violet-700 border-violet-500/20", card: "bg-violet-50/60 border-violet-200/80", label: "text-violet-700", subLabel: "text-violet-600/70" },
-          "2026": { dot: "bg-emerald-500", bar: "bg-emerald-500", pill: "bg-emerald-500/10 text-emerald-700 border-emerald-500/20", card: "bg-emerald-50/60 border-emerald-200/80", label: "text-emerald-700", subLabel: "text-emerald-600/70" },
-        };
-
-        const maxElevFt = maxElevTrip?.maxElevationLabel?.match(/\(([^)]+)\)/)?.[1] || "15,049 ft";
-
-        const statCards = [
-          { label: "Total Distance", value: `${totalKm.toLocaleString("en-IN")} km`, sub: "across all trips", Icon: Route, accent: "text-indigo-600", bg: "bg-indigo-500/8 border-indigo-500/15", bar: "bg-indigo-500" },
-          { label: "Total Spent", value: `₹${Math.round(totalSpentVal).toLocaleString("en-IN")}`, sub: "personal expenditure", Icon: Wallet, accent: "text-emerald-600", bg: "bg-emerald-500/8 border-emerald-500/15", bar: "bg-emerald-500" },
-          { label: "Max Elevation", value: `${maxElevTrip ? (maxElevTrip.maxElevationMeters || 4587).toLocaleString("en-IN") : "4,587"} m`, sub: `${maxElevFt} • ${maxElevTrip ? maxElevTrip.title.split(" ")[0] : "Spiti"}`, Icon: Mountain, accent: "text-cyan-600", bg: "bg-cyan-500/8 border-cyan-500/15", bar: "bg-cyan-500" },
-          { label: "Days on Road", value: `${totalDays} days`, sub: "away from home", Icon: Calendar, accent: "text-amber-600", bg: "bg-amber-500/8 border-amber-500/15", bar: "bg-amber-500" },
-          { label: "States Visited", value: `${statesCount} states`, sub: statesVisited.slice(0, 2).join(", ") + (statesCount > 2 ? " +" + (statesCount - 2) : ""), Icon: MapPin, accent: "text-rose-600", bg: "bg-rose-500/8 border-rose-500/15", bar: "bg-rose-500" },
-          { label: "Trips Done", value: `${tripsCount} trips`, sub: `${completedTreksCount} ${completedTreksCount === 1 ? 'trek' : 'treks'} • ${completedRoadTripsCount} road`, Icon: CheckCircle2, accent: "text-slate-700", bg: "bg-black/4 border-black/10", bar: "bg-slate-700" },
-        ];
-
-        return (
-          <section id="travel-stats" className="w-full bg-[#e8e4dc] border-y border-black/8 py-14 px-6 md:px-12 lg:px-16 scroll-mt-6">
-            <div className="max-w-7xl mx-auto space-y-10">
-
-              {/* Section Header */}
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-black/8 pb-6">
-                <div>
-                  <span className="text-[10px] font-black font-mono tracking-widest text-slate-400 uppercase flex items-center gap-1.5">
-                    <TrendingUp size={11} className="text-emerald-600" />
-                    Personal Analytics
-                  </span>
-                  <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mt-1 text-slate-900" style={{ fontFamily: "'Anton', sans-serif" }}>
-                    Travel Stats
-                  </h2>
-                  <p className="text-xs text-slate-400 font-medium mt-1">Computed from completed trips only.</p>
+            {/* Total Financial Summary Pills */}
+            <div className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 bg-black/5 p-1.5 rounded-3xl border border-black/5">
+              {/* Capsule 1: Total Spent */}
+              <div className="flex items-center gap-2.5 bg-emerald-600 text-white px-3.5 py-2 sm:py-1.5 rounded-2xl shadow-xs flex-1 sm:flex-initial">
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                  ₹
                 </div>
-                <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 bg-white/80 border border-black/10 px-3 py-1.5 rounded-xl shadow-xs">
-                  <BarChart2 size={11} />
-                  {tripsCount} Expeditions Logged
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 flex-wrap">
+                    <span className="text-[9px] sm:text-[8px] font-black uppercase tracking-wider text-emerald-100 font-mono">Total Spent</span>
+                    <span className="text-[9px] sm:text-[8px] font-black bg-white/20 px-1.5 py-0.5 sm:py-0.2 rounded-md font-mono shrink-0">8 Done • {completedDaysTotal} Days</span>
+                  </div>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-sm sm:text-xs font-black font-mono tracking-tight">₹{Math.round(totalSpent).toLocaleString("en-IN")}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* ── STAT CARDS ROW ── */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {statCards.map((card, i) => (
-                  <div key={i} className={`relative bg-white/70 border border-black/10 rounded-3xl p-5 hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden group`}>
-                    <div className={`w-8 h-8 rounded-2xl ${card.bg} border flex items-center justify-center mb-3`}>
-                      <card.Icon size={15} className={card.accent} />
-                    </div>
-                    <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400 mb-1">{card.label}</p>
-                    <p className="text-xl md:text-2xl font-black tracking-tight text-slate-900" style={{ fontFamily: "'Anton', sans-serif" }}>{card.value}</p>
-                    <p className="text-[10px] text-slate-400 font-medium mt-1 truncate">{card.sub}</p>
-                    <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${card.bar} opacity-30 group-hover:opacity-60 transition-opacity`} />
-                  </div>
-                ))}
-              </div>
-
-              {/* ── MAIN DASHBOARD GRID (UNIFIED 2-COLUMN SECTION) ── */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-
-                {/* LEFT COLUMN: Financial & Transit Charts (7 Columns) */}
-                <div className="lg:col-span-7 space-y-5">
-
-                  {/* Spend per Trip */}
-                  <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs">
-                    <div className="border-b border-black/8 pb-3 mb-5 flex items-center justify-between">
-                      <div>
-                        <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Expense Breakdown</p>
-                        <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Spend per Trip</h3>
-                      </div>
-                      <BarChart2 size={16} className="text-slate-300" />
-                    </div>
-                    <div className="space-y-2.5">
-                      {chartTrips.map((trip, i) => {
-                        const spent = trip.spentTotal || 0;
-                        const pct = Math.round((spent / maxSpend) * 100);
-                        const yr = String(trip.completedYear || 2026);
-                        const pal = yearPalette[yr] || yearPalette["2026"];
-                        return (
-                          <div key={trip.id} className="bg-white/60 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors group">
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-2 min-w-0">
-                                <span className="text-[10px] font-black font-mono text-slate-300 w-3.5 shrink-0 text-right">{i + 1}</span>
-                                <span className="text-[11px] font-black text-slate-800 truncate">{trip.title}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 shrink-0">
-                                {trip.maxElevationMeters ? (
-                                  <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200/80 flex items-center gap-0.5">
-                                    <Mountain size={8} className="text-cyan-500" />
-                                    {trip.maxElevationMeters}m
-                                  </span>
-                                ) : null}
-                                {trip.distanceKm ? (
-                                  <span className="text-[8px] font-black font-mono text-slate-500 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
-                                    <Route size={8} className="text-slate-400" />
-                                    {trip.distanceKm.toLocaleString("en-IN")} km
-                                  </span>
-                                ) : null}
-                                <span className={`text-[8.5px] font-black font-mono px-1.5 py-0.5 rounded-md border ${pal.pill}`}>{yr}</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <div className="flex-1 h-2 bg-black/6 rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full rounded-full ${pal.bar} opacity-75 group-hover:opacity-100 transition-all duration-300`}
-                                  style={{ width: `${pct}%` }}
-                                />
-                              </div>
-                              <span className="text-[11px] font-black font-mono text-slate-900 shrink-0">₹{Math.round(spent).toLocaleString("en-IN")}</span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div className="mt-5 pt-4 border-t border-black/8 flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-black text-slate-400 uppercase flex items-center gap-1.5">
-                        <Wallet size={11} />
-                        Total Expenditure
-                      </span>
-                      <span className="text-base font-black text-emerald-600 font-mono">₹{Math.round(totalSpentVal).toLocaleString("en-IN")}</span>
-                    </div>
-                  </div>
-
-                  {/* Sub-row: Category Split & Transport Mode Distribution (2 Columns) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
-
-                    {/* Category Expense Split */}
-                    <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-4">
-                      <div>
-                        <div className="border-b border-black/8 pb-3 mb-4 flex items-center justify-between">
-                          <div>
-                            <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Budget Analytics</p>
-                            <h3 className="text-lg font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Category Split</h3>
-                          </div>
-                          <PieChart size={16} className="text-slate-300" />
-                        </div>
-
-                        {/* Stacked Progress Bar */}
-                        <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5 mb-3">
-                          {categoryList.map((cat, idx) => {
-                            const bgColors = ["bg-indigo-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500"];
-                            return (
-                              <div
-                                key={cat.name}
-                                className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
-                                style={{ width: `${cat.pct}%` }}
-                                title={`${cat.name}: ₹${Math.round(cat.val).toLocaleString("en-IN")} (${cat.pct}%)`}
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Category Breakdown Cards */}
-                      <div className="grid grid-cols-1 gap-2">
-                        {categoryList.map((cat, idx) => {
-                          const styles = [
-                            { border: "border-indigo-200/80 bg-indigo-50/50", label: "text-indigo-700", dot: "bg-indigo-500" },
-                            { border: "border-emerald-200/80 bg-emerald-50/50", label: "text-emerald-700", dot: "bg-emerald-500" },
-                            { border: "border-amber-200/80 bg-amber-50/50", label: "text-amber-700", dot: "bg-amber-500" },
-                            { border: "border-rose-200/80 bg-rose-50/50", label: "text-rose-700", dot: "bg-rose-500" }
-                          ][idx % 4];
-
-                          return (
-                            <div key={cat.name} className={`rounded-xl border p-2.5 flex items-center justify-between ${styles.border}`}>
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
-                                <span className={`text-[10px] font-black truncate ${styles.label}`}>{cat.name}</span>
-                              </div>
-                              <div className="flex items-center gap-2 shrink-0">
-                                <span className={`text-[10.5px] font-black font-mono ${styles.label}`}>₹{Math.round(cat.val).toLocaleString("en-IN")}</span>
-                                <span className={`text-[9px] font-black font-mono ${styles.label} opacity-70 w-7 text-right`}>{cat.pct}%</span>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Transport Mode Distribution */}
-                    <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-4">
-                      <div>
-                        <div className="border-b border-black/8 pb-3 mb-4 flex items-center justify-between">
-                          <div>
-                            <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Transit Analytics</p>
-                            <h3 className="text-lg font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Transport Modes</h3>
-                          </div>
-                          <Layers size={16} className="text-slate-300" />
-                        </div>
-
-                        {/* Stacked Distance Bar */}
-                        <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5 mb-3">
-                          {transportList.map((item, idx) => {
-                            const bgColors = ["bg-sky-500", "bg-indigo-500", "bg-amber-500", "bg-rose-500", "bg-emerald-500", "bg-teal-500"];
-                            return (
-                              <div
-                                key={item.name}
-                                className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
-                                style={{ width: `${item.pct}%` }}
-                                title={`${item.name}: ${item.distance.toLocaleString("en-IN")} km (${item.pct}%)`}
-                              />
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Transport Mode List */}
-                      <div className="space-y-1.5">
-                        {transportList.map((item, idx) => {
-                          const styles = [
-                            { dot: "bg-sky-500" },
-                            { dot: "bg-indigo-500" },
-                            { dot: "bg-amber-500" },
-                            { dot: "bg-rose-500" },
-                            { dot: "bg-emerald-500" },
-                            { dot: "bg-teal-500" }
-                          ][idx % 6];
-
-                          return (
-                            <div key={item.name} className="bg-white/60 border border-black/8 rounded-xl p-2 flex items-center justify-between gap-2 hover:bg-white transition-colors">
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
-                                <span className="text-[10px] font-black text-slate-800 truncate">{item.name}</span>
-                              </div>
-                              <div className="flex items-center gap-1.5 shrink-0">
-                                <span className="text-[9.5px] font-black font-mono text-slate-600 bg-black/5 px-1.5 py-0.5 rounded border border-black/5">
-                                  {item.distance.toLocaleString("en-IN")} km
-                                </span>
-                                <span className="text-[9px] font-black font-mono text-slate-400 w-6 text-right">{item.pct}%</span>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                  </div>
-
+              {/* Capsule 2: Planned Est. Budget */}
+              <div className="flex items-center gap-2.5 bg-slate-900 text-white px-3.5 py-2 sm:py-1.5 rounded-2xl shadow-xs flex-1 sm:flex-initial">
+                <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-black border border-emerald-500/30 shrink-0">
+                  ₹
                 </div>
-
-                {/* RIGHT COLUMN: Year in Review Timeline (5 Columns) */}
-                <div className="lg:col-span-5 h-full">
-                  <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
-                    <div className="border-b border-black/8 pb-3 flex items-center justify-between">
-                      <div>
-                        <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Year in Review</p>
-                        <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>By Year</h3>
-                      </div>
-                      <Calendar size={16} className="text-slate-300" />
-                    </div>
-                    <div className="space-y-4">
-                      {years.map(year => {
-                        const yTrips = byYear[year];
-                        const ySpent = yTrips.reduce((s, t) => s + (t.spentTotal || 0), 0);
-                        const yDays = yTrips.reduce((s, t) => { const { max } = getTripDaysBounds(t); return s + max; }, 0);
-                        const yKm = yTrips.reduce((s, t) => s + (t.distanceKm || 0), 0);
-                        const pal = yearPalette[year] || yearPalette["2026"];
-                        const pct = Math.round((ySpent / (totalSpentVal || 1)) * 100);
-                        return (
-                          <div key={year} className={`rounded-2xl border p-4 ${pal.card}`}>
-                            <div className="flex items-center justify-between mb-3">
-                              <div className="flex items-center gap-2">
-                                <div className={`w-2 h-2 rounded-full ${pal.dot}`} />
-                                <span className={`text-sm font-black font-mono ${pal.label}`}>{year}</span>
-                              </div>
-                              <span className={`text-[9px] font-black font-mono px-2 py-0.5 rounded-lg border ${pal.pill}`}>{yTrips.length} trip{yTrips.length > 1 ? "s" : ""}</span>
-                            </div>
-                            <div className="grid grid-cols-3 gap-2 mb-3">
-                              {[
-                                { l: "Spent", v: `₹${Math.round(ySpent).toLocaleString("en-IN")}` },
-                                { l: "Days", v: `${yDays}d` },
-                                { l: "Distance", v: `${yKm.toLocaleString("en-IN")} km` },
-                              ].map(({ l, v }) => (
-                                <div key={l}>
-                                  <p className={`text-[9px] font-black font-mono uppercase ${pal.subLabel}`}>{l}</p>
-                                  <p className={`text-xs font-black ${pal.label}`}>{v}</p>
-                                </div>
-                              ))}
-                            </div>
-                            <div className="h-1 bg-black/8 rounded-full overflow-hidden mb-1">
-                              <div className={`h-full ${pal.dot} rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
-                            </div>
-                            <p className={`text-[9px] font-mono font-black ${pal.subLabel}`}>{pct}% of total spend</p>
-                            <div className="mt-3.5 space-y-2 pt-3 border-t border-black/10">
-                              <p className={`text-[9px] font-black font-mono uppercase tracking-widest ${pal.subLabel}`}>Trips & Major Spots Covered</p>
-                              {yTrips.map(t => {
-                                const spots = t.majorSpots || [];
-                                const recs = t.records || [];
-                                return (
-                                  <div key={t.id} className="bg-white/70 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors">
-                                    <div className="flex items-center justify-between gap-2">
-                                      <span className={`text-[11px] font-black ${pal.label}`}>{t.title}</span>
-                                      <div className="flex items-center gap-1 shrink-0">
-                                        {t.maxElevationMeters ? (
-                                          <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1 py-0.5 rounded border border-cyan-200/80 flex items-center gap-0.5">
-                                            <Mountain size={8} className="text-cyan-500" />
-                                            {t.maxElevationMeters}m
-                                          </span>
-                                        ) : null}
-                                        {t.distanceKm ? (
-                                          <span className="text-[8px] font-black font-mono text-slate-600 bg-black/5 px-1 py-0.5 rounded border border-black/5 flex items-center gap-0.5">
-                                            <Route size={8} className="text-slate-400" />
-                                            {t.distanceKm.toLocaleString("en-IN")} km
-                                          </span>
-                                        ) : null}
-                                        <span className={`text-[8px] font-black font-mono px-1 py-0.5 rounded border ${pal.pill}`}>
-                                          {t.stats?.duration ? t.stats.duration.split(" (")[0] : shortLabel(t)}
-                                        </span>
-                                      </div>
-                                    </div>
-                                    {spots.length > 0 && (
-                                      <div className="flex flex-wrap gap-1">
-                                        {spots.map((spot, sIdx) => (
-                                          <span key={sIdx} className="text-[8.5px] font-semibold bg-black/4 text-slate-700 px-1 py-0.5 rounded border border-black/5 flex items-center gap-1">
-                                            <MapPin size={8.5} className="text-slate-400 shrink-0" />
-                                            {spot}
-                                          </span>
-                                        ))}
-                                      </div>
-                                    )}
-                                    {recs.length > 0 && (
-                                      <div className="flex flex-wrap gap-1 pt-0.5">
-                                        {recs.map((rec, rIdx) => (
-                                          <span key={rIdx} className="text-[8.5px] font-black bg-amber-500/10 text-amber-800 px-1.5 py-0.5 rounded border border-amber-500/20 flex items-center gap-1">
-                                            <Award size={8.5} className="text-amber-600 shrink-0" />
-                                            <span className="font-bold text-amber-900">{rec.landmark}:</span> {rec.record}
-                                          </span>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between sm:justify-start gap-1.5 flex-wrap">
+                    <span className="text-[9px] sm:text-[8px] font-black uppercase tracking-wider text-slate-400 font-mono">Planned Est.</span>
+                    <span className="text-[9px] sm:text-[8px] font-black bg-white/10 text-emerald-400 px-1.5 py-0.5 sm:py-0.2 rounded-md font-mono shrink-0">
+                      36 Routes • {grandTotalDaysEst.min === grandTotalDaysEst.max ? `${grandTotalDaysEst.min} Days` : `${grandTotalDaysEst.min}–${grandTotalDaysEst.max} Days`}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-sm sm:text-xs font-black font-mono text-emerald-400 tracking-tight">
+                      {Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min) === Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max)
+                        ? `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}`
+                        : `₹${Math.round(upcomingTreksRange.min + upcomingRoadTripsRange.min + jyotirlingaRange.min + kedarKailashRange.min + charDhamRange.min).toLocaleString("en-IN")}–${Math.round(upcomingTreksRange.max + upcomingRoadTripsRange.max + jyotirlingaRange.max + kedarKailashRange.max + charDhamRange.max).toLocaleString("en-IN")}`}
+                    </span>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
 
+          {/* Financial Summary Stat Badges */}
+          <div className="flex flex-col gap-3">
+            {/* Top Row: General & Expedition Summaries (2 cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+              {/* Card 1: Combined Upcoming Treks & Road Trips Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-emerald-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-emerald-700 uppercase tracking-wider">Upcoming Treks & Road Trips</span>
+                </div>
+                <p className="text-base font-black text-black font-mono leading-snug">
+                  {upcomingTreksRange.min + upcomingRoadTripsRange.min === upcomingTreksRange.max + upcomingRoadTripsRange.max ? (
+                    `₹${(upcomingTreksRange.min + upcomingRoadTripsRange.min).toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${(upcomingTreksRange.min + upcomingRoadTripsRange.min).toLocaleString("en-IN")} – ₹${(upcomingTreksRange.max + upcomingRoadTripsRange.max).toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-emerald-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {activeTreksCount} Treks • {activeRoadTripsCount} Trips • {upcomingDaysRange.min === upcomingDaysRange.max ? `${upcomingDaysRange.min} Days` : `${upcomingDaysRange.min}–${upcomingDaysRange.max} Days`}
+                </p>
               </div>
 
-              {/* ── WORLD & NATIONAL RECORD LANDMARKS VISITED (FULL WIDTH) ── */}
-              {allRecords.length > 0 && (
-                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-5">
-                  <div className="border-b border-black/8 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <span className="text-[9px] font-black font-mono uppercase tracking-widest text-amber-600 flex items-center gap-1.5">
-                        <Award size={11} className="text-amber-500" />
-                        Checklist Distinction Records
-                      </span>
-                      <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
-                        World & National Record Landmarks Visited
-                      </h3>
-                      <p className="text-xs text-slate-500 font-medium">World highest, Asia highest, India highest & sacred landmark records covered.</p>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-amber-800 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-xl self-start sm:self-auto">
-                      <Trophy size={11} className="text-amber-600" />
-                      {allRecords.length} Distinction Records
-                    </div>
-                  </div>
+              {/* Card 2: Archived Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-black/10 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-slate-500" />
+                  <span className="text-[9px] font-black font-mono text-slate-400 uppercase tracking-wider">Archived Est.</span>
+                </div>
+                <p className="text-base font-black text-black font-mono leading-snug">
+                  {archivedRange.min === archivedRange.max ? (
+                    `₹${archivedRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${archivedRange.min.toLocaleString("en-IN")} – ₹${archivedRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-slate-400 mt-0.5 font-mono whitespace-nowrap">
+                  {archivedTreksCount} Treks • {archivedRoadTripsCount} Trips • {archivedDaysRange.min === archivedDaysRange.max ? `${archivedDaysRange.min} Days` : `${archivedDaysRange.min}–${archivedDaysRange.max} Days`}
+                </p>
+              </div>
+            </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                    {allRecords.map((rec, idx) => {
-                      const scopeBadgeStyles = {
-                        World: "bg-amber-500/15 text-amber-900 border-amber-500/30",
-                        Asia: "bg-purple-500/15 text-purple-900 border-purple-500/30",
-                        India: "bg-emerald-500/15 text-emerald-900 border-emerald-500/30"
-                      };
-                      const badgeStyle = scopeBadgeStyles[rec.scope] || "bg-slate-500/15 text-slate-900 border-slate-500/30";
+            {/* Bottom Row: Spiritual Yatras (3 cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+              {/* Card 5: Jyotirlinga Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-amber-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-amber-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-amber-700 uppercase tracking-wider">Jyotirlinga Est.</span>
+                </div>
+                <p className="text-sm font-black text-black font-mono leading-snug">
+                  {jyotirlingaRange.min === jyotirlingaRange.max ? (
+                    `₹${jyotirlingaRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${jyotirlingaRange.min.toLocaleString("en-IN")} – ₹${jyotirlingaRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-amber-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {jyotirlingaCount} Shrines • {jyotirlingaDaysRange.min === jyotirlingaDaysRange.max ? `${jyotirlingaDaysRange.min} Days` : `${jyotirlingaDaysRange.min}–${jyotirlingaDaysRange.max} Days`}
+                </p>
+              </div>
 
-                      return (
-                        <div key={idx} className="bg-white/80 border border-black/10 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:bg-white hover:border-black/20 hover:shadow-sm transition-all group">
-                          <div className="space-y-1.5">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className={`text-[8.5px] font-black font-mono uppercase tracking-wider px-2 py-0.5 rounded-md border ${badgeStyle} flex items-center gap-1`}>
-                                <Award size={9} />
-                                {rec.badge}
-                              </span>
-                              <span className="text-[9px] font-black font-mono text-slate-400">
-                                {rec.tripYear}
-                              </span>
-                            </div>
-                            <h4 className="text-sm font-black text-slate-900 tracking-tight leading-tight group-hover:text-amber-900 transition-colors">
-                              {rec.landmark}
-                            </h4>
-                            <p className="text-xs font-bold text-amber-700 font-mono">
-                              {rec.record}
-                            </p>
-                            {rec.detail && (
-                              <p className="text-[11px] text-slate-500 font-medium leading-normal">
-                                {rec.detail}
-                              </p>
-                            )}
-                          </div>
+              {/* Card 6: Kedar & Kailash */}
+              <div className="bg-white/80 backdrop-blur-md border border-purple-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-purple-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-purple-700 uppercase tracking-wider">Kedar & Kailash</span>
+                </div>
+                <p className="text-sm font-black text-black font-mono leading-snug">
+                  {kedarKailashRange.min === kedarKailashRange.max ? (
+                    `₹${kedarKailashRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${kedarKailashRange.min.toLocaleString("en-IN")} – ₹${kedarKailashRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-purple-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {kedarCount} Kedar • {kailashCount} Kailash • {kedarKailashDaysRange.min === kedarKailashDaysRange.max ? `${kedarKailashDaysRange.min} Days` : `${kedarKailashDaysRange.min}–${kedarKailashDaysRange.max} Days`}
+                </p>
+              </div>
 
-                          <div className="pt-2 border-t border-black/5 flex items-center justify-between">
-                            <span className="text-[9.5px] font-mono text-slate-400 truncate">
-                              {rec.tripTitle}
-                            </span>
-                            <span className="text-[9px] font-black font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 shrink-0 flex items-center gap-0.5">
-                              <CheckCircle2 size={9} /> Visited
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+              {/* Card 7: Char Dham Est. */}
+              <div className="bg-white/80 backdrop-blur-md border border-red-500/30 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
+                  <span className="text-[9px] font-black font-mono text-red-700 uppercase tracking-wider">Char Dham Est.</span>
+                </div>
+                <p className="text-sm font-black text-black font-mono leading-snug">
+                  {charDhamRange.min === charDhamRange.max ? (
+                    `₹${charDhamRange.min.toLocaleString("en-IN")}`
+                  ) : (
+                    `₹${charDhamRange.min.toLocaleString("en-IN")} – ₹${charDhamRange.max.toLocaleString("en-IN")}`
+                  )}
+                </p>
+                <p className="text-[9px] font-bold text-red-700/80 mt-0.5 font-mono whitespace-nowrap">
+                  {dhamCount} Shrines • {charDhamDaysRange.min === charDhamDaysRange.max ? `${charDhamDaysRange.min} Days` : `${charDhamDaysRange.min}–${charDhamDaysRange.max} Days`}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Map showing completed places */}
+        <CompletedTripsMap completedPlans={completedPlans} archivedTrips={archivedTrips} />
+
+        {/* Filter Toolbar: Row 1 = Category Tabs, Row 2 = Status & Controls */}
+        <div id="adventures-section" className="space-y-4 mb-10 border-b border-black/10 pb-6">
+          {/* Row 1: Category Selector Tabs */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setCategoryTab("all")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${
+                categoryTab === "all"
+                  ? "bg-black text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              All Adventures ({allTrips.filter(t => activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t)).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("trek")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "trek"
+                  ? "bg-emerald-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Footprints size={13} />
+              Mountain Treks ({allTrips.filter(t => t.type === "trek" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("trip")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "trip"
+                  ? "bg-sky-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Compass size={13} />
+              Road Trips ({allTrips.filter(t => t.type === "trip" && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("jyotirlinga")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "jyotirlinga"
+                  ? "bg-amber-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              Jyotirlingas ({allTrips.filter(t => (t.type === "jyotirlinga" || t.tags?.includes("jyotirlinga")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("panch-kedar")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "panch-kedar"
+                  ? "bg-orange-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              5 Kedar ({allTrips.filter(t => (t.type === "panch-kedar" || t.tags?.includes("panch-kedar")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("panch-kailash")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "panch-kailash"
+                  ? "bg-purple-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              5 Kailash ({allTrips.filter(t => (t.type === "panch-kailash" || t.tags?.includes("panch-kailash")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+
+            <button
+              onClick={() => setCategoryTab("char-dham")}
+              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                categoryTab === "char-dham"
+                  ? "bg-red-600 text-white shadow-md"
+                  : "bg-white/70 hover:bg-white border border-black/10 text-slate-600"
+              }`}
+            >
+              <Sparkles size={13} />
+              4 Dham ({allTrips.filter(t => (t.type === "char-dham" || t.tags?.includes("char-dham")) && (activeTab === "done" ? isTripCompleted(t) : !isTripCompleted(t))).length})
+            </button>
+          </div>
+
+          {/* Row 2: Controls, Status & Readiness Sub-Filters */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-black/5">
+            {/* Left Control Groups: Status + Readiness */}
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Status Selector (Active vs Done vs Archived) */}
+              <div className="flex gap-1.5 bg-black/5 p-1 rounded-2xl shrink-0">
+                <button
+                  onClick={() => setActiveTab("active")}
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeTab === "active"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  Active
+                </button>
+                <button
+                  onClick={() => setActiveTab("done")}
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeTab === "done"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  Done
+                </button>
+                <button
+                  onClick={() => setActiveTab("archived")}
+                  className={`px-3 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                    activeTab === "archived"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  Archived
+                </button>
+              </div>
+
+              {/* Sub-Filter Selector (All vs Ready vs Coming Soon) */}
+              <div className="flex gap-1 bg-black/5 p-1 rounded-2xl shrink-0">
+                <button
+                  onClick={() => setSubFilterKey("global", "all")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                    getSubFilter("global") === "all"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setSubFilterKey("global", "ready")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                    getSubFilter("global") === "ready"
+                      ? "bg-emerald-600 text-white shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  <CheckCircle2 size={11} /> Ready
+                </button>
+                <button
+                  onClick={() => setSubFilterKey("global", "coming-soon")}
+                  className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                    getSubFilter("global") === "coming-soon"
+                      ? "bg-slate-700 text-white shadow-sm"
+                      : "text-slate-500 hover:text-black"
+                  }`}
+                >
+                  <Clock size={11} /> Coming Soon
+                </button>
+              </div>
+            </div>
+
+            {/* Right Control Groups: Sort + View Mode */}
+            <div className="flex items-center gap-3 shrink-0">
+              {/* Sort Controls */}
+              {viewMode === "grid" && (
+                <div className="flex bg-black/5 p-1 rounded-2xl">
+                  <button
+                    onClick={() => setSortBy("money")}
+                    className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                      sortBy === "money"
+                        ? "bg-white text-black shadow-sm"
+                        : "text-slate-500 hover:text-black"
+                    }`}
+                    title="Sort by Money"
+                  >
+                    <Wallet size={12} /> Money
+                  </button>
+                  <button
+                    onClick={() => setSortBy("days")}
+                    className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                      sortBy === "days"
+                        ? "bg-white text-black shadow-sm"
+                        : "text-slate-500 hover:text-black"
+                    }`}
+                    title="Sort by Duration"
+                  >
+                    <Calendar size={12} /> Days
+                  </button>
                 </div>
               )}
 
-              {/* ── SEASONAL TRAVEL HEATMAP (FULL WIDTH) ── */}
-              {(() => {
-                const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-                const MONTH_MAP = {
-                  jan:0, feb:1, mar:2, apr:3, may:4, jun:5,
-                  jul:6, aug:7, sep:8, oct:9, nov:10, dec:11
-                };
-
-                // Parse days from duration string e.g. "9 Days (2 Jul – 10 Jul 2026)"
-                const parseDaysFromDuration = (str) => {
-                  if (!str) return 0;
-                  const m = str.match(/^(\d+)\s*days?/i);
-                  return m ? parseInt(m[1], 10) : 0;
-                };
-
-                // Build per-year data: { "2025": { counts, days, trips }, "2026": ... }
-                const yearData = {};
-                doneTrips.forEach(trip => {
-                  const durationStr = trip.stats?.duration || trip.plans?.[0]?.duration || "";
-                  const match = durationStr.match(/\(\s*\d+\s+([A-Za-z]+)/);
-                  if (match) {
-                    const monthKey = match[1].toLowerCase().slice(0, 3);
-                    const mIdx = MONTH_MAP[monthKey];
-                    const yr = String(trip.completedYear || 2026);
-                    const tripDays = parseDaysFromDuration(durationStr);
-                    if (mIdx !== undefined) {
-                      if (!yearData[yr]) {
-                        yearData[yr] = {
-                          counts: Array(12).fill(0),
-                          days:   Array(12).fill(0),
-                          trips:  Array.from({ length: 12 }, () => [])
-                        };
-                      }
-                      yearData[yr].counts[mIdx] += 1;
-                      yearData[yr].days[mIdx]   += tripDays;
-                      yearData[yr].trips[mIdx].push({ title: trip.title, days: tripDays });
-                    }
-                  }
-                });
-
-                const sortedYears = Object.keys(yearData).sort();
-                const totalTravelMonths = sortedYears.reduce((sum, yr) =>
-                  sum + yearData[yr].counts.filter(c => c > 0).length, 0);
-
-                // Violet for 2025, Emerald for 2026
-                const yearPaletteHeat = {
-                  "2025": {
-                    label: "text-violet-700",
-                    active: ["bg-black/5 border-black/5", "bg-violet-100 border-violet-200/80 text-violet-700", "bg-violet-200 border-violet-300/80 text-violet-800", "bg-violet-400 border-violet-400 text-violet-900", "bg-violet-600 border-violet-600 text-white"],
-                    ring: "ring-violet-500/50",
-                    peak: "bg-violet-600",
-                    dot: "bg-violet-500",
-                    subText: "text-violet-500/70",
-                  },
-                  "2026": {
-                    label: "text-emerald-700",
-                    active: ["bg-black/5 border-black/5", "bg-emerald-100 border-emerald-200/80 text-emerald-700", "bg-emerald-200 border-emerald-300/80 text-emerald-800", "bg-emerald-400 border-emerald-400 text-emerald-900", "bg-emerald-600 border-emerald-600 text-white"],
-                    ring: "ring-emerald-500/50",
-                    peak: "bg-emerald-600",
-                    dot: "bg-emerald-500",
-                    subText: "text-emerald-500/70",
-                  },
-                };
-
-                // Color driven by days (more meaningful than count)
-                const getCell = (days, maxDays, palette) => {
-                  if (days === 0) return { cellCls: "bg-black/5 border-black/5", textCls: "text-slate-300", subCls: "text-slate-200" };
-                  const pct = days / maxDays;
-                  let tier = 1;
-                  if (pct > 0.75) tier = 4;
-                  else if (pct > 0.5) tier = 3;
-                  else if (pct > 0.25) tier = 2;
-                  const cls = palette.active[tier];
-                  const parts = cls.split(" ");
-                  const textCls = parts.find(p => p.startsWith("text-")) || "text-slate-700";
-                  const cellCls = parts.filter(p => !p.startsWith("text-")).join(" ");
-                  // sub text: slightly transparent version of same text color
-                  const subCls = textCls.replace("text-", "text-") + " opacity-70";
-                  return { cellCls, textCls, subCls };
-                };
-
-                return (
-                  <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-5">
-                    {/* Header */}
-                    <div className="border-b border-black/8 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div>
-                        <span className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-500 flex items-center gap-1.5">
-                          <Calendar size={11} className="text-slate-400" />
-                          Activity Pattern
-                        </span>
-                        <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
-                          Seasonal Travel Heatmap
-                        </h3>
-                        <p className="text-xs text-slate-500 font-medium">One row per year — shows trips &amp; days traveled per month.</p>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-slate-700 bg-black/5 border border-black/10 px-3 py-1.5 rounded-xl self-start sm:self-auto">
-                        <Calendar size={11} className="text-slate-500" />
-                        {totalTravelMonths} Active Month{totalTravelMonths !== 1 ? "s" : ""}
-                      </div>
-                    </div>
-
-                    {/* Month Label Row (shared header) */}
-                    <div className="space-y-2.5">
-                      <div className="grid gap-1.5" style={{ gridTemplateColumns: "3rem repeat(12, 1fr)" }}>
-                        <div /> {/* year label spacer */}
-                        {MONTHS.map(m => (
-                          <div key={m} className="text-center text-[8.5px] font-black font-mono uppercase text-slate-400 tracking-wider">{m}</div>
-                        ))}
-                      </div>
-
-                      {/* One row per year */}
-                      {sortedYears.map(yr => {
-                        const { counts, days, trips } = yearData[yr];
-                        const palette = yearPaletteHeat[yr] || yearPaletteHeat["2026"];
-                        const maxDays = Math.max(...days, 1);
-                        const peakIdx = days.indexOf(Math.max(...days));
-                        const hasPeak = days[peakIdx] > 0;
-
-                        return (
-                          <div key={yr} className="grid gap-1.5 items-stretch" style={{ gridTemplateColumns: "3rem repeat(12, 1fr)" }}>
-                            {/* Year label */}
-                            <div className={`text-[9px] font-black font-mono ${palette.label} text-right pr-1 flex items-center justify-end`}>{yr}</div>
-
-                            {/* 12 Month Cells */}
-                            {MONTHS.map((month, mIdx) => {
-                              const count = counts[mIdx];
-                              const totalDays = days[mIdx];
-                              const tripList = trips[mIdx];
-                              const { cellCls, textCls, subCls } = getCell(totalDays, maxDays, palette);
-                              const isPeak = hasPeak && mIdx === peakIdx;
-
-                              return (
-                                <div
-                                  key={month}
-                                  title={count > 0 ? `${yr} ${month}: ${tripList.map(t => t.title).join(", ")} (${totalDays}d)` : `${yr} ${month}: No trips`}
-                                  className={`relative rounded-xl border ${cellCls} h-14 flex flex-col items-center justify-center gap-0 transition-all hover:scale-105 hover:shadow-md cursor-default group ${isPeak ? `ring-2 ${palette.ring} ring-offset-1` : ""}`}
-                                >
-                                  {count > 0 ? (
-                                    <>
-                                      {/* Trip count */}
-                                      <span className={`text-sm font-black leading-tight ${textCls}`} style={{ fontFamily: "'Anton', sans-serif" }}>
-                                        {count}
-                                      </span>
-                                      {/* Days */}
-                                      <span className={`text-[8px] font-black font-mono leading-tight ${subCls}`}>
-                                        {totalDays}d
-                                      </span>
-                                    </>
-                                  ) : (
-                                    <span className="text-slate-200 text-lg font-black" style={{ fontFamily: "'Anton', sans-serif" }}>·</span>
-                                  )}
-
-                                  {isPeak && (
-                                    <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[6.5px] font-black font-mono uppercase tracking-wider ${palette.peak} text-white px-1 py-0.5 rounded-full whitespace-nowrap`}>
-                                      Peak
-                                    </span>
-                                  )}
-                                  {count > 0 && (
-                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
-                                      <div className="bg-slate-900 text-white text-[8.5px] font-black font-mono rounded-lg px-2.5 py-2 whitespace-nowrap max-w-[200px] text-center shadow-xl space-y-1">
-                                        <div className="text-slate-400 text-[7.5px] uppercase tracking-widest border-b border-white/10 pb-1 mb-1">{yr} · {month}</div>
-                                        {tripList.map(t => (
-                                          <div key={t.title} className="flex items-center justify-between gap-3">
-                                            <span className="truncate text-left">{t.title}</span>
-                                            {t.days > 0 && <span className="text-slate-400 shrink-0">{t.days}d</span>}
-                                          </div>
-                                        ))}
-                                        <div className="border-t border-white/10 pt-1 mt-1 text-slate-300">
-                                          {count} trip{count > 1 ? "s" : ""} · {totalDays} day{totalDays !== 1 ? "s" : ""}
-                                        </div>
-                                      </div>
-                                      <div className="w-2 h-2 bg-slate-900 rotate-45 -mt-1" />
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Legend Row */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-black/8">
-                      <div className="flex flex-wrap items-center gap-4">
-                        {sortedYears.map(yr => {
-                          const palette = yearPaletteHeat[yr] || yearPaletteHeat["2026"];
-                          const { counts, days } = yearData[yr];
-                          const active = counts.filter(c => c > 0).length;
-                          const total = counts.reduce((a, b) => a + b, 0);
-                          const totalDays = days.reduce((a, b) => a + b, 0);
-                          return (
-                            <div key={yr} className="flex items-center gap-1.5">
-                              <div className={`w-2 h-2 rounded-full ${palette.dot}`} />
-                              <span className={`text-[9px] font-black font-mono ${palette.label}`}>{yr}</span>
-                              <span className="text-[9px] font-mono text-slate-400">— {total} trip{total !== 1 ? "s" : ""} · {totalDays} days · {active} month{active !== 1 ? "s" : ""}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black font-mono uppercase text-slate-400">Days intensity:</span>
-                        <div className="flex items-center gap-0.5">
-                          {["bg-black/8","bg-emerald-100","bg-emerald-300","bg-emerald-500","bg-emerald-700"].map((cls, i) => (
-                            <div key={i} className={`w-4 h-3 rounded-sm ${cls}`} />
-                          ))}
-                          <span className="text-[8px] font-mono text-slate-400 ml-1">High</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-
-            </div>
-          </section>
-        );
-      })()}
-
-
-      {/* CTA: Explore All Adventures */}
-      <section className="w-full bg-[#e8e4dc] border-y border-black/8 py-14 px-6 md:px-12 lg:px-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative bg-white/70 border border-black/10 rounded-3xl overflow-hidden p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 shadow-xs">
-            <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500 rounded-l-3xl" />
-            <div className="relative z-10 max-w-2xl pl-4">
-              <span className="text-[9px] font-black font-mono uppercase tracking-widest text-emerald-600 flex items-center gap-1.5 mb-2">
-                <Compass size={11} className="text-emerald-500" />
-                Adventure Portal
-              </span>
-              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-slate-900 mb-2" style={{ fontFamily: "'Anton', sans-serif" }}>
-                Select Your Adventure
-              </h2>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed mb-5">
-                Browse 31 planned expeditions — Himalayan treks, road trips, 12 Jyotirlingas, Panch Kedar, Panch Kailash, and Char Dham pilgrimages with full itineraries and budget breakdowns.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { label: "Mountain Treks", bg: "bg-emerald-500/10 border-emerald-500/20 text-emerald-700", Icon: Footprints },
-                  { label: "Road Trips", bg: "bg-sky-500/10 border-sky-500/20 text-sky-700", Icon: Compass },
-                  { label: "Jyotirlingas", bg: "bg-amber-500/10 border-amber-500/20 text-amber-700", Icon: Sparkles },
-                  { label: "Panch Kedar", bg: "bg-orange-500/10 border-orange-500/20 text-orange-700", Icon: Sparkles },
-                  { label: "Panch Kailash", bg: "bg-purple-500/10 border-purple-500/20 text-purple-700", Icon: Sparkles },
-                  { label: "Char Dham", bg: "bg-red-500/10 border-red-500/20 text-red-700", Icon: Sparkles },
-                ].map(({ label, bg, Icon }) => (
-                  <span key={label} className={`inline-flex items-center gap-1 text-[9px] font-black font-mono uppercase tracking-wider px-2.5 py-1 rounded-full border ${bg}`}>
-                    <Icon size={9} />
-                    {label}
-                  </span>
-                ))}
+              {/* View Mode Switcher */}
+              <div className="flex gap-1 bg-black/5 p-1 rounded-2xl">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 rounded-xl transition-all ${
+                    viewMode === "grid"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-400 hover:text-black"
+                  }`}
+                  title="Grid View"
+                >
+                  <LayoutGrid size={15} />
+                </button>
+                <button
+                  onClick={() => setViewMode("timeline")}
+                  className={`p-1.5 rounded-xl transition-all ${
+                    viewMode === "timeline"
+                      ? "bg-white text-black shadow-sm"
+                      : "text-slate-400 hover:text-black"
+                  }`}
+                  title="Timeline View"
+                >
+                  <Clock size={15} />
+                </button>
               </div>
-            </div>
-            <div className="relative z-10 shrink-0 pl-4 md:pl-0">
-              <a
-                href="/adventures"
-                className="group inline-flex items-center gap-2.5 bg-slate-900 hover:bg-emerald-600 text-white font-black uppercase tracking-wider text-xs px-7 py-3.5 rounded-2xl shadow-sm hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-0.5"
-              >
-                View All Adventures
-                <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
             </div>
           </div>
         </div>
-      </section>
 
+        {/* Content Section: Separated display when 'all' is selected */}
+        {viewMode === "timeline" ? (
+          renderTimelineView()
+        ) : categoryTab === "all" ? (
+          <div className="space-y-12">
+            {/* Section 1: Mountain Treks */}
+            {trekItems.length > 0 && (
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-700">
+                    <Footprints size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Himalayan Mountain Treks
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Foot trails, high passes, and sacred temple treks</p>
+                  </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("trek", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("trek") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({trekItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trek", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trek") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({trekItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trek", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trek") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({trekItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {(() => {
+                    const filteredList = trekItems.filter(t => getSubFilter("trek") === "ready" ? !isNotReadyTrip(t) : getSubFilter("trek") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("trek") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("trek") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Section 2: Road Trips & Expeditions */}
+            {tripItems.length > 0 && (
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-700">
+                    <Compass size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Road Trips & Expeditions
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Self-scooty circuits, bike rentals, and high-pass riding routes</p>
+                  </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("trip", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("trip") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({tripItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trip", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trip") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({tripItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("trip", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("trip") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({tripItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {(() => {
+                    const filteredList = tripItems.filter(t => getSubFilter("trip") === "ready" ? !isNotReadyTrip(t) : getSubFilter("trip") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("trip") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("trip") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Section 3: Jyotirlinga Yatras */}
+            {jyotirlingaItems.length > 0 && (
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Jyotirlinga Yatras
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Sacred pilgrimages to the 12 Jyotirlinga shrines</p>
+                  </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("jyotirlinga", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("jyotirlinga") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({jyotirlingaItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("jyotirlinga", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("jyotirlinga") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({jyotirlingaItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("jyotirlinga", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("jyotirlinga") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({jyotirlingaItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {(() => {
+                    const filteredList = jyotirlingaItems.filter(t => getSubFilter("jyotirlinga") === "ready" ? !isNotReadyTrip(t) : getSubFilter("jyotirlinga") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("jyotirlinga") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("jyotirlinga") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Section 4: Panch Kedar Shrines */}
+            {panchKedarItems.length > 0 && (
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Panch Kedar Shrines
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">The five sacred Shiva temples in Garhwal Himalayas</p>
+                  </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("panch-kedar", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("panch-kedar") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({panchKedarItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kedar", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kedar") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({panchKedarItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kedar", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kedar") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({panchKedarItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {(() => {
+                    const filteredList = panchKedarItems.filter(t => getSubFilter("panch-kedar") === "ready" ? !isNotReadyTrip(t) : getSubFilter("panch-kedar") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("panch-kedar") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("panch-kedar") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Section 5: Panch Kailash Expeditions */}
+            {panchKailashItems.length > 0 && (
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Panch Kailash Expeditions
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Sacred high-altitude pilgrimages to the 5 Holy Kailash Peaks</p>
+                  </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("panch-kailash", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("panch-kailash") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({panchKailashItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kailash", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kailash") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({panchKailashItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("panch-kailash", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("panch-kailash") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({panchKailashItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {(() => {
+                    const filteredList = panchKailashItems.filter(t => getSubFilter("panch-kailash") === "ready" ? !isNotReadyTrip(t) : getSubFilter("panch-kailash") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("panch-kailash") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("panch-kailash") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Section 6: Char Dham Pilgrimages */}
+            {charDhamItems.length > 0 && (
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 border-b border-black/5 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-700">
+                    <Sparkles size={16} />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                      Char Dham Pilgrimages
+                    </h2>
+                    <p className="text-xs text-slate-500 font-medium">Holy Char Dham shrines across Uttarakhand and India</p>
+                  </div>
+                    </div>
+                    <div className="flex items-center gap-1 bg-black/5 p-1 rounded-2xl self-start sm:self-auto shrink-0">
+                      <button
+                        onClick={() => setSubFilterKey("char-dham", "all")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                          getSubFilter("char-dham") === "all" ? "bg-white text-black shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        All ({charDhamItems.length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("char-dham", "ready")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("char-dham") === "ready" ? "bg-emerald-600 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <CheckCircle2 size={10} /> Ready ({charDhamItems.filter(t => !isNotReadyTrip(t)).length})
+                      </button>
+                      <button
+                        onClick={() => setSubFilterKey("char-dham", "coming-soon")}
+                        className={`px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${
+                          getSubFilter("char-dham") === "coming-soon" ? "bg-slate-700 text-white shadow-xs" : "text-slate-500 hover:text-black"
+                        }`}
+                      >
+                        <Clock size={10} /> Coming Soon ({charDhamItems.filter(t => isNotReadyTrip(t)).length})
+                      </button>
+                    </div>
+                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  {(() => {
+                    const filteredList = charDhamItems.filter(t => getSubFilter("char-dham") === "ready" ? !isNotReadyTrip(t) : getSubFilter("char-dham") === "coming-soon" ? isNotReadyTrip(t) : true);
+                    if (filteredList.length === 0) {
+                      return (
+                        <div className="border border-dashed border-black/10 rounded-2xl p-6 text-center bg-white/40 col-span-2">
+                          <Compass size={20} className="mx-auto text-slate-300 mb-1.5" />
+                          <p className="text-xs font-black uppercase tracking-wide text-slate-600">
+                            No {getSubFilter("char-dham") === "ready" ? "Ready" : "Coming Soon"} Routes
+                          </p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">
+                            {getSubFilter("char-dham") === "ready"
+                              ? "All routes in this category are currently under development (Coming Soon)."
+                              : "All routes in this category are fully ready and available!"}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return filteredList.map(renderTripCard);
+                  })()}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Filtered view for specific category */
+          <div>
+            <div className="flex items-center gap-2 mb-6 border-b border-black/5 pb-3">
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                categoryTab === "trek" ? "bg-emerald-500/10 text-emerald-700" : categoryTab === "jyotirlinga" ? "bg-amber-500/10 text-amber-700" : "bg-sky-500/10 text-sky-700"
+              }`}>
+                {categoryTab === "trek" ? <Footprints size={16} /> : categoryTab === "jyotirlinga" ? <Sparkles size={16} /> : <Compass size={16} />}
+              </div>
+              <div>
+                <h2 className="text-xl font-black uppercase tracking-tight" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  {categoryTab === "trek" ? "Himalayan Mountain Treks" : categoryTab === "jyotirlinga" ? "Jyotirlinga Yatras" : categoryTab === "panch-kedar" ? "Panch Kedar Shrines" : categoryTab === "panch-kailash" ? "Panch Kailash Expeditions" : categoryTab === "char-dham" ? "Char Dham Pilgrimages" : "Road Trips & Expeditions"}
+                </h2>
+                <p className="text-xs text-slate-500 font-medium">
+                  {categoryTab === "trek" ? "Foot trails, high passes, and sacred temple treks" : categoryTab === "jyotirlinga" ? "Sacred pilgrimages to the 12 Jyotirlinga shrines" : categoryTab === "panch-kedar" ? "The five sacred Shiva temples in Garhwal Himalayas" : categoryTab === "panch-kailash" ? "Sacred high-altitude pilgrimages to the 5 Holy Kailash Peaks" : categoryTab === "char-dham" ? "Holy Char Dham shrines across Uttarakhand and India" : "Self-scooty circuits, bike rentals, and high-pass riding routes"}
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+              {sortedTrips.map(renderTripCard)}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {filteredTrips.length === 0 && (
+          <div className="border-2 border-dashed border-black/10 rounded-[32px] p-12 text-center py-16">
+            <Compass size={32} className="mx-auto text-slate-300 mb-3" />
+            <h4 className="font-extrabold text-base text-slate-700">No Adventures Found</h4>
+            <p className="text-xs text-slate-400 max-w-xs mx-auto mt-1 leading-relaxed">
+              No routes match the selected category and status filters.
+            </p>
+          </div>
+        )}
+      </main>
 
       {/* Footer */}
       <footer className="w-full py-6 px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center text-[10px] font-semibold uppercase tracking-widest text-black/45 z-30 border-t border-black/5 mt-12 gap-3">

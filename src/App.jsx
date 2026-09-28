@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";
+import Adventures from "./pages/Adventures";
 import Wardrobe from "./pages/Wardrobe";
 
 export default function App() {
@@ -8,6 +9,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/adventures" element={<Adventures />} />
         <Route path="/rudranath-plan1" element={<Home />} />
         <Route path="/rudranath-plan2" element={<Home />} />
         <Route path="/plan1" element={<Home />} />
