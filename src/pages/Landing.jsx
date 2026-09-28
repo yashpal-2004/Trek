@@ -52,6 +52,7 @@ import { moonPeakAmounts } from "../data/moon-peak/amounts";
 
 function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = {}, completedPlans = [], archivedPlans = [] }) {
   const [isBookOpen, setIsBookOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("index");
   const [pageSubTab, setPageSubTab] = useState("photo"); // 'photo' for 1st page, 'details' for turned page
@@ -221,7 +222,15 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   // If Book is Closed, Render Vintage Scrapbook Travel Journal Cover
   if (!isBookOpen) {
     return (
-      <div className="relative w-full h-[720px] md:h-[760px] cursor-pointer group perspective-1000" onClick={() => { setIsBookOpen(true); triggerStamp("JOURNAL UNLOCKED"); }}>
+      <div
+        className="relative w-full h-[720px] md:h-[760px] cursor-pointer group perspective-1000"
+        onClick={() => {
+          setIsBookOpen(true);
+          setIsClosing(false);
+          const currentTrip = sortedTrips[selectedIndex] || sortedTrips[0];
+          triggerStamp(getOneWordPlaceName(currentTrip));
+        }}
+      >
         {/* Outer Frame Container */}
         <div className="w-full h-full bg-[#2a1d15] rounded-[40px] p-3 md:p-5 shadow-2xl font-serif text-slate-800 border-4 border-[#1c130d] flex flex-col justify-between relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.005]">
           
@@ -281,6 +290,14 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
               </div>
             </div>
 
+            {/* Metallic Brass Latch Badge */}
+            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-7 h-20 bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 border-2 border-amber-400/80 rounded-r-2xl shadow-2xl flex flex-col items-center justify-center gap-1 group-hover:translate-x-1 transition-transform z-30 pointer-events-none">
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-950 border border-amber-400/60 shadow-inner flex items-center justify-center">
+                <div className="w-1 h-1 bg-amber-300 rounded-full" />
+              </div>
+              <span className="text-[6.5px] font-mono font-black uppercase text-amber-200 rotate-90 tracking-widest whitespace-nowrap">LATCH</span>
+            </div>
+
             {/* Left Spine Crease Shadow overlay */}
             <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none z-20" />
             <div className="absolute top-0 bottom-0 left-8 border-l border-[#5c4431]/60 pointer-events-none z-20" />
@@ -291,11 +308,18 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   }
 
   return (
-    <div className="relative w-full h-auto min-h-[580px] md:h-[760px] bg-[#3d2f24] rounded-[24px] sm:rounded-[40px] p-2.5 sm:p-5 md:p-8 shadow-2xl font-serif text-slate-800 border-2 sm:border-4 border-[#2b1f17] flex flex-col justify-between overflow-hidden">
+    <div className={`relative w-full h-auto min-h-[580px] md:h-[760px] bg-[#3d2f24] rounded-[24px] sm:rounded-[40px] p-2.5 sm:p-5 md:p-8 shadow-2xl font-serif text-slate-800 border-2 sm:border-4 border-[#2b1f17] flex flex-col justify-between overflow-hidden transition-all duration-300 ${isClosing ? "animate-bookClose3D opacity-80" : "animate-bookOpen3D"}`}>
       
       {/* Close Cover Bookmark Tag Button */}
       <button
-        onClick={() => setIsBookOpen(false)}
+        onClick={() => {
+          setIsClosing(true);
+          triggerStamp("SEALED");
+          setTimeout(() => {
+            setIsBookOpen(false);
+            setIsClosing(false);
+          }, 800);
+        }}
         className="absolute -top-1 left-4 sm:left-12 md:left-16 z-30 px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-[#4a331e] hover:bg-[#2b1f17] text-[#f7e4c8] text-[10px] sm:text-xs font-mono font-bold rounded-b-xl border-x-2 border-b-2 border-amber-900/60 shadow-lg flex items-center gap-1.5 transition-all transform hover:translate-y-0.5 cursor-pointer"
         title="Fold up and close journal cover"
       >
