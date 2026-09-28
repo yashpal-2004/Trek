@@ -3296,6 +3296,222 @@ export default function Landing() {
                   </div>
                 </div>
               )}
+
+              {/* ── SEASONAL TRAVEL HEATMAP (FULL WIDTH) ── */}
+              {(() => {
+                const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                const MONTH_MAP = {
+                  jan:0, feb:1, mar:2, apr:3, may:4, jun:5,
+                  jul:6, aug:7, sep:8, oct:9, nov:10, dec:11
+                };
+
+                // Parse days from duration string e.g. "9 Days (2 Jul – 10 Jul 2026)"
+                const parseDaysFromDuration = (str) => {
+                  if (!str) return 0;
+                  const m = str.match(/^(\d+)\s*days?/i);
+                  return m ? parseInt(m[1], 10) : 0;
+                };
+
+                // Build per-year data: { "2025": { counts, days, trips }, "2026": ... }
+                const yearData = {};
+                doneTrips.forEach(trip => {
+                  const durationStr = trip.stats?.duration || trip.plans?.[0]?.duration || "";
+                  const match = durationStr.match(/\(\s*\d+\s+([A-Za-z]+)/);
+                  if (match) {
+                    const monthKey = match[1].toLowerCase().slice(0, 3);
+                    const mIdx = MONTH_MAP[monthKey];
+                    const yr = String(trip.completedYear || 2026);
+                    const tripDays = parseDaysFromDuration(durationStr);
+                    if (mIdx !== undefined) {
+                      if (!yearData[yr]) {
+                        yearData[yr] = {
+                          counts: Array(12).fill(0),
+                          days:   Array(12).fill(0),
+                          trips:  Array.from({ length: 12 }, () => [])
+                        };
+                      }
+                      yearData[yr].counts[mIdx] += 1;
+                      yearData[yr].days[mIdx]   += tripDays;
+                      yearData[yr].trips[mIdx].push({ title: trip.title, days: tripDays });
+                    }
+                  }
+                });
+
+                const sortedYears = Object.keys(yearData).sort();
+                const totalTravelMonths = sortedYears.reduce((sum, yr) =>
+                  sum + yearData[yr].counts.filter(c => c > 0).length, 0);
+
+                // Violet for 2025, Emerald for 2026
+                const yearPaletteHeat = {
+                  "2025": {
+                    label: "text-violet-700",
+                    active: ["bg-black/5 border-black/5", "bg-violet-100 border-violet-200/80 text-violet-700", "bg-violet-200 border-violet-300/80 text-violet-800", "bg-violet-400 border-violet-400 text-violet-900", "bg-violet-600 border-violet-600 text-white"],
+                    ring: "ring-violet-500/50",
+                    peak: "bg-violet-600",
+                    dot: "bg-violet-500",
+                    subText: "text-violet-500/70",
+                  },
+                  "2026": {
+                    label: "text-emerald-700",
+                    active: ["bg-black/5 border-black/5", "bg-emerald-100 border-emerald-200/80 text-emerald-700", "bg-emerald-200 border-emerald-300/80 text-emerald-800", "bg-emerald-400 border-emerald-400 text-emerald-900", "bg-emerald-600 border-emerald-600 text-white"],
+                    ring: "ring-emerald-500/50",
+                    peak: "bg-emerald-600",
+                    dot: "bg-emerald-500",
+                    subText: "text-emerald-500/70",
+                  },
+                };
+
+                // Color driven by days (more meaningful than count)
+                const getCell = (days, maxDays, palette) => {
+                  if (days === 0) return { cellCls: "bg-black/5 border-black/5", textCls: "text-slate-300", subCls: "text-slate-200" };
+                  const pct = days / maxDays;
+                  let tier = 1;
+                  if (pct > 0.75) tier = 4;
+                  else if (pct > 0.5) tier = 3;
+                  else if (pct > 0.25) tier = 2;
+                  const cls = palette.active[tier];
+                  const parts = cls.split(" ");
+                  const textCls = parts.find(p => p.startsWith("text-")) || "text-slate-700";
+                  const cellCls = parts.filter(p => !p.startsWith("text-")).join(" ");
+                  // sub text: slightly transparent version of same text color
+                  const subCls = textCls.replace("text-", "text-") + " opacity-70";
+                  return { cellCls, textCls, subCls };
+                };
+
+                return (
+                  <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-5">
+                    {/* Header */}
+                    <div className="border-b border-black/8 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-500 flex items-center gap-1.5">
+                          <Calendar size={11} className="text-slate-400" />
+                          Activity Pattern
+                        </span>
+                        <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>
+                          Seasonal Travel Heatmap
+                        </h3>
+                        <p className="text-xs text-slate-500 font-medium">One row per year — shows trips &amp; days traveled per month.</p>
+                      </div>
+                      <div className="inline-flex items-center gap-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-slate-700 bg-black/5 border border-black/10 px-3 py-1.5 rounded-xl self-start sm:self-auto">
+                        <Calendar size={11} className="text-slate-500" />
+                        {totalTravelMonths} Active Month{totalTravelMonths !== 1 ? "s" : ""}
+                      </div>
+                    </div>
+
+                    {/* Month Label Row (shared header) */}
+                    <div className="space-y-2.5">
+                      <div className="grid gap-1.5" style={{ gridTemplateColumns: "3rem repeat(12, 1fr)" }}>
+                        <div /> {/* year label spacer */}
+                        {MONTHS.map(m => (
+                          <div key={m} className="text-center text-[8.5px] font-black font-mono uppercase text-slate-400 tracking-wider">{m}</div>
+                        ))}
+                      </div>
+
+                      {/* One row per year */}
+                      {sortedYears.map(yr => {
+                        const { counts, days, trips } = yearData[yr];
+                        const palette = yearPaletteHeat[yr] || yearPaletteHeat["2026"];
+                        const maxDays = Math.max(...days, 1);
+                        const peakIdx = days.indexOf(Math.max(...days));
+                        const hasPeak = days[peakIdx] > 0;
+
+                        return (
+                          <div key={yr} className="grid gap-1.5 items-stretch" style={{ gridTemplateColumns: "3rem repeat(12, 1fr)" }}>
+                            {/* Year label */}
+                            <div className={`text-[9px] font-black font-mono ${palette.label} text-right pr-1 flex items-center justify-end`}>{yr}</div>
+
+                            {/* 12 Month Cells */}
+                            {MONTHS.map((month, mIdx) => {
+                              const count = counts[mIdx];
+                              const totalDays = days[mIdx];
+                              const tripList = trips[mIdx];
+                              const { cellCls, textCls, subCls } = getCell(totalDays, maxDays, palette);
+                              const isPeak = hasPeak && mIdx === peakIdx;
+
+                              return (
+                                <div
+                                  key={month}
+                                  title={count > 0 ? `${yr} ${month}: ${tripList.map(t => t.title).join(", ")} (${totalDays}d)` : `${yr} ${month}: No trips`}
+                                  className={`relative rounded-xl border ${cellCls} h-14 flex flex-col items-center justify-center gap-0 transition-all hover:scale-105 hover:shadow-md cursor-default group ${isPeak ? `ring-2 ${palette.ring} ring-offset-1` : ""}`}
+                                >
+                                  {count > 0 ? (
+                                    <>
+                                      {/* Trip count */}
+                                      <span className={`text-sm font-black leading-tight ${textCls}`} style={{ fontFamily: "'Anton', sans-serif" }}>
+                                        {count}
+                                      </span>
+                                      {/* Days */}
+                                      <span className={`text-[8px] font-black font-mono leading-tight ${subCls}`}>
+                                        {totalDays}d
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="text-slate-200 text-lg font-black" style={{ fontFamily: "'Anton', sans-serif" }}>·</span>
+                                  )}
+
+                                  {isPeak && (
+                                    <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[6.5px] font-black font-mono uppercase tracking-wider ${palette.peak} text-white px-1 py-0.5 rounded-full whitespace-nowrap`}>
+                                      Peak
+                                    </span>
+                                  )}
+                                  {count > 0 && (
+                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:flex flex-col items-center z-20 pointer-events-none">
+                                      <div className="bg-slate-900 text-white text-[8.5px] font-black font-mono rounded-lg px-2.5 py-2 whitespace-nowrap max-w-[200px] text-center shadow-xl space-y-1">
+                                        <div className="text-slate-400 text-[7.5px] uppercase tracking-widest border-b border-white/10 pb-1 mb-1">{yr} · {month}</div>
+                                        {tripList.map(t => (
+                                          <div key={t.title} className="flex items-center justify-between gap-3">
+                                            <span className="truncate text-left">{t.title}</span>
+                                            {t.days > 0 && <span className="text-slate-400 shrink-0">{t.days}d</span>}
+                                          </div>
+                                        ))}
+                                        <div className="border-t border-white/10 pt-1 mt-1 text-slate-300">
+                                          {count} trip{count > 1 ? "s" : ""} · {totalDays} day{totalDays !== 1 ? "s" : ""}
+                                        </div>
+                                      </div>
+                                      <div className="w-2 h-2 bg-slate-900 rotate-45 -mt-1" />
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Legend Row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-black/8">
+                      <div className="flex flex-wrap items-center gap-4">
+                        {sortedYears.map(yr => {
+                          const palette = yearPaletteHeat[yr] || yearPaletteHeat["2026"];
+                          const { counts, days } = yearData[yr];
+                          const active = counts.filter(c => c > 0).length;
+                          const total = counts.reduce((a, b) => a + b, 0);
+                          const totalDays = days.reduce((a, b) => a + b, 0);
+                          return (
+                            <div key={yr} className="flex items-center gap-1.5">
+                              <div className={`w-2 h-2 rounded-full ${palette.dot}`} />
+                              <span className={`text-[9px] font-black font-mono ${palette.label}`}>{yr}</span>
+                              <span className="text-[9px] font-mono text-slate-400">— {total} trip{total !== 1 ? "s" : ""} · {totalDays} days · {active} month{active !== 1 ? "s" : ""}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black font-mono uppercase text-slate-400">Days intensity:</span>
+                        <div className="flex items-center gap-0.5">
+                          {["bg-black/8","bg-emerald-100","bg-emerald-300","bg-emerald-500","bg-emerald-700"].map((cls, i) => (
+                            <div key={i} className={`w-4 h-3 rounded-sm ${cls}`} />
+                          ))}
+                          <span className="text-[8px] font-mono text-slate-400 ml-1">High</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+
             </div>
           </section>
         );
