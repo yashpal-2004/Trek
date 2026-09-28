@@ -2940,282 +2940,293 @@ export default function Landing() {
                 ))}
               </div>
 
-              {/* ── YEAR-IN-REVIEW + BAR CHART ── */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+              {/* ── MAIN DASHBOARD GRID (UNIFIED 2-COLUMN SECTION) ── */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
-                {/* Year-in-Review */}
-                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
-                  <div className="border-b border-black/8 pb-3 flex items-center justify-between">
-                    <div>
-                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Year in Review</p>
-                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>By Year</h3>
+                {/* LEFT COLUMN: Financial & Transit Charts (7 Columns) */}
+                <div className="lg:col-span-7 space-y-5">
+
+                  {/* Spend per Trip */}
+                  <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs">
+                    <div className="border-b border-black/8 pb-3 mb-5 flex items-center justify-between">
+                      <div>
+                        <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Expense Breakdown</p>
+                        <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Spend per Trip</h3>
+                      </div>
+                      <BarChart2 size={16} className="text-slate-300" />
                     </div>
-                    <Calendar size={16} className="text-slate-300" />
-                  </div>
-                  <div className="space-y-3">
-                    {years.map(year => {
-                      const yTrips = byYear[year];
-                      const ySpent = yTrips.reduce((s, t) => s + (t.spentTotal || 0), 0);
-                      const yDays = yTrips.reduce((s, t) => { const { max } = getTripDaysBounds(t); return s + max; }, 0);
-                      const yKm = yTrips.reduce((s, t) => s + (t.distanceKm || 0), 0);
-                      const pal = yearPalette[year] || yearPalette["2026"];
-                      const pct = Math.round((ySpent / (totalSpentVal || 1)) * 100);
-                      return (
-                        <div key={year} className={`rounded-2xl border p-4 ${pal.card}`}>
-                          <div className="flex items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <div className={`w-2 h-2 rounded-full ${pal.dot}`} />
-                              <span className={`text-sm font-black font-mono ${pal.label}`}>{year}</span>
-                            </div>
-                            <span className={`text-[9px] font-black font-mono px-2 py-0.5 rounded-lg border ${pal.pill}`}>{yTrips.length} trip{yTrips.length > 1 ? "s" : ""}</span>
-                          </div>
-                          <div className="grid grid-cols-3 gap-2 mb-3">
-                            {[
-                              { l: "Spent", v: `₹${Math.round(ySpent).toLocaleString("en-IN")}` },
-                              { l: "Days", v: `${yDays}d` },
-                              { l: "Distance", v: `${yKm.toLocaleString("en-IN")} km` },
-                            ].map(({ l, v }) => (
-                              <div key={l}>
-                                <p className={`text-[9px] font-black font-mono uppercase ${pal.subLabel}`}>{l}</p>
-                                <p className={`text-sm font-black ${pal.label}`}>{v}</p>
+                    <div className="space-y-2.5">
+                      {chartTrips.map((trip, i) => {
+                        const spent = trip.spentTotal || 0;
+                        const pct = Math.round((spent / maxSpend) * 100);
+                        const yr = String(trip.completedYear || 2026);
+                        const pal = yearPalette[yr] || yearPalette["2026"];
+                        return (
+                          <div key={trip.id} className="bg-white/60 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors group">
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="text-[10px] font-black font-mono text-slate-300 w-3.5 shrink-0 text-right">{i + 1}</span>
+                                <span className="text-[11px] font-black text-slate-800 truncate">{trip.title}</span>
                               </div>
-                            ))}
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                {trip.maxElevationMeters ? (
+                                  <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200/80 flex items-center gap-0.5">
+                                    <Mountain size={8} className="text-cyan-500" />
+                                    {trip.maxElevationMeters}m
+                                  </span>
+                                ) : null}
+                                {trip.distanceKm ? (
+                                  <span className="text-[8px] font-black font-mono text-slate-500 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
+                                    <Route size={8} className="text-slate-400" />
+                                    {trip.distanceKm.toLocaleString("en-IN")} km
+                                  </span>
+                                ) : null}
+                                <span className={`text-[8.5px] font-black font-mono px-1.5 py-0.5 rounded-md border ${pal.pill}`}>{yr}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <div className="flex-1 h-2 bg-black/6 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${pal.bar} opacity-75 group-hover:opacity-100 transition-all duration-300`}
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                              <span className="text-[11px] font-black font-mono text-slate-900 shrink-0">₹{Math.round(spent).toLocaleString("en-IN")}</span>
+                            </div>
                           </div>
-                          <div className="h-1 bg-black/8 rounded-full overflow-hidden mb-1">
-                            <div className={`h-full ${pal.dot} rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
-                          </div>
-                          <p className={`text-[9px] font-mono font-black ${pal.subLabel}`}>{pct}% of total spend</p>
-                          <div className="mt-3.5 space-y-2 pt-3 border-t border-black/10">
-                            <p className={`text-[9px] font-black font-mono uppercase tracking-widest ${pal.subLabel}`}>Trips & Major Spots Covered</p>
-                            {yTrips.map(t => {
-                              const spots = t.majorSpots || [];
-                              const recs = t.records || [];
-                              return (
-                                <div key={t.id} className="bg-white/70 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors">
-                                  <div className="flex items-center justify-between gap-2">
-                                    <span className={`text-[11px] font-black ${pal.label}`}>{t.title}</span>
-                                    <div className="flex items-center gap-1.5 shrink-0">
-                                      {t.maxElevationMeters ? (
-                                        <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200/80 flex items-center gap-0.5">
-                                          <Mountain size={8} className="text-cyan-500" />
-                                          {t.maxElevationMeters}m
-                                        </span>
-                                      ) : null}
-                                      {t.distanceKm ? (
-                                        <span className="text-[8px] font-black font-mono text-slate-600 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
-                                          <Route size={8} className="text-slate-400" />
-                                          {t.distanceKm.toLocaleString("en-IN")} km
-                                        </span>
-                                      ) : null}
-                                      <span className={`text-[8px] font-black font-mono px-1.5 py-0.5 rounded-md border ${pal.pill}`}>
-                                        {t.stats?.duration ? t.stats.duration.split(" (")[0] : shortLabel(t)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  {spots.length > 0 && (
-                                    <div className="flex flex-wrap gap-1">
-                                      {spots.map((spot, sIdx) => (
-                                        <span key={sIdx} className="text-[9px] font-semibold bg-black/4 text-slate-700 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-1">
-                                          <MapPin size={9} className="text-slate-400 shrink-0" />
-                                          {spot}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  )}
-                                  {recs.length > 0 && (
-                                    <div className="flex flex-wrap gap-1 pt-0.5">
-                                      {recs.map((rec, rIdx) => (
-                                        <span key={rIdx} className="text-[8.5px] font-black bg-amber-500/10 text-amber-800 px-1.5 py-0.5 rounded-md border border-amber-500/20 flex items-center gap-1">
-                                          <Award size={8.5} className="text-amber-600 shrink-0" />
-                                          <span className="font-bold text-amber-900">{rec.landmark}:</span> {rec.record}
-                                        </span>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Spend Bar Chart */}
-                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs">
-                  <div className="border-b border-black/8 pb-3 mb-5 flex items-center justify-between">
-                    <div>
-                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Expense Breakdown</p>
-                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Spend per Trip</h3>
+                        );
+                      })}
                     </div>
-                    <BarChart2 size={16} className="text-slate-300" />
+                    <div className="mt-5 pt-4 border-t border-black/8 flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-black text-slate-400 uppercase flex items-center gap-1.5">
+                        <Wallet size={11} />
+                        Total Expenditure
+                      </span>
+                      <span className="text-base font-black text-emerald-600 font-mono">₹{Math.round(totalSpentVal).toLocaleString("en-IN")}</span>
+                    </div>
                   </div>
-                  <div className="space-y-2.5">
-                    {chartTrips.map((trip, i) => {
-                      const spent = trip.spentTotal || 0;
-                      const pct = Math.round((spent / maxSpend) * 100);
-                      const yr = String(trip.completedYear || 2026);
-                      const pal = yearPalette[yr] || yearPalette["2026"];
-                      return (
-                        <div key={trip.id} className="bg-white/60 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors group">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 min-w-0">
-                              <span className="text-[10px] font-black font-mono text-slate-300 w-3.5 shrink-0 text-right">{i + 1}</span>
-                              <span className="text-[11px] font-black text-slate-800 truncate">{trip.title}</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              {trip.maxElevationMeters ? (
-                                <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1.5 py-0.5 rounded-md border border-cyan-200/80 flex items-center gap-0.5">
-                                  <Mountain size={8} className="text-cyan-500" />
-                                  {trip.maxElevationMeters}m
-                                </span>
-                              ) : null}
-                              {trip.distanceKm ? (
-                                <span className="text-[8px] font-black font-mono text-slate-500 bg-black/5 px-1.5 py-0.5 rounded-md border border-black/5 flex items-center gap-0.5">
-                                  <Route size={8} className="text-slate-400" />
-                                  {trip.distanceKm.toLocaleString("en-IN")} km
-                                </span>
-                              ) : null}
-                              <span className={`text-[8.5px] font-black font-mono px-1.5 py-0.5 rounded-md border ${pal.pill}`}>{yr}</span>
-                            </div>
+
+                  {/* Sub-row: Category Split & Transport Mode Distribution (2 Columns) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
+
+                    {/* Category Expense Split */}
+                    <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+                      <div>
+                        <div className="border-b border-black/8 pb-3 mb-4 flex items-center justify-between">
+                          <div>
+                            <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Budget Analytics</p>
+                            <h3 className="text-lg font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Category Split</h3>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1 h-2 bg-black/6 rounded-full overflow-hidden">
+                          <PieChart size={16} className="text-slate-300" />
+                        </div>
+
+                        {/* Stacked Progress Bar */}
+                        <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5 mb-3">
+                          {categoryList.map((cat, idx) => {
+                            const bgColors = ["bg-indigo-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500"];
+                            return (
                               <div
-                                className={`h-full rounded-full ${pal.bar} opacity-75 group-hover:opacity-100 transition-all duration-300`}
-                                style={{ width: `${pct}%` }}
+                                key={cat.name}
+                                className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
+                                style={{ width: `${cat.pct}%` }}
+                                title={`${cat.name}: ₹${Math.round(cat.val).toLocaleString("en-IN")} (${cat.pct}%)`}
                               />
-                            </div>
-                            <span className="text-[11px] font-black font-mono text-slate-900 shrink-0">₹{Math.round(spent).toLocaleString("en-IN")}</span>
-                          </div>
+                            );
+                          })}
                         </div>
-                      );
-                    })}
+                      </div>
+
+                      {/* Category Breakdown Cards */}
+                      <div className="grid grid-cols-1 gap-2">
+                        {categoryList.map((cat, idx) => {
+                          const styles = [
+                            { border: "border-indigo-200/80 bg-indigo-50/50", label: "text-indigo-700", dot: "bg-indigo-500" },
+                            { border: "border-emerald-200/80 bg-emerald-50/50", label: "text-emerald-700", dot: "bg-emerald-500" },
+                            { border: "border-amber-200/80 bg-amber-50/50", label: "text-amber-700", dot: "bg-amber-500" },
+                            { border: "border-rose-200/80 bg-rose-50/50", label: "text-rose-700", dot: "bg-rose-500" }
+                          ][idx % 4];
+
+                          return (
+                            <div key={cat.name} className={`rounded-xl border p-2.5 flex items-center justify-between ${styles.border}`}>
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
+                                <span className={`text-[10px] font-black truncate ${styles.label}`}>{cat.name}</span>
+                              </div>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <span className={`text-[10.5px] font-black font-mono ${styles.label}`}>₹{Math.round(cat.val).toLocaleString("en-IN")}</span>
+                                <span className={`text-[9px] font-black font-mono ${styles.label} opacity-70 w-7 text-right`}>{cat.pct}%</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Transport Mode Distribution */}
+                    <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+                      <div>
+                        <div className="border-b border-black/8 pb-3 mb-4 flex items-center justify-between">
+                          <div>
+                            <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Transit Analytics</p>
+                            <h3 className="text-lg font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Transport Modes</h3>
+                          </div>
+                          <Layers size={16} className="text-slate-300" />
+                        </div>
+
+                        {/* Stacked Distance Bar */}
+                        <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5 mb-3">
+                          {transportList.map((item, idx) => {
+                            const bgColors = ["bg-sky-500", "bg-indigo-500", "bg-amber-500", "bg-rose-500", "bg-emerald-500", "bg-teal-500"];
+                            return (
+                              <div
+                                key={item.name}
+                                className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
+                                style={{ width: `${item.pct}%` }}
+                                title={`${item.name}: ${item.distance.toLocaleString("en-IN")} km (${item.pct}%)`}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Transport Mode List */}
+                      <div className="space-y-1.5">
+                        {transportList.map((item, idx) => {
+                          const styles = [
+                            { dot: "bg-sky-500" },
+                            { dot: "bg-indigo-500" },
+                            { dot: "bg-amber-500" },
+                            { dot: "bg-rose-500" },
+                            { dot: "bg-emerald-500" },
+                            { dot: "bg-teal-500" }
+                          ][idx % 6];
+
+                          return (
+                            <div key={item.name} className="bg-white/60 border border-black/8 rounded-xl p-2 flex items-center justify-between gap-2 hover:bg-white transition-colors">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
+                                <span className="text-[10px] font-black text-slate-800 truncate">{item.name}</span>
+                              </div>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <span className="text-[9.5px] font-black font-mono text-slate-600 bg-black/5 px-1.5 py-0.5 rounded border border-black/5">
+                                  {item.distance.toLocaleString("en-IN")} km
+                                </span>
+                                <span className="text-[9px] font-black font-mono text-slate-400 w-6 text-right">{item.pct}%</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
                   </div>
-                  <div className="mt-5 pt-4 border-t border-black/8 flex items-center justify-between">
-                    <span className="text-[10px] font-mono font-black text-slate-400 uppercase flex items-center gap-1.5">
-                      <Wallet size={11} />
-                      Total Expenditure
-                    </span>
-                    <span className="text-base font-black text-emerald-600 font-mono">₹{Math.round(totalSpentVal).toLocaleString("en-IN")}</span>
+
+                </div>
+
+                {/* RIGHT COLUMN: Year in Review Timeline (5 Columns) */}
+                <div className="lg:col-span-5 h-full">
+                  <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
+                    <div className="border-b border-black/8 pb-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Year in Review</p>
+                        <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>By Year</h3>
+                      </div>
+                      <Calendar size={16} className="text-slate-300" />
+                    </div>
+                    <div className="space-y-4">
+                      {years.map(year => {
+                        const yTrips = byYear[year];
+                        const ySpent = yTrips.reduce((s, t) => s + (t.spentTotal || 0), 0);
+                        const yDays = yTrips.reduce((s, t) => { const { max } = getTripDaysBounds(t); return s + max; }, 0);
+                        const yKm = yTrips.reduce((s, t) => s + (t.distanceKm || 0), 0);
+                        const pal = yearPalette[year] || yearPalette["2026"];
+                        const pct = Math.round((ySpent / (totalSpentVal || 1)) * 100);
+                        return (
+                          <div key={year} className={`rounded-2xl border p-4 ${pal.card}`}>
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-2 h-2 rounded-full ${pal.dot}`} />
+                                <span className={`text-sm font-black font-mono ${pal.label}`}>{year}</span>
+                              </div>
+                              <span className={`text-[9px] font-black font-mono px-2 py-0.5 rounded-lg border ${pal.pill}`}>{yTrips.length} trip{yTrips.length > 1 ? "s" : ""}</span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 mb-3">
+                              {[
+                                { l: "Spent", v: `₹${Math.round(ySpent).toLocaleString("en-IN")}` },
+                                { l: "Days", v: `${yDays}d` },
+                                { l: "Distance", v: `${yKm.toLocaleString("en-IN")} km` },
+                              ].map(({ l, v }) => (
+                                <div key={l}>
+                                  <p className={`text-[9px] font-black font-mono uppercase ${pal.subLabel}`}>{l}</p>
+                                  <p className={`text-xs font-black ${pal.label}`}>{v}</p>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="h-1 bg-black/8 rounded-full overflow-hidden mb-1">
+                              <div className={`h-full ${pal.dot} rounded-full transition-all duration-700`} style={{ width: `${pct}%` }} />
+                            </div>
+                            <p className={`text-[9px] font-mono font-black ${pal.subLabel}`}>{pct}% of total spend</p>
+                            <div className="mt-3.5 space-y-2 pt-3 border-t border-black/10">
+                              <p className={`text-[9px] font-black font-mono uppercase tracking-widest ${pal.subLabel}`}>Trips & Major Spots Covered</p>
+                              {yTrips.map(t => {
+                                const spots = t.majorSpots || [];
+                                const recs = t.records || [];
+                                return (
+                                  <div key={t.id} className="bg-white/70 border border-black/8 rounded-xl p-2.5 space-y-1.5 hover:bg-white transition-colors">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className={`text-[11px] font-black ${pal.label}`}>{t.title}</span>
+                                      <div className="flex items-center gap-1 shrink-0">
+                                        {t.maxElevationMeters ? (
+                                          <span className="text-[8px] font-black font-mono text-cyan-700 bg-cyan-50 px-1 py-0.5 rounded border border-cyan-200/80 flex items-center gap-0.5">
+                                            <Mountain size={8} className="text-cyan-500" />
+                                            {t.maxElevationMeters}m
+                                          </span>
+                                        ) : null}
+                                        {t.distanceKm ? (
+                                          <span className="text-[8px] font-black font-mono text-slate-600 bg-black/5 px-1 py-0.5 rounded border border-black/5 flex items-center gap-0.5">
+                                            <Route size={8} className="text-slate-400" />
+                                            {t.distanceKm.toLocaleString("en-IN")} km
+                                          </span>
+                                        ) : null}
+                                        <span className={`text-[8px] font-black font-mono px-1 py-0.5 rounded border ${pal.pill}`}>
+                                          {t.stats?.duration ? t.stats.duration.split(" (")[0] : shortLabel(t)}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    {spots.length > 0 && (
+                                      <div className="flex flex-wrap gap-1">
+                                        {spots.map((spot, sIdx) => (
+                                          <span key={sIdx} className="text-[8.5px] font-semibold bg-black/4 text-slate-700 px-1 py-0.5 rounded border border-black/5 flex items-center gap-1">
+                                            <MapPin size={8.5} className="text-slate-400 shrink-0" />
+                                            {spot}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                    {recs.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 pt-0.5">
+                                        {recs.map((rec, rIdx) => (
+                                          <span key={rIdx} className="text-[8.5px] font-black bg-amber-500/10 text-amber-800 px-1.5 py-0.5 rounded border border-amber-500/20 flex items-center gap-1">
+                                            <Award size={8.5} className="text-amber-600 shrink-0" />
+                                            <span className="font-bold text-amber-900">{rec.landmark}:</span> {rec.record}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
               </div>
 
-              {/* ── CATEGORY EXPENSE SPLIT & TRANSPORT MODE DISTRIBUTION ── */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
-
-                {/* Category Expense Split */}
-                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
-                  <div className="border-b border-black/8 pb-3 flex items-center justify-between">
-                    <div>
-                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Budget Analytics</p>
-                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Category Expense Split</h3>
-                    </div>
-                    <PieChart size={16} className="text-slate-300" />
-                  </div>
-
-                  {/* Stacked Progress Bar */}
-                  <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5">
-                    {categoryList.map((cat, idx) => {
-                      const bgColors = ["bg-indigo-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500"];
-                      return (
-                        <div
-                          key={cat.name}
-                          className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
-                          style={{ width: `${cat.pct}%` }}
-                          title={`${cat.name}: ₹${Math.round(cat.val).toLocaleString("en-IN")} (${cat.pct}%)`}
-                        />
-                      );
-                    })}
-                  </div>
-
-                  {/* Category Breakdown Cards */}
-                  <div className="grid grid-cols-2 gap-2.5 pt-1">
-                    {categoryList.map((cat, idx) => {
-                      const styles = [
-                        { border: "border-indigo-200/80 bg-indigo-50/50", label: "text-indigo-700", dot: "bg-indigo-500" },
-                        { border: "border-emerald-200/80 bg-emerald-50/50", label: "text-emerald-700", dot: "bg-emerald-500" },
-                        { border: "border-amber-200/80 bg-amber-50/50", label: "text-amber-700", dot: "bg-amber-500" },
-                        { border: "border-rose-200/80 bg-rose-50/50", label: "text-rose-700", dot: "bg-rose-500" }
-                      ][idx % 4];
-
-                      return (
-                        <div key={cat.name} className={`rounded-xl border p-3 ${styles.border}`}>
-                          <div className="flex items-center justify-between mb-1">
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
-                              <span className={`text-[10px] font-black truncate ${styles.label}`}>{cat.name}</span>
-                            </div>
-                            <span className={`text-[9px] font-black font-mono shrink-0 ${styles.label}`}>{cat.pct}%</span>
-                          </div>
-                          <p className={`text-sm font-black font-mono ${styles.label}`}>₹{Math.round(cat.val).toLocaleString("en-IN")}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Transport Mode Distribution */}
-                <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-4">
-                  <div className="border-b border-black/8 pb-3 flex items-center justify-between">
-                    <div>
-                      <p className="text-[9px] font-black font-mono uppercase tracking-widest text-slate-400">Transit Analytics</p>
-                      <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 mt-0.5" style={{ fontFamily: "'Anton', sans-serif" }}>Transport Mode Distribution</h3>
-                    </div>
-                    <Layers size={16} className="text-slate-300" />
-                  </div>
-
-                  {/* Stacked Distance Bar */}
-                  <div className="h-3 bg-black/6 rounded-full overflow-hidden flex gap-0.5 p-0.5">
-                    {transportList.map((item, idx) => {
-                      const bgColors = ["bg-sky-500", "bg-indigo-500", "bg-amber-500", "bg-rose-500", "bg-emerald-500", "bg-teal-500"];
-                      return (
-                        <div
-                          key={item.name}
-                          className={`h-full ${bgColors[idx % bgColors.length]} first:rounded-l-full last:rounded-r-full transition-all duration-500`}
-                          style={{ width: `${item.pct}%` }}
-                          title={`${item.name}: ${item.distance.toLocaleString("en-IN")} km (${item.pct}%)`}
-                        />
-                      );
-                    })}
-                  </div>
-
-                  {/* Transport Mode List */}
-                  <div className="space-y-2 pt-1">
-                    {transportList.map((item, idx) => {
-                      const styles = [
-                        { dot: "bg-sky-500", text: "text-sky-700" },
-                        { dot: "bg-indigo-500", text: "text-indigo-700" },
-                        { dot: "bg-amber-500", text: "text-amber-700" },
-                        { dot: "bg-rose-500", text: "text-rose-700" },
-                        { dot: "bg-emerald-500", text: "text-emerald-700" },
-                        { dot: "bg-teal-500", text: "text-teal-700" }
-                      ][idx % 6];
-
-                      return (
-                        <div key={item.name} className="bg-white/60 border border-black/8 rounded-xl p-2.5 flex items-center justify-between gap-3 hover:bg-white transition-colors">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <div className={`w-2 h-2 rounded-full ${styles.dot} shrink-0`} />
-                            <span className="text-[11px] font-black text-slate-800 truncate">{item.name}</span>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-[10px] font-black font-mono text-slate-600 bg-black/5 px-2 py-0.5 rounded-md border border-black/5">
-                              {item.distance.toLocaleString("en-IN")} km
-                            </span>
-                            <span className="text-[9px] font-black font-mono text-slate-400 w-8 text-right">{item.pct}%</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-              </div>
-
-              {/* ── WORLD & NATIONAL RECORD LANDMARKS VISITED ── */}
+              {/* ── WORLD & NATIONAL RECORD LANDMARKS VISITED (FULL WIDTH) ── */}
               {allRecords.length > 0 && (
                 <div className="bg-white/70 border border-black/10 rounded-3xl p-6 shadow-xs space-y-5">
                   <div className="border-b border-black/8 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
