@@ -50,3 +50,25 @@ body {
     page-break-inside: avoid;
   }
 }
+
+@keyframes stampSlam {
+  0% {
+    opacity: 0;
+    transform: scale(2.6) rotate(-25deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(0.95) rotate(-10deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-12deg);
+  }
+  100% {
+    opacity: 0.95;
+    transform: scale(1) rotate(-12deg);
+  }
+}
+
+.animate-stampSlam {
+  animation: stampSlam 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}

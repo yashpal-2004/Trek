@@ -55,6 +55,34 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("index");
   const [pageSubTab, setPageSubTab] = useState("photo"); // 'photo' for 1st page, 'details' for turned page
+  const [stampActive, setStampActive] = useState(false);
+  const [stampText, setStampText] = useState("VERIFIED LOG");
+
+  const triggerStamp = (text = "VERIFIED LOG") => {
+    setStampText(text);
+    setStampActive(true);
+    setTimeout(() => {
+      setStampActive(false);
+    }, 1000);
+  };
+
+  const getOneWordPlaceName = (trip) => {
+    if (!trip) return "EXPEDITION";
+    const shortMap = {
+      "spiti": "SPITI",
+      "rudranath-tungnath": "RUDRANATH",
+      "amritsar": "AMRITSAR",
+      "hisar": "HISAR",
+      "mussoorie-dehradun": "MUSSOORIE",
+      "manali-sissu-circuit": "MANALI",
+      "jaipur-heritage": "JAIPUR",
+      "vrindavan-family": "VRINDAVAN",
+      "varanasi": "VARANASI"
+    };
+    if (trip.id && shortMap[trip.id]) return shortMap[trip.id];
+    const firstWord = (trip.title || "").split(" ")[0].replace(/[^A-Za-z]/g, "").toUpperCase();
+    return firstWord || "EXPEDITION";
+  };
 
   const colorPalette = [
     "bg-sky-500", "bg-emerald-500", "bg-amber-500", "bg-rose-500",
@@ -193,7 +221,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
   // If Book is Closed, Render Vintage Scrapbook Travel Journal Cover
   if (!isBookOpen) {
     return (
-      <div className="relative w-full h-[720px] md:h-[760px] cursor-pointer group perspective-1000" onClick={() => setIsBookOpen(true)}>
+      <div className="relative w-full h-[720px] md:h-[760px] cursor-pointer group perspective-1000" onClick={() => { setIsBookOpen(true); triggerStamp("JOURNAL UNLOCKED"); }}>
         {/* Outer Frame Container */}
         <div className="w-full h-full bg-[#2a1d15] rounded-[40px] p-3 md:p-5 shadow-2xl font-serif text-slate-800 border-4 border-[#1c130d] flex flex-col justify-between relative overflow-hidden transition-transform duration-500 group-hover:scale-[1.005]">
           
@@ -310,6 +338,37 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
         {/* Main 2-Page Paper Content */}
         <div className="flex-1 p-3.5 sm:p-5 md:p-7 grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 relative overflow-hidden">
           
+          {/* Animated Vintage Wax-Seal & Postmark Overlay */}
+          {stampActive && (
+            <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center bg-black/5 backdrop-blur-[1px]">
+              <div className="relative animate-stampSlam flex flex-col items-center justify-center">
+                <div className="relative w-32 h-32 md:w-36 md:h-36 rounded-full bg-gradient-to-br from-red-800 via-amber-900 to-red-950 border-4 border-amber-400/60 shadow-2xl flex items-center justify-center p-2 transform rotate-[-12deg]">
+                  <div className="w-full h-full rounded-full border-2 border-dashed border-amber-300/50 flex flex-col items-center justify-center text-center p-1 bg-red-950/40">
+                    <Compass size={22} className="text-amber-300 mb-0.5" />
+                    <span className="text-[8px] font-mono font-black tracking-widest text-amber-200 uppercase leading-none">
+                      PASSED & STAMPED
+                    </span>
+                    <span className="text-[10px] font-serif font-black tracking-tight text-amber-100 uppercase my-0.5 border-y border-amber-400/40 px-1 truncate max-w-[100px]">
+                      {stampText}
+                    </span>
+                    <span className="text-[7.5px] font-mono text-amber-300/80 uppercase">
+                      EXPEDITION LOG
+                    </span>
+                  </div>
+                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400/80" />
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-amber-400/80" />
+                  <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 rounded-full bg-amber-400/80" />
+                  <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 rounded-full bg-amber-400/80" />
+                </div>
+                <div className="mt-2 flex items-center gap-1.5 opacity-90 text-amber-900 font-mono text-[9px] font-bold uppercase tracking-widest bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-800/30 shadow-xs">
+                  <span className="w-3 h-0.5 bg-amber-900 rounded-full" />
+                  <span>VERIFIED TRAIL RECORD</span>
+                  <span className="w-3 h-0.5 bg-amber-900 rounded-full" />
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Page Center Binding Stitch Shadow (Desktop Only) */}
           <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-12 bg-gradient-to-r from-black/5 via-black/15 to-black/5 hidden md:block z-20 pointer-events-none border-x border-black/5" />
 
@@ -340,6 +399,7 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
                         setSelectedIndex(idx);
                         setActiveTab("index");
                         setPageSubTab("photo");
+                        triggerStamp(getOneWordPlaceName(trip));
                       }}
                       className={`w-full text-left p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl border transition-all flex items-center justify-between relative overflow-hidden group shadow-xs ${
                         isSelected
@@ -612,7 +672,11 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => {
-                      setSelectedIndex(prev => Math.max(0, prev - 1));
+                      setSelectedIndex(prev => {
+                        const next = Math.max(0, prev - 1);
+                        triggerStamp(getOneWordPlaceName(sortedTrips[next]));
+                        return next;
+                      });
                       setPageSubTab("photo");
                     }}
                     disabled={selectedIndex === 0}
@@ -623,7 +687,11 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
                   </button>
                   <button
                     onClick={() => {
-                      setSelectedIndex(prev => Math.min(sortedTrips.length - 1, prev + 1));
+                      setSelectedIndex(prev => {
+                        const next = Math.min(sortedTrips.length - 1, prev + 1);
+                        triggerStamp(getOneWordPlaceName(sortedTrips[next]));
+                        return next;
+                      });
                       setPageSubTab("photo");
                     }}
                     disabled={selectedIndex === sortedTrips.length - 1}
@@ -637,7 +705,13 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
                 {activeTab === "index" && (
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => setPageSubTab(prev => prev === "photo" ? "details" : "photo")}
+                      onClick={() => {
+                        setPageSubTab(prev => {
+                          const next = prev === "photo" ? "details" : "photo";
+                          triggerStamp(getOneWordPlaceName(sortedTrips[selectedIndex]));
+                          return next;
+                        });
+                      }}
                       className="px-3 py-1.5 rounded-lg text-xs font-mono font-bold uppercase border-2 border-amber-900/40 text-amber-950 hover:bg-amber-900/10 transition-all flex items-center gap-1 shadow-xs bg-[#fdfaf3]"
                     >
                       {pageSubTab === "photo" ? (
