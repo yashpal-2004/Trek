@@ -362,7 +362,7 @@ export const completedTrips = [
     type: "jyotirlinga",
     typeLabel: "Jyotirlinga Yatra",
     title: "Kashi Vishwanath Jyotirlinga Yatra",
-    subtitle: "Varanasi, Uttar Pradesh",
+    subtitle: "Uttar Pradesh, India",
     description: "Sacred pilgrimage to Kashi Vishwanath Jyotirlinga along the Ganges in Varanasi.",
     isCompleted: true,
     distanceKm: 1600,
