@@ -221,7 +221,22 @@ function ExpeditionJournalBook({ completedTrips, setSelectedTrip, actualCosts = 
 
               <div className="space-y-1 my-2">
                 <p className="text-xs font-serif italic text-[#634832] font-semibold">
-                  Spiti • Rudranath • Amritsar • Mussoorie
+                  {(() => {
+                    const shortNames = {
+                      "spiti": "Spiti",
+                      "rudranath-tungnath": "Rudranath",
+                      "amritsar": "Amritsar",
+                      "hisar": "Hisar",
+                      "mussoorie-dehradun": "Mussoorie",
+                      "manali-sissu-circuit": "Manali",
+                      "jaipur-heritage": "Jaipur",
+                      "vrindavan-family": "Vrindavan",
+                      "varanasi": "Varanasi",
+                    };
+                    return completedTrips
+                      .map(t => shortNames[t.id] || t.title.split(" ")[0])
+                      .join(" • ");
+                  })()}
                 </p>
                 <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-[#8c6b4f]">
                   <span>VOL. 01</span>
