@@ -42,6 +42,7 @@ import { budget as manimaheshKailashBudget } from "../data/manimahesh-kailash/bu
 import { budget as puriBudget } from "../data/puri/budget";
 import { budget as yamunotriBudget } from "../data/yamunotri/budget";
 import { budget as varanasiBudget } from "../data/varanasi/budget";
+import { budget as vrindavanBudget } from "../data/vrindavan/budget";
 import { somnathNageshwarAmounts as somnathNageshwarAmountsPlan1 } from "../data/somnath-nageshwar/plan1/amounts";
 import { somnathNageshwarAmounts as somnathNageshwarAmountsPlan2 } from "../data/somnath-nageshwar/plan2/amounts";
 import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/amounts";
@@ -1021,6 +1022,7 @@ export default function Landing() {
     if (key === 'jibhi-plan1' || key === 'jibhi-plan2') return 'jibhi';
     if (key === 'kashmir' || key === 'kashmir-plan1' || key === 'kashmir-plan2' || key === 'kashmir-plan3') return 'kashmir';
     if (key === 'varanasi-plan' || key === 'varanasi') return 'varanasi';
+    if (key === 'vrindavan-plan' || key === 'vrindavan') return 'vrindavan';
     return key;
   };
 
@@ -1063,6 +1065,8 @@ export default function Landing() {
       "nepal-plan2": "expenses-nepal-p2",
       "kashmir-plan3": "expenses-kashmir-plan3",
       "varanasi-plan": "expenses-varanasi",
+      "vrindavan-plan": "expenses-vrindavan",
+      "vrindavan": "expenses-vrindavan",
     };
     return keysMap[planId] || `expenses-${planId}`;
   };
@@ -2019,6 +2023,31 @@ export default function Landing() {
           details: "Spiritual weekend trip covering Kashi Vishwanath, Ganga Aarti, and Sarnath.",
           budget: "₹" + varanasiBudget.total.toLocaleString("en-IN") + " / person",
           path: "/varanasi"
+        }
+      ]
+    },
+    {
+      id: "vrindavan",
+      type: "pilgrimage",
+      typeLabel: "Krishna Pilgrimage",
+      title: "Vrindavan & Mathura Pilgrimage",
+      subtitle: "Vrindavan & Mathura, Uttar Pradesh",
+      description: "A 2-day Krishna pilgrimage from Sonipat to the sacred land of Braj — Banke Bihari, Prem Mandir, ISKCON, Krishna Janmabhoomi & Dwarkadheesh.",
+      stats: {
+        duration: "2 Days",
+        distance: "340 km",
+        budget: "₹" + (vrindavanBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "vrindavan-plan",
+          title: "Vrindavan & Mathura Temple Circuit",
+          duration: "2 Days",
+          route: "Sonipat → Mathura → Vrindavan → Mathura → Sonipat",
+          details: "Budget weekend temple circuit covering Banke Bihari, Prem Mandir, ISKCON, Krishna Janmabhoomi & Dwarkadheesh by train.",
+          budget: "₹" + vrindavanBudget.total.toLocaleString("en-IN") + " / person",
+          path: "/vrindavan"
         }
       ]
     },

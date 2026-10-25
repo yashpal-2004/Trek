@@ -41,6 +41,7 @@ import { budget as manimaheshKailashBudget } from "../data/manimahesh-kailash/bu
 import { budget as puriBudget } from "../data/puri/budget";
 import { budget as yamunotriBudget } from "../data/yamunotri/budget";
 import { budget as varanasiBudget } from "../data/varanasi/budget";
+import { budget as vrindavanBudget } from "../data/vrindavan/budget";
 import { somnathNageshwarAmounts as somnathNageshwarAmountsPlan1 } from "../data/somnath-nageshwar/plan1/amounts";
 import { somnathNageshwarAmounts as somnathNageshwarAmountsPlan2 } from "../data/somnath-nageshwar/plan2/amounts";
 import { mallikarjunaRameswaramAmounts } from "../data/mallikarjuna-rameswaram/amounts";
@@ -922,6 +923,7 @@ export default function Adventures() {
     if (key === 'jibhi-plan1' || key === 'jibhi-plan2') return 'jibhi';
     if (key === 'kashmir' || key === 'kashmir-plan1' || key === 'kashmir-plan2' || key === 'kashmir-plan3') return 'kashmir';
     if (key === 'varanasi-plan' || key === 'varanasi') return 'varanasi';
+    if (key === 'vrindavan-plan' || key === 'vrindavan') return 'vrindavan';
     return key;
   };
 
@@ -964,6 +966,8 @@ export default function Adventures() {
       "nepal-plan2": "expenses-nepal-p2",
       "kashmir-plan3": "expenses-kashmir-plan3",
       "varanasi-plan": "expenses-varanasi",
+      "vrindavan-plan": "expenses-vrindavan",
+      "vrindavan": "expenses-vrindavan",
     };
     return keysMap[planId] || `expenses-${planId}`;
   };
@@ -1762,6 +1766,31 @@ export default function Adventures() {
           path: "/moon-peak",
         }
       ],
+    },
+    {
+      id: "vrindavan",
+      type: "trip",
+      typeLabel: "Krishna Pilgrimage",
+      title: "Vrindavan & Mathura Pilgrimage",
+      subtitle: "Vrindavan & Mathura, Uttar Pradesh",
+      description: "A 2-day Krishna pilgrimage from Sonipat to the sacred land of Braj — Banke Bihari, Prem Mandir, ISKCON, Krishna Janmabhoomi & Dwarkadheesh.",
+      stats: {
+        duration: "2 Days",
+        distance: "340 km",
+        budget: "₹" + (vrindavanBudget.total / 1000).toFixed(1) + "K"
+      },
+      image: "/mountain_clay_peak.png",
+      plans: [
+        {
+          id: "vrindavan-plan",
+          title: "Vrindavan & Mathura Temple Circuit",
+          duration: "2 Days",
+          route: "Sonipat → Mathura → Vrindavan → Mathura → Sonipat",
+          details: "Budget weekend temple circuit covering Banke Bihari, Prem Mandir, ISKCON, Krishna Janmabhoomi & Dwarkadheesh by train.",
+          budget: "₹" + vrindavanBudget.total.toLocaleString("en-IN") + " / person",
+          path: "/vrindavan"
+        }
+      ]
     }
   ];
 
@@ -2025,7 +2054,8 @@ export default function Adventures() {
       else if (rawTitle.includes("mussoorie")) key = "mussoorie";
       else if (rawTitle.includes("manali")) key = "manali";
       else if (rawTitle.includes("jaipur")) key = "jaipur";
-      else if (rawTitle.includes("vrindavan")) key = "vrindavan";
+      else if (trip.id === "vrindavan-family" || rawTitle.includes("family")) key = "vrindavan-family";
+      else if (trip.id === "vrindavan" || rawTitle.includes("vrindavan")) key = "vrindavan";
       else if (rawTitle.includes("varanasi") || rawTitle.includes("kashi")) key = "varanasi";
 
       if (!map.has(key) || trip.isCompleted) {
@@ -4410,7 +4440,8 @@ export function CompletedTripsMap({ completedPlans = [], archivedTrips = [] }) {
     { id: "mussoorie-dehradun", name: "Mussoorie, Landour & Tehri", city: "Mussoorie, Uttarakhand", coords: [30.4598, 78.0796], dates: "23 Jan – 26 Jan 2026", spent: "₹8,637", staticCompleted: true, state: "Uttarakhand" },
     { id: "manali-sissu-circuit", name: "Manali, Kasol & Sissu Circuit", city: "Manali, Himachal Pradesh", coords: [32.2396, 77.1887], dates: "26 Nov – 1 Dec 2025", spent: "₹4,192.50", staticCompleted: true, state: "Himachal Pradesh" },
     { id: "jaipur-heritage", name: "Jaipur Heritage Trip", city: "Jaipur, Rajasthan", coords: [26.9124, 75.7873], dates: "9 Jan – 12 Jan 2026", spent: "₹5,631.50", staticCompleted: true, state: "Rajasthan" },
-    { id: "vrindavan-family", name: "Vrindavan Pilgrimage", city: "Vrindavan, Uttar Pradesh", coords: [27.5650, 77.7008], dates: "10 Jul – 11 Jul 2026", spent: "₹0", staticCompleted: true, state: "Uttar Pradesh" },
+    { id: "vrindavan-family", name: "Vrindavan Pilgrimage", city: "Vrindavan, Uttar Pradesh", coords: [27.5650, 77.7008], dates: "10 Jul – 11 Jul 2026", spent: "₹0", staticCompleted: true, planIds: ["vrindavan-done"], state: "Uttar Pradesh" },
+    { id: "vrindavan", name: "Vrindavan & Mathura Pilgrimage", city: "Vrindavan & Mathura, UP", coords: [27.5706, 77.6593], dates: "2 Days", budget: "₹1.5K", planIds: ["vrindavan-plan"], state: "Uttar Pradesh" },
     { id: "rudranath", name: "Rudranath & Tungnath Trek", city: "Rudranath, Uttarakhand", coords: [30.5284, 79.3175], dates: "3 Jul – 8 Jul 2026", spent: "₹6,352", planIds: ["rudranath-plan1", "rudranath-plan2"], state: "Uttarakhand" },
     { id: "spiti", name: "Spiti Valley Expedition", city: "Kaza, Himachal Pradesh", coords: [32.2276, 78.0710], dates: "20 Aug – 25 Aug 2026", spent: "₹9,964", planIds: ["spiti-plan1", "spiti-plan2", "spiti-plan3"], state: "Himachal Pradesh" },
     { id: "varanasi", name: "Kashi Vishwanath Jyotirlinga Yatra", city: "Varanasi, Uttar Pradesh", coords: [25.3109, 83.0107], dates: "20 Sep – 24 Sep 2026", spent: "₹3,124", staticCompleted: true, planIds: ["varanasi-plan"], state: "Uttar Pradesh" },
