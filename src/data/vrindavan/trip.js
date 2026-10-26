@@ -1,18 +1,18 @@
 export const trip = {
   title: "Vrindavan & Mathura Pilgrimage",
-  subtitle: "A 2-day Krishna pilgrimage from Sonipat to the land of Braj by budget train",
+  subtitle: "A 2-day Krishna pilgrimage from Sonipat to the land of Braj by intercity bus",
   duration: "2 Days",
   durationDays: 2,
-  people: 1,
+  people: 4,
   budgetMin: 2000,
   budgetMax: 3000,
   difficulty: "Easy / City Pilgrimage",
   highestAltitude: "174m (Mathura-Vrindavan)",
   totalDistance: "340 km (Round Trip)",
   totalTrekDistance: "0 km",
-  startingPoint: "Sonipat (SNP)",
-  endingPoint: "Sonipat (SNP)",
-  transport: ["Passenger/Express Train", "E-Rickshaw / Tempo"],
+  startingPoint: "College, Sonipat",
+  endingPoint: "College, Sonipat",
+  transport: ["UPSRTC / Intercity Bus", "E-Rickshaw / Tempo"],
   theme: "Purple",
   version: "1.0.0",
   developer: "Trip Team",
@@ -20,21 +20,22 @@ export const trip = {
 
 export const quickStats = [
   { id: "days", label: "Total Days", value: 2, suffix: "", description: "Weekend pilgrimage", icon: "Calendar" },
-  { id: "distance", label: "Total Distance", value: 340, suffix: " KM", description: "Sonipat–Mathura Round Trip", icon: "Route" },
-  { id: "budget", label: "Budget", value: 2.5, suffix: "K", prefix: "₹", description: "Per person (budget style)", icon: "Wallet" },
+  { id: "distance", label: "Total Distance", value: 340, suffix: " KM", description: "Sonipat–Delhi–Vrindavan Round Trip", icon: "Route" },
+  { id: "budget", label: "Budget", value: 2.1, suffix: "K", prefix: "₹", description: "Per person (4 friends / family)", icon: "Wallet" },
   { id: "altitude", label: "Elevation", value: 174, suffix: " M", description: "Yamuna River Plains", icon: "TrendingUp" },
   { id: "passes", label: "Temples", value: 7, suffix: "", description: "Banke Bihari, Prem Mandir, ISKCON & more", icon: "MapPin" },
   { id: "destinations", label: "Major Stops", value: 3, suffix: "", description: "Vrindavan, Mathura, Govardhan", icon: "MapPin" },
 ];
 
 export const routeTimeline = [
-  { id: 1, location: "Sonipat (SNP)", altitude: "230m", distance: "0 km", day: 0, date: "Day 1 Morning", arrTime: "—", depTime: "05:30 AM", transport: "Express/Passenger Train", icon: "Train" },
-  { id: 2, location: "Mathura Junction (MTJ)", altitude: "174m", distance: "170 km", day: 1, date: "Day 1 Morning", arrTime: "09:30 AM", depTime: "10:30 AM", transport: "E-Rickshaw to Vrindavan", icon: "MapPin" },
-  { id: 3, location: "Vrindavan – Banke Bihari, Prem Mandir & ISKCON", altitude: "174m", distance: "178 km", day: 1, date: "Day 1 Afternoon", arrTime: "11:00 AM", depTime: "05:00 PM", transport: "E-Rickshaw / Walking", icon: "MapPin" },
-  { id: 4, location: "Yamuna Ghat Aarti – Kesi Ghat", altitude: "174m", distance: "180 km", day: 1, date: "Day 1 Evening", arrTime: "06:30 PM", depTime: "07:30 PM", transport: "Walking", icon: "Compass" },
-  { id: 5, location: "Mathura – Krishna Janmabhoomi & Dwarkadheesh Temple", altitude: "174m", distance: "185 km", day: 2, date: "Day 2 Morning", arrTime: "08:00 AM", depTime: "12:00 PM", transport: "E-Rickshaw / Tempo", icon: "MapPin" },
-  { id: 6, location: "Mathura Junction (MTJ) – Depart for Sonipat", altitude: "174m", distance: "195 km", day: 2, date: "Day 2 Afternoon", arrTime: "01:00 PM", depTime: "02:00 PM", transport: "Return Train to Sonipat", icon: "Train" },
-  { id: 7, location: "Sonipat (SNP)", altitude: "230m", distance: "340 km", day: 2, date: "Day 2 Evening", arrTime: "06:00 PM", depTime: "—", transport: "Arrive Home", icon: "Home" },
+  { id: 1, location: "College (Sonipat)", altitude: "230m", distance: "0 km", day: 0, date: "Day 1 Morning", arrTime: "—", depTime: "07:30 AM", transport: "Bus / Metro to Delhi", icon: "Bus" },
+  { id: 2, location: "Delhi ISBT (Kashmere Gate / Sarai Kale Khan)", altitude: "216m", distance: "45 km", day: 1, date: "Day 1 Morning", arrTime: "08:45 AM", depTime: "09:15 AM", transport: "Expressway Bus to Vrindavan", icon: "Bus" },
+  { id: 3, location: "Vrindavan Highway Cut / Chatikara", altitude: "174m", distance: "185 km", day: 1, date: "Day 1 Afternoon", arrTime: "12:30 PM", depTime: "01:00 PM", transport: "E-Rickshaw to Ashram", icon: "MapPin" },
+  { id: 4, location: "Vrindavan – Ashram Check-in & Temples", altitude: "174m", distance: "192 km", day: 1, date: "Day 1 Afternoon", arrTime: "01:30 PM", depTime: "06:30 PM", transport: "E-Rickshaw / Walking", icon: "MapPin" },
+  { id: 5, location: "Yamuna Ghat Aarti – Kesi Ghat", altitude: "174m", distance: "195 km", day: 1, date: "Day 1 Evening", arrTime: "07:00 PM", depTime: "08:00 PM", transport: "Walking", icon: "Compass" },
+  { id: 6, location: "Mathura – Krishna Janmabhoomi & Dwarkadheesh", altitude: "174m", distance: "205 km", day: 2, date: "Day 2 Morning", arrTime: "08:30 AM", depTime: "01:30 PM", transport: "E-Rickshaw / Tempo", icon: "MapPin" },
+  { id: 7, location: "Mathura / Highway Bus Stand – Return Bus", altitude: "174m", distance: "210 km", day: 2, date: "Day 2 Afternoon", arrTime: "02:00 PM", depTime: "02:30 PM", transport: "Expressway Bus to Delhi", icon: "Bus" },
+  { id: 8, location: "College (Sonipat)", altitude: "230m", distance: "360 km", day: 2, date: "Day 2 Evening", arrTime: "07:30 PM", depTime: "—", transport: "Arrive at College", icon: "Home" },
 ];
 
 export const overviewCards = [

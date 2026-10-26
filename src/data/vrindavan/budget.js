@@ -1,7 +1,7 @@
 import { vrindavanAmounts as amounts } from "./amounts";
 
 const budgetTotal =
-  amounts.transport.train +
+  amounts.transport.bus +
   amounts.transport.localAuto +
   amounts.transport.misc +
   amounts.accommodation.ashram +
@@ -19,14 +19,14 @@ export const budget = {
     {
       id: "transport",
       label: "Transportation",
-      amount: amounts.transport.train + amounts.transport.localAuto + amounts.transport.misc,
+      amount: amounts.transport.bus + amounts.transport.localAuto + amounts.transport.misc,
       color: "#2563EB",
       icon: "Bus",
-      description: "Train round trip + E-rickshaws in Vrindavan & Mathura",
+      description: "Intercity Bus round trip + shared E-rickshaw / Auto for 4 people",
       subItems: [
-        { name: "Train Round Trip (Sonipat–Mathura)", price: amounts.transport.train },
-        { name: "Local E-Rickshaw / Tempo", price: amounts.transport.localAuto },
-        { name: "Misc Transport", price: amounts.transport.misc }
+        { name: "Bus Round Trip (Sonipat–Mathura/Vrindavan)", price: amounts.transport.bus },
+        { name: "Local E-Rickshaw / Tempo (Split among 4)", price: amounts.transport.localAuto },
+        { name: "Misc Transit / Luggage Split", price: amounts.transport.misc }
       ]
     },
     {
@@ -35,9 +35,9 @@ export const budget = {
       amount: amounts.accommodation.ashram,
       color: "#10B981",
       icon: "Bed",
-      description: "Ashram / Dharamshala stay in Vrindavan",
+      description: "Ashram / Dharamshala family room / 2 double rooms (split for 4)",
       subItems: [
-        { name: "Ashram / Dharamshala (1 Night)", price: amounts.accommodation.ashram }
+        { name: "Ashram / Dharamshala Stay (Per Person)", price: amounts.accommodation.ashram }
       ]
     },
     {
@@ -67,12 +67,12 @@ export const budget = {
     }
   ],
   dailyEstimate: [
-    { day: 0, amount: 200, label: "Day 0 — Board early morning train from Sonipat" },
-    { day: 1, amount: 1500, label: "Day 1 — Arrive Mathura, explore Vrindavan temples & Govardhan" },
-    { day: 2, amount: 800, label: "Day 2 — Morning Yamuna Aarti, Mathura tour & return train" }
+    { day: 0, amount: 200, label: "Day 0 — Board early morning bus from Sonipat / Delhi ISBT" },
+    { day: 1, amount: 1500, label: "Day 1 — Arrive Mathura/Vrindavan, explore Vrindavan temples & Govardhan" },
+    { day: 2, amount: 800, label: "Day 2 — Morning Yamuna Aarti, Mathura tour & return bus" }
   ],
   calculatorDefaults: {
-    transport: amounts.transport.train + amounts.transport.localAuto + amounts.transport.misc,
+    transport: amounts.transport.bus + amounts.transport.localAuto + amounts.transport.misc,
     accommodation: amounts.accommodation.ashram,
     food: amounts.food.meals + amounts.food.snacks,
     emergency: amounts.misc.templePrasad + amounts.misc.mathurapeda + amounts.misc.shopping

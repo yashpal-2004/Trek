@@ -1786,7 +1786,7 @@ export default function Adventures() {
           title: "Vrindavan & Mathura Temple Circuit",
           duration: "2 Days",
           route: "Sonipat → Mathura → Vrindavan → Mathura → Sonipat",
-          details: "Budget weekend temple circuit covering Banke Bihari, Prem Mandir, ISKCON, Krishna Janmabhoomi & Dwarkadheesh by train.",
+          details: "Budget weekend temple circuit covering Banke Bihari, Prem Mandir, ISKCON, Krishna Janmabhoomi & Dwarkadheesh by bus.",
           budget: "₹" + vrindavanBudget.total.toLocaleString("en-IN") + " / person",
           path: "/vrindavan"
         }

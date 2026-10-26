@@ -16,8 +16,8 @@ export const faq = [
     answer: "No photography is allowed inside Banke Bihari Temple. The pujaris are very strict about this rule. Store your phone before entering."
   },
   {
-    question: "What is the best train from Sonipat to Mathura?",
-    answer: "Multiple trains run between Sonipat and Mathura. The 12311 Kalka Mail and intercity/passenger trains are good options. Book on IRCTC or buy Unreserved General (GS) ticket for the cheapest option (~₹75–85)."
+    question: "What is the best way to travel by bus from Sonipat / Delhi to Vrindavan?",
+    answer: "Regular UPSRTC, Haryana Roadways, and private intercity express buses depart frequently from Delhi ISBT (Kashmere Gate / Sarai Kale Khan) via Yamuna Expressway / NH-19 towards Mathura & Vrindavan Cut (~3.5–4 hrs, ₹150–250)."
   },
   {
     question: "Is food available at ISKCON Vrindavan?",

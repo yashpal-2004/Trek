@@ -1,21 +1,21 @@
 export const transport = [
   {
     id: 1,
-    from: "Sonipat (SNP)",
-    to: "Mathura Junction (MTJ)",
-    mode: "Express / Passenger Train",
-    distance: "170 km",
-    duration: "3 hrs 30 mins – 4 hrs",
-    fare: 180,
-    cheapest: 75,
-    alternative: "Unreserved General Coach (GS) for lowest cost",
-    frequency: "Multiple trains daily (5:00 AM – 8:00 AM departures)",
-    notes: "Trains include 12311 Kalka Mail, 12003 Swarna Shatabdi, and several passenger trains. Check IRCTC / NTES for latest schedule. Unreserved General Ticket costs ~₹75–85. Sleeper class costs ~₹180.",
-    busType: "Indian Railways"
+    from: "College (Sonipat) via Delhi ISBT",
+    to: "Vrindavan Cut / Chatikara",
+    mode: "UPSRTC / Intercity Express Bus",
+    distance: "185 km",
+    duration: "4 hrs 30 mins – 5 hrs",
+    fare: 200,
+    cheapest: 150,
+    alternative: "Haryana Roadways from Sonipat to Delhi ISBT (₹50) + UPSRTC Expressway Bus to Vrindavan Cut (₹150)",
+    frequency: "Depart 7:30 AM from College; Delhi buses run every 15–20 mins",
+    notes: "Leave college at 7:30 AM to reach Kashmere Gate / Sarai Kale Khan ISBT by 8:45 AM. Board Yamuna Expressway bus by 9:15 AM to arrive at Vrindavan Cut (Chatikara) by 12:30 PM. Group of 4 can easily get seats together.",
+    busType: "State Transport / Intercity Bus"
   },
   {
     id: 2,
-    from: "Mathura Junction (MTJ)",
+    from: "Mathura / Vrindavan Cut",
     to: "Vrindavan",
     mode: "E-Rickshaw / Shared Tempo",
     distance: "12 km",
@@ -23,8 +23,8 @@ export const transport = [
     fare: 150,
     cheapest: 30,
     alternative: "Shared Tempo (Vikram) — ₹20–30 per seat",
-    frequency: "Continuous outside Mathura Junction",
-    notes: "E-rickshaws are readily available outside Mathura Jn. Shared Vikram Tempo to Vrindavan runs from stand near platform. Negotiate price before boarding private autos.",
+    frequency: "Continuous outside Mathura Bus Stand & highway cut",
+    notes: "E-rickshaws and tempos are readily available at the highway cut and new bus stand. Shared Vikram Tempos run frequently to Chatikara / Bhaktivedanta Swami Marg. Negotiate before boarding.",
     busType: "E-Rickshaw / Tempo"
   },
   {
@@ -57,18 +57,18 @@ export const transport = [
   },
   {
     id: 5,
-    from: "Mathura Junction (MTJ)",
-    to: "Sonipat (SNP)",
-    mode: "Express / Passenger Train (Return)",
-    distance: "170 km",
-    duration: "3 hrs 30 mins – 4 hrs",
-    fare: 180,
-    cheapest: 75,
-    alternative: "Unreserved General (GS) or Sleeper class",
-    frequency: "Multiple trains from 12 PM – 5 PM",
-    notes: "Return trains include 12312 Kalka Mail (reverse), 12004 Swarna Shatabdi and other intercity trains. Book in advance on IRCTC or buy unreserved GS ticket at Mathura Junction.",
-    busType: "Indian Railways"
+    from: "Mathura / Vrindavan Bus Stand",
+    to: "College (Sonipat) via Delhi ISBT",
+    mode: "UPSRTC / Intercity Express Bus (Return)",
+    distance: "185 km",
+    duration: "4 hrs 30 mins – 5 hrs",
+    fare: 200,
+    cheapest: 150,
+    alternative: "UPSRTC bus to Sarai Kale Khan / Kashmere Gate (₹150) + Connecting bus to Sonipat College (₹50)",
+    frequency: "Frequent buses from 12 PM – 8 PM",
+    notes: "Board return bus at 2:00 PM to reach Delhi by 6:00 PM, and return to Sonipat College campus by 7:30 PM.",
+    busType: "State Transport / Intercity Bus"
   }
 ];
 
-export const transportModes = ["All", "Express / Passenger Train", "E-Rickshaw / Shared Tempo", "Walking"];
+export const transportModes = ["All", "UPSRTC / Intercity Express Bus", "E-Rickshaw / Shared Tempo", "Walking"];

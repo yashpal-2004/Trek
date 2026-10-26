@@ -2,7 +2,7 @@ export const emergencyContacts = [
   { id: "police", name: "Mathura Police Control Room", number: "100 / 112", description: "For general emergencies and safety.", icon: "PhoneCall" },
   { id: "medical", name: "Mathura District Hospital", number: "0565-2500000", description: "Nearest major multi-specialty government hospital.", icon: "Stethoscope" },
   { id: "iskcon", name: "ISKCON Vrindavan Medical / Helpdesk", number: "+91-565-254-0021", description: "Guesthouse and medical room assistance.", icon: "PhoneCall" },
-  { id: "railway", name: "Mathura Junction Enquiry", number: "139", description: "Train and station enquiry.", icon: "PhoneCall" }
+  { id: "bus", name: "Mathura / ISBT Bus Enquiry", number: "1800-180-2877 / 0565-2400326", description: "UPSRTC & regional bus stand enquiry.", icon: "PhoneCall" }
 ];
 
 export const emergencyTips = [

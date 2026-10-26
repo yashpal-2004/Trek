@@ -12,7 +12,7 @@ export const packing = [
     category: "Documents",
     items: [
       { name: "Government ID proof (Aadhar/PAN)", essential: true },
-      { name: "IRCTC ticket / train PNR on phone", essential: true }
+      { name: "Bus booking confirmation / m-ticket on phone", essential: true }
     ]
   },
   {
