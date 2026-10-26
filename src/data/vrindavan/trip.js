@@ -21,7 +21,7 @@ export const trip = {
 export const quickStats = [
   { id: "days", label: "Total Days", value: 2, suffix: "", description: "Weekend pilgrimage", icon: "Calendar" },
   { id: "distance", label: "Total Distance", value: 340, suffix: " KM", description: "Sonipat–Delhi–Vrindavan Round Trip", icon: "Route" },
-  { id: "budget", label: "Budget", value: 2.1, suffix: "K", prefix: "₹", description: "Per person (4 friends / family)", icon: "Wallet" },
+  { id: "budget", label: "Budget", value: 2.55, suffix: "K", prefix: "₹", description: "Per person (4 friends / family)", icon: "Wallet" },
   { id: "altitude", label: "Elevation", value: 174, suffix: " M", description: "Yamuna River Plains", icon: "TrendingUp" },
   { id: "passes", label: "Temples", value: 7, suffix: "", description: "Banke Bihari, Prem Mandir, ISKCON & more", icon: "MapPin" },
   { id: "destinations", label: "Major Stops", value: 3, suffix: "", description: "Vrindavan, Mathura, Govardhan", icon: "MapPin" },
