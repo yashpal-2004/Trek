@@ -59,7 +59,7 @@ export const expenseCategories = ["Transport", "Accommodation", "Food", "Temple 
 
 export const STORAGE_KEYS = {
   expenseTracker: "expenses-vrindavan",
-  budgetCalculator: "budget-values-vrindavan",
+  budgetCalculator: "budget-values-vrindavan-v2",
   completedTreks: "completed-treks-vrindavan",
   packingChecklist: "packing-checklist-vrindavan",
   completedDays: "completed-days-vrindavan",
